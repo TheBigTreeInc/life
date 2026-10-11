@@ -1,0 +1,11 @@
+ZIPRUNNER_HANDOFF v1
+project: the-life-loop
+artifact_type: source_zip
+version: 0.4.1
+filename: the-life-loop-0.4.1-ziprunner.zip
+action: download_to_inbox
+build_command: node tools/verify.mjs
+play_file: PLAY.html
+workboard_update: .ziprunner-workboard-update.json
+notes: GitHub Pages supported via workflow .github/workflows/pages.yml; publish to public repo and select Settings > Pages > GitHub Actions. Git push remains operator-controlled. Full-source, flat-root ZIP. Preserve .git, machine-specific ZipRunner configuration and runtime saves. No credentials included. Save v0.1–v0.3 migrations preserved. Apply workboard changes only on successful build. Operator must verify PLAY.html direct opening on Windows. Git commit/push are not automatically requested.
+END_ZIPRUNNER_HANDOFF

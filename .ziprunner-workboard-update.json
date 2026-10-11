@@ -1,0 +1,216 @@
+{
+  "schema": "ziprunner.workboard-update.v1",
+  "project": "the-life-loop",
+  "version": "0.4.1",
+  "summary": "GitHub Pages deployment v0.4.1: generate static site from tested, single-file offline game; GitHub Actions publishes on main, with no secrets; preserve 0.4.0 gameplay, saves and 48 tests.",
+  "implemented": [
+    {
+      "id": "LL-001",
+      "title": "Original city and weekly simulation",
+      "summary": "Keep 12 travel locations, 40-hour action budgeting and end-of-week progression",
+      "operator_checks": [
+        "Start a game and travel between buildings; confirm hours are deducted."
+      ]
+    },
+    {
+      "id": "LL-002",
+      "title": "Economy, work and education",
+      "summary": "Retain existing career requirements, courses, wages, rent, banking and competitor AI",
+      "operator_checks": [
+        "Take a starter job, work a shift and complete a university lesson."
+      ]
+    },
+    {
+      "id": "LL-003",
+      "title": "Illustrated building scenes",
+      "summary": "Render 12 distinct original SVG storefront scenes in both city board and destination panel",
+      "operator_checks": [
+        "Visit three buildings and verify their scene art differs and displays offline."
+      ]
+    },
+    {
+      "id": "LL-004",
+      "title": "Animated character portraits",
+      "summary": "Draw 12 original vector citizens and show contextual greetings and light motion",
+      "operator_checks": [
+        "Visit the Career Center and Fresh & Frugal; check portraits, copy and reduced-motion behavior."
+      ]
+    },
+    {
+      "id": "LL-005",
+      "title": "Branching scripted city encounters",
+      "summary": "Give each local character a once-only branching story with at least one affordable option",
+      "operator_checks": [
+        "At Your Place select Talk to Mira, choose a response, verify the resulting stat change."
+      ]
+    },
+    {
+      "id": "LL-006",
+      "title": "Persistent NPC conversations",
+      "summary": "Save social progress, weekly talk cooldowns, and unresolved story decisions",
+      "operator_checks": [
+        "Start a conversation, export and import JSON, resolve it, and confirm it does not repeat."
+      ]
+    },
+    {
+      "id": "LL-007",
+      "title": "Offline single-page executable",
+      "summary": "Build PLAY.html from modular source and CSS for a one-file portable game",
+      "operator_checks": [
+        "Open PLAY.html directly in Chrome/Edge and play through a complete week with no internet."
+      ]
+    },
+    {
+      "id": "LL-008",
+      "title": "Source preservation and regression tests",
+      "summary": "Maintain baseline plus new 48-test automated coverage, including seasonal stories, pricing, accounts, save migration and long campaigns.",
+      "operator_checks": [
+        "Run npm test and tools/verify.mjs from the installed project folder."
+      ]
+    },
+    {
+      "id": "LL-009",
+      "title": "ZipRunner source delivery and workboard",
+      "summary": "Provide complete project source, portable scripts, required workboard manifest and handoff",
+      "operator_checks": [
+        "Import the versioned ZIP in ZipRunner and inspect updated workboard entries after successful validation."
+      ]
+    },
+    {
+      "id": "LL-015",
+      "title": "Remembered relationships",
+      "summary": "Track separate trust scores and player choice memories for all twelve NPCs. Provide contextual greetings.",
+      "operator_checks": [
+        "Talk to Mira, choose to help and talk again the next week to see a remembered response."
+      ]
+    },
+    {
+      "id": "LL-016",
+      "title": "Local friendship favors",
+      "summary": "Unlock one distinct useful action per resident at 18 trust, and limit it to one use every four weeks.",
+      "operator_checks": [
+        "Build 18 trust with a local resident; verify favor availability and cooldown after use."
+      ]
+    },
+    {
+      "id": "LL-017",
+      "title": "Responsive city-wide economy",
+      "summary": "Rotate ten authored four-week events that modify sector action prices and/or wages.",
+      "operator_checks": [
+        "Check discounted groceries in the first event, then advance to the next month and compare prices."
+      ]
+    },
+    {
+      "id": "LL-018",
+      "title": "Monthly civic opportunities and city pulse",
+      "summary": "Add a one-per-player-per-event activity, City Pulse panel and a map indicator.",
+      "operator_checks": [
+        "Visit the highlighted event venue and claim the activity; confirm it becomes unavailable until a new event."
+      ]
+    },
+    {
+      "id": "LL-019",
+      "title": "State migration and long-run regression",
+      "summary": "Keep legacy save migration and extend scenario/long-run tests to 48 cases with new narrative and finance records.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and confirm 35 passing Node tests; export/import a relationship save."
+      ]
+    },
+    {
+      "id": "LL-010",
+      "title": "Financial history dashboard",
+      "summary": "Implement bounded transaction ledger with actual account deltas, per-week net worth snapshots, income/expense totals, milestone timeline, and a responsive offline SVG chart.",
+      "operator_checks": [
+        "Open Finances on desktop and mobile after work, groceries and savings transfers; verify transfers do not inflate earnings.",
+        "Advance to week 5 and confirm rent or rent debt appears in the ledger and graph."
+      ]
+    },
+    {
+      "id": "LL-020",
+      "title": "Multi-episode personal stories",
+      "summary": "Add three seasonal three-stage NPC arcs, host and partner trust outcomes, time gates, player-specific chapter state, City Pulse synergy and permanent community improvements.",
+      "operator_checks": [
+        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2–3 require more weeks and trust.",
+        "Finish the community pantry project and verify food prices drop permanently for every player."
+      ]
+    },
+    {
+      "id": "LL-021",
+      "title": "Cross-resident trust and permanent civic legacies",
+      "summary": "Three cross-resident storylines change relationships, and successful final choices modify food/leisure prices or global shift pay while different final choices skip the upgrade.",
+      "operator_checks": [
+        "Complete a final chapter with its community outcome and verify the City Pulse Legacy badge and live sector modifier.",
+        "Choose the personal-benefit alternative and confirm the upgrade is not activated."
+      ]
+    },
+    {
+      "id": "LL-022",
+      "title": "Financial accounting and legacy save migration",
+      "summary": "Record actual money changes, rent arrears and investment fluctuations; bound history and ledger size, and migrate save files created by previous releases.",
+      "operator_checks": [
+        "Confirm cash-to-bank transfers show net change 0 and are not counted as income.",
+        "Import a v0.3 JSON save and verify default story/financial data appear without data loss."
+      ]
+    },
+    {
+      "id": "LL-023",
+      "title": "Seasonal story and finance UI tests",
+      "summary": "48 automated tests, in-memory Chromium smoke of offline game at 1440/390 widths, chapter activation and responsive financial report with no page errors.",
+      "operator_checks": [
+        "Run node tools/verify.mjs, then open PLAY.html in Chrome/Edge and test Finance dialog and a seasonal chapter."
+      ]
+    },
+    {
+      "id": "LL-024",
+      "title": "GitHub Pages static publishing",
+      "summary": "Build minimal dist/index.html from the same tested offline standalone game and publish through GitHub Actions with minimum Pages permissions.",
+      "operator_checks": [
+        "Run npm run build:pages; confirm dist/index.html is generated and works via localhost.",
+        "Push source to GitHub main, choose Settings > Pages > GitHub Actions, and confirm deployment URL opens the game."
+      ]
+    },
+    {
+      "id": "LL-025",
+      "title": "Pages CI test gate and safe deployment",
+      "summary": "Automatically run full ZipRunner verification and 48 regression tests before Pages artifact upload/deployment; keep all test/dev files out of public site.",
+      "operator_checks": [
+        "Intentionally break a gameplay test in a throwaway branch and verify publishing cannot succeed.",
+        "Inspect published site and ensure no game save files, source archives, or workboard manifest are publicly served."
+      ]
+    },
+    {
+      "id": "LL-026",
+      "title": "GitHub deployment documentation",
+      "summary": "Document one-time Pages setup, future ZipRunner Git pushes, local-only saves, and repository visibility requirements.",
+      "operator_checks": [
+        "Follow README Pages steps with a fresh public repository; confirm future commits to main redeploy."
+      ]
+    }
+  ],
+  "remaining": [
+    {
+      "id": "LL-011",
+      "title": "Audio and weather ambience",
+      "summary": "Add original music and controllable effects without requiring network assets",
+      "priority": "low"
+    },
+    {
+      "id": "LL-012",
+      "title": "Long-term opponent balancing",
+      "summary": "Run wider long-form economic balance simulations with adjustable difficulty",
+      "priority": "high"
+    },
+    {
+      "id": "LL-013",
+      "title": "Hotseat player privacy screen",
+      "summary": "Prevent the next human player from seeing the previous player’s private view",
+      "priority": "medium"
+    },
+    {
+      "id": "LL-014",
+      "title": "Cross-platform desktop and mobile QA",
+      "summary": "Run manual visual regression on Windows, Mac, Linux, mobile browsers, including small viewports",
+      "priority": "high"
+    }
+  ]
+}

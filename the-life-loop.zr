@@ -1,0 +1,32 @@
+{
+  "project_key": "the-life-loop",
+  "display_name": "The Life Loop",
+  "zip_match_patterns": [
+    "the-life-loop-*-ziprunner.zip"
+  ],
+  "zip_patterns": [
+    "the-life-loop-*-ziprunner.zip"
+  ],
+  "match_patterns": [
+    "the-life-loop-*-ziprunner.zip"
+  ],
+  "build_commands": [
+    "node tools/verify.mjs"
+  ],
+  "start_commands": [],
+  "strip_single_root_folder": false,
+  "delete_missing_files": false,
+  "clean_git_tree": false,
+  "post_build_requires_success": true,
+  "build_window": "hidden",
+  "protected_paths": [
+    ".git",
+    "ziprunner.config.json",
+    "ziprunner.project-state.json",
+    "saves",
+    "user-data",
+    ".env",
+    "*.local.json"
+  ],
+  "git_auto_push": false
+}

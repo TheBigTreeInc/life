@@ -1,0 +1,14 @@
+{
+  "name": "the-life-loop",
+  "version": "0.4.1",
+  "private": true,
+  "description": "Original offline life simulation featuring three seasonal NPC story arcs, lasting city projects and a financial history dashboard",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "build": "node tools/build-offline.mjs",
+    "build:pages": "node tools/build-pages.mjs",
+    "test": "node --test tests/*.test.cjs",
+    "verify": "node tools/verify.mjs"
+  },
+  "license": "UNLICENSED"
+}

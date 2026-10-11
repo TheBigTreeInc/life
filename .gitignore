@@ -1,0 +1,15 @@
+# ZipRunner must keep runtime / private state out of source commits.
+.git/
+node_modules/
+dist/
+coverage/
+.screenshots/
+qa-*.png
+*.log
+saves/
+user-data/
+ziprunner.config.json
+ziprunner.project-state.json
+*.local.json
+.DS_Store
+Thumbs.db
