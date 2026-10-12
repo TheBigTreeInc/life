@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.13",
-  "summary": "v0.5.13: data-driven pixel character compiler and manifest with 24 idle/walk poses, layered hair/outfit/headwear/body parts, shared Canvas/SVG renderer, animated Character Studio preview and sprite export; 51 illustrated portraits preserved; guest choices saved in shared game. No rules/DB schema changes.",
+  "version": "0.5.15",
+  "summary": "v0.5.15: consolidated game heading with Life Loop logo, careers and finances shortcuts; chat unread indicator, co-op room dropdown and New Game in menu; one ticker beneath the city for turn ownership, week, market and hours. Removed dark top bar and pale-green turn banner; original gameplay unchanged.",
   "implemented": [
     {
       "id": "LL-001",
@@ -749,6 +749,55 @@
       "operator_checks": [
         "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
         "Run node tools/verify.mjs and check no workboard/version mismatch."
+      ]
+    },
+    {
+      "id": "LL-112",
+      "title": "Temporarily disable character customization and restore original avatars",
+      "summary": "Game uses its original simple fixed player icons, ignores previously saved appearance in UI, and does not attach local appearance to new games or multiplayer joins; editor and all catalog assets remain in source behind an off-by-default feature flag.",
+      "operator_checks": [
+        "New Game shows name and play mode without character selection; choose Start and see the original default icon.",
+        "Menu contains no My Characters command; check guest join dialog has no local character picker.",
+        "Load an old customized save and confirm fixed original icon shows, while the save data itself is not deleted."
+      ]
+    },
+    {
+      "id": "LL-113",
+      "title": "Preserve dormant character system and test quick-start rollback",
+      "summary": "Keep old character creator, compiler, portrait catalog, and stored profiles untouched; add tests for enabled-only entry points and no appearance in new game/multiplayer payload, retain future reinstatement path.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and Python Looprd tests; inspect complete ZipRunner archive for untouched customization source and catalogs.",
+        "Play local and co-op setup, ensuring the simple avatar does not regress gameplay, turn handling, or chat."
+      ]
+    },
+    {
+      "id": "LL-114",
+      "title": "Replace top bars with one city heading",
+      "summary": "Move game branding in place of city heading; relocate Careers and Finances beside it and consolidate New Game, Save, Load and How to Play in right menu.",
+      "operator_checks": [
+        "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
+        "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
+        "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+      ]
+    },
+    {
+      "id": "LL-115",
+      "title": "Compact co-op and notification controls",
+      "summary": "Place destination, live-only chat unread icon, and co-op menu together at top right; show WS status and room identity in co-op dropdown.",
+      "operator_checks": [
+        "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
+        "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
+        "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+      ]
+    },
+    {
+      "id": "LL-116",
+      "title": "Single weekly status ticker and responsive QA",
+      "summary": "Replace duplicate green status banners and scattered week/market readouts with one ticker under building grid. Preserve mobile, side docks, and active turn clarity.",
+      "operator_checks": [
+        "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
+        "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
+        "Check ticker shows correct turn, week, market and remaining hours after taking actions."
       ]
     }
   ],

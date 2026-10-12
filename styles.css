@@ -599,3 +599,84 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
  .pixel-preview-dock{grid-template-columns:1fr;justify-self:stretch}
  .pixel-preview-dock canvas{width:min(160px,44vw)}
 }
+
+/* v0.5.14: character creation is behind an off switch; keep menu hidden. */
+#charactersBtn[hidden]{display:none!important}
+
+/* v0.5.15 — One city heading and one compact status ticker. No full-width top/banners. */
+.city-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 auto;min-height:58px;padding:7px clamp(12px,2vw,32px);background:var(--paper);border-bottom:1px solid #e0e8de;position:relative;z-index:26}
+.city-brand{display:flex;align-items:center;gap:clamp(8px,1.5vw,20px);min-width:0}
+.city-toolbar .identity{display:flex;align-items:center;gap:9px;min-width:0}
+.city-toolbar .brand{color:var(--ink);font-size:clamp(15px,1.6vw,23px);line-height:1.08}
+.city-toolbar .brand span{color:#4f9966}
+.city-toolbar .brand-sub{display:block;color:#748a7d;font-size:9px;margin-top:4px;letter-spacing:1px}
+.city-toolbar .logo-symbol{height:40px;width:40px;border-radius:11px;flex:none;font-size:29px}
+.brand-shortcuts,.city-toolbar .head-actions{display:flex;align-items:center;gap:4px;min-width:0}
+.city-toolbar .head-actions{flex:0 0 auto;margin-left:auto}
+.city-icon-button{display:flex;position:relative;align-items:center;justify-content:center;gap:6px;padding:8px 10px;border:1px solid transparent;background:transparent;border-radius:10px;color:#2b5948;font-size:15px;font-weight:800;white-space:nowrap;min-height:39px;cursor:pointer}
+.city-icon-button:hover,.city-icon-button:focus-visible{background:#e6f0e4;border-color:#d2e3d3}
+.city-icon-button:disabled{color:#9daea5;opacity:.7;cursor:not-allowed}
+.city-icon-label{font-size:11px;letter-spacing:.1px}
+.city-toolbar .utility-holder{position:relative}
+.city-toolbar .utility-menu{z-index:43}
+.city-toolbar .notification-circle{position:absolute;top:1px;right:1px;min-width:14px;height:14px;line-height:1;font-size:9px;padding:1px 3px}
+.connection-indicator{position:absolute;right:2px;top:2px;background:#dca55d;width:8px;height:8px;border:1px solid #fff;border-radius:100%}
+.connection-indicator[data-live="true"]{background:#42b879}
+.connection-indicator[hidden]{display:none!important}
+.coop-menu{min-width:270px;max-width:min(330px,calc(100vw - 20px));padding:8px}
+.coop-summary{display:grid;gap:5px;padding:11px 10px 13px;border-bottom:1px solid #dbe7d9;color:#587263;font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.coop-summary strong{color:#244d39;font-size:14px}
+.coop-summary #coopTransport{font-weight:800;color:#36754c}
+.mobile-summary[hidden]{display:none!important}
+.main-area{padding-top:clamp(4px,.8vh,12px);padding-bottom:clamp(5px,.8vh,12px)}
+.status-ticker{flex:0 0 auto;display:flex;align-items:center;gap:clamp(8px,1.1vw,14px);border:1px solid #d3e2d4;border-radius:12px;padding:8px 12px;margin-top:clamp(5px,.8vh,11px);background:#fff;min-height:38px;color:#344f42;overflow:hidden}
+.status-ticker .turn-banner{padding:0;background:transparent!important;border:0!important;display:flex;align-items:center;gap:6px;min-height:0;flex:0 1 auto;flex-wrap:nowrap;white-space:nowrap;font-size:10px;color:#315d3a}
+.status-ticker .turn-banner[data-owner="other"]{color:#956323}
+.status-ticker .turn-banner strong{font-size:11px;white-space:nowrap}
+.status-ticker .turn-banner .turn-lamp{height:7px;width:7px;box-shadow:none}
+.status-ticker #turnDetails{font-size:10px;white-space:nowrap;min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis}
+.status-ticker #turnConnection[hidden]{display:none!important}
+.ticker-meta{display:flex;align-items:center;gap:10px;flex:0 0 auto;color:#526c5e;font-size:10px;font-weight:850;letter-spacing:.35px;white-space:nowrap}
+.ticker-separator{height:13px;width:1px;background:#c7d9ce}
+.status-ticker .time-strip{padding:0;margin:0;border:0;border-radius:0;box-shadow:none;display:flex;align-items:center;gap:9px;flex:1;min-width:70px;max-width:none;background:transparent}
+.status-ticker .hour-pips{min-width:0;max-width:none;gap:2px}
+.status-ticker .hour-pips span{height:6px}
+.status-ticker .time-remaining{font-size:11px;font-weight:900}
+@media(min-width:1600px){.city-toolbar{padding-left:calc(clamp(265px,17vw,310px) + clamp(10px,1.6vw,26px))}}
+@media(min-width:1025px) and (max-width:1599px){
+ .city-toolbar{padding-left:max(24px,6vw)}
+ .drawer-right{display:none!important}
+ .status-ticker{max-width:none}
+}
+@media(max-width:1024px){
+ .city-toolbar{min-height:45px;padding:4px 8px;gap:5px;z-index:26}
+ .city-toolbar .brand{font-size:13px}
+ .city-toolbar .brand-sub{display:block;font-size:7px;letter-spacing:.4px}
+ .city-toolbar .logo-symbol{width:28px;height:28px;font-size:22px}
+ .city-toolbar .city-brand{gap:4px}
+ .city-icon-button{padding:5px 7px;min-height:33px;font-size:14px}
+ .city-icon-label{display:none}
+ .city-toolbar .brand-shortcuts,.city-toolbar .head-actions{gap:1px}
+ .main-area{padding:4px 6px}
+ .status-ticker{margin-top:4px;padding:5px 7px;gap:7px;min-height:32px;border-radius:8px}
+ .status-ticker #turnDetails{display:none}
+ .status-ticker .turn-banner strong{font-size:9px}
+ .status-ticker .ticker-meta{font-size:9px;gap:5px}
+ .status-ticker .time-strip{gap:5px;min-width:48px}
+ .status-ticker .hour-pips{display:none}
+ .status-ticker .time-remaining{font-size:9px}
+ .mobile-summary[hidden]{display:none!important}
+ .mobile-nav{z-index:24}
+}
+@media(max-width:390px){
+ .city-toolbar .brand{font-size:10px;letter-spacing:-.2px}
+ .city-toolbar .brand-sub{font-size:6px;letter-spacing:0}
+ .city-icon-button{padding:4px 6px;min-height:30px;font-size:13px}
+ .status-ticker{gap:5px;padding:4px}
+ .status-ticker .turn-banner strong{font-size:8px}
+ .status-ticker .ticker-meta{font-size:8px;gap:4px}
+ .ticker-meta #economy{max-width:68px;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* Keep the full market status readable on the narrowest phones. */
+@media(max-width:390px){.ticker-meta #economy{max-width:none;overflow:visible;text-overflow:clip;font-size:7px}}

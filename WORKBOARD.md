@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.13
+# The Life Loop — workboard v0.5.15
 
-Full-source release: `the-life-loop-0.5.13-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.15-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -220,7 +220,7 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 **Operator smoke:** choose Contemporary Starter Studio, inspect Home and Your Destination; upgrade to Sunny Apartment / Skyline Loft and verify pictures change without a balance change. Repeat in Historical and Sci-Fi (procedural art). Save/reload and test both responsive and standalone editions. Run `node tools/verify.mjs`.
 
 
-## v0.5.13 — Quick Start and reusable new-game settings
+## v0.5.15 — Quick Start and reusable new-game settings
 
 - [x] **LL-100** — Store sanitized local preferences for rules, era, solo/hotseat/online/sandbox mode and four goal values independently of character library, game save and Looprd room. Restore them automatically; one-click reset to defaults.
 - [x] **LL-101** — Initial game screen is a compact Quick Start: choose character and mode, then Start. Existing autosave gets a prominent Continue; starting over requires confirmation. Optional advanced accordion displays settings summary without demanding setup on every start.
@@ -238,7 +238,7 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 Operator acceptance: test 320px mobile and large desktop. Open My characters, select a modern or classic portrait, save and start a game, reload and confirm the image persists in sidebar. Switch to Custom drawn and confirm existing color/hair controls still respond. Test both host and guest with a freshly registered Looprd component. No gameplay or Classic rule changes.
 
 
-## v0.5.13 — Data-driven Pixel Studio character compiler
+## v0.5.15 — Data-driven Pixel Studio character compiler
 
 - [x] **LL-107** — Source-controlled `assets/characters/pixel-v1/catalog.json` contract with three body templates, component slots, semantic material palettes, draw bands, interaction variants and idle/walk frame timing; generated browser catalog included in source ZIP.
 - [x] **LL-108** — Pure deterministic compiler and render adapters: 32×40 nearest-neighbor geometry, 4 directions, idle and walking (24 shared-clock poses), stable draw order, bounded appearance cache, SVG sidebar thumbnails and 2D Canvas preview/sprite-sheet PNG export.
@@ -247,3 +247,19 @@ Operator acceptance: test 320px mobile and large desktop. Open My characters, se
 - [ ] **LL-111 (medium)** — Future art-production pass: authored 32×40 PNG/RGBA sprite atlas with trim/anchors; extended garment/hat masks, distinct body-specific artwork, more actions and directional details. Current procedural sprites establish the compiler and renderer contract; they are not a finished production atlas.
 
 **Operator acceptance:** Open My Characters → Create, switch to Pixel Studio, select three body types, hairstyles and a cap/beanie; confirm hair compresses under hats. Use direction arrows and Walk, export the PNG sheet; save and start a game, verify pixel thumbnail in sidebar. Reopen and verify saved parts. For online, deploy updated `looprd.yaml` handler and start a fresh room, confirming guest body/headwear choices show for both players. Run `node tools/verify.mjs` and Python Looprd tests. No changes to Classic economy, city art, or server database schema. Git push/deployment are manual.
+
+
+## v0.5.15 — Character customization temporarily disabled
+
+- [x] **LL-112** — Restore the original fixed character icons (player 🧑‍🎨, local friend 🧑‍🚀, rival 😎). Hide My Characters in the top-right menu; remove character selection from Quick Start and online join. No new custom appearance is transferred to games or Looprd rooms.
+- [x] **LL-113** — Keep all the character creator, Pixi-like compiler/renderer, sprite/portrait assets, saved local profiles and references in source under `ENABLE_CHARACTER_CUSTOMIZATION=false`. The original profiles and old save data are **not** deleted, but customized avatars are ignored during play while the feature is off. Regression-test disabled UI and preserve future reactivation.
+
+**Operator acceptance:** Open v0.5.15 at 320px and desktop. Start a game with an ordinary name; verify the default emoji avatar in Your Story and absence of character fields in Quick Start and online join. Verify `Menu` lacks My Characters. If you open a previously customized save, the original icon appears, while the old appearance data is not altered or deleted. `node tools/verify.mjs` and the Looprd handler tests should still pass. No game economy, rules, chat or server schema changes.
+
+
+### v0.5.15 — Compact city navigation and status
+
+- **LL-114 — Implemented:** Replaced dark brand bar and extra city title with single Life Loop heading; Careers and Finances beside logo, New Game moved under Menu.
+- **LL-115 — Implemented:** Destination, WSS-only Chat (unread badge), Co-op dropdown and Menu are right-aligned. Room code, participants, turn owner and WS/HTTP status reside in Co-op.
+- **LL-116 — Implemented:** Removed pale-green turn band and redundant week/market location; added ticker directly beneath the board, showing turn, week, market status and time. Keeps original gameplay and mobile tabs.
+- **Acceptance:** visual QA at 320/390/768/1280/1600 widths, menu and co-op dropdown dismissal, unchanged WSS chat gate and unread marker, clean ZIP and CI.

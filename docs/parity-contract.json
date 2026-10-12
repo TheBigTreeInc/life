@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.parity-contract.v1",
   "architecture_revision": "1.4",
-  "release": "0.5.13",
+  "release": "0.5.15",
   "implementation_baseline": "0.5.1",
   "policy": "Original core mechanics are authoritative; modern presentation must not change economic outcomes; modern gameplay additions must be opt-in.",
   "mechanics": [
@@ -226,5 +226,5 @@
       "acceptance": "Classic ruleset suppresses non-original mechanical bonuses while keeping dialog optional."
     }
   ],
-  "version": "0.5.13"
+  "version": "0.5.15"
 }

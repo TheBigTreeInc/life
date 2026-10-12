@@ -4,6 +4,8 @@ const D=window.LifeData;
 const Game=window.LifeGame;
 const Art=window.LifeArt;
 const Characters=window.LifeCharacters;
+// Rollback switch: keep the editor, assets and compiler in source, but do not expose or use them.
+const ENABLE_CHARACTER_CUSTOMIZATION=false;
 const SetupPrefs=window.LifeSetupPreferences;
 const preferencesStorage=(()=>{try{return window.localStorage;}catch{return null;}})();
 const characters=Characters.createStore((()=>{try{return window.localStorage;}catch{return null;}})());
@@ -30,7 +32,9 @@ function setDrawer(which){
  markViewed(which);
 }
 function updateLayout(){closeDrawer();updateMobileAccessibility();if(wideScreen.matches){markViewed('story');markViewed('actions');}}
-function setUtilityMenu(open){$('utilityMenu').hidden=!open;$('utilityMenuBtn').setAttribute('aria-expanded',String(open));}
+function setUtilityMenu(open){if(open)setCoopMenu(false);$('utilityMenu').hidden=!open;$('utilityMenuBtn').setAttribute('aria-expanded',String(open));}
+function setCoopMenu(open){if(open)setUtilityMenu(false);$('coopMenu').hidden=!open;$('onlineBtn').setAttribute('aria-expanded',String(open));}
+
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -63,7 +67,7 @@ function render(){
  const p=game.player,j=game.getJob(p),score=game.scores(p),current=place(p.location);
  document.body.dataset.era=game.settings.era;
  document.body.dataset.ruleset=game.settings.ruleset;
- document.querySelector('.board-heading h1').innerHTML=esc(eraMeta().city)+'<span class="sun-icon">✳</span>';
+ $('cityName').textContent=eraMeta().city.toUpperCase();
  $('topWeek').textContent='WEEK '+String(game.week).padStart(2,'0');
  $('mobileWeek').textContent=String(game.week).padStart(2,'0');
  $('mobileHours').textContent=p.hours+'h';
@@ -74,20 +78,27 @@ function render(){
  const online=!!net?.role,ours=!online||net.ownTurn();
  const ourName=net?.role==='guest'?(game.players.find(x=>x.id==='friend')?.name||'Friend'):(game.players.find(x=>x.id==='player')?.name||'Host');
  const rivalName=net?.role==='guest'?(game.players.find(x=>x.id==='player')?.name||'Host'):(game.players.find(x=>x.id==='friend')?.name||'Friend');
- let turnTitle=online?(ours?'YOUR TURN':`${p.name.toUpperCase()}’S TURN`):`${p.name.toUpperCase()}’S TURN`;
+ let turnTitle=online?(ours?'YOUR TURN':`${p.name.toUpperCase()}’S TURN`):(p.id==='player'?'YOUR TURN':`${p.name.toUpperCase()}’S TURN`);
  if(online&&!net.joined&&net.role==='host')turnTitle='WAITING FOR YOUR FRIEND TO JOIN';
- const roleLine=online?`${net.role==='host'?'Host':'Guest'}: ${ourName} · ${net.joined?'2 players online':'Awaiting second player'} · ${p.hours}h remaining`:`${p.hours} hours remaining`;
+ const roleLine=online?`${net.role==='host'?'Host':'Guest'} · ${net.joined?'2 players connected':'Waiting for friend'}`:'Local game';
  $('turnHeadline').textContent=turnTitle;$('turnDetails').textContent=roleLine;
  $('turnBanner').dataset.owner=ours?'self':'other';$('turnBanner').dataset.online=String(online);
  $('turnLamp').title=online?(net.socketOpen?'WebSocket connected':net.lastSyncAt?'HTTP fallback / retrying':'Waiting for Looprd'):'Local play';
  $('turnConnection').textContent=online?`${net.socketOpen?'● WS live':net.lastSyncAt?'○ HTTP fallback':'○ Connecting'} · Room ${net.code} ↗`:'◎ Start online co-op ↗';
+ $('coopIndicator').hidden=!online;
+ $('coopIndicator').dataset.live=String(!!net?.socketOpen);
+ $('coopRoomTitle').textContent=online?`Room ${net.code}`:'No room connected';
+ $('coopRoomState').textContent=online?`${net.role==='host'?'Hosting':'Joined as guest'} · ${net.joined?'2 players':'Waiting for friend'}`:'Start or join a room to play together.';
+ $('coopTurnState').textContent=online?turnTitle:'Local game';
+ $('coopTransport').textContent=online?(net.socketOpen?'● WSS live':net.lastSyncAt?'○ HTTP fallback — WSS offline':'○ Connecting to Looprd'):'No Looprd connection';
+
  if($('roomTurnText'))$('roomTurnText').textContent=net.ownTurn()?'YOUR TURN':`WAITING FOR ${game.player.name}`;
  if($('roomParticipants'))$('roomParticipants').textContent=`Current player: ${game.player.name} · You: ${net.role} · Remote: ${net.guestName||'Not named yet'} · ${net.joined?'2 joined':'1 joined'}`;
  if($('roomTransport'))$('roomTransport').textContent=`WebSocket: ${net.socketOpen?'Connected':'Not connected (HTTP polling fallback)'} · HTTP: ${net.lastSyncAt?'Last room response '+new Date(net.lastSyncAt).toLocaleTimeString():'Awaiting room response'}`;
  if($('roomVersion'))$('roomVersion').textContent=`Room version: ${net.version} · ${net.endpoint}`;
  if($('roomComponent'))$('roomComponent').textContent=`Component schema: ${net.infoStatus}`;
  
- $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${p.appearance?Characters.avatar({...p.appearance,name:p.name},'sidebar'):(p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨')}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?`${esc(j.name)} · ${esc(j.employer||placeLabel(j.place))} · ${fmt(p.wage)}/h`:'Unemployed · Apply at Career Center'}</div></div></div><div class="profile-mini"><span>📍 <b>${esc(placeLabel(current.id))}</b></span><span class="pill">${esc(D.dwellings[p.home].name)}</span></div>`;
+ $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${ENABLE_CHARACTER_CUSTOMIZATION&&p.appearance?Characters.avatar({...p.appearance,name:p.name},'sidebar'):(p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨')}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?`${esc(j.name)} · ${esc(j.employer||placeLabel(j.place))} · ${fmt(p.wage)}/h`:'Unemployed · Apply at Career Center'}</div></div></div><div class="profile-mini"><span>📍 <b>${esc(placeLabel(current.id))}</b></span><span class="pill">${esc(D.dwellings[p.home].name)}</span></div>`;
  $('balances').innerHTML=`<div class="stat-card"><div class="stat-label">CASH ON HAND</div><div class="stat-number">${fmt(p.cash)}</div><div class="stat-note">Ready to spend</div></div><div class="stat-card"><div class="stat-label">NET WORTH</div><div class="stat-number">${fmt(game.wealth(p))}</div><div class="stat-note">Including savings${p.rentDebt?' · debt':''}</div></div>`;
  const goalLabels={wealth:'💰 Wealth',happiness:'☀️ Happiness',education:'🎓 Education',career:'🚀 Career'};
  $('goals').innerHTML=D.GOAL_KEYS.map(k=>`<div class="goal-item"><div class="goal-title"><strong>${goalLabels[k]}</strong><span class="goal-percent">${score[k]}%</span></div><div class="track" role="progressbar" aria-label="${k}" aria-valuenow="${score[k]}" aria-valuemin="0" aria-valuemax="100"><div style="width:${percent(score[k])}"></div></div></div>`).join('');
@@ -103,7 +114,7 @@ function render(){
  const rival=game.players.some(x=>x.isAI&&x.location===loc.id);
  return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''}" ${net?.role&&(!net.ownTurn()||net.busy)?'disabled':''} data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="Visit ${esc(placeLabel(loc.id))}${cost?' · '+cost+' hour'+(cost!==1?'s':''):' · current location'}" aria-label="${esc(placeLabel(loc.id))}, ${cost?'travel '+cost+' hours':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.id,true,game.settings.era,p.home)}</div><div class="tile-caption"><div class="tile-name">${esc(placeLabel(loc.id))}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
  }).join('')+`<div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`;
- $('timeStrip').innerHTML=`<div class="time-label"><strong>⏱ &nbsp; Your weekly time</strong><br/>Every decision takes a little time</div><div class="hour-pips">${Array.from({length:game.rules.hours/2},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / ${game.rules.hours} h</div>`;
+ $('timeStrip').innerHTML=`<div class="hour-pips" aria-label="${p.hours} of ${game.rules.hours} weekly hours remaining">${Array.from({length:game.rules.hours/2},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / ${game.rules.hours} h</div>`;
  $('cityPulse').hidden=game.isClassic;
  const event=game.cityEvent,prices=Object.entries(event.prices).map(([sector,mult])=>`${sector} ${Math.round((mult-1)*100)>0?'+':''}${Math.round((mult-1)*100)}%`),pay=event.wage!==1?`shift pay +${Math.round((event.wage-1)*100)}%`:'';
  const legacies=D.storyArcs.filter(a=>!game.isClassic&&game.cityProjects[a.id]).map(a=>`${a.title} · ${a.sector==='wage'?'+5% shift wages':a.sector==='food'?'−5% food':'−8% leisure'}`);
@@ -130,7 +141,7 @@ function render(){
    const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled&&(!net?.role||net.ownTurn())&&!net?.busy?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
  }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>');
  $('hint').innerHTML=`<b>✦ TODAY'S TIP</b><br/>${esc(hint(p))}`;
- $('onlineBtn').textContent=net?.indicator()||'◎ Online co-op';
+ $('onlineBtn').title=net?.indicator()||'Co-op';
  const visibleMessages=game.messages.filter(m=>m.actor==='system'||m.actor===p.id||m.actor==='jones');
  const storyFingerprint=JSON.stringify([p.id,game.week,...visibleMessages.slice(-6).map(m=>[m.actor,m.message,m.week])]);
  const destinationFingerprint=JSON.stringify([p.id,p.location,game.week,game.actions().filter(a=>a.enabled).map(a=>a.id)]);
@@ -167,20 +178,20 @@ function setChatOpen(open){
 function onlineDialog(){
  const connected=!!net.role;
  const server=esc(net.endpoint?window.LifeOnline.serverBase(net.endpoint):window.LifeOnline.suggestedServer());
- const selectedProfile=characters.selected();
+ const selectedProfile=ENABLE_CHARACTER_CUSTOMIZATION?characters.selected():null;
  showModal(`<section class="modal compact" aria-label="Online co-op"><div class="modal-head"><div><span class="eyebrow dark">PLAY TOGETHER FROM ANYWHERE</span><h2>Online co-op</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div>
  ${connected?`<p class="modal-lead"><strong>${esc(net.role==='host'?'You are hosting':'You are connected as guest')}</strong> · Game code <strong class="code-value">${esc(net.code)}</strong><br/>${esc(net.notice)} · ${net.joined?'Two players joined the room':'Waiting for a friend'}</p><div class="room-diagnostics" id="roomDiagnostics"><strong>Room status — <span id="roomTurnText">${net.ownTurn()?'YOUR TURN':`WAITING FOR ${esc(game.player.name)}`}</span></strong><span id="roomParticipants">Current player: ${esc(game.player.name)} · You: ${esc(net.role)} · Remote: ${esc(net.guestName||'Not named yet')}</span><span id="roomVersion">Looprd API: ${esc(net.endpoint)} · Room version: ${net.version}</span><span id="roomTransport">WebSocket: ${net.socketOpen?'Connected':'Not connected (HTTP polling fallback)'} · HTTP: ${net.lastSyncAt?'Last room response '+new Date(net.lastSyncAt).toLocaleTimeString():'Awaiting room response'}</span><span id="roomComponent">Component schema: ${esc(net.infoStatus)}</span><button type="button" class="modal-secondary" id="checkLooprd">Check Looprd component API</button></div><div class="online-controls"><button class="modal-secondary" id="copyInvite">Copy invitation link</button><button class="modal-secondary" id="disconnectOnline">Disconnect</button></div>`:
- `<p class="modal-lead">To host, choose <b>New Game → Online with a friend</b>. To join, enter the friend's code and Looprd server FQDN below.</p><form id="joinOnlineForm"><label class="field-label">LOOPRD SERVER FQDN<input class="form-input" name="url" type="text" required autocomplete="url" placeholder="api.server.country" value="${server}" /><small>Use your API server address only; /looprd/the-life-loop/v1 is added automatically.</small></label><label class="field-label">FRIEND CODE<input class="form-input" name="code" id="inviteCode" maxlength="15" autocomplete="off" placeholder="ABCD234567" required value="${esc(new URLSearchParams(location.search).get('join')||'')}" /></label><label class="field-label">YOUR LOCAL CHARACTER<select class="form-select" id="joinCharacterPick">${profileOptions(selectedProfile?.id||'')}</select></label><label class="field-label">YOUR DISPLAY NAME<input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||'Friend')}" required /></label><button class="modal-primary" type="submit">Join friend's game ↗</button></form>`}
+ `<p class="modal-lead">To host, choose <b>New Game → Online with a friend</b>. To join, enter the friend's code and Looprd server FQDN below.</p><form id="joinOnlineForm"><label class="field-label">LOOPRD SERVER FQDN<input class="form-input" name="url" type="text" required autocomplete="url" placeholder="api.server.country" value="${server}" /><small>Use your API server address only; /looprd/the-life-loop/v1 is added automatically.</small></label><label class="field-label">FRIEND CODE<input class="form-input" name="code" id="inviteCode" maxlength="15" autocomplete="off" placeholder="ABCD234567" required value="${esc(new URLSearchParams(location.search).get('join')||'')}" /></label>${ENABLE_CHARACTER_CUSTOMIZATION?`<label class="field-label">YOUR LOCAL CHARACTER<select class="form-select" id="joinCharacterPick">${profileOptions(selectedProfile?.id||'')}</select></label>`:''}<label class="field-label">YOUR DISPLAY NAME<input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||'Friend')}" required /></label><button class="modal-primary" type="submit">Join friend's game ↗</button></form>`}
  <p class="modal-footnote">Multiplayer requires an external Looprd server over HTTPS/WSS when hosted on GitHub Pages. Invitation links include the server address and game code, never participant tokens. Participant tokens are kept in your browser session. The host must remain connected for guest turns.</p></section>`);
  if(connected){
   $('checkLooprd').addEventListener('click',async()=>{const button=$('checkLooprd');button.disabled=true;try{const outcome=await net.probe();toast(outcome);}catch(e){toast('Looprd check failed: '+e.message,true);}finally{if($('overlay').classList.contains('open')&&$('overlay').querySelector('#roomDiagnostics'))onlineDialog();}});
   $('copyInvite').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(net.inviteLink());toast('Invite link copied');}catch(e){toast('Copy unavailable: '+e.message,true);}});
   $('disconnectOnline').addEventListener('click',()=>{net.disconnect();closeOverlay();toast('Disconnected from multiplayer');});
  }else{
-  $('joinCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)$('joinOnlineForm').elements.name.value=p.name;});
+  if(ENABLE_CHARACTER_CUSTOMIZATION)$('joinCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)$('joinOnlineForm').elements.name.value=p.name;});
   $('joinOnlineForm').addEventListener('submit',async e=>{
    e.preventDefault();const fd=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;
-   try{await net.join(String(fd.get('url')),String(fd.get('code')),String(fd.get('name')),characters.all().find(p=>p.id===$('joinCharacterPick').value)||null);closeOverlay();toast('Connected to '+net.code+'!');}
+   try{await net.join(String(fd.get('url')),String(fd.get('code')),String(fd.get('name')),ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===$('joinCharacterPick').value)||null:null);closeOverlay();toast('Connected to '+net.code+'!');}
    catch(err){toast('Cannot join: '+err.message,true);btn.disabled=false;}
   });
  }
@@ -296,18 +307,18 @@ function editCharacter(id=null,returnTo='new'){
  updateEditor();
 }
 function newGameDialog(isInitial=false){
- const saved=restore(),selectedProfile=characters.selected(),pref=SetupPrefs.read(preferencesStorage);
+ const saved=restore(),selectedProfile=ENABLE_CHARACTER_CUSTOMIZATION?characters.selected():null,pref=SetupPrefs.read(preferencesStorage);
  const selected=(value,expected)=>value===expected?'selected':'';
  const checked=(value,expected)=>value===expected?'checked':'';
  const modeItems=[['solo','Solo vs. The Rival (AI)'],['hotseat','2 humans · same computer'],['online','Online co-op · friend code + Looprd'],['sandbox','Relaxed · Play alone']];
- showModal(`<section class="modal quick-start-modal" aria-label="Create a new game"><div class="modal-head"><div><span class="eyebrow dark">YOUR NEXT CHAPTER</span><h2>${saved?'Welcome back.':'Ready for your next life?'} <span style="color:#6ba86a">✳</span></h2><p class="modal-lead">Your character and preferences are ready. You can change them whenever you like.</p></div>${isInitial?'':'<button class="modal-close" data-close aria-label="Close">×</button>'}</div>
+ showModal(`<section class="modal quick-start-modal" aria-label="Create a new game"><div class="modal-head"><div><span class="eyebrow dark">YOUR NEXT CHAPTER</span><h2>${saved?'Welcome back.':'Ready for your next life?'} <span style="color:#6ba86a">✳</span></h2><p class="modal-lead">Pick a name and game mode, then jump into the city. Your rules and goals are remembered.</p></div>${isInitial?'':'<button class="modal-close" data-close aria-label="Close">×</button>'}</div>
  <form id="startForm" class="quick-start-form"><div class="quick-start-body">
- <section class="quick-character"><div class="section-heading"><span>PLAY AS</span><span class="muted micro">YOUR LOCAL CHARACTERS</span></div>
+ ${ENABLE_CHARACTER_CUSTOMIZATION?`<section class="quick-character"><div class="section-heading"><span>PLAY AS</span><span class="muted micro">YOUR LOCAL CHARACTERS</span></div>
  <div class="quick-character-row"><label class="character-field"><span class="field-label">CHARACTER</span><select class="form-select" id="characterPick" name="characterId">${profileOptions(selectedProfile?.id||'')}</select></label><button type="button" class="character-small quick-manage" id="manageCharactersBtn">✎ Edit characters</button></div>
- <div id="characterPickPreview" class="quick-preview">${profilePreview(selectedProfile)}</div></section>
+ <div id="characterPickPreview" class="quick-preview">${profilePreview(selectedProfile)}</div></section>`:''}
  <div class="new-form quick-identity"><label><span class="field-label">YOUR NAME</span><input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||'You')}" required /></label>
  <label><span class="field-label">PLAY MODE</span><select class="form-select" id="gameMode" name="mode">${modeItems.map(([key,label])=>`<option value="${key}" ${selected(pref.mode,key)}>${label}</option>`).join('')}</select></label>
- <label id="friendField" style="display:${['hotseat','online'].includes(pref.mode)?'block':'none'};grid-column:1/-1"><span class="field-label">PLAYER 2 NAME</span><input class="form-input" name="friend" maxlength="24" value="Player 2" /><span class="field-label">PLAYER 2 LOCAL CHARACTER (OPTIONAL)</span><select class="form-select" id="friendCharacterPick" name="friendCharacterId">${profileOptions('')}</select></label>
+ <label id="friendField" style="display:${['hotseat','online'].includes(pref.mode)?'block':'none'};grid-column:1/-1"><span class="field-label">PLAYER 2 NAME</span><input class="form-input" name="friend" maxlength="24" value="Player 2" />${ENABLE_CHARACTER_CUSTOMIZATION?`<span class="field-label">PLAYER 2 LOCAL CHARACTER (OPTIONAL)</span><select class="form-select" id="friendCharacterPick" name="friendCharacterId">${profileOptions('')}</select>`:''}</label>
  <label id="onlineServerField" style="display:${pref.mode==='online'?'block':'none'};grid-column:1/-1"><span class="field-label">LOOPRD SERVER FQDN</span><input class="form-input" name="onlineServer" id="onlineServer" autocomplete="url" value="${esc(window.LifeOnline.suggestedServer())}" placeholder="api.server.country" ${pref.mode==='online'?'required':''}/><small>/looprd/the-life-loop/v1 is automatic. You get a room code after starting.</small></label></div>
  <details class="setup-advanced" id="setupAdvanced"><summary><span>⚙ Game settings <small>Rules · era · goals</small></span><strong id="setupPrefsSummary">${esc(SetupPrefs.summary(pref))}</strong></summary><div class="setup-advanced-body">
  <div class="new-settings-block" aria-label="Ruleset selection"><div class="section-heading"><span>GAME RULES</span><span class="muted micro">CHANGES GAMEPLAY</span></div><div class="setup-options setup-rules">
@@ -322,9 +333,9 @@ function newGameDialog(isInitial=false){
  const currentPrefs=()=>SetupPrefs.sanitize({mode:form.elements.mode.value,ruleset:form.querySelector('input[name="ruleset"]:checked')?.value,era:form.querySelector('input[name="era"]:checked')?.value,goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(form.elements[k].value)]))});
  const updatePreferences=()=>{const value=SetupPrefs.write(preferencesStorage,currentPrefs());$('setupPrefsSummary').textContent=SetupPrefs.summary(value);};
  const updateMode=()=>{const mode=$('gameMode').value;$('friendField').style.display=['hotseat','online'].includes(mode)?'block':'none';$('onlineServerField').style.display=mode==='online'?'block':'none';$('onlineServer').required=mode==='online';};
- $('manageCharactersBtn').addEventListener('click',()=>showCharacterLibrary('new'));
- $('characterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);$('characterPickPreview').innerHTML=profilePreview(p);if(p)form.elements.name.value=p.name;});
- $('friendCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)form.elements.friend.value=p.name;});
+ if(ENABLE_CHARACTER_CUSTOMIZATION)$('manageCharactersBtn').addEventListener('click',()=>showCharacterLibrary('new'));
+ if(ENABLE_CHARACTER_CUSTOMIZATION)$('characterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);$('characterPickPreview').innerHTML=profilePreview(p);if(p)form.elements.name.value=p.name;});
+ if(ENABLE_CHARACTER_CUSTOMIZATION)$('friendCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)form.elements.friend.value=p.name;});
  $('gameMode').addEventListener('change',updateMode);
  form.addEventListener('input',e=>{if(e.target.type==='range'){const el=form.querySelector(`[data-range-value="${e.target.name}"]`);if(el)el.textContent=e.target.value+'%';}if(e.target.matches('[name="mode"],[name="ruleset"],[name="era"],input[type="range"]'))updatePreferences();});
  form.addEventListener('change',e=>{if(e.target.matches('[name="mode"],[name="ruleset"],[name="era"],input[type="range"]'))updatePreferences();});
@@ -335,7 +346,7 @@ function newGameDialog(isInitial=false){
   const f=new FormData(form),online=f.get('mode')==='online';
   updatePreferences();
   if(net.role)net.disconnect();
-  game=new Game({name:String(f.get('name')),character:characters.all().find(p=>p.id===f.get('characterId'))||null,friendCharacter:characters.all().find(p=>p.id===f.get('friendCharacterId'))||null,mode:online?'hotseat':String(f.get('mode')),friend:String(f.get('friend')||''),ruleset:String(f.get('ruleset')||'classic'),era:String(f.get('era')||'current'),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(f.get(k))]))});
+  game=new Game({name:String(f.get('name')),character:ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===f.get('characterId'))||null:null,friendCharacter:ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===f.get('friendCharacterId'))||null:null,mode:online?'hotseat':String(f.get('mode')),friend:String(f.get('friend')||''),ruleset:String(f.get('ruleset')||'classic'),era:String(f.get('era')||'current'),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(f.get(k))]))});
   didShowWin=false;store();closeOverlay();render();
   if(online){try{await net.host(String(f.get('onlineServer')));onlineDialog();toast('Room created! Share '+net.code+' with your friend.');}catch(err){toast('Server did not create a room: '+err.message,true);newGameDialog();}}
   else toast('Welcome to '+eraMeta().city+' · '+game.rules.name+'!');
@@ -383,23 +394,25 @@ $('actions').addEventListener('change',e=>{if(e.target.id==='classicEmployerFilt
 $('actions').addEventListener('click',async e=>{const btn=e.target.closest('[data-act]');if(!btn||btn.disabled)return;const actionId=btn.dataset.act,location=game.player.location;if(actionId.startsWith('apply:')&&confirmEmploymentSwitch(actionId))return;const result=await net.execute('act',actionId,()=>game.act(actionId));if(result.ok&&net.role!=='guest'){store();render();if(actionId==='chat'&&!game.pendingEncounter)showSmallTalk(result.message,location);}toast(result.message,!result.ok);});
 $('endTurnBtn').addEventListener('click',async()=>{const result=await net.execute('endTurn',null,()=>game.endTurn());if(result.ok&&net.role!=='guest'){store();render();}toast(result.message,!result.ok);});
 $('guideBtn').addEventListener('click',()=>{setUtilityMenu(false);guide();});
-$('charactersBtn').addEventListener('click',()=>{setUtilityMenu(false);showCharacterLibrary('new');});
+$('charactersBtn').hidden=!ENABLE_CHARACTER_CUSTOMIZATION;
+if(ENABLE_CHARACTER_CUSTOMIZATION)$('charactersBtn').addEventListener('click',()=>{setUtilityMenu(false);showCharacterLibrary('new');});
 $('financeBtn').addEventListener('click',showFinances);
 $('careerBtn').addEventListener('click',showCareers);
-$('newBtn').addEventListener('click',()=>newGameDialog());
+$('newBtn').addEventListener('click',()=>{setUtilityMenu(false);newGameDialog();});
 $('utilityMenuBtn').addEventListener('click',()=>setUtilityMenu($('utilityMenu').hidden));
 $('saveBtn').addEventListener('click',()=>setUtilityMenu(false));
 $('loadBtn').addEventListener('click',()=>setUtilityMenu(false));
 $('storyDrawerBtn').addEventListener('click',()=>setDrawer('story'));
-$('destinationDrawerBtn').addEventListener('click',()=>setDrawer('actions'));
+$('destinationDrawerBtn').addEventListener('click',()=>{if(mobileBreakpoint.matches)setMobileView('actions');else if(drawerScreen.matches)setDrawer('actions');else{$('gameActions').focus();markViewed('actions');}});
 $('drawerScrim').addEventListener('click',closeDrawer);
 document.querySelectorAll('[data-close-drawer]').forEach(b=>b.addEventListener('click',closeDrawer));
-document.addEventListener('click',e=>{if(!e.target.closest('.utility-holder'))setUtilityMenu(false);});
+document.addEventListener('click',e=>{if(!e.target.closest('.utility-holder')){setUtilityMenu(false);setCoopMenu(false);}});
 $('turnConnection').addEventListener('click',onlineDialog);
 $('mobileNav').addEventListener('click',e=>{const tab=e.target.closest('[data-mobile-tab]');if(tab)setMobileView(tab.dataset.mobileTab);});
 mobileBreakpoint.addEventListener('change',updateLayout);wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);
 setMobileView('city',{scroll:false});
-$('onlineBtn').addEventListener('click',onlineDialog);
+$('onlineBtn').addEventListener('click',()=>setCoopMenu($('coopMenu').hidden));
+$('coopOpenDetails').addEventListener('click',()=>{setCoopMenu(false);onlineDialog();});
 $('chatToggle').addEventListener('click',()=>setChatOpen($('chatPanel').hidden));
 $('closeChat').addEventListener('click',()=>setChatOpen(false));
 $('chatForm').addEventListener('submit',async e=>{e.preventDefault();const input=$('chatInput'),text=input.value.trim();if(!text)return;const button=$('chatSend');button.disabled=true;
@@ -409,7 +422,7 @@ $('saveBtn').addEventListener('click',saveExport);
 $('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
 $('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
 $('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){setUtilityMenu(false);closeDrawer();if($('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){setUtilityMenu(false);setCoopMenu(false);closeDrawer();if($('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();}});
 net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast,chatRender});
 render();newGameDialog(true);
 net.resume().then(reconnected=>{if(reconnected){$('overlay').dataset.kind='';closeOverlay();toast('Reconnected to room '+net.code);}else if(new URLSearchParams(location.search).has('join'))onlineDialog();});

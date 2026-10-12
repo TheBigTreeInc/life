@@ -1,4 +1,4 @@
-# The Life Loop — v0.5.13
+# The Life Loop — v0.5.15
 
 **Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.13-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.15-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -124,10 +124,20 @@ New Game now focuses on picking a character and play mode, with **Start new game
 The in-game Character Studio offers 16 modern illustrated portrait presets and 35 portraits from the supplied reference artwork, grouped under Illustrated and Classic. Gallery images are fixed painted looks; choose Custom drawn for fully editable SVG appearance. Saving a character saves a validated `portrait` ID, not the image or a URL. Images are bundled with the offline game and separately deployed with Pages. The optional `portrait` field is also sanitized by the Looprd Python handler; redeploy the updated handler for multiplayer portrait sharing (no database schema change).
 
 
-## v0.5.13 — Dynamic Pixel Studio and appearance compiler
+## v0.5.15 — Dynamic Pixel Studio and appearance compiler
 
 In **My Characters → Create / Edit**, use the **Pixel Studio** tab to build a character from reusable parts. Change three discrete body shapes, six hairstyles, hat/beanie/none, skin/hair/fabric palettes, clothing style, mood, and personality. The preview uses a tiny 32×40 pixel canvas, enlarged with nearest-neighbor sampling; direction arrows turn the sprite through north/west/south/east and Walk animates with one shared frame clock. **Export sprite sheet** downloads a 128×320 PNG containing all idle and walk poses. You can still choose any of the 51 fixed illustrated portraits or the previous Custom drawn SVG.
 
 A versioned component catalog is in `assets/characters/pixel-v1/catalog.json`, generated JavaScript in `src/character-catalog.js`, and a pure compiler with Canvas/SVG adapters in `src/character-sprites.js`. It compiles when appearance changes and caches bounded compiled poses; the gameplay thumbnail uses exactly the same compiled pose as the studio. Appearance selections save locally and are embedded in the shared game snapshot, including validated `body`, `headwear`, `portrait: pixel`, `schemaVersion`, and `catalogVersion` fields. No private profile list or rendered pixel buffers go to Looprd. Update the server's `looprd.yaml` to accept the new guest options; the Room database schema is unchanged.
 
 **Art limitation:** these are initial procedural pixel primitives and a complete runtime pipeline, *not* a finished bespoke sprite atlas. Authored sprite PNG atlases, masks, more complex accessories and animation clips remain a separate art-production milestone. See ADR-0014. Game balance and Classic mechanical parity remain unchanged.
+
+
+### v0.5.15 — Simple characters again (creator paused)
+
+The game has returned to the original emoji player icons, preserving the existing name input and all Classic/Modern game options. Customization controls and galleries are hidden and no character appearance is supplied when starting/joining a multiplayer game. All source, catalogs, images, and user-created browser-local profile records remain intact: `src/app.js` contains the `ENABLE_CHARACTER_CUSTOMIZATION=false` switch for later reactivation. Previously stored game appearance values are ignored in the interface, not deleted. This is a presentation rollback only; game rules and Looprd schema are unchanged.
+
+
+### v0.5.15 toolbar and ticker
+
+The Life Loop identity sits above the city in the same compact heading as Careers/Finances. On the right, Destination, WSS-only Chat, Co-op and Menu are available; Menu owns New Game, Save, Load and How to Play. Co-op owns room identity, current turn and WSS/HTTP transport health. The old top header and pale-green turn banner are removed; week, market, remaining hours and turn state appear in a single ticker beneath the buildings. Mobile keeps City / Activities / My Life tabs. No engine or Looprd handler changes.

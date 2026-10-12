@@ -10,40 +10,39 @@
 </head>
 <body>
   <div class="shell">
-    <header class="topbar">
-      <div class="identity">
-        <div class="logo-symbol"><span>↗</span></div>
-        <div><div class="brand">THE LIFE <span>LOOP</span></div><div class="brand-sub">A LITTLE GAME ABOUT BIG DECISIONS</div></div>
+    <div class="city-toolbar" role="navigation" aria-label="Game shortcuts">
+      <div class="city-brand">
+        <div class="identity" aria-label="The Life Loop"><div class="logo-symbol" aria-hidden="true"><span>↗</span></div><div><div class="brand">THE LIFE <span>LOOP</span></div><div class="brand-sub" id="cityName">NEW DAY CITY</div></div></div>
+        <div class="brand-shortcuts">
+          <button class="city-icon-button" id="careerBtn" type="button" aria-label="Careers" title="Career pathways"><span aria-hidden="true">🎓</span><span class="city-icon-label">Careers</span></button>
+          <button class="city-icon-button" id="financeBtn" type="button" aria-label="Finances" title="Financial history"><span aria-hidden="true">▥</span><span class="city-icon-label">Finances</span></button>
+        </div>
       </div>
-      <div class="top-center"><span class="live-dot"></span><span id="topWeek">WEEK 01</span><span class="top-separator"></span><span id="economy">MARKET STABLE</span></div>
       <div class="head-actions">
-        <button class="text-button" id="chatToggle" type="button" aria-label="Multiplayer chat" aria-expanded="false" aria-controls="chatPanel" disabled>💬 <span>Chat</span><span class="notification-circle" id="chatBadge" hidden>1</span></button>
-        <button class="text-button" id="onlineBtn" type="button" aria-label="Online multiplayer">◎ <span>Online co-op</span></button>
-        <button class="text-button" id="careerBtn" type="button" aria-label="Career pathways">🎓 <span>Careers</span></button>
-        <button class="text-button" id="financeBtn" type="button" aria-label="Financial history">▥ <span>Finances</span></button>
-        <button class="text-button new-button" id="newBtn" type="button">+ <span>New game</span></button>
+        <button type="button" id="destinationDrawerBtn" class="city-icon-button destination-control" aria-controls="gameActions" aria-expanded="false" aria-label="Open Your Destination"><span aria-hidden="true">↗</span><span class="city-icon-label">Destination</span><span id="destinationBadge" class="notification-circle" hidden>1</span></button>
+        <button class="city-icon-button" id="chatToggle" type="button" aria-label="Multiplayer chat" aria-expanded="false" aria-controls="chatPanel" title="Live room chat" disabled><span aria-hidden="true">💬</span><span class="city-icon-label">Chat</span><span class="notification-circle" id="chatBadge" hidden>1</span></button>
+        <div class="utility-holder coop-holder">
+          <button class="city-icon-button" id="onlineBtn" type="button" aria-label="Co-op menu" aria-haspopup="true" aria-expanded="false" aria-controls="coopMenu" title="Co-op"><span aria-hidden="true">◎</span><span class="city-icon-label">Co-op</span><span class="connection-indicator" id="coopIndicator" hidden></span></button>
+          <div class="utility-menu coop-menu" id="coopMenu" role="menu" hidden>
+            <div class="coop-summary"><strong id="coopRoomTitle">Not connected</strong><span id="coopRoomState">Start or join a room to play together.</span><span id="coopTurnState">Local game</span><span id="coopTransport">No Looprd connection</span></div>
+            <button type="button" role="menuitem" id="coopOpenDetails">◎ Open co-op &amp; room details</button>
+          </div>
+        </div>
         <div class="utility-holder">
-          <button class="text-button utility-trigger" id="utilityMenuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="utilityMenu" aria-label="Game menu">☰ <span>Menu</span></button>
+          <button class="city-icon-button utility-trigger" id="utilityMenuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="utilityMenu" aria-label="Game menu" title="Game menu"><span aria-hidden="true">☰</span><span class="city-icon-label">Menu</span></button>
           <div class="utility-menu" id="utilityMenu" role="menu" hidden>
-            <button type="button" role="menuitem" id="charactersBtn">◉ My characters</button>
+            <button type="button" role="menuitem" id="newBtn">＋ New game</button>
+            <button type="button" role="menuitem" id="charactersBtn" hidden>◉ My characters</button>
             <button type="button" role="menuitem" id="saveBtn">↓ Save game</button>
             <button type="button" role="menuitem" id="loadBtn">↑ Load game</button>
             <button type="button" role="menuitem" id="guideBtn">? How to play</button>
           </div>
         </div>
       </div>
-    </header>
-
-    <div class="turn-banner" id="turnBanner" role="status" aria-live="polite">
-      <span class="turn-lamp" id="turnLamp" aria-hidden="true"></span>
-      <strong id="turnHeadline">Your turn</strong>
-      <span id="turnDetails">Local game</span>
-      <button id="turnConnection" type="button" aria-label="Open online room details">◎ Multiplayer details ↗</button>
     </div>
     <div class="drawer-rail drawer-left"><button type="button" id="storyDrawerBtn" class="drawer-toggle" aria-controls="gameLife" aria-expanded="false" aria-label="Open Your Story">♥ Your Story <span id="storyBadge" class="notification-circle" hidden>1</span></button></div>
-    <div class="drawer-rail drawer-right"><button type="button" id="destinationDrawerBtn" class="drawer-toggle" aria-controls="gameActions" aria-expanded="false" aria-label="Open Your Destination">↗ Your Destination <span id="destinationBadge" class="notification-circle" hidden>1</span></button></div>
     <button type="button" class="drawer-scrim" id="drawerScrim" aria-label="Close side panel" hidden></button>
-    <div class="mobile-summary" id="mobileSummary" aria-label="Current turn summary" aria-live="off">
+    <div class="mobile-summary" id="mobileSummary" hidden aria-label="Current turn summary" aria-live="off">
       <div><span>WEEK</span><strong id="mobileWeek">01</strong></div>
       <div><span>TIME LEFT</span><strong id="mobileHours">60h</strong></div>
       <div><span>CASH</span><strong id="mobileCash">$0</strong></div>
@@ -70,17 +69,20 @@
       </aside>
 
       <main class="main-area" id="gameCity">
-        <div class="board-heading"><div><h1>New Day City<span class="sun-icon">✳</span></h1></div></div>
         <div class="board-frame">
           <div class="board-grid" id="board"></div>
         </div>
-        <div class="time-strip" id="timeStrip" hidden></div>
+        <div class="status-ticker" aria-label="Weekly and multiplayer status">
+          <div class="turn-banner" id="turnBanner" role="status" aria-live="polite"><span class="turn-lamp" id="turnLamp" aria-hidden="true"></span><strong id="turnHeadline">Your turn</strong><span id="turnDetails">Local game</span><button id="turnConnection" type="button" hidden aria-label="Open online room details">Co-op details</button></div>
+          <div class="ticker-meta"><strong id="topWeek">WEEK 01</strong><span class="ticker-separator" aria-hidden="true"></span><span id="economy">MARKET STABLE</span></div>
+          <div class="time-strip" id="timeStrip"></div>
+        </div>
         <section class="pulse-panel" aria-label="City pulse" id="cityPulse"></section>
         <div class="journal-header" hidden><div><span class="eyebrow dark">THE LITTLE THINGS</span><h2>Your story so far</h2></div><span class="journal-key">● LIFE HAPPENS IN BETWEEN</span></div>
         <div class="journal" id="journal" aria-live="polite" hidden></div>
       </main>
 
-      <aside class="action-pane pane" id="gameActions">
+      <aside class="action-pane pane" id="gameActions" tabindex="-1">
         <div class="pane-heading"><span class="eyebrow">YOUR DESTINATION</span><button type="button" class="pane-close" data-close-drawer="actions" aria-label="Close Your Destination">×</button></div>
         <div id="venue"></div>
         <div class="action-panel-heading"><span>What will you do?</span><span id="actionsCount" class="muted micro"></span></div>
@@ -97,7 +99,7 @@
       <button type="button" data-mobile-tab="actions" aria-controls="gameActions" aria-pressed="false"><span aria-hidden="true">↗</span><strong>Activities</strong><span id="mobileActionsBadge" class="notification-circle" hidden>1</span></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.13</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.15</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <section id="chatPanel" class="chat-panel" role="region" aria-label="Live room chat" hidden>
     <div class="chat-heading"><strong>💬 Room chat</strong><span>LIVE · NO HISTORY</span><button id="closeChat" type="button" aria-label="Close chat">×</button></div>

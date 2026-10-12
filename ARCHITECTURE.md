@@ -146,6 +146,6 @@ Reusable character profiles use a separate browser-local store, not the authorit
 The Contemporary default art manifest now binds a separate user-supplied painting to each housing tier (studio/apartment/loft), providing card/detail resolutions. Render solely from the player's saved housing tier. No cost, score, comfort or rent changes. Keep Open Door Realty as a dedicated service location, not the player's home. Continue to use procedural art outside Contemporary. The original 1991 gameplay parity contract is unchanged by this release.
 
 
-## Character compiler and pixel rendering (ADR-0014, v0.5.13)
+## Character compiler and pixel rendering (ADR-0014, v0.5.14)
 
 The new browser source `src/character-sprites.js` compiles a small, catalog-versioned configuration into resolved parts and 24 deterministic idle/walk poses. The pure compiler resolves discrete bodies, hair/hat variants, material palette bindings and stable bands **before** rendering; a 32×40 Canvas adapter animates and exports sprites while an SVG adapter draws static in-game portraits from the same pose. `assets/characters/pixel-v1/catalog.json` is the authoritative component manifest. No PixiJS/TypeScript runtime or WebGL dependency is necessary for the initial 32×40 vertical slice. Existing painted portraits continue to be selectable separately. The art-production backlog includes PNG atlas authoring, masking and richer animation.

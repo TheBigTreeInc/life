@@ -126,9 +126,11 @@ const characterCatalog=JSON.parse(load('assets/characters/pixel-v1/catalog.json'
 if(characterCatalog.schema!=='the-life-loop.character-parts.v1'||characterCatalog.canvas?.width!==32||characterCatalog.directions?.length!==4)errors.push('Pixel character catalog missing or invalid');
 if(!load('index.html').includes('src/character-sprites.js')||!load('PLAY.html').includes('root.LifeSprites')||!load('src/app.js').includes('id="spriteExportBtn"'))errors.push('Compiled pixel character renderer missing');
 if(!load('tools/build-offline.mjs').includes('generate-character-catalog.mjs'))errors.push('Character catalog generation not wired into offline build');
+if(!load('docs/decisions/ADR-0015-pause-character-customization.md').includes('**Status:** Accepted'))errors.push('Customization pause ADR missing');
+if(!['LL-112','LL-113'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.14 rollback workboard tasks missing');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
 // Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
 execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/portrait-gallery.test.cjs','tests/character-compiler.test.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/toolbar-ticker.test.cjs','tests/portrait-gallery.test.cjs','tests/character-compiler.test.cjs','tests/customization-disabled.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');
