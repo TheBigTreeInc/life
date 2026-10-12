@@ -96,7 +96,7 @@ if(!load('docs/decisions/ADR-0010-shared-multiplayer-cosmetics-ephemeral-chat-an
 if(!['LL-087','LL-088','LL-089','LL-090','LL-091'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-092'))errors.push('v0.5.7 workboard tasks missing');
 if(!load('looprd.yaml').includes('schemaVersion: 2')||!load('looprd.yaml').includes('chatKey:'))errors.push('Looprd v2 private chat key missing');
 if(!load('server/looprd_handler.py').includes("if op == 'chat':")||!load('src/network.js').includes('async sendChat(')||!load('index.html').includes('id="chatPanel"'))errors.push('Ephemeral WSS chat implementation missing');
-if(!load('src/app.js').includes('setup-wizard-progress')||!load('src/app.js').includes('characters.all().find(p=>p.id===$('))errors.push('Guest profile sharing or mobile stepper missing');
+if(!load('src/app.js').includes('quick-start-form')||!load('src/app.js').includes('characters.all().find(p=>p.id===f.get('))errors.push('Guest profile sharing or quick start missing');
 const artManifest=JSON.parse(load('assets/art/styles/contemporary-default/manifest.json'));
 const artMap=JSON.parse(load('src/art-assets.js').match(/root\.LifeArtAssets=(\{.*\});/)?.[1]||'{}');
 if(artManifest.schema!=='the-life-loop.art-pack.v1'||artManifest.version!==pkg.version||JSON.stringify(artManifest)!==JSON.stringify(artMap))errors.push('Contemporary art pack mapping out of sync');
@@ -111,9 +111,12 @@ for(const tier of ['studio','apartment','loft']) {
 }
 if(!load('src/app.js').includes('Art.scene(loc.id,true,game.settings.era,p.home)')||!load('src/app.js').includes('Art.scene(current.id,false,game.settings.era,p.home)'))errors.push('Housing tier-aware visual wiring missing');
 if(!load('tools/build-offline.mjs').includes('generate-art-assets.mjs'))errors.push('Art manifest generation not integrated');
+if(!load('index.html').includes('src/setup-preferences.js')||!load('PLAY.html').includes('the-life-loop-setup-preferences-v1')||!load('src/app.js').includes('id="setupAdvanced"'))errors.push('Quick Start preferences missing');
+if(!load('docs/decisions/ADR-0012-quick-start-and-local-new-game-preferences.md').includes('**Status:** Accepted'))errors.push('Quick Start architecture decision missing');
+if(!['LL-100','LL-101','LL-102'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.10 workboard tasks missing');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
 // Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
 execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

@@ -6,7 +6,7 @@ execFileSync(process.execPath,[resolve(root,'tools/generate-art-assets.mjs')],{c
 let html=readFileSync(resolve(root,'index.html'),'utf8');
 const css=readFileSync(resolve(root,'styles.css'),'utf8').replace(/<\/style/gi,'<\\/style');
 html=html.replace('<link rel="stylesheet" href="styles.css" />',`<style>\n${css}\n</style>`);
-for(const src of ['data','characters','engine','art-assets','art','network','app']){
+for(const src of ['data','characters','setup-preferences','engine','art-assets','art','network','app']){
  const file=`src/${src}.js`;
  const body=readFileSync(resolve(root,file),'utf8').replace(/<\/script/gi,'<\\/script');
  const tag=`<script src="${file}"></script>`;

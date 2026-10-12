@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.9
-filename: the-life-loop-0.5.9-ziprunner.zip
+version: 0.5.11
+filename: the-life-loop-0.5.11-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -23,6 +23,7 @@ notes_mobile: Responsive City / Activities / My life panels with touch-friendly 
 server_field: Enter the base FQDN only (api.server.country); component route /looprd/the-life-loop/v1 is implicit.
 workboard_hotfix: Normalize LL-072 priority from P1 to high (ZipRunner v1 enum) and validate manifest priority values during node tools/verify.mjs. No game logic changes.
 release_revision: v0.5.4 correct version bump for CI/workboard sync; no gameplay changes; commit the manifest with package.json.
+notes_quick_start: browser-local rule, era, goal and mode defaults; simple new-game screen with Advanced settings and confirmation before replacing an autosave.
 END_ZIPRUNNER_HANDOFF
 art_pack: assets/art/styles/contemporary-default/manifest.json
 art_pack_offline: Embedded optimized WebP imagery in PLAY.html

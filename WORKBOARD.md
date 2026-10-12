@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.9
+# The Life Loop — workboard v0.5.11
 
-Full-source release: `the-life-loop-0.5.9-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.11-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -218,3 +218,12 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 **Original Classic mechanics progress (no change in v0.5.9):** parity contract currently tracks 22 rule IDs: 2 implemented, 19 partial and 1 missing. High-priority outstanding areas: exact original action/movement hours (especially partial shifts), job dependability/vacancy/firing rules, original scoring, four-human play, the pawn shop and DOS-aligned price/random-event behavior. The self-reported contract is **not** proof of original binary equivalence; operator acceptance requires side-by-side DOS captures and measurements.
 
 **Operator smoke:** choose Contemporary Starter Studio, inspect Home and Your Destination; upgrade to Sunny Apartment / Skyline Loft and verify pictures change without a balance change. Repeat in Historical and Sci-Fi (procedural art). Save/reload and test both responsive and standalone editions. Run `node tools/verify.mjs`.
+
+
+## v0.5.11 — Quick Start and reusable new-game settings
+
+- [x] **LL-100** — Store sanitized local preferences for rules, era, solo/hotseat/online/sandbox mode and four goal values independently of character library, game save and Looprd room. Restore them automatically; one-click reset to defaults.
+- [x] **LL-101** — Initial game screen is a compact Quick Start: choose character and mode, then Start. Existing autosave gets a prominent Continue; starting over requires confirmation. Optional advanced accordion displays settings summary without demanding setup on every start.
+- [x] **LL-102** — Single layout for desktop and mobile without old three-step wizard; sticky Start/Continue footer, optional internal Advanced scrolling. New tests, ADR-0012 and ZipRunner version sync.
+
+**Operator acceptance:** Load fresh page and start without entering an advanced wizard. Change goals, era, rules and game mode in Advanced, refresh and confirm persistence. Start a new game only after acknowledging overwrite of any previous autosave; confirm Cancel leaves that save intact. On mobile check 320×568, 390×844; actions remain visible. No game balance, original DOS parity rules, live multiplayer protocol or character storage changes.

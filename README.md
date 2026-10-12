@@ -1,4 +1,4 @@
-# The Life Loop — v0.5.9
+# The Life Loop — v0.5.11
 
 **Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.9-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.11-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -113,3 +113,8 @@ See ADR-0011 for details.
 Three player-supplied square illustrations are now the active Contemporary home artwork for the Starter Studio, Sunny Apartment and Skyline Loft. The manifest references `home-{studio,apartment,loft}-{card,detail}.webp` files, updated automatically based on the current player's `home` state. Home artwork and Realty office artwork remain different. Standalone `PLAY.html` embeds images; GitHub Pages publishes cacheable WebPs. Historical/Sci-Fi remain procedural.
 
 **Classic port status:** 22 tracked mechanics; only 2 currently marked fully implemented. Work is still needed to reproduce DOS movement, employment and dependability formulas, scoring, pawn and financial events faithfully; visual releases do not claim or change gameplay parity.
+
+
+## v0.5.11 — Quick Start and Game Settings
+
+New Game now focuses on picking a character and play mode, with **Start new game** immediately available. An existing autosave exposes **Continue** as the primary button. Classic/Modern, visual era and all four goal values are under collapsed **Game settings**, with their values displayed in a summary. Adjustments are remembered per browser origin for future games; **Reset defaults** restores Classic, Contemporary and 40/55/50/45 goals. Preferences are not copied into the private character library or Looprd. Starting over confirms before replacing an autosave. The mobile dialog no longer demands a three-page setup wizard.

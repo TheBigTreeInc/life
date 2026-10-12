@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.9",
-  "summary": "v0.5.9: integrate player-provided three residence images (studio/apartment/loft), optimize card/detail assets, maintain offline + Pages fidelity, preserve original Classic gameplay and Looprd protocol.",
+  "version": "0.5.11",
+  "summary": "v0.5.11: modernized character studio with richer avatar rendering, live preview card, visual style selectors, randomize option, and improved saved-character presentation. No rules, saves, or Looprd changes.",
   "implemented": [
     {
       "id": "LL-001",
@@ -130,7 +130,7 @@
       "title": "Multi-episode personal stories",
       "summary": "Add three seasonal three-stage NPC arcs, host and partner trust outcomes, time gates, player-specific chapter state, City Pulse synergy and permanent community improvements.",
       "operator_checks": [
-        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2–3 require more weeks and trust.",
+        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2\u20133 require more weeks and trust.",
         "Finish the community pantry project and verify food prices drop permanently for every player."
       ]
     },
@@ -405,7 +405,7 @@
     {
       "id": "LL-064",
       "title": "Fresh-food refrigerator/freezer storage",
-      "summary": "Black’s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
+      "summary": "Black\u2019s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
       "operator_checks": [
         "Buy 4 portions, test spoilage; acquire fridge/freezer and test capacity."
       ]
@@ -657,6 +657,33 @@
         "Run node tools/verify.mjs and Python Looprd server tests.",
         "Verify current art packs contain three non-null residence entries and no network dependencies in PLAY.html."
       ]
+    },
+    {
+      "id": "LL-100",
+      "title": "Persistent local new-game preferences",
+      "summary": "Keep play mode, Classic/Modern rules, era and all four goals as validated browser-local defaults independent of saves and character profiles. Include reset support and safe storage failure fallback.",
+      "operator_checks": [
+        "Change era, Classic/Modern and goals in Advanced; close/reopen New Game and refresh the browser; verify choices persist without altering a saved game.",
+        "Reset defaults and verify Classic, Contemporary and default four goals."
+      ]
+    },
+    {
+      "id": "LL-101",
+      "title": "Quick Start game onboarding",
+      "summary": "Compact start screen presents character, name, play mode and clear start/continue actions; game rules, era and goals are collapsed into advanced options with a visible summary. Starting over asks before overwriting an autosave.",
+      "operator_checks": [
+        "Start with no saved game and click Start new game immediately.",
+        "With existing autosave, Continue resumes and Start another game asks before overwriting; cancel does not modify the save."
+      ]
+    },
+    {
+      "id": "LL-102",
+      "title": "Viewport-friendly start dialog and regression",
+      "summary": "New Game dialog fits mobile heights with only optional internal scrolling when Advanced opens; preserve character management, hotseat, Looprd server input and game engine parity.",
+      "operator_checks": [
+        "Check 320x568, 390x844, 768x1024 and 1440x900 for visible Start and Continue buttons without document scrolling.",
+        "Run node tools/verify.mjs and build GitHub Pages."
+      ]
     }
   ],
   "remaining": [
@@ -675,7 +702,7 @@
     {
       "id": "LL-013",
       "title": "Hotseat player privacy screen",
-      "summary": "Prevent the next human player from seeing the previous player’s private view",
+      "summary": "Prevent the next human player from seeing the previous player\u2019s private view",
       "priority": "medium"
     },
     {

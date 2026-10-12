@@ -67,18 +67,53 @@ function createStore(storage){
 }
 function avatar(profile,size='normal'){
  const p=normalizeAppearance(profile),name=esc(profile?.name||'Character');
- const skin=SKIN[p.skin],hair=HAIR_COLOR[p.hairColor],outfit=ACCENT[p.accent];
- const hairPaths={
-  short:`<path d="M26 41 Q22 10 58 12 Q92 9 94 43 L84 35 Q70 30 62 22 Q50 36 31 34 Z" fill="${hair}"/>`,
-  long:`<path d="M23 38 Q17 8 60 10 Q105 10 98 43 L100 91 Q91 101 79 85 L80 36 Q59 27 43 34 L40 87 Q29 98 22 87 Z" fill="${hair}"/>`,
-  curly:`<g fill="${hair}"><circle cx="31" cy="29" r="15"/><circle cx="48" cy="21" r="17"/><circle cx="67" cy="19" r="17"/><circle cx="84" cy="26" r="16"/><circle cx="92" cy="43" r="12"/><circle cx="24" cy="43" r="12"/></g>`,
-  bun:`<circle cx="82" cy="14" r="16" fill="${hair}"/><path d="M25 41 Q20 10 60 12 Q97 13 94 41 L84 33 Q60 34 48 25 L33 39 Z" fill="${hair}"/>`,
-  buzz:`<path d="M27 37 Q26 13 59 14 Q91 14 92 37 Q61 30 27 37Z" fill="${hair}"/>`,
-  swept:`<path d="M25 43 Q16 12 59 12 Q97 12 94 39 Q69 41 63 27 Q42 44 25 43Z" fill="${hair}"/>`
+ const skin=SKIN[p.skin],hair=HAIR_COLOR[p.hairColor],outfit=ACCENT[p.accent],soft=outfit+'22';
+ const hairShapes={
+  short:`<path d="M24 46 Q25 14 59 13 Q94 12 96 45 Q85 31 68 29 Q52 24 39 35 Q32 39 24 46Z" fill="${hair}"/>`,
+  long:`<path d="M22 43 Q24 11 61 12 Q97 13 98 42 L97 93 Q91 106 77 101 L77 38 Q63 31 46 35 L44 101 Q30 106 23 92 Z" fill="${hair}"/>`,
+  curly:`<g fill="${hair}"><circle cx="28" cy="39" r="12"/><circle cx="37" cy="24" r="15"/><circle cx="54" cy="18" r="18"/><circle cx="75" cy="18" r="18"/><circle cx="91" cy="27" r="15"/><circle cx="96" cy="43" r="11"/><circle cx="74" cy="35" r="16"/><circle cx="49" cy="35" r="16"/></g>`,
+  bun:`<circle cx="84" cy="16" r="15" fill="${hair}"/><path d="M25 45 Q24 13 60 13 Q95 13 95 42 Q75 28 59 28 Q41 29 25 45Z" fill="${hair}"/>`,
+  buzz:`<path d="M27 39 Q30 16 60 16 Q89 16 92 39 Q61 29 27 39Z" fill="${hair}"/>`,
+  swept:`<path d="M23 43 Q24 12 61 12 Q95 12 95 38 Q77 37 66 24 Q55 24 44 33 Q35 41 23 43Z" fill="${hair}"/>`
  };
- const mouth=p.mood==='smile'?'<path d="M48 65 Q59 76 71 65"/>':p.mood==='focused'?'<path d="M49 68 L69 68"/>':'<path d="M51 67 Q60 70 68 67"/>';
- const collar=p.outfit==='smart'?`<path d="M44 92 L58 116 L72 92 L65 88 L58 104 L51 88Z" fill="#fcf8f1"/>`:p.outfit==='creative'?`<path d="M39 103 L82 121" stroke="#fff4" stroke-width="7"/>`:p.outfit==='sport'?`<path d="M59 90 L59 140" stroke="#fff8" stroke-width="4"/>`:'';
- return `<svg class="character-avatar character-avatar-${size}" viewBox="0 0 120 140" role="img" aria-label="${name}'s character portrait" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="140" rx="24" fill="${ACCENT[p.accent]}28"/><circle cx="60" cy="55" r="44" fill="#fff7"/><path d="M4 140 Q2 96 38 94 L49 90 L70 90 L82 94 Q116 97 117 140" fill="${outfit}"/><path d="M52 84 L53 96 L67 96 L68 84" fill="${skin}"/><ellipse cx="60" cy="49" rx="31" ry="36" fill="${skin}"/><ellipse cx="29" cy="51" rx="5" ry="9" fill="${skin}"/><ellipse cx="91" cy="51" rx="5" ry="9" fill="${skin}"/>${hairPaths[p.hair]}<g stroke="#3f3435" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M43 51 L49 51"/><path d="M70 51 L76 51"/>${mouth}</g>${collar}</svg>`;
+ const eyebrow=p.mood==='focused'?'M43 54 L49 52 M71 52 L77 54':p.mood==='calm'?'M43 53 L49 53 M71 53 L77 53':'M43 52 L49 54 M71 54 L77 52';
+ const mouth=p.mood==='smile'?'<path d="M48 72 Q60 80 72 72"/>':p.mood==='focused'?'<path d="M49 74 L71 74"/>':'<path d="M49 73 Q60 77 71 73"/>';
+ const outfitDetails=p.outfit==='smart'
+  ? `<path d="M44 97 L59 116 L74 97 L66 92 L59 104 L52 92Z" fill="#f8faf6"/><path d="M37 140 L48 95 L59 111 L72 95 L83 140" fill="${outfit}"/>`
+  : p.outfit==='sport'
+  ? `<path d="M37 140 Q40 108 47 95 L59 105 L72 95 Q79 107 82 140" fill="${outfit}"/><path d="M59 95 L59 136" stroke="#ffffff99" stroke-width="4"/>`
+  : p.outfit==='creative'
+  ? `<path d="M37 140 Q40 110 49 96 L59 104 L70 96 Q79 108 82 140" fill="${outfit}"/><path d="M42 114 L76 127" stroke="#ffffffb0" stroke-width="5" stroke-linecap="round"/><circle cx="46" cy="106" r="4" fill="#ffffffaa"/><circle cx="72" cy="113" r="3.2" fill="#ffffff88"/>`
+  : `<path d="M37 140 Q40 110 49 96 L59 104 L70 96 Q79 108 82 140" fill="${outfit}"/>`;
+ return `<svg class="character-avatar character-avatar-${size}" viewBox="0 0 120 140" role="img" aria-label="${name}'s character portrait" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+   <linearGradient id="bg-${p.accent}" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="${soft}"/><stop offset="1" stop-color="#ffffff"/></linearGradient>
+   <linearGradient id="shine-${p.accent}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".8"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect width="120" height="140" rx="28" fill="url(#bg-${p.accent})"/>
+  <rect x="8" y="8" width="104" height="124" rx="24" fill="#ffffff9c"/>
+  <circle cx="60" cy="49" r="34" fill="url(#shine-${p.accent})"/>
+  <path d="M31 140 Q31 108 47 95 L59 104 L71 95 Q88 107 88 140" fill="${outfit}"/>
+  <path d="M52 83 L53 96 L67 96 L68 83" fill="${skin}"/>
+  <ellipse cx="60" cy="53" rx="30" ry="34" fill="${skin}"/>
+  <ellipse cx="30" cy="56" rx="4.5" ry="8.5" fill="${skin}"/>
+  <ellipse cx="90" cy="56" rx="4.5" ry="8.5" fill="${skin}"/>
+  ${hairShapes[p.hair]}
+  <path d="M40 60 Q46 63 50 60" fill="#fff" opacity=".22"/>
+  <g stroke="#443638" stroke-width="2.6" stroke-linecap="round" fill="none">
+   <path d="${eyebrow}"/>
+   <path d="M45 61 L49 61"/>
+   <path d="M71 61 L75 61"/>
+   <path d="M60 61 L58 68 L63 68" opacity=".55"/>
+   ${mouth}
+  </g>
+  <circle cx="47" cy="61" r="1.5" fill="#443638"/>
+  <circle cx="73" cy="61" r="1.5" fill="#443638"/>
+  <path d="M37 140 Q40 110 49 96 L59 104 L70 96 Q79 108 82 140" fill="${outfit}"/>
+  ${outfitDetails}
+  <rect x="17" y="108" width="17" height="17" rx="8.5" fill="${outfit}" opacity=".12"/>
+  <rect x="86" y="18" width="16" height="16" rx="8" fill="${outfit}" opacity=".18"/>
+ </svg>`;
 }
 return {KEY,LIMIT,SKIN,HAIR,HAIR_COLOR,OUTFIT,ACCENT,MOOD,PERSONALITY,normalizeAppearance,normalizeProfile,createStore,avatar};
 });
