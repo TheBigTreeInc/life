@@ -4,10 +4,11 @@ import {execFileSync} from 'node:child_process';
 const root=resolve(import.meta.dirname,'..');
 execFileSync(process.execPath,[resolve(root,'tools/generate-art-assets.mjs')],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,[resolve(root,'tools/generate-portrait-assets.mjs')],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,[resolve(root,'tools/generate-character-catalog.mjs')],{cwd:root,stdio:'inherit'});
 let html=readFileSync(resolve(root,'index.html'),'utf8');
 const css=readFileSync(resolve(root,'styles.css'),'utf8').replace(/<\/style/gi,'<\\/style');
 html=html.replace('<link rel="stylesheet" href="styles.css" />',`<style>\n${css}\n</style>`);
-for(const src of ['data','portrait-assets','characters','setup-preferences','engine','art-assets','art','network','app']){
+for(const src of ['data','portrait-assets','character-catalog','character-sprites','characters','setup-preferences','engine','art-assets','art','network','app']){
  const file=`src/${src}.js`;
  const body=readFileSync(resolve(root,file),'utf8').replace(/<\/script/gi,'<\\/script');
  const tag=`<script src="${file}"></script>`;

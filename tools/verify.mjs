@@ -120,9 +120,15 @@ if(!load('src/portrait-assets.js').includes('LifePortraitAssets'))errors.push('G
 for(const item of Object.values(portraitManifest.portraits)){if(statSync(resolve(root,item.image)).size>120*1024)errors.push('Portrait image exceeds size budget '+item.image);}
 if(!['LL-103','LL-104','LL-105'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.12 portrait workboard tasks missing');
 if(!load('docs/decisions/ADR-0013-illustrated-character-portrait-catalog.md').includes('**Status:** Accepted'))errors.push('Portrait catalog ADR missing');
+if(!load('docs/decisions/ADR-0014-character-compiler-and-pixel-preview.md').includes('**Status:** Accepted'))errors.push('Character compiler architecture ADR missing');
+if(!['LL-107','LL-108','LL-109','LL-110'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-111'))errors.push('v0.5.13 character compiler workboard tasks missing');
+const characterCatalog=JSON.parse(load('assets/characters/pixel-v1/catalog.json'));
+if(characterCatalog.schema!=='the-life-loop.character-parts.v1'||characterCatalog.canvas?.width!==32||characterCatalog.directions?.length!==4)errors.push('Pixel character catalog missing or invalid');
+if(!load('index.html').includes('src/character-sprites.js')||!load('PLAY.html').includes('root.LifeSprites')||!load('src/app.js').includes('id="spriteExportBtn"'))errors.push('Compiled pixel character renderer missing');
+if(!load('tools/build-offline.mjs').includes('generate-character-catalog.mjs'))errors.push('Character catalog generation not wired into offline build');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
 // Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
 execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/portrait-gallery.test.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/portrait-gallery.test.cjs','tests/character-compiler.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

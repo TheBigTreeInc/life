@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.12
+# The Life Loop — workboard v0.5.13
 
-Full-source release: `the-life-loop-0.5.12-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.13-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -220,7 +220,7 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 **Operator smoke:** choose Contemporary Starter Studio, inspect Home and Your Destination; upgrade to Sunny Apartment / Skyline Loft and verify pictures change without a balance change. Repeat in Historical and Sci-Fi (procedural art). Save/reload and test both responsive and standalone editions. Run `node tools/verify.mjs`.
 
 
-## v0.5.12 — Quick Start and reusable new-game settings
+## v0.5.13 — Quick Start and reusable new-game settings
 
 - [x] **LL-100** — Store sanitized local preferences for rules, era, solo/hotseat/online/sandbox mode and four goal values independently of character library, game save and Looprd room. Restore them automatically; one-click reset to defaults.
 - [x] **LL-101** — Initial game screen is a compact Quick Start: choose character and mode, then Start. Existing autosave gets a prominent Continue; starting over requires confirmation. Optional advanced accordion displays settings summary without demanding setup on every start.
@@ -236,3 +236,14 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 - [ ] **LL-106 (high)** — Operator: deploy updated Looprd handler to retain remote guest portrait IDs. Requires no Room table migration; accept a fresh co-op room and validate both players' portraits.
 
 Operator acceptance: test 320px mobile and large desktop. Open My characters, select a modern or classic portrait, save and start a game, reload and confirm the image persists in sidebar. Switch to Custom drawn and confirm existing color/hair controls still respond. Test both host and guest with a freshly registered Looprd component. No gameplay or Classic rule changes.
+
+
+## v0.5.13 — Data-driven Pixel Studio character compiler
+
+- [x] **LL-107** — Source-controlled `assets/characters/pixel-v1/catalog.json` contract with three body templates, component slots, semantic material palettes, draw bands, interaction variants and idle/walk frame timing; generated browser catalog included in source ZIP.
+- [x] **LL-108** — Pure deterministic compiler and render adapters: 32×40 nearest-neighbor geometry, 4 directions, idle and walking (24 shared-clock poses), stable draw order, bounded appearance cache, SVG sidebar thumbnails and 2D Canvas preview/sprite-sheet PNG export.
+- [x] **LL-109** — Pixel Studio in Character Studio: skin, hair, hair color, body silhouette, hat/hairstyle compatibility, clothing, accent, expression, and personality; touch-friendly pose controls and animated preview. Existing 51 portrait choices remain independent.
+- [x] **LL-110** — Small validated character configuration saved locally, in game snapshots and guest join; versioned catalog and Looprd guest appearance field allowlist, with no database table migration. Tests cover pose completeness, deterministic draw, hats, Canvas/SVG, persistence and release metadata.
+- [ ] **LL-111 (medium)** — Future art-production pass: authored 32×40 PNG/RGBA sprite atlas with trim/anchors; extended garment/hat masks, distinct body-specific artwork, more actions and directional details. Current procedural sprites establish the compiler and renderer contract; they are not a finished production atlas.
+
+**Operator acceptance:** Open My Characters → Create, switch to Pixel Studio, select three body types, hairstyles and a cap/beanie; confirm hair compresses under hats. Use direction arrows and Walk, export the PNG sheet; save and start a game, verify pixel thumbnail in sidebar. Reopen and verify saved parts. For online, deploy updated `looprd.yaml` handler and start a fresh room, confirming guest body/headwear choices show for both players. Run `node tools/verify.mjs` and Python Looprd tests. No changes to Classic economy, city art, or server database schema. Git push/deployment are manual.

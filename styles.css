@@ -583,3 +583,19 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 @media(max-width:360px){.portrait-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 /* Keep thumbnail rows physically separated when the collection scrolls on small phones. */
 .portrait-collection-grid{grid-auto-rows:max-content;align-content:start}
+
+/* v0.5.13: composable pixel sprite studio. Canvas is rendered at 32×40 with nearest sampling. */
+.pixel-character{image-rendering:pixelated;shape-rendering:crispEdges}
+.pixel-preview-dock{display:grid;justify-items:center;gap:12px;padding:10px;border:1px solid #ffffff28;border-radius:20px;background:linear-gradient(180deg,#102e29,#305c46);min-width:0}
+.pixel-preview-dock canvas{image-rendering:pixelated;width:clamp(140px,15vw,190px);height:auto;aspect-ratio:4/5;display:block;background:linear-gradient(180deg,#83b6ad 0%,#b9ddd0 74%,#669a7b 75%,#527c65 100%);border:3px solid #d7ecdc;border-radius:8px;box-shadow:0 8px 24px #03190b55}
+.sprite-preview-controls{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.sprite-preview-controls button{width:38px;height:38px;cursor:pointer;border-radius:11px;border:1px solid #ffffff45;background:#ffffff1d;color:#f4fff8;font-size:20px;font-weight:800}
+.sprite-preview-controls button.is-active{background:#b9ef85;color:#234c30}
+.pixel-preview-dock #spriteActionToggle{background:#edf8e8;color:#234c30}
+.pixel-studio-intro{background:#e9f4e8;border-radius:16px;padding:14px;border:1px solid #cbdcca}
+.editor-avatar-stage[hidden],.pixel-preview-dock[hidden],#spriteExportBtn[hidden],#pixelGeometryFields[hidden]{display:none!important}
+#spriteExportBtn{background:#edf5e9;color:#254b35;border:1px solid #c5d9bc}
+@media(max-width:860px){
+ .pixel-preview-dock{grid-template-columns:1fr;justify-self:stretch}
+ .pixel-preview-dock canvas{width:min(160px,44vw)}
+}

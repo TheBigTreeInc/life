@@ -78,7 +78,8 @@ class LifeOnline {
  }
  async join(url,code,name,appearance=null){
   this.disconnect();this.endpoint=LifeOnline.validateEndpoint(url);
-  const data=await this.api({op:'join',code:code.trim().toUpperCase().replace(/[-\s]/g,''),name,appearance});
+  const sanitizedAppearance=appearance&&typeof window.LifeCharacters?.normalizeAppearance==='function'?window.LifeCharacters.normalizeAppearance(appearance):appearance;
+  const data=await this.api({op:'join',code:code.trim().toUpperCase().replace(/[-\s]/g,''),name,appearance:sanitizedAppearance});
   Object.assign(this,{role:'guest',code:data.code,token:data.token,version:data.version,chatKey:data.chatKey||'',joined:true,notice:'Connected'});
   this.h.setGame(data.state);this.persist();this.connect();this.h.render();return data;
  }

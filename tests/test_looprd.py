@@ -14,7 +14,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'server'))
-from looprd_handler import execute
+from looprd_handler import execute, guest_appearance
 
 
 def example_state(active=0):
@@ -116,16 +116,33 @@ class LooprdTests(unittest.TestCase):
         joined,event=self.call(op='join',code=host['code'],name='Guest New',appearance=appearance)
         self.assertTrue(joined['ok'])
         self.assertEqual(joined['version'],2)
-        self.assertEqual(joined['state']['players'][1]['appearance'],appearance)
+        shared=joined['state']['players'][1]['appearance']
+        self.assertTrue(all(shared.get(k)==v for k,v in appearance.items()))
+        self.assertEqual(shared['schemaVersion'],1)
+        self.assertEqual(shared['catalogVersion'],'2026-10-12.1')
+        self.assertEqual(shared['body'],'standard')
+        self.assertEqual(shared['headwear'],'none')
         self.assertEqual(joined['state']['players'][1]['appearance']['portrait'],'illustrated-12')
         self.assertEqual(joined['state']['players'][1]['color'],'#8274c7')
         self.assertEqual(event['resource'],'pulses')
         state,_=self.call(op='status',code=host['code'],token=host['token'])
         self.assertEqual(state['state']['players'][1]['name'],'Guest New')
-        self.assertEqual(state['state']['players'][1]['appearance'],appearance)
+        self.assertEqual(state['state']['players'][1]['appearance'],shared)
         self.assertNotIn('appearance',str(event))
         self.assertEqual(state['chatKey'],host['chatKey'])
         self.assertEqual(joined['chatKey'],host['chatKey'])
+
+    def test_pixel_profile_body_and_hat_survive_guest_join(self):
+        host,_=self.call(op='create',state=example_state())
+        profile={'schemaVersion':1,'catalogVersion':'2026-10-12.1','portrait':'pixel',
+                 'body':'broad','headwear':'beanie','hair':'long','accent':'violet','skin':'olive'}
+        joined,_=self.call(op='join',code=host['code'],name='Sprite',appearance=profile)
+        self.assertTrue(joined['ok'])
+        result=joined['state']['players'][1]['appearance']
+        for field,value in profile.items():self.assertEqual(result[field],value)
+        self.assertNotIn('id',result)
+        # Malformed nested values must not crash server-side character validation.
+        self.assertEqual(guest_appearance({'headwear':{'unsafe':1}})['headwear'],'none')
 
     def test_chat_emits_encrypted_ephemeral_websocket_event_only(self):
         host,_=self.call(op='create',state=example_state())

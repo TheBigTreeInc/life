@@ -37,6 +37,10 @@ def valid_snapshot(state):
         return False
 
 APPEARANCE_OPTIONS = {
+    'schemaVersion': {1},
+    'catalogVersion': {'2026-10-12.1'},
+    'body': {'compact','standard','broad'},
+    'headwear': {'none','cap','beanie'},
     'skin': {'peach','tan','brown','deep','pale','olive'},
     'hair': {'short','long','curly','bun','buzz','swept'},
     'hairColor': {'black','brown','auburn','blonde','silver','mint'},
@@ -44,9 +48,9 @@ APPEARANCE_OPTIONS = {
     'accent': {'forest','coral','violet','sky','gold','rose'},
     'mood': {'smile','calm','focused'},
     'personality': {'curious','kind','bold','thoughtful'},
-    'portrait': {''} | {f'illustrated-{i:02d}' for i in range(1,17)} | {f'original-{i:02d}' for i in range(1,36)},
+    'portrait': {'','pixel'} | {f'illustrated-{i:02d}' for i in range(1,17)} | {f'original-{i:02d}' for i in range(1,36)},
 }
-APPEARANCE_DEFAULTS = {'skin':'peach','hair':'short','hairColor':'brown','outfit':'everyday',
+APPEARANCE_DEFAULTS = {'schemaVersion':1,'catalogVersion':'2026-10-12.1','body':'standard','headwear':'none','skin':'peach','hair':'short','hairColor':'brown','outfit':'everyday',
                        'accent':'forest','mood':'smile','personality':'curious','portrait':''}
 ACCENT_COLORS = {'forest':'#367b5d','coral':'#dc7a6a','violet':'#8274c7',
                  'sky':'#4683b0','gold':'#c48a35','rose':'#c26b99'}
@@ -54,7 +58,7 @@ ACCENT_COLORS = {'forest':'#367b5d','coral':'#dc7a6a','violet':'#8274c7',
 def guest_appearance(value):
     if not isinstance(value, dict):
         value = {}
-    return {key: value.get(key) if value.get(key) in options else APPEARANCE_DEFAULTS[key]
+    return {key: value.get(key) if isinstance(value.get(key), (str,int)) and value.get(key) in options else APPEARANCE_DEFAULTS[key]
             for key, options in APPEARANCE_OPTIONS.items()}
 
 def replace_guest_identity(state, name, appearance):

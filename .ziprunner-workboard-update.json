@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.12",
-  "summary": "v0.5.12: 51 real selectable portrait illustrations integrated in-game (16 new illustrated / 35 original user examples), persistent local/game/guest multiplayer portrait IDs, custom SVG fallback, offline and Pages assets; no rule changes.",
+  "version": "0.5.13",
+  "summary": "v0.5.13: data-driven pixel character compiler and manifest with 24 idle/walk poses, layered hair/outfit/headwear/body parts, shared Canvas/SVG renderer, animated Character Studio preview and sprite export; 51 illustrated portraits preserved; guest choices saved in shared game. No rules/DB schema changes.",
   "implemented": [
     {
       "id": "LL-001",
@@ -714,6 +714,42 @@
         "Start or join a two-player game and confirm the selected portrait is visible on each client.",
         "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
       ]
+    },
+    {
+      "id": "LL-107",
+      "title": "Versioned pixel character parts catalog",
+      "summary": "Source JSON manifest maps three body templates, component slots, semantic palettes, pose timing, bands and hat/hair interaction variants.",
+      "operator_checks": [
+        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+        "Run node tools/verify.mjs and check no workboard/version mismatch."
+      ]
+    },
+    {
+      "id": "LL-108",
+      "title": "Deterministic character compiler and render adapters",
+      "summary": "Compile on appearance changes, cache bounded resolved poses, and draw the same components to 32x40 SVG thumbnails, animated Canvas preview and a PNG sprite sheet.",
+      "operator_checks": [
+        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+        "Run node tools/verify.mjs and check no workboard/version mismatch."
+      ]
+    },
+    {
+      "id": "LL-109",
+      "title": "Interactive Pixel Studio in the character creator",
+      "summary": "Body, headwear, hair, palette, outfit and mood controls; four direction buttons and walk/idle preview; existing illustrated portrait gallery preserved.",
+      "operator_checks": [
+        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+        "Run node tools/verify.mjs and check no workboard/version mismatch."
+      ]
+    },
+    {
+      "id": "LL-110",
+      "title": "Snapshot/Looprd cosmetics persistence and tests",
+      "summary": "Validate pixel portrait/body/headwear fields in browser and guest handler; keep versioned configuration small, with automated rendering and persistence tests.",
+      "operator_checks": [
+        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+        "Run node tools/verify.mjs and check no workboard/version mismatch."
+      ]
     }
   ],
   "remaining": [
@@ -819,6 +855,12 @@
         "Reload and re-register Looprd component from updated root looprd.yaml, then create a fresh two-browser game.",
         "Select illustrated portrait in guest browser; confirm it is visible to the host, guest and after reconnect."
       ]
+    },
+    {
+      "id": "LL-111",
+      "title": "Production sprite atlas and richer animation set",
+      "summary": "Author explicit PNG atlases with trim offsets, body-specific clothing and hat occlusion masks, expand animation clips; current procedural 32x40 art is an initial complete pipeline only.",
+      "priority": "medium"
     }
   ]
 }
