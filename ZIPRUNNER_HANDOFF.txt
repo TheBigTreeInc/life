@@ -1,11 +1,26 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.4.1
-filename: the-life-loop-0.4.1-ziprunner.zip
+version: 0.5.4
+filename: the-life-loop-0.5.4-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
 workboard_update: .ziprunner-workboard-update.json
-notes: GitHub Pages supported via workflow .github/workflows/pages.yml; publish to public repo and select Settings > Pages > GitHub Actions. Git push remains operator-controlled. Full-source, flat-root ZIP. Preserve .git, machine-specific ZipRunner configuration and runtime saves. No credentials included. Save v0.1–v0.3 migrations preserved. Apply workboard changes only on successful build. Operator must verify PLAY.html direct opening on Windows. Git commit/push are not automatically requested.
+architecture_reference: ARCHITECTURE.md
+parity_contract: docs/parity-contract.json
+parity_matrix: docs/parity-matrix.md
+architecture_decision: docs/decisions/ADR-0001-classic-mechanics-modern-presentation.md
+architecture_decision_2: docs/decisions/ADR-0002-rulesets-and-world-eras.md
+notes: v0.5.2 Classic: retains 37 DOS jobs and manual rent; adds $100 savings, loan installments, six stock categories, 1/2/4 food bundles and fridge/freezer storage. Eleven branching degrees and original career stat caps remain. Full original economic and location parity is pending. Classic/Modern ruleset and Historical/Contemporary/Sci-Fi visual era selectable at New Game. Classic mechanic parity is still partial; old saves default Modern/Contemporary. GitHub Pages supported via workflow .github/workflows/pages.yml; publish to public repo and select Settings > Pages > GitHub Actions. Git push remains operator-controlled. Full-source, flat-root ZIP. Preserve .git, machine-specific ZipRunner configuration and runtime saves. No credentials included. Save v0.1–v0.3 migrations preserved. Apply workboard changes only on successful build. Operator must verify PLAY.html direct opening on Windows. Git commit/push are not automatically requested.
+looprd_specification: looprd.yaml
+looprd_contract: looprd/v1
+server_components: server/looprd_handler.py, server/sources.local.yaml
+websocket_route: /looprd/the-life-loop/v1/events
+http_session_route: /looprd/the-life-loop/v1/session
+notes_multiplayer: Needs a running Looprd instance with LOOPRD_ALLOW_PYTHON=true and configured CORS origins; no container or secrets bundled. GitHub Pages remains static. Invite code creates one remote guest, host applies actions and broadcasts snapshots. Host migration and fully server-side validation remain backlog.
+notes_mobile: Responsive City / Activities / My life panels with touch-friendly illustrated board and mobile online lobby; no game mechanics changed.
+server_field: Enter the base FQDN only (api.server.country); component route /looprd/the-life-loop/v1 is implicit.
+workboard_hotfix: Normalize LL-072 priority from P1 to high (ZipRunner v1 enum) and validate manifest priority values during node tools/verify.mjs. No game logic changes.
+release_revision: v0.5.4 correct version bump for CI/workboard sync; no gameplay changes; commit the manifest with package.json.
 END_ZIPRUNNER_HANDOFF

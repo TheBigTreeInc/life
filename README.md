@@ -1,4 +1,4 @@
-# The Life Loop — v0.5.3
+# The Life Loop — v0.5.4
 
 **Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.1-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.4-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -63,3 +63,14 @@ Phones and tablets use the City, Activities and My life bottom tabs. Tap a build
 For **Online co-op**, enter only the Looprd API server FQDN, such as `api.server.country` (or `https://api.server.country`); the game appends `/looprd/the-life-loop/v1` and automatically uses `wss://` for event notifications. Invitations carry the FQDN and friend code, not participant credentials. GitHub Pages serves the frontend; multiplayer requires a separately running Looprd server with CORS/origin configuration.
 
 Read [ADR-0007](docs/decisions/ADR-0007-responsive-mobile-layout.md). Desktop keeps the three-panel view. Full two-device, real iOS and real Android verification remains a deployment/operator check.
+
+
+## GitHub Pages metadata repair (v0.5.3)
+
+If GitHub Actions reports `Project/version mismatch` and missing workboard tasks despite the app being at v0.5.3, inspect `.ziprunner-workboard-update.json` in the **GitHub repository**. An old 0.4.1 copy remained on GitHub after later game changes were committed. ZipRunner processing a workboard update does not guarantee the JSON file was committed.
+
+Commit `.ziprunner-workboard-update.json`, `ZIPRUNNER_HANDOFF.txt`, `WORKBOARD.md`, and `tools/verify.mjs` from this release to the repo `main` branch. Then run `node tools/verify.mjs` and check the Pages workflow. No gameplay changes were made in this repair.
+
+## v0.5.4 — ZipRunner release metadata revision
+
+This release corrects the previously unversioned v0.5.3 CI/workboard repair. All deployment-relevant version markers now agree (`package.json`, `.ziprunner-workboard-update.json`, `docs/parity-contract.json`, `looprd.yaml`, `ZIPRUNNER_HANDOFF.txt`, and the browser footer). The packaging script derives its artifact name from `package.json`. **No gameplay or save-format changes.** Commit the whole release to `main` to avoid the stale-manifest Pages error.

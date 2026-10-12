@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.0
+# The Life Loop — workboard v0.5.4
 
-Full-source release: `the-life-loop-0.4.6-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.4-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -148,3 +148,21 @@ Operator checks: run `node tools/verify.mjs`; optionally run `python -m unittest
 
 - Fixed LL-072 remaining-task priority (`P1` → `high`) to satisfy `ziprunner.workboard-update.v1`; the parity contract uses a separate P0–P3 vocabulary and is unchanged.
 - Added ZipRunner priority enum validation to `node tools/verify.mjs` so invalid workboard entries fail before a ZIP is published. No game mechanics or save data changed.
+
+
+## v0.5.3 — GitHub Pages manifest synchronization (CI metadata repair)
+
+- [x] LL-076 — Reconcile GitHub's stale `.ziprunner-workboard-update.json` (0.4.1) with the v0.5.3 game, architecture, Looprd, and mobile UI. Update release handoff.
+- [ ] Operator: commit the corrected manifest and handoff to the actual GitHub `main` branch. ZipRunner installing or processing a workboard update is not proof the JSON file was committed.
+- [ ] Operator: confirm GitHub Actions `Deploy The Life Loop to GitHub Pages` runs `node tools/verify.mjs` successfully and deploys.
+
+This release makes no gameplay or online protocol changes. Private state and local configuration must remain excluded.
+
+## v0.5.4 — Release version synchronization
+
+- [x] **LL-077** — Bump the CI/workboard repair to a new v0.5.4 ZipRunner release. Keep manifest, game footer, package version, Looprd release, parity contract and handoff in sync.
+- [x] Generate the ZIP filename from package version and verify version metadata before publication.
+- [ ] Operator: commit **all** v0.5.4 source files, especially the hidden workboard JSON, rather than uploading only the built HTML.
+- [ ] Operator: validate the GitHub Pages Actions build, website and Looprd discovery after deployment.
+
+No changes to gameplay, saved games, or Looprd database schema.

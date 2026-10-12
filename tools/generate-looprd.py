@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import json
 import yaml
 root=Path(__file__).resolve().parent.parent
 source=(root/'server/looprd_handler.py').read_text()
 spec={
- 'apiVersion':'looprd/v1', 'component':'the-life-loop', 'release':'0.5.3', 'api':{'version':'v1'},
+ 'apiVersion':'looprd/v1', 'component':'the-life-loop', 'release':json.loads((root/'package.json').read_text())['version'], 'api':{'version':'v1'},
  'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':1},
  'models':{
   'Room':{'fields':{

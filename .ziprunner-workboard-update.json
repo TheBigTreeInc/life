@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.4.1",
-  "summary": "GitHub Pages deployment v0.4.1: generate static site from tested, single-file offline game; GitHub Actions publishes on main, with no secrets; preserve 0.4.0 gameplay, saves and 48 tests.",
+  "version": "0.5.4",
+  "summary": "v0.5.4 release: synchronize ZipRunner/GitHub metadata after the v0.5.3 CI repair; ensure manifest, app, parity contract, Looprd release, handoff, website version and archive filename agree; no changes to game mechanics.",
   "implemented": [
     {
       "id": "LL-001",
@@ -185,6 +185,322 @@
       "operator_checks": [
         "Follow README Pages steps with a fresh public repository; confirm future commits to main redeploy."
       ]
+    },
+    {
+      "id": "LL-027",
+      "title": "One-employer contracts and explicit job switching",
+      "summary": "Human UI confirms a job switch, shows current/new employer and wage, and only offers shifts at hired workplace. Lateral moves cannot farm happiness.",
+      "operator_checks": [
+        "Hire at diner; attempt shift at bank, then switch from diner to market; cancel and retry modal; confirm only the new workplace pays."
+      ]
+    },
+    {
+      "id": "LL-028",
+      "title": "Unemployment side-work safety net and save compatibility",
+      "summary": "Home gigs no longer constitute repeatable side work for an employed character; a single weekly casual gig remains available for unemployed players. AI respects contract and older saves migrate safely.",
+      "operator_checks": [
+        "While unemployed take a temporary gig once and confirm cooldown; then hire and confirm temporary home work is disabled. Import an old v0.4.1 save."
+      ]
+    },
+    {
+      "id": "LL-030",
+      "title": "Original gameplay parity report and automated regression",
+      "summary": "Source-linked rules comparison, nine new tests for employment flow, 57-test verification and operator checklist.",
+      "operator_checks": [
+        "Read GAMEPLAY_AUDIT.md, run node tools/verify.mjs, and check all job change transitions in desktop browser."
+      ]
+    },
+    {
+      "id": "LL-029",
+      "title": "Deepen classic job and education parity",
+      "summary": "Weekly wardrobe depletion, career branches, qualification-based applications and four certificate courses implemented; remaining original parity work tracked separately.",
+      "operator_checks": [
+        "Run low on casual clothing and confirm you cannot work until you buy a compatible replacement.",
+        "Use the Career roadmap to check qualifications and earn a certificate at university."
+      ]
+    },
+    {
+      "id": "LL-031",
+      "title": "Original-inspired consumable uniforms",
+      "summary": "Casual/dress/business clothes are tracked by weeks. All categories decay once each week and higher-quality uniforms cover lower-grade jobs.",
+      "operator_checks": [
+        "Wait until casual clothing is exhausted and verify a starter shift is disabled; buy a new outfit and retry.",
+        "Confirm dress and business can substitute for lower-grade uniforms."
+      ]
+    },
+    {
+      "id": "LL-032",
+      "title": "Budget and boutique outfit purchasing",
+      "summary": "Fresh & Frugal sells shorter-lasting casual/dress wear; Thread Theory sells quality casual/dress/business wear. Repurchases add weeks instead of permanent unlocks.",
+      "operator_checks": [
+        "Buy casual at Fresh & Frugal for nine weeks, then again at Thread Theory for eleven; compare prices and expiry warnings."
+      ]
+    },
+    {
+      "id": "LL-033",
+      "title": "Expanded career tree and specialist courses",
+      "summary": "Nineteen named jobs, including new venue-specific branches; four independent certificates with course prerequisites and progress persisted in saves.",
+      "operator_checks": [
+        "Open Careers and inspect paths; finish Service & Supervision and apply for Retail Supervisor at Career Center."
+      ]
+    },
+    {
+      "id": "LL-034",
+      "title": "Wardrobe and career UI",
+      "summary": "Show remaining weeks in sidebar, uniform requirements for work/applications, and a full read-only career roadmap.",
+      "operator_checks": [
+        "Verify Careers modal at desktop/mobile, including incomplete prerequisites and remaining wardrobe weeks."
+      ]
+    },
+    {
+      "id": "LL-035",
+      "title": "AI wardrobe and save compatibility",
+      "summary": "AI replenishes work uniforms without acquiring multiple jobs; v0.4.2 permanent clothing flags migrate into consumable counters.",
+      "operator_checks": [
+        "Run long AI simulations; import older saved JSON containing owned formal/casual clothes."
+      ]
+    },
+    {
+      "id": "LL-037",
+      "title": "Accept original-gameplay-first architecture",
+      "summary": "Authoritative ARCHITECTURE.md and ADR-0001 establish same original rules as target, with modern presentation and optional modern story mechanics. v0.4.4 changes documentation only.",
+      "operator_checks": [
+        "Read ARCHITECTURE.md and ADR-0001; check evidence hierarchy and classic-vs-modern distinction.",
+        "Confirm the compiled game behaves like v0.4.3, without new rules claimed."
+      ]
+    },
+    {
+      "id": "LL-038",
+      "title": "Evidence-backed parity contract and validation",
+      "summary": "Add original-gameplay reference spec, 21-rule JSON registry and parity matrix; fail ZipRunner verification if docs/contract are incomplete.",
+      "operator_checks": [
+        "Inspect docs/parity-contract.json and docs/parity-matrix.md; confirm 21 traceable rules.",
+        "Run node tools/verify.mjs from extracted ZIP and verify architecture checks pass."
+      ]
+    },
+    {
+      "id": "LL-043",
+      "title": "Independent New Game rule presets",
+      "summary": "Add Classic Rules (default in UI) and Modern Story selection with saved settings. Classic implements 60-hour budget, 4-hour job applications, 6-hour relax, 2-hour entry overhead, Dependability starting 20 and decaying 3 per week. Provisional +1 capped job stats and no-opening results; full DOS parity still open.",
+      "operator_checks": [
+        "Start Classic and check 60/60h and 20 Dependability; travel to the Career Center and verify application consumes 4h.",
+        "Start Modern and check 40/40h and 3h applications; verify City Pulse and social actions are enabled.",
+        "In Classic, confirm home gigs, City Pulse modifiers and non-original story rewards are unavailable."
+      ]
+    },
+    {
+      "id": "LL-044",
+      "title": "World era visuals independent of mechanics",
+      "summary": "Historical/Contemporary/Sci-Fi scenarios map the same 12 locations to different names and use different vector building geometry, backgrounds and NPC accessories without changing gameplay economy.",
+      "operator_checks": [
+        "Choose Historical and confirm Willowford buildings/timber/cobblestone artwork.",
+        "Choose Sci-Fi and confirm Neon Meridian arcology/neon/orbit scenes and alternate costumes.",
+        "Switch eras between new games at same ruleset and confirm job/time/cash outcomes remain identical."
+      ]
+    },
+    {
+      "id": "LL-045",
+      "title": "ADR-0002 and ruleset scenario regression tests",
+      "summary": "Document preset configuration, original-parity caveats, deterministic-era isolation and legacy-save migration. Add scenarios tests to verification/ZipRunner.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and confirm full regression suite passes including rules-era.test.cjs.",
+        "Import a v0.4.4 save and verify Modern/Contemporary fallback while newly started Classic games are preserved across saves.",
+        "Verify both options are visible and selectable in New Game at mobile and desktop sizes."
+      ]
+    },
+    {
+      "id": "LL-046",
+      "title": "Classic 11-degree university and enrollment",
+      "summary": "Separate Classic-only degree prerequisite graph, paid enrollments, up to four active courses, ten 6h lessons and extra-credit items; save-safe progress and roadmap.",
+      "operator_checks": [
+        "Start Classic, buy enrollment at university, complete Junior College, verify Academic and Business Administration unlock.",
+        "Buy computer and all three books in Classic to reduce per-diploma lesson count.",
+        "Export/import a partially completed degree and confirm Modern courses still work."
+      ]
+    },
+    {
+      "id": "LL-047",
+      "title": "Classic job-cap, dependability and dismissal rules",
+      "summary": "Start with 10 Experience, documented job-dependent stat cap formulas, +2 XP on new jobs, graduation bonuses, warning/dismissal on work attempts and raise thresholds.",
+      "operator_checks": [
+        "Work a low-end job repeatedly and verify stats stop at cap, then graduate to increase caps.",
+        "Let Dependability decay, attempt work at an advanced role and confirm warning/dismissal without earning a shift.",
+        "Confirm only one current job and that Modern Story still uses its original stat model."
+      ]
+    },
+    {
+      "id": "LL-048",
+      "title": "Parity ADR-0003 and Classic regression coverage",
+      "summary": "Update architecture/parity contract/workboard and implement independent Classic parity tests, legacy-save migration and browser smoke checks.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and confirm all unit/parity tests pass.",
+        "Inspect docs/decisions/ADR-0003-classic-progression-education-employment.md and parity-matrix for outstanding original-catalog work.",
+        "Start Classic on desktop/mobile with every world era; test university enroll and Careers panel."
+      ]
+    },
+    {
+      "id": "LL-055",
+      "title": "Authentic DOS job table",
+      "summary": "37 documented floppy roles with employer, wages, Experience/Dependability minima, diplomas and uniforms; exclude two CD-only jobs.",
+      "operator_checks": [
+        "Check all nine employers; compare Factory General Manager (25/h, 70/70, two degrees) with documented table."
+      ]
+    },
+    {
+      "id": "LL-056",
+      "title": "Original-style Classic hiring and raises",
+      "summary": "Four-hour applications, qualification rejections, per-week opening lockouts, variable luck, one employer, listed-wage raises.",
+      "operator_checks": [
+        "Fail an underqualified application, then hire Cook; switch roles and confirm only one employer."
+      ]
+    },
+    {
+      "id": "LL-057",
+      "title": "Manual Classic cash rent and debt",
+      "summary": "Starter $325 rent, due week 4, extension roll, persistent arrears, 50% garnishment and $2 interest.",
+      "operator_checks": [
+        "Play through week four, pay in cash or miss; confirm subsequent earnings garnished when debt remains."
+      ]
+    },
+    {
+      "id": "LL-058",
+      "title": "Classic employer UI and backward save migration",
+      "summary": "Employer filter and mapped venues; Classic legacy-job migration; smart AI food/rent handling; Modern unchanged.",
+      "operator_checks": [
+        "Compare Classic 37 listings against Modern 19; import prior Classic save and verify held wage preserved."
+      ]
+    },
+    {
+      "id": "LL-059",
+      "title": "Parity contract ADR and 110 tests",
+      "summary": "ADR-0004, full source job table, parity matrix, and 15 new tests including 100 seeded AI campaigns.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and ensure all tests pass from a fresh ZIP extraction."
+      ]
+    },
+    {
+      "id": "LL-061",
+      "title": "Classic zero-time savings transfers",
+      "summary": "$100 account transfers, Classic savings earn no interest.",
+      "operator_checks": [
+        "Transfer $100 both directions at Bank; verify wallet, savings and hours unchanged."
+      ]
+    },
+    {
+      "id": "LL-062",
+      "title": "Classic loan application and installments",
+      "summary": "2h Classic loan, recurring $45 principal plus $5 fee, missed-month defaults and credit penalty.",
+      "operator_checks": [
+        "Apply while employed, pay installment, miss next due month; verify debt and defaults."
+      ]
+    },
+    {
+      "id": "LL-063",
+      "title": "Six separate original stock categories",
+      "summary": "Broker entrance 2h and original prices/holding ledger; T-Bills redeem for 97% of face value.",
+      "operator_checks": [
+        "Enter broker and trade T-Bills/Gold; check cash and portfolio balance."
+      ]
+    },
+    {
+      "id": "LL-064",
+      "title": "Fresh-food refrigerator/freezer storage",
+      "summary": "Black’s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
+      "operator_checks": [
+        "Buy 4 portions, test spoilage; acquire fridge/freezer and test capacity."
+      ]
+    },
+    {
+      "id": "LL-065",
+      "title": "Parity docs, save migration and fresh-zip verification",
+      "summary": "ADR-0005, tests for original base prices/Modern isolation and old Classic investment recovery.",
+      "operator_checks": [
+        "Run node tools/verify.mjs after fresh extraction; open PLAY.html and inspect bank and market."
+      ]
+    },
+    {
+      "id": "LL-067",
+      "title": "DAPI/Looprd component schema",
+      "summary": "Embed the Looprd v1 YAML component with private Room records, hashed participant tokens, public non-sensitive change signals, and trusted inline Python handlers.",
+      "operator_checks": [
+        "Validate looprd.yaml on the running Looprd server; confirm GET /info and POST /session."
+      ]
+    },
+    {
+      "id": "LL-068",
+      "title": "Friend code host and join",
+      "summary": "Create 10-character invite codes, one remote guest, session-scoped tokens, join links and reconnecting sessions in the browser.",
+      "operator_checks": [
+        "Start Online with friend; share code; join from a second browser."
+      ]
+    },
+    {
+      "id": "LL-069",
+      "title": "Remote turn synchronization",
+      "summary": "Guest sends remote actions via HTTP; host validates using LifeGame and publishes snapshots; both listen for WebSocket notifications.",
+      "operator_checks": [
+        "Move, work, switch employment, end turn from guest; confirm host and guest agree."
+      ]
+    },
+    {
+      "id": "LL-070",
+      "title": "Multiplayer transport regression",
+      "summary": "Exercise SQLAlchemy handler integration, JS client role gating, version checks, duplicate-command rejection, and original 120 engine regressions.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py."
+      ]
+    },
+    {
+      "id": "LL-071",
+      "title": "Multiplayer architecture and operations",
+      "summary": "Document Looprd self-contained component and source registrations, reverse proxy CORS requirements, multiplayer limitations, and server setup.",
+      "operator_checks": [
+        "Confirm Looprd source discovery and GitHub Pages HTTPS/WSS accessibility."
+      ]
+    },
+    {
+      "id": "LL-073",
+      "title": "Touch-friendly City, Activities and My life panels",
+      "summary": "Responsive bottom navigation and live status strip; tapping a building opens its activities without changing engine state",
+      "operator_checks": [
+        "At 390px, start Classic, tap the Career Center, confirm Activities opens, then return to City and visit My life."
+      ]
+    },
+    {
+      "id": "LL-074",
+      "title": "Responsive illustrated city and dialog interactions",
+      "summary": "Two-column illustrated mobile city, safe-area bottom tabs, readable actions and full-height scrolling setup/online dialogs",
+      "operator_checks": [
+        "At 320px, verify no sideways scroll and that New Game, Looprd server field, and all 12 locations remain usable."
+      ]
+    },
+    {
+      "id": "LL-075",
+      "title": "Mobile UI parity and release checks",
+      "summary": "Structural mobile regression, ADR-0007, versioned ZipRunner manifest and standalone build checks",
+      "operator_checks": [
+        "Run node tools/verify.mjs and check Chrome/Edge at 320/390/768/1024/1280px."
+      ]
+    },
+    {
+      "id": "LL-076",
+      "title": "GitHub Pages release metadata reconciliation",
+      "summary": "Update repository workboard manifest, handoff and workboard to v0.5.3 so Pages CI verifies the same source release committed by ZipRunner; report exact version mismatch in verification.",
+      "operator_checks": [
+        "Commit .ziprunner-workboard-update.json, ZIPRUNNER_HANDOFF.txt, WORKBOARD.md and tools/verify.mjs to main.",
+        "Run node tools/verify.mjs and confirm full JS suite passes.",
+        "Inspect GitHub Pages build and verify the published website loads."
+      ]
+    },
+    {
+      "id": "LL-077",
+      "title": "Release version consistency and ZipRunner packaging",
+      "summary": "Publish the previous CI/workboard correction as a new v0.5.4 source release. Align package.json, workboard JSON, parity contract, Looprd component, generated HTML footer, release handoff, and ZipRunner artifact filename. Validate cross-file consistency before packaging.",
+      "operator_checks": [
+        "Confirm the source ZIP is named the-life-loop-0.5.4-ziprunner.zip and contains no private/runtime state.",
+        "Run node tools/verify.mjs after fresh extraction; verify version invariants and full tests succeed.",
+        "Commit the entire v0.5.4 source release (including the hidden .ziprunner-workboard-update.json) to GitHub main; inspect the CI Pages run."
+      ]
     }
   ],
   "remaining": [
@@ -210,6 +526,51 @@
       "id": "LL-014",
       "title": "Cross-platform desktop and mobile QA",
       "summary": "Run manual visual regression on Windows, Mac, Linux, mobile browsers, including small viewports",
+      "priority": "high"
+    },
+    {
+      "id": "LL-036",
+      "title": "Further original parity and economy depth",
+      "summary": "Original job/location catalog, menu/function fidelity and economy rules not yet ported. v0.4.6 original-style job requirements currently map to modern roles."
+    },
+    {
+      "id": "LL-039",
+      "title": "Original 60h time economy and actions",
+      "summary": "Complete original movement graph/edge behavior and partial shifts. Classic 60h and 2h entry overhead implemented provisionally; confirm DOS behavior and expand parity tests.",
+      "priority": "critical"
+    },
+    {
+      "id": "LL-040",
+      "title": "Original employment/stat progression and mode isolation",
+      "summary": "Map full original Sierra job/wage chart; replace provisional flat 20% vacancy rejection; verify original dismissal edge cases/raise behavior in DOS. Classic 0.4.6 has documented stat caps and work-triggered dismissal.",
+      "priority": "critical"
+    },
+    {
+      "id": "LL-041",
+      "title": "Original degrees, goals, rent and financial decisions",
+      "summary": "Classic original 11-diploma graph and education/career scoring added in v0.4.6; remaining goal formulas, rent collection and loan mechanics need work.",
+      "priority": "high"
+    },
+    {
+      "id": "LL-042",
+      "title": "Consumer economy, risk and four-person multiplayer",
+      "summary": "Add inventory durability, food spoilage/storage, pawn shop, original investments and edition-specific random risks, up to four human players.",
+      "priority": "medium"
+    },
+    {
+      "id": "LL-060",
+      "title": "Complete one-to-one DOS parity",
+      "summary": "Recreate standalone classic board location service rules, detailed economy, loans, food, pawn, multiplayer and DOS-reference scenario matching."
+    },
+    {
+      "id": "LL-066",
+      "title": "Complete remaining original bank, pawn and storefront parity",
+      "summary": "Original random market volatility and loan approval, loan default edge rules, shop spoilage penalties, Pawn Shop, robbery and original DOS map/service flow."
+    },
+    {
+      "id": "LL-072",
+      "title": "Native server-authoritative simulation and multi-device resilience",
+      "summary": "Migrate simulation validation into a trusted server-side engine for hostile-client resistance and add multi-room expiration/observability, host migration, spectator support, and real deployment acceptance.",
       "priority": "high"
     }
   ]
