@@ -44,9 +44,10 @@ APPEARANCE_OPTIONS = {
     'accent': {'forest','coral','violet','sky','gold','rose'},
     'mood': {'smile','calm','focused'},
     'personality': {'curious','kind','bold','thoughtful'},
+    'portrait': {''} | {f'illustrated-{i:02d}' for i in range(1,17)} | {f'original-{i:02d}' for i in range(1,36)},
 }
 APPEARANCE_DEFAULTS = {'skin':'peach','hair':'short','hairColor':'brown','outfit':'everyday',
-                       'accent':'forest','mood':'smile','personality':'curious'}
+                       'accent':'forest','mood':'smile','personality':'curious','portrait':''}
 ACCENT_COLORS = {'forest':'#367b5d','coral':'#dc7a6a','violet':'#8274c7',
                  'sky':'#4683b0','gold':'#c48a35','rose':'#c26b99'}
 

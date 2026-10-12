@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.11
+# The Life Loop — workboard v0.5.12
 
-Full-source release: `the-life-loop-0.5.11-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.12-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -220,10 +220,19 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 **Operator smoke:** choose Contemporary Starter Studio, inspect Home and Your Destination; upgrade to Sunny Apartment / Skyline Loft and verify pictures change without a balance change. Repeat in Historical and Sci-Fi (procedural art). Save/reload and test both responsive and standalone editions. Run `node tools/verify.mjs`.
 
 
-## v0.5.11 — Quick Start and reusable new-game settings
+## v0.5.12 — Quick Start and reusable new-game settings
 
 - [x] **LL-100** — Store sanitized local preferences for rules, era, solo/hotseat/online/sandbox mode and four goal values independently of character library, game save and Looprd room. Restore them automatically; one-click reset to defaults.
 - [x] **LL-101** — Initial game screen is a compact Quick Start: choose character and mode, then Start. Existing autosave gets a prominent Continue; starting over requires confirmation. Optional advanced accordion displays settings summary without demanding setup on every start.
 - [x] **LL-102** — Single layout for desktop and mobile without old three-step wizard; sticky Start/Continue footer, optional internal Advanced scrolling. New tests, ADR-0012 and ZipRunner version sync.
 
 **Operator acceptance:** Load fresh page and start without entering an advanced wizard. Change goals, era, rules and game mode in Advanced, refresh and confirm persistence. Start a new game only after acknowledging overwrite of any previous autosave; confirm Cancel leaves that save intact. On mobile check 320×568, 390×844; actions remain visible. No game balance, original DOS parity rules, live multiplayer protocol or character storage changes.
+
+## v0.5.12 — Real portrait gallery inside the game
+
+- [x] **LL-103** — Select 16 new illustrated portraits and 35 user-supplied classic portrait thumbnails directly in Character Studio. Fixed illustrations have a clearly labeled gallery; Custom drawn remains available for fine-grained skin/hair/outfit changes.
+- [x] **LL-104** — Carry validated portrait IDs into browser-local character records, game saves and online guest room snapshots. No image data, profile IDs or paths are sent to Looprd.
+- [x] **LL-105** — Produce optimized WebP source assets and versioned manifest; embed assets in portable `PLAY.html` and copy to cacheable GitHub Pages directories; add tests and CI gates.
+- [ ] **LL-106 (high)** — Operator: deploy updated Looprd handler to retain remote guest portrait IDs. Requires no Room table migration; accept a fresh co-op room and validate both players' portraits.
+
+Operator acceptance: test 320px mobile and large desktop. Open My characters, select a modern or classic portrait, save and start a game, reload and confirm the image persists in sidebar. Switch to Custom drawn and confirm existing color/hair controls still respond. Test both host and guest with a freshly registered Looprd component. No gameplay or Classic rule changes.

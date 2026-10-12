@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.parity-contract.v1",
   "architecture_revision": "1.4",
-  "release": "0.5.11",
+  "release": "0.5.12",
   "implementation_baseline": "0.5.1",
   "policy": "Original core mechanics are authoritative; modern presentation must not change economic outcomes; modern gameplay additions must be opt-in.",
   "mechanics": [
@@ -9,7 +9,7 @@
       "id": "TURN-001",
       "title": "Per-player weekly turns",
       "target": "One turn per player; week advances after all players finish.",
-      "current": "Turn order supports 1–2 humans and AI; 4-human original maximum unavailable.",
+      "current": "Turn order supports 1\u20132 humans and AI; 4-human original maximum unavailable.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
@@ -79,7 +79,7 @@
       "id": "JOB-004",
       "title": "Dependability and firing",
       "target": "20 initial, -3 per week; low stat warnings and dismissal on work attempts.",
-      "current": "Classic starts Dependability 20 and decays 3/week; hiring below 10 resets it, low reliability warns, and work attempts below job requirement−5 dismiss without pay. Exact messages/DOS edges unverified.",
+      "current": "Classic starts Dependability 20 and decays 3/week; hiring below 10 resets it, low reliability warns, and work attempts below job requirement\u22125 dismiss without pay. Exact messages/DOS edges unverified.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Dependibility",
@@ -99,7 +99,7 @@
       "id": "JOB-005",
       "title": "Wages and raises",
       "target": "8h pay for full 6h work, current wage; raise prerequisites, wage changes and risks.",
-      "current": "Classic uses documented $5–$25 base hourly wages, listed-wage raises (+4h) and half-shift garnishment/$2 interest. Original macroeconomy pricing curve and partial shifts remain different.",
+      "current": "Classic uses documented $5\u2013$25 base hourly wages, listed-wage raises (+4h) and half-shift garnishment/$2 interest. Original macroeconomy pricing curve and partial shifts remain different.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Jobs",
@@ -119,7 +119,7 @@
       "id": "EDU-002",
       "title": "Course time and benefits",
       "target": "Enroll fees and 6h lessons, usually 10 lessons; studies can benefit from durables.",
-      "current": "Classic enrollment $50, ten 6h lessons (1–5h partial final time permitted), computer and three-book study aids, graduation +5 happiness/reliability. Enrollment queue and item details require DOS validation.",
+      "current": "Classic enrollment $50, ten 6h lessons (1\u20135h partial final time permitted), computer and three-book study aids, graduation +5 happiness/reliability. Enrollment queue and item details require DOS validation.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hi-Tech_U",
@@ -208,8 +208,8 @@
     {
       "id": "GOAL-002",
       "title": "Education/career scoring",
-      "target": "Education ≈1+9/degrees; career ≈1.25×dependability in secondary reference.",
-      "current": "Classic degree score 1+9×diplomas and employed career score 1.25×Dependability; Modern story keeps tier and linear education scoring. Other goal formulas still simplified.",
+      "target": "Education \u22481+9/degrees; career \u22481.25\u00d7dependability in secondary reference.",
+      "current": "Classic degree score 1+9\u00d7diplomas and employed career score 1.25\u00d7Dependability; Modern story keeps tier and linear education scoring. Other goal formulas still simplified.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Dependibility",
@@ -225,5 +225,6 @@
       "source_url": "https://en.wikipedia.org/wiki/Jones_in_the_Fast_Lane",
       "acceptance": "Classic ruleset suppresses non-original mechanical bonuses while keeping dialog optional."
     }
-  ]
+  ],
+  "version": "0.5.12"
 }

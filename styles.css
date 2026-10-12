@@ -546,3 +546,40 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 @media(max-width:390px){
  .option-grid-swatches,.option-grid-tiles,.option-grid-choices{grid-template-columns:1fr}
 }
+
+/* v0.5.12 — real portrait illustrations inside the playable game */
+.character-avatar.portrait-image{display:block;object-fit:cover;border-radius:inherit;aspect-ratio:1 / 1;background:#e7f0e7}
+.editor-avatar-stage .portrait-image{width:min(100%,276px);height:auto;max-height:286px;aspect-ratio:1/1;border-radius:21px;box-shadow:0 12px 25px #10291f3d}
+.avatar .portrait-image{border-radius:14px;object-fit:cover}
+.profile-preview .portrait-image{width:66px;height:66px;aspect-ratio:1/1;border-radius:12px}
+.character-row .portrait-image{width:58px;height:58px;aspect-ratio:1/1;border-radius:11px}
+.character-avatar-sidebar.portrait-image{width:52px;height:52px;border-radius:13px}
+.portrait-editor-section{gap:10px;min-width:0}
+.portrait-collection-tabs{display:flex;align-items:stretch;gap:5px;padding:4px;border-radius:14px;background:#ebf1e9;flex-wrap:wrap}
+.portrait-collection-tab{flex:1 1 100px;min-height:38px;padding:8px 10px;border-radius:11px;border:1px solid transparent;background:transparent;color:#50705d;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.portrait-collection-tab.is-active{background:#fff;border-color:#bed8bf;color:#1e5131;box-shadow:0 2px 8px #1a48241a}
+.portrait-collection-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow-y:auto;overscroll-behavior:contain;max-height:min(38vh,350px);padding:2px 4px 4px 2px;scrollbar-width:thin}
+.portrait-pick{min-width:0;position:relative;aspect-ratio:1/1;overflow:hidden;border:2px solid #dde5dc;border-radius:13px;background:#fff;cursor:pointer;padding:0;box-shadow:0 2px 7px #122c2010;transition:transform .12s,border-color .12s,box-shadow .12s}
+.portrait-pick:hover,.portrait-pick:focus-visible{transform:translateY(-1px);border-color:#8fbc95}
+.portrait-pick.is-selected{border:3px solid #21834d;box-shadow:0 0 0 2px #a8eab4,0 6px 12px #1d663c33}
+.portrait-pick img{width:100%;height:100%;display:block;object-fit:cover;pointer-events:none}
+.portrait-pick span{position:absolute;right:3px;bottom:3px;display:grid;place-items:center;min-width:27px;height:19px;padding:2px 4px;border-radius:7px;background:#142f27d9;color:#fff;font-size:10px;font-weight:900}
+.portrait-custom-help{display:grid;gap:9px;padding:14px;border-radius:13px;background:#e8f4e6;color:#294c38}
+.portrait-custom-help p,.portrait-presets-note{font-size:12px;line-height:1.5;color:#5b7163;margin:0}
+.portrait-custom-help .option-chip{justify-self:start;min-height:40px}
+#editorFineTune[hidden],[data-portrait-group][hidden],#portraitNote[hidden]{display:none!important}
+@media(max-width:860px){
+ .modern-preview-pane{display:block}
+ .modern-preview-pane .character-stage-card{grid-template-columns:minmax(0,1fr);gap:6px}
+ .editor-avatar-stage{min-height:142px}
+ .editor-avatar-stage .portrait-image{width:min(65vw,215px)}
+ .portrait-collection-grid{grid-template-columns:repeat(5,minmax(0,1fr));max-height:min(30vh,300px)}
+}
+@media(max-width:600px){
+ .portrait-collection-grid{grid-template-columns:repeat(4,minmax(0,1fr));max-height:min(27vh,230px)}
+ .portrait-collection-tab{font-size:11px;padding:7px 5px;flex-basis:75px}
+ .portrait-pick{border-radius:10px}
+}
+@media(max-width:360px){.portrait-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* Keep thumbnail rows physically separated when the collection scrolls on small phones. */
+.portrait-collection-grid{grid-auto-rows:max-content;align-content:start}

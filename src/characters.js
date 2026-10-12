@@ -13,13 +13,15 @@ const OUTFIT={everyday:'Everyday',smart:'Smart',sport:'Sport',creative:'Creative
 const ACCENT={forest:'#367b5d',coral:'#dc7a6a',violet:'#8274c7',sky:'#4683b0',gold:'#c48a35',rose:'#c26b99'};
 const MOOD={smile:'Cheerful',calm:'Calm',focused:'Focused'};
 const PERSONALITY={curious:'Curious',kind:'Kind',bold:'Bold',thoughtful:'Thoughtful'};
-const DEFAULT={skin:'peach',hair:'short',hairColor:'brown',outfit:'everyday',accent:'forest',mood:'smile',personality:'curious'};
+const DEFAULT={skin:'peach',hair:'short',hairColor:'brown',outfit:'everyday',accent:'forest',mood:'smile',personality:'curious',portrait:''};
+const PORTRAIT_ID=/^(illustrated-(0[1-9]|1[0-6])|original-(0[1-9]|[12][0-9]|3[0-5]))$/;
 const text=(value,max)=>String(value??'').replace(/[\u0000-\u001f\u007f<>]/g,'').trim().slice(0,max);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function normalizeAppearance(value){
  const v=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
  const result={};
  for(const [field,map] of Object.entries({skin:SKIN,hair:HAIR,hairColor:HAIR_COLOR,outfit:OUTFIT,accent:ACCENT,mood:MOOD,personality:PERSONALITY})) result[field]=Object.hasOwn(map,v[field])?v[field]:DEFAULT[field];
+ result.portrait=typeof v.portrait==='string'&&PORTRAIT_ID.test(v.portrait)?v.portrait:'';
  return result;
 }
 function normalizeProfile(input){
@@ -67,6 +69,8 @@ function createStore(storage){
 }
 function avatar(profile,size='normal'){
  const p=normalizeAppearance(profile),name=esc(profile?.name||'Character');
+ const portrait=(typeof globalThis!=='undefined'?globalThis.LifePortraitAssets:null)?.portraits?.[p.portrait];
+ if(portrait?.image)return `<img class="character-avatar character-avatar-${size} portrait-image" src="${portrait.image}" alt="${name}'s illustrated character portrait" draggable="false" />`;
  const skin=SKIN[p.skin],hair=HAIR_COLOR[p.hairColor],outfit=ACCENT[p.accent],soft=outfit+'22';
  const hairShapes={
   short:`<path d="M24 46 Q25 14 59 13 Q94 12 96 45 Q85 31 68 29 Q52 24 39 35 Q32 39 24 46Z" fill="${hair}"/>`,
@@ -115,5 +119,5 @@ function avatar(profile,size='normal'){
   <rect x="86" y="18" width="16" height="16" rx="8" fill="${outfit}" opacity=".18"/>
  </svg>`;
 }
-return {KEY,LIMIT,SKIN,HAIR,HAIR_COLOR,OUTFIT,ACCENT,MOOD,PERSONALITY,normalizeAppearance,normalizeProfile,createStore,avatar};
+return {KEY,LIMIT,SKIN,HAIR,HAIR_COLOR,OUTFIT,ACCENT,MOOD,PERSONALITY,normalizeAppearance,normalizeProfile,createStore,avatar,PORTRAIT_ID};
 });

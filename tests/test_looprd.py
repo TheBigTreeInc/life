@@ -112,11 +112,12 @@ class LooprdTests(unittest.TestCase):
     def test_guest_character_is_persisted_in_shared_game_snapshot_and_validated(self):
         host,_=self.call(op='create',state=example_state())
         appearance={'skin':'olive','hair':'curly','hairColor':'silver','outfit':'sport',
-                    'accent':'violet','mood':'focused','personality':'bold'}
+                    'accent':'violet','mood':'focused','personality':'bold','portrait':'illustrated-12'}
         joined,event=self.call(op='join',code=host['code'],name='Guest New',appearance=appearance)
         self.assertTrue(joined['ok'])
         self.assertEqual(joined['version'],2)
         self.assertEqual(joined['state']['players'][1]['appearance'],appearance)
+        self.assertEqual(joined['state']['players'][1]['appearance']['portrait'],'illustrated-12')
         self.assertEqual(joined['state']['players'][1]['color'],'#8274c7')
         self.assertEqual(event['resource'],'pulses')
         state,_=self.call(op='status',code=host['code'],token=host['token'])

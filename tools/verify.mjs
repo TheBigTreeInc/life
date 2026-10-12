@@ -114,9 +114,15 @@ if(!load('tools/build-offline.mjs').includes('generate-art-assets.mjs'))errors.p
 if(!load('index.html').includes('src/setup-preferences.js')||!load('PLAY.html').includes('the-life-loop-setup-preferences-v1')||!load('src/app.js').includes('id="setupAdvanced"'))errors.push('Quick Start preferences missing');
 if(!load('docs/decisions/ADR-0012-quick-start-and-local-new-game-preferences.md').includes('**Status:** Accepted'))errors.push('Quick Start architecture decision missing');
 if(!['LL-100','LL-101','LL-102'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.10 workboard tasks missing');
+const portraitManifest=JSON.parse(load('assets/portraits/default/manifest.json'));
+if(portraitManifest.schema!=='the-life-loop.portrait-pack.v1'||portraitManifest.version!==pkg.version||Object.keys(portraitManifest.portraits).length!==51)errors.push('Portrait pack manifest invalid');
+if(!load('src/portrait-assets.js').includes('LifePortraitAssets'))errors.push('Generated portrait asset map missing');
+for(const item of Object.values(portraitManifest.portraits)){if(statSync(resolve(root,item.image)).size>120*1024)errors.push('Portrait image exceeds size budget '+item.image);}
+if(!['LL-103','LL-104','LL-105'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.12 portrait workboard tasks missing');
+if(!load('docs/decisions/ADR-0013-illustrated-character-portrait-catalog.md').includes('**Status:** Accepted'))errors.push('Portrait catalog ADR missing');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
 // Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
 execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/portrait-gallery.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.11",
-  "summary": "v0.5.11: modernized character studio with richer avatar rendering, live preview card, visual style selectors, randomize option, and improved saved-character presentation. No rules, saves, or Looprd changes.",
+  "version": "0.5.12",
+  "summary": "v0.5.12: 51 real selectable portrait illustrations integrated in-game (16 new illustrated / 35 original user examples), persistent local/game/guest multiplayer portrait IDs, custom SVG fallback, offline and Pages assets; no rule changes.",
   "implemented": [
     {
       "id": "LL-001",
@@ -684,6 +684,36 @@
         "Check 320x568, 390x844, 768x1024 and 1440x900 for visible Start and Continue buttons without document scrolling.",
         "Run node tools/verify.mjs and build GitHub Pages."
       ]
+    },
+    {
+      "id": "LL-103",
+      "title": "Real illustrated portrait gallery in character creator",
+      "summary": "Select from 16 modern illustrated or 35 classic portrait assets without leaving game; fixed portraits are marked as presets.",
+      "operator_checks": [
+        "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
+        "Start or join a two-player game and confirm the selected portrait is visible on each client.",
+        "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+      ]
+    },
+    {
+      "id": "LL-104",
+      "title": "Local and multiplayer portrait identity persistence",
+      "summary": "Persist validated portrait IDs in browser-local character profiles and serialized game/guest snapshots; reject injected asset paths.",
+      "operator_checks": [
+        "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
+        "Start or join a two-player game and confirm the selected portrait is visible on each client.",
+        "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+      ]
+    },
+    {
+      "id": "LL-105",
+      "title": "Offline/PWA-ready portrait assets and CI coverage",
+      "summary": "Optimize and package all 51 WebP images for standalone HTML and separately cached GitHub Pages; verify asset manifest and appearance tests.",
+      "operator_checks": [
+        "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
+        "Start or join a two-player game and confirm the selected portrait is visible on each client.",
+        "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+      ]
     }
   ],
   "remaining": [
@@ -779,6 +809,16 @@
       "title": "Optional downloadable local style packs",
       "summary": "Offer local art pack import, validation and per-browser selection without adding dependencies to the standalone game.",
       "priority": "low"
+    },
+    {
+      "id": "LL-106",
+      "title": "Verify portrait sharing on production Looprd",
+      "summary": "Deploy refreshed handler and test guest portrait persistence on both browsers; Looprd room schema unchanged.",
+      "priority": "high",
+      "operator_checks": [
+        "Reload and re-register Looprd component from updated root looprd.yaml, then create a fresh two-browser game.",
+        "Select illustrated portrait in guest browser; confirm it is visible to the host, guest and after reconnect."
+      ]
     }
   ]
 }

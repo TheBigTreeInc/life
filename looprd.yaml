@@ -1,7 +1,7 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.11
+release: 0.5.12
 api:
   version: v1
 auth:
@@ -89,21 +89,23 @@ handlers:
     \ 'skin': {'peach','tan','brown','deep','pale','olive'},\n    'hair': {'short','long','curly','bun','buzz','swept'},\n\
     \    'hairColor': {'black','brown','auburn','blonde','silver','mint'},\n    'outfit': {'everyday','smart','sport','creative'},\n\
     \    'accent': {'forest','coral','violet','sky','gold','rose'},\n    'mood': {'smile','calm','focused'},\n \
-    \   'personality': {'curious','kind','bold','thoughtful'},\n}\nAPPEARANCE_DEFAULTS = {'skin':'peach','hair':'short','hairColor':'brown','outfit':'everyday',\n\
-    \                       'accent':'forest','mood':'smile','personality':'curious'}\nACCENT_COLORS = {'forest':'#367b5d','coral':'#dc7a6a','violet':'#8274c7',\n\
-    \                 'sky':'#4683b0','gold':'#c48a35','rose':'#c26b99'}\n\ndef guest_appearance(value):\n    if\
-    \ not isinstance(value, dict):\n        value = {}\n    return {key: value.get(key) if value.get(key) in options\
-    \ else APPEARANCE_DEFAULTS[key]\n            for key, options in APPEARANCE_OPTIONS.items()}\n\ndef replace_guest_identity(state,\
-    \ name, appearance):\n    # This is an actual persisted multiplayer snapshot, not the browser's private profile\
-    \ library.\n    updated = json.loads(json.dumps(state))\n    guest = updated['players'][1]\n    guest['name']\
-    \ = name\n    if appearance is not None:\n        guest['appearance'] = appearance\n        guest['color'] =\
-    \ ACCENT_COLORS[appearance['accent']]\n    return updated\n\ndef execute(body, sessions):\n    if not isinstance(body,\
-    \ dict):\n        return fail('Invalid request'), None\n    op = body.get('op')\n    now = int(time.time())\n\
-    \    event = None\n    with sessions.begin() as db:\n        if op == 'create':\n            state = body.get('state')\n\
-    \            if not valid_snapshot(state):\n                return fail('A valid two-human hotseat game is required'),\
-    \ None\n            db.execute(sa.delete(Room).where(Room.c.touched < now - TTL))\n            host = secrets.token_urlsafe(32)\n\
-    \            chat_key = secrets.token_urlsafe(32)\n            code = ''.join(secrets.choice(ALPHABET) for _\
-    \ in range(10))\n            # The random join code is not used as the privileged host token.\n            db.execute(sa.insert(Room).values(codeHash=digest(code),\
+    \   'personality': {'curious','kind','bold','thoughtful'},\n    'portrait': {''} | {f'illustrated-{i:02d}' for\
+    \ i in range(1,17)} | {f'original-{i:02d}' for i in range(1,36)},\n}\nAPPEARANCE_DEFAULTS = {'skin':'peach','hair':'short','hairColor':'brown','outfit':'everyday',\n\
+    \                       'accent':'forest','mood':'smile','personality':'curious','portrait':''}\nACCENT_COLORS\
+    \ = {'forest':'#367b5d','coral':'#dc7a6a','violet':'#8274c7',\n                 'sky':'#4683b0','gold':'#c48a35','rose':'#c26b99'}\n\
+    \ndef guest_appearance(value):\n    if not isinstance(value, dict):\n        value = {}\n    return {key: value.get(key)\
+    \ if value.get(key) in options else APPEARANCE_DEFAULTS[key]\n            for key, options in APPEARANCE_OPTIONS.items()}\n\
+    \ndef replace_guest_identity(state, name, appearance):\n    # This is an actual persisted multiplayer snapshot,\
+    \ not the browser's private profile library.\n    updated = json.loads(json.dumps(state))\n    guest = updated['players'][1]\n\
+    \    guest['name'] = name\n    if appearance is not None:\n        guest['appearance'] = appearance\n      \
+    \  guest['color'] = ACCENT_COLORS[appearance['accent']]\n    return updated\n\ndef execute(body, sessions):\n\
+    \    if not isinstance(body, dict):\n        return fail('Invalid request'), None\n    op = body.get('op')\n\
+    \    now = int(time.time())\n    event = None\n    with sessions.begin() as db:\n        if op == 'create':\n\
+    \            state = body.get('state')\n            if not valid_snapshot(state):\n                return fail('A\
+    \ valid two-human hotseat game is required'), None\n            db.execute(sa.delete(Room).where(Room.c.touched\
+    \ < now - TTL))\n            host = secrets.token_urlsafe(32)\n            chat_key = secrets.token_urlsafe(32)\n\
+    \            code = ''.join(secrets.choice(ALPHABET) for _ in range(10))\n            # The random join code\
+    \ is not used as the privileged host token.\n            db.execute(sa.insert(Room).values(codeHash=digest(code),\
     \ hostHash=digest(host),\n                guestHash=None, guestName=None, chatKey=chat_key, state=state, pending=None,\
     \ lastResult=None,\n                version=1, signal=0, touched=now))\n            return {'ok': True, 'code':\
     \ code, 'token': host, 'role': 'host', 'version': 1, 'state': state, 'joined': False, 'chatKey':chat_key}, None\n\
