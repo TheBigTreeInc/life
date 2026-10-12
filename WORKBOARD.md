@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.15
+# The Life Loop — workboard v0.5.19
 
-Full-source release: `the-life-loop-0.5.15-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.19-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -220,7 +220,7 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 **Operator smoke:** choose Contemporary Starter Studio, inspect Home and Your Destination; upgrade to Sunny Apartment / Skyline Loft and verify pictures change without a balance change. Repeat in Historical and Sci-Fi (procedural art). Save/reload and test both responsive and standalone editions. Run `node tools/verify.mjs`.
 
 
-## v0.5.15 — Quick Start and reusable new-game settings
+## v0.5.10 — Quick Start and reusable new-game settings
 
 - [x] **LL-100** — Store sanitized local preferences for rules, era, solo/hotseat/online/sandbox mode and four goal values independently of character library, game save and Looprd room. Restore them automatically; one-click reset to defaults.
 - [x] **LL-101** — Initial game screen is a compact Quick Start: choose character and mode, then Start. Existing autosave gets a prominent Continue; starting over requires confirmation. Optional advanced accordion displays settings summary without demanding setup on every start.
@@ -238,7 +238,7 @@ The three user-provided homes are installed in `homeTiers`; each has a 448px car
 Operator acceptance: test 320px mobile and large desktop. Open My characters, select a modern or classic portrait, save and start a game, reload and confirm the image persists in sidebar. Switch to Custom drawn and confirm existing color/hair controls still respond. Test both host and guest with a freshly registered Looprd component. No gameplay or Classic rule changes.
 
 
-## v0.5.15 — Data-driven Pixel Studio character compiler
+## v0.5.13 — Data-driven Pixel Studio character compiler
 
 - [x] **LL-107** — Source-controlled `assets/characters/pixel-v1/catalog.json` contract with three body templates, component slots, semantic material palettes, draw bands, interaction variants and idle/walk frame timing; generated browser catalog included in source ZIP.
 - [x] **LL-108** — Pure deterministic compiler and render adapters: 32×40 nearest-neighbor geometry, 4 directions, idle and walking (24 shared-clock poses), stable draw order, bounded appearance cache, SVG sidebar thumbnails and 2D Canvas preview/sprite-sheet PNG export.
@@ -249,12 +249,12 @@ Operator acceptance: test 320px mobile and large desktop. Open My characters, se
 **Operator acceptance:** Open My Characters → Create, switch to Pixel Studio, select three body types, hairstyles and a cap/beanie; confirm hair compresses under hats. Use direction arrows and Walk, export the PNG sheet; save and start a game, verify pixel thumbnail in sidebar. Reopen and verify saved parts. For online, deploy updated `looprd.yaml` handler and start a fresh room, confirming guest body/headwear choices show for both players. Run `node tools/verify.mjs` and Python Looprd tests. No changes to Classic economy, city art, or server database schema. Git push/deployment are manual.
 
 
-## v0.5.15 — Character customization temporarily disabled
+## v0.5.14 — Character customization temporarily disabled
 
 - [x] **LL-112** — Restore the original fixed character icons (player 🧑‍🎨, local friend 🧑‍🚀, rival 😎). Hide My Characters in the top-right menu; remove character selection from Quick Start and online join. No new custom appearance is transferred to games or Looprd rooms.
 - [x] **LL-113** — Keep all the character creator, Pixi-like compiler/renderer, sprite/portrait assets, saved local profiles and references in source under `ENABLE_CHARACTER_CUSTOMIZATION=false`. The original profiles and old save data are **not** deleted, but customized avatars are ignored during play while the feature is off. Regression-test disabled UI and preserve future reactivation.
 
-**Operator acceptance:** Open v0.5.15 at 320px and desktop. Start a game with an ordinary name; verify the default emoji avatar in Your Story and absence of character fields in Quick Start and online join. Verify `Menu` lacks My Characters. If you open a previously customized save, the original icon appears, while the old appearance data is not altered or deleted. `node tools/verify.mjs` and the Looprd handler tests should still pass. No game economy, rules, chat or server schema changes.
+**Operator acceptance:** Open v0.5.14 at 320px and desktop. Start a game with an ordinary name; verify the default emoji avatar in Your Story and absence of character fields in Quick Start and online join. Verify `Menu` lacks My Characters. If you open a previously customized save, the original icon appears, while the old appearance data is not altered or deleted. `node tools/verify.mjs` and the Looprd handler tests should still pass. No game economy, rules, chat or server schema changes.
 
 
 ### v0.5.15 — Compact city navigation and status
@@ -263,3 +263,44 @@ Operator acceptance: test 320px mobile and large desktop. Open My characters, se
 - **LL-115 — Implemented:** Destination, WSS-only Chat (unread badge), Co-op dropdown and Menu are right-aligned. Room code, participants, turn owner and WS/HTTP status reside in Co-op.
 - **LL-116 — Implemented:** Removed pale-green turn band and redundant week/market location; added ticker directly beneath the board, showing turn, week, market status and time. Keeps original gameplay and mobile tabs.
 - **Acceptance:** visual QA at 320/390/768/1280/1600 widths, menu and co-op dropdown dismissal, unchanged WSS chat gate and unread marker, clean ZIP and CI.
+
+
+## v0.5.16 — Classic partial work and pawn economy
+
+- [x] **LL-117** — Restore partial work sessions when only 1–5 hours remain, with proportional gross pay and action costs; retain the full 6h/8h paid shift.
+- [x] **LL-118** — Accumulate partial work toward six-hour experience/dependability credit; reset when jobs change or player is dismissed, avoiding one-hour shift grinding.
+- [x] **LL-119** — Add Classic pawn/loan, on-time redemption, and expired-property resale to another player for refrigerator, freezer, computer, and three books. Pawn desk is temporarily at Circuit City; economic coefficients are provisional.
+- [x] **LL-120** — Serialize shared pawn lots, validate on load, and test positive/negative cases and Modern isolation.
+
+**Operator acceptance:** Hire a Classic cook; use travel or other actions to reach the workplace with 3h left, work and verify proportional salary/zero remaining time. At Circuit City buy a computer, pawn it, save/reload, and redeem it before deadline. For resale, use two local humans and advance past the redemption deadline. Check no pawn actions in Modern Story. `node tools/verify.mjs` and `python -m unittest discover -s tests -p test_looprd.py -q` must pass. See [ADR-0017](docs/decisions/ADR-0017-classic-partial-work-and-pawn-lifecycle.md). Exact DOS observed time/currency formulas and separate pawn venue are still backlog.
+
+
+## v0.5.17 — Shared city geometry and qualified-first careers
+
+- [x] **LL-121** — Shared 13-venue board in Classic and Modern, with a 4×5 perimeter, a central hub and an unclickable public garden slot. Every business has unique stable ID and position.
+- [x] **LL-122** — New standalone Second Chance Pawn, with distinct player-created Contemporary artwork and procedural Historical/Sci-Fi fallback. The pawn, redeem and buy lifecycle moves from Circuit City to this venue in both rulesets. Fees and timing remain provisional and need DOS verification.
+- [x] **LL-123** — Career Center now displays eligible jobs first. A clear opt-in checkbox exposes future roles, missing requirements and the original failed-application mechanic. The full roadmap remains in Careers.
+- [x] **LL-124** — Travel cost derives from actual ring positions, not a list index; regression tests, asset checks and source/Pages release verification.
+
+**Original-fidelity note:** A referenced Jones guide confirms underqualified job applications are possible and display missing qualifications. Hiding these by default is a Life Loop convenience rather than verified DOS UI parity. The full 13-venue map is now shared, but we have not yet split all original businesses (such as Z-Mart and Black's Market) into distinct destinations. Pawn values and redemption deadlines are also still unverified.
+
+
+## v0.5.19 — Original Classic economy, goal points and Jones opponent difficulty
+
+- [x] **LL-125** — Classic start $200 cash / $0 savings; Modern Story $250/$100 retained; opening finance history consistent.
+- [x] **LL-126** — Original-derived per-goal Classic statistics (liquid assets/100; happiness stat; 1+9 per degree; career 1.25×Dependability while employed) and four independent victory checks.
+- [x] **LL-127** — Jones difficulty presets (Take It Easy +40, Play Fair ±0, Go For Broke −40); default human 200 goal points. Rival goals independently allocated from a seeded approximation that biases wealth within ten points and roundtrip in shared snapshots.
+- [x] **LL-128** — Employer-first Classic Employment Office selector, qualified jobs by default, future job opt-in and original rejection behavior preserved. AI purchases replacement uniform before depletion to stay solvent after original starting-cash correction.
+- [x] **LL-129** — Regression suite, updated documentation, parity contract, ZipRunner version synchronization and clean package.
+- [ ] **LL-130 (high)** — Capture DOS reference checks for Jones goal distribution, exact treatment of liabilities in wealth and original win evaluation timing. Our implementation deliberately marks those as approximations.
+
+**Operator acceptance:** Start Classic, confirm $200 cash/$0 savings; open Game Settings and compare Jones difficulties at default goals (240/200/160). Visit Employment Office and switch employer, then Show future jobs and verify missing qualifications plus rejection. Verify Modern retains its balances. Run full verification and test across two browsers for networked snapshots. See ADR-0019.
+
+## v0.5.19 — Primary-source Classic scoring correction
+
+- [x] LL-131 — Sierra Quick Reference crosswalk, annotated distinction between primary evidence and provisional algorithms.
+- [x] LL-132 — Original-style money goal values owned durable goods; incomplete diploma work counts toward education.
+- [x] LL-133 — Two-week hopeless-stranding relative rescue; explicit tested $90 provisional gift with eight-week cooldown.
+- [ ] LL-134 — Original weekly economy index, robbery/house security, durable item breakage and store inventory parity.
+
+See `docs/decisions/ADR-0020-printed-reference-classic-economy.md`.

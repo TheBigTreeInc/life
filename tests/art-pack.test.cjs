@@ -6,7 +6,7 @@ const manifest=JSON.parse(readFileSync('assets/art/styles/contemporary-default/m
 const map=require('../src/art-assets.js');
 const Art=require('../src/art.js');
 const D=require('../src/data.js');
-test('Default pack contains precisely the 11 non-home venue identities',()=>{
+test('Default pack contains precisely the 12 non-home venue identities',()=>{
  const locations=new Set(D.places.map(x=>x.id));
  assert.deepEqual(new Set(Object.keys(manifest.venues)),new Set([...locations].filter(id=>id!=='home')));
  assert.deepEqual(map,manifest);

@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.parity-contract.v1",
-  "architecture_revision": "1.4",
-  "release": "0.5.15",
+  "architecture_revision": "1.5",
+  "release": "0.5.19",
   "implementation_baseline": "0.5.1",
   "policy": "Original core mechanics are authoritative; modern presentation must not change economic outcomes; modern gameplay additions must be opt-in.",
   "mechanics": [
@@ -39,7 +39,7 @@
       "id": "TIME-003",
       "title": "Action time accounting",
       "target": "Full work session 6h paid for 8h; job application 4h; study 6h; relaxing 6h.",
-      "current": "Classic 4h application and 6h relaxation; work 6h/8h pay, study 6h. Partial-work handling unimplemented.",
+      "current": "Classic retains 6h full work paid for 8h, and now allows 1\u20135 remaining-hour shifts with proportional wages, energy, rent garnishment and cumulative six-hour work-stat credit. Exact DOS partial rounding and stat awards remain to be compared.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hour",
@@ -59,7 +59,7 @@
       "id": "JOB-002",
       "title": "Applications and openings",
       "target": "Requirements + chance-based no openings; failed applications still consume time.",
-      "current": "Classic now uses the 37-job DOS/floppy catalog, stat/diploma qualification rejection (+4h/-1 Happiness), qualification-sensitive openings chance and same-week rejection lockout; original RNG order still unverified.",
+      "current": "Classic 37-job catalog with eligibility filter; agency now selects employer first and lists that workplace\u2019s jobs, with optional future applications, 4h failed attempts, and chance-based no openings. Exact DOS UI ordering and RNG unverified.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Employment_Office",
@@ -69,7 +69,7 @@
       "id": "JOB-003",
       "title": "Work-stat gains and caps",
       "target": "+1 experience/+1 dependability per work session up to job/degree caps.",
-      "current": "Classic stat caps now use the DOS 37-job requirement data and completed diploma counts; XP/Dependability capped per authentic role. Work/dismissal edge cases still require DOS comparison.",
+      "current": "Classic XP/Dependability +1 per full six-hour work-credit up to job+degree caps; partial hours accumulate across actions and weeks, resetting upon changing job or dismissal. Original DOS partial-stat edge cases unverified.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Jobs",
@@ -99,7 +99,7 @@
       "id": "JOB-005",
       "title": "Wages and raises",
       "target": "8h pay for full 6h work, current wage; raise prerequisites, wage changes and risks.",
-      "current": "Classic uses documented $5\u2013$25 base hourly wages, listed-wage raises (+4h) and half-shift garnishment/$2 interest. Original macroeconomy pricing curve and partial shifts remain different.",
+      "current": "Classic 8-hour pay for 6h full sessions and prorated pay for partial sessions with listed rates; rent garnishment capped to gross pay. Raises and exact DOS rounding still partial.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Jobs",
@@ -179,8 +179,8 @@
       "id": "ECON-004",
       "title": "Pawn, repossession and durable economy",
       "target": "Pawn valuables, redeem within time window, other players can buy unredeemed goods.",
-      "current": "No equivalent pawn-shop simulation.",
-      "status": "missing",
+      "current": "Provisional Classic-only pawn lifecycle for six durables (pledge for cash, redeem by deadline, expired lots bought by another human), exposed as Circuit City pawn counter on 12-tile map; values, deadlines and exact original location unverified.",
+      "status": "partial",
       "priority": "P2",
       "source_url": "https://wiki-origin.giantbomb.com/wiki/Games/Jones_in_the_Fast_Lane",
       "acceptance": "Pawn item, redeem within window, let it expire, other player buys it."
@@ -189,7 +189,7 @@
       "id": "EVT-001",
       "title": "Economic cycles and random losses",
       "target": "Events may cause robberies, job loss, weekends; timing differs by DOS edition.",
-      "current": "Classic disables non-original civic modifiers/opportunities; original economic/random event distribution absent.",
+      "current": "Classic has a new provisional emergency relative gift for fully stranded players. Accurate weekend event tables, robbery, bankruptcy assistance amounts, and weekly economy shock timing still absent.",
       "status": "partial",
       "priority": "P2",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
@@ -199,7 +199,7 @@
       "id": "GOAL-001",
       "title": "Four adjustable goals",
       "target": "Wealth, happiness, education and career; win when all chosen thresholds achieved.",
-      "current": "Four configurable goals exist, but advancement formulas differ.",
+      "current": "Classic tracks individual goal points 10\u2013100 and 200-point default. Human targets and Jones targets now differ: Take It Easy +40, Play Fair 0, Go For Broke -40. A seeded semi-random allocator distributes valid AI goals and keeps Wealth within 10 points of human wealth when feasible; exact Sierra allocation unverified.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://en.wikipedia.org/wiki/Jones_in_the_Fast_Lane",
@@ -208,11 +208,11 @@
     {
       "id": "GOAL-002",
       "title": "Education/career scoring",
-      "target": "Education \u22481+9/degrees; career \u22481.25\u00d7dependability in secondary reference.",
-      "current": "Classic degree score 1+9\u00d7diplomas and employed career score 1.25\u00d7Dependability; Modern story keeps tier and linear education scoring. Other goal formulas still simplified.",
+      "target": "Money goal accounts for net worth including the value of owned goods (Sierra printed Quick Reference); education goal advances with completed university study units; Career follows dependability when employed.",
+      "current": "Classic money goal includes durable inventory via provisional purchase-price appraisal alongside cash, savings and investments net of debts; education progress includes unfinished course lessons plus completed diplomas. Original item valuation, fractional education conversion, rounding and debt handling still unverified. Career uses 1.25 * Dependability while employed.",
       "status": "partial",
       "priority": "P1",
-      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Dependibility",
+      "source_url": "https://www.dosdays.co.uk/media/games/jones/Jones_in_the_Fast_Lane_-_Quick_Reference_Card.pdf",
       "acceptance": "Compare all four formula outputs against original observations, including unemployment."
     },
     {
@@ -226,5 +226,5 @@
       "acceptance": "Classic ruleset suppresses non-original mechanical bonuses while keeping dialog optional."
     }
   ],
-  "version": "0.5.15"
+  "version": "0.5.19"
 }

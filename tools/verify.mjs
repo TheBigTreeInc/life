@@ -50,7 +50,7 @@ const contract=JSON.parse(load('docs/parity-contract.json'));
 if(!architecture.includes('Mechanical Fidelity Charter')||!architecture.includes('original gameplay mechanics'))errors.push('Architectural mechanics-first charter missing');
 if(!adr.includes('Status:** Accepted')||!scenarioAdr.includes('Status:** Accepted')||!classicAdr.includes('Status:** Accepted'))errors.push('Accepted architecture decision missing');
 if(!originalRules.includes('TIME-001')||!originalRules.includes('EDU-001'))errors.push('Reference specification incomplete');
-if(contract.schema!=='the-life-loop.parity-contract.v1'||contract.release!==pkg.version)errors.push(`Parity contract schema/release mismatch: ${contract.release} vs ${pkg.version}`);
+if(contract.schema!=='the-life-loop.parity-contract.v1'||contract.release!==pkg.version||contract.version!==pkg.version)errors.push(`Parity contract schema/release mismatch: ${contract.release} vs ${pkg.version}`);
 if(!Array.isArray(contract.mechanics)||contract.mechanics.length<21)errors.push('Parity registry missing required mechanics');
 const requiredRuleIds=['TURN-001','TIME-001','TIME-002','TIME-003','JOB-001','JOB-002','JOB-003','JOB-004','JOB-005','EDU-001','EDU-002','ITEM-001','ITEM-002','ECON-001','ECON-002','ECON-003','ECON-004','EVT-001','GOAL-001','GOAL-002','MOD-001','JOB-006'];
 const statuses=new Set(['implemented','partial','deviates','missing','unverified']);
@@ -100,7 +100,7 @@ if(!load('src/app.js').includes('quick-start-form')||!load('src/app.js').include
 const artManifest=JSON.parse(load('assets/art/styles/contemporary-default/manifest.json'));
 const artMap=JSON.parse(load('src/art-assets.js').match(/root\.LifeArtAssets=(\{.*\});/)?.[1]||'{}');
 if(artManifest.schema!=='the-life-loop.art-pack.v1'||artManifest.version!==pkg.version||JSON.stringify(artManifest)!==JSON.stringify(artMap))errors.push('Contemporary art pack mapping out of sync');
-if(Object.keys(artManifest.venues).length!==11||artManifest.venues.home)errors.push('Art pack must map eleven non-home venues');
+if(Object.keys(artManifest.venues).length!==12||artManifest.venues.home)errors.push('Art pack must map twelve non-home venues');
 for(const tier of ['studio','apartment','loft'])if(!Object.hasOwn(artManifest.homeTiers,tier))errors.push('Missing home artwork tier '+tier);
 if(!load('docs/decisions/ADR-0011-distinct-venue-art-and-residence-tiers.md').includes('**Status:** Accepted'))errors.push('Art architecture decision missing');
 if(!['LL-093','LL-094','LL-095','LL-096'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.implemented.some(t=>t.id==='LL-097')||!manifest.remaining.some(t=>t.id==='LL-098')||!manifest.implemented.some(t=>t.id==='LL-099'))errors.push('v0.5.8 workboard tasks missing');
@@ -128,9 +128,19 @@ if(!load('index.html').includes('src/character-sprites.js')||!load('PLAY.html').
 if(!load('tools/build-offline.mjs').includes('generate-character-catalog.mjs'))errors.push('Character catalog generation not wired into offline build');
 if(!load('docs/decisions/ADR-0015-pause-character-customization.md').includes('**Status:** Accepted'))errors.push('Customization pause ADR missing');
 if(!['LL-112','LL-113'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.14 rollback workboard tasks missing');
+if(!['LL-117','LL-118','LL-119','LL-120'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('v0.5.16 Classic time and pawn workboard tasks missing');
+if(!load('src/engine.js').includes('classicPawnLots')||!load('src/engine.js').includes('classicWorkHourCredit')||!load('docs/decisions/ADR-0017-classic-partial-work-and-pawn-lifecycle.md').includes('**Status:** Accepted'))errors.push('Classic partial work and pawn feature/ADR missing');
+if(!['LL-121','LL-122','LL-123','LL-124'].every(id=>manifest.implemented.some(t=>t.id===id)))errors.push('Shared map and eligible jobs release tasks missing');
+if(!['LL-125','LL-126','LL-127','LL-128','LL-129'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-130'))errors.push('Classic Jones goals/economy release tasks missing');
+if(!load('src/engine.js').includes('rivalGoalAllocation(')||!load('src/app.js').includes('id="jonesDifficulty"')||!load('src/engine.js').includes('classicGoalStats(p)'))errors.push('Original Classic rival-goal mechanics missing');
+if(!load('docs/decisions/ADR-0019-classic-goals-jones-and-employer-office.md').includes('**Status:** Accepted'))errors.push('Classic goal/competition ADR missing');
+if(!load('src/app.js').includes('showFutureJobApplications=false')||!load('src/data.js').includes("id:'pawn'"))errors.push('Shared 13-venue board and eligible-first careers not present');
+if(!manifest.implemented.some(t=>t.id==='LL-131')||!manifest.implemented.some(t=>t.id==='LL-132')||!manifest.implemented.some(t=>t.id==='LL-133')||!manifest.remaining.some(t=>t.id==='LL-134'))errors.push('v0.5.19 printed-reference parity workboard tasks missing');
+if(!load('docs/decisions/ADR-0020-printed-reference-classic-economy.md').includes('**Status:** Accepted'))errors.push('Original primary-source parity decision missing');
+if(!load('src/engine.js').includes('classicOwnedValue(')||!load('src/engine.js').includes('classicStudyProgress(')||!load('src/engine.js').includes('classicEmergencyRelief('))errors.push('Classic reference parity gameplay missing');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
 // Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
 execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/toolbar-ticker.test.cjs','tests/portrait-gallery.test.cjs','tests/character-compiler.test.cjs','tests/customization-disabled.test.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/classic-work-pawn.test.cjs','tests/toolbar-ticker.test.cjs','tests/portrait-gallery.test.cjs','tests/character-compiler.test.cjs','tests/customization-disabled.test.cjs','tests/shared-board-careers.test.cjs','tests/classic-goals-competition.test.cjs','tests/classic-reference-mechanics.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

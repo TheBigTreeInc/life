@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.art-pack.v1",
   "id": "contemporary-default",
-  "version": "0.5.15",
+  "version": "0.5.19",
   "era": "current",
   "description": "Distinct contemporary venue paintings and user-supplied residence illustrations keyed by the player housing tier.",
   "venues": {
@@ -48,6 +48,10 @@
     "cinema": {
       "card": "assets/art/styles/contemporary-default/cinema-card.webp",
       "detail": "assets/art/styles/contemporary-default/cinema-detail.webp"
+    },
+    "pawn": {
+      "card": "assets/art/styles/contemporary-default/pawn-card.webp",
+      "detail": "assets/art/styles/contemporary-default/pawn-detail.webp"
     }
   },
   "homeTiers": {

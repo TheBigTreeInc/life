@@ -14,7 +14,8 @@ const themes={
  housing:    {sky:'#ffdfba',wall:'#f0bf9f',roof:'#a66e74',trim:'#fff0d9',door:'#9a7d7d',form:'house',label:'OPEN DOOR',extra:'keys'},
  boutique:   {sky:'#f8cee7',wall:'#eab2ce',roof:'#b872aa',trim:'#fff3e6',door:'#b57da1',form:'shop',label:'THREADS',extra:'hanger'},
  tech:       {sky:'#b8e4d9',wall:'#81b9b0',roof:'#3a767a',trim:'#e8fcf1',door:'#467d7d',form:'shop',label:'CIRCUIT',extra:'circuit'},
- clinic:     {sky:'#d3efd8',wall:'#a7cdb7',roof:'#668a78',trim:'#fff9ea',door:'#6c9e83',form:'office',label:'WELLBEING',extra:'cross'}
+ clinic:     {sky:'#d3efd8',wall:'#a7cdb7',roof:'#668a78',trim:'#fff9ea',door:'#6c9e83',form:'office',label:'WELLBEING',extra:'cross'},
+ pawn:       {sky:'#ffe1b7',wall:'#d6b38e',roof:'#3d755e',trim:'#fff4d8',door:'#35634c',form:'shop',label:'PAWN SHOP',extra:'coin'}
 };
 const people={
  home:{skin:'#d89b78',hair:'#4b3f42',shirt:'#6f9e8a',style:'curly'},
@@ -28,7 +29,8 @@ const people={
  housing:{skin:'#c48d6d',hair:'#765544',shirt:'#be877d',style:'curly'},
  boutique:{skin:'#8f5947',hair:'#25283a',shirt:'#c18baa',style:'bun'},
  tech:{skin:'#c78e6c',hair:'#3e4b59',shirt:'#4a9996',style:'side'},
- clinic:{skin:'#b77f60',hair:'#493e47',shirt:'#90c7aa',style:'curly'}
+ clinic:{skin:'#b77f60',hair:'#493e47',shirt:'#90c7aa',style:'curly'},
+ pawn:{skin:'#a87960',hair:'#423730',shirt:'#bd9a68',style:'side'}
 };
 // Entirely original procedural SVG architecture; unlike a CSS tint, each era has distinct silhouettes and street furniture.
 function eraScene(id,compact,era){

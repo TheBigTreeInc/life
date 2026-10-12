@@ -1,4 +1,4 @@
-# The Life Loop — v0.5.15
+# The Life Loop — v0.5.19
 
 **Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
@@ -30,7 +30,7 @@ Read `ARCHITECTURE.md`, `docs/parity-matrix.md`, `docs/classic-job-table.md` and
 
 ## Limitations
 
-Original DOS gameplay has **not** been run side by side here. Era visuals are new, not extracted assets. Exact historical price swings and loan approvals, pawn, spoilage medical bills, market crashes, special apartment behavior, four-player hotseat and the map's original nine storefront distinctions are still incomplete. Do not redistribute the original DOS archive in this package.
+Original DOS gameplay has **not** been run side by side here. Era visuals are new, not extracted assets. Exact historical price swings and loan approvals, exact pawn fees/deadlines/location, spoilage medical bills, market crashes, special apartment behavior, four-player hotseat and the map's original nine storefront distinctions are still incomplete. Do not redistribute the original DOS archive in this package.
 
 ## GitHub Pages
 
@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.15-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.19-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -124,7 +124,7 @@ New Game now focuses on picking a character and play mode, with **Start new game
 The in-game Character Studio offers 16 modern illustrated portrait presets and 35 portraits from the supplied reference artwork, grouped under Illustrated and Classic. Gallery images are fixed painted looks; choose Custom drawn for fully editable SVG appearance. Saving a character saves a validated `portrait` ID, not the image or a URL. Images are bundled with the offline game and separately deployed with Pages. The optional `portrait` field is also sanitized by the Looprd Python handler; redeploy the updated handler for multiplayer portrait sharing (no database schema change).
 
 
-## v0.5.15 — Dynamic Pixel Studio and appearance compiler
+## v0.5.17 — Dynamic Pixel Studio and appearance compiler
 
 In **My Characters → Create / Edit**, use the **Pixel Studio** tab to build a character from reusable parts. Change three discrete body shapes, six hairstyles, hat/beanie/none, skin/hair/fabric palettes, clothing style, mood, and personality. The preview uses a tiny 32×40 pixel canvas, enlarged with nearest-neighbor sampling; direction arrows turn the sprite through north/west/south/east and Walk animates with one shared frame clock. **Export sprite sheet** downloads a 128×320 PNG containing all idle and walk poses. You can still choose any of the 51 fixed illustrated portraits or the previous Custom drawn SVG.
 
@@ -133,11 +133,31 @@ A versioned component catalog is in `assets/characters/pixel-v1/catalog.json`, g
 **Art limitation:** these are initial procedural pixel primitives and a complete runtime pipeline, *not* a finished bespoke sprite atlas. Authored sprite PNG atlases, masks, more complex accessories and animation clips remain a separate art-production milestone. See ADR-0014. Game balance and Classic mechanical parity remain unchanged.
 
 
-### v0.5.15 — Simple characters again (creator paused)
+### v0.5.17 — Simple characters again (creator paused)
 
 The game has returned to the original emoji player icons, preserving the existing name input and all Classic/Modern game options. Customization controls and galleries are hidden and no character appearance is supplied when starting/joining a multiplayer game. All source, catalogs, images, and user-created browser-local profile records remain intact: `src/app.js` contains the `ENABLE_CHARACTER_CUSTOMIZATION=false` switch for later reactivation. Previously stored game appearance values are ignored in the interface, not deleted. This is a presentation rollback only; game rules and Looprd schema are unchanged.
 
 
-### v0.5.15 toolbar and ticker
+### v0.5.17 toolbar and ticker
 
 The Life Loop identity sits above the city in the same compact heading as Careers/Finances. On the right, Destination, WSS-only Chat, Co-op and Menu are available; Menu owns New Game, Save, Load and How to Play. Co-op owns room identity, current turn and WSS/HTTP transport health. The old top header and pale-green turn banner are removed; week, market, remaining hours and turn state appear in a single ticker beneath the buildings. Mobile keeps City / Activities / My Life tabs. No engine or Looprd handler changes.
+
+
+## v0.5.17 — Classic partial shifts and pawned valuables
+
+- Employed Classic players with **1–5 hours left** may now work those hours for proportional wages; full six-hour work still pays eight hours at the current rate. XP/dependability progression uses cumulative six-hour credit to discourage abuse.
+- The **Classic pawn counter at Circuit City** accepts a fridge, freezer, computer, dictionary, atlas or encyclopedia. The pledged item is removed from your inventory until redeemed. Redemption is available through the second subsequent week; after expiry, another human player can buy it.
+- **Pawn terms are provisional**, not verified against DOS: 45% of base price in cash, redemption of principal plus 10% (minimum $5 extra). The city still lacks an authentic dedicated pawn shop.
+- Pawn lots are included in save and online game snapshots. No server schema change is required; test both browsers against your Looprd deployment after updating clients.
+- Modern Story rules and character customization flag stay untouched. Additional tests: `tests/classic-work-pawn.test.cjs`.
+
+
+## v0.5.19 — Classic starting economy, goal points and Jones competition
+
+- **Original starting balances:** Classic begins at **$200 cash, $0 savings**, reflected in the finance ledger. Modern Story remains $250/$100.
+- **Classic goal stat points:** wealth = liquid net assets/100 (liabilities approximation), happiness = Happiness stat, education = 1 + 9 × completed degrees, career = 1.25 × Dependability while employed; each is checked against its independent 10–100 goal-point threshold.
+- **Jones difficulty:** Take It Easy = human goal budget +40; Play Fair = same total; Go For Broke = −40. Defaults: human 200 goal points → Jones 240/200/160. AI goals use a seeded, deterministic approximation biased toward the human wealth target. Distribution is serialized with game snapshot and shared by co-op. Sierra's exact distribution algorithm remains unverified.
+- **Employment Office:** jobs shown for one employer by default, with eligible roles first and optional future jobs and requirements; the player can still attempt an underqualified application for the documented rejection and time cost. All 37 Classic jobs remain present.
+- **AI survival:** preemptive clothing replenishment fixes an insolvency softlock exposed by the original starting balances; 100-seed 60-week Classic campaigns remain verified. No character creator reactivation, no UI/bar redesign, no Modern Story economic rule changes.
+
+See [ADR-0019](docs/decisions/ADR-0019-classic-goals-jones-and-employer-office.md). Run `node tools/verify.mjs` and `python -m unittest discover -s tests -p test_looprd.py -q`; test with 2 clients against a deployed Looprd server before declaring production multiplayer accepted.

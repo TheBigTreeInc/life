@@ -104,3 +104,16 @@ Still incomplete: exact shop/building map parity (Z-Mart and Black’s Market sh
 - **Intentionally partial:** loan amount/acceptance mathematics, per-week stock price fluctuation, bank robberies/market crashes, doctor-bill spoilage charges, restaurant-specific food variety and item rarity, exact DOS action-zero-hour exceptions. Parity status remains partial.
 - **Missing:** original Pawn Shop, original distinct ring tile layout, full durable/second-hand economy, 4-human hotseat.
 - **Tests:** bank zero-hour transfers and T-Bill fees, default schedule, six instruments, food storage/spoilage, Modern isolation, save migration and long simulation.
+
+
+## v0.5.18 — Verified Classic opening economy, goal points and Jones difficulty
+
+Classic opening balance is now $200 cash and zero savings. The original goal stat equations are implemented explicitly: liquid assets / 100 (currently net debts, unverified), raw Happiness, 1 + 9 times completed diplomas, and 1.25 times Dependability only when employed. Win checks require all four configured goal thresholds independently. This replaces the old Life Loop proportional score estimates **only in Classic**. The player chooses 10–100 point goals; original defaults are 50 per goal, for 200 total points.
+
+Jones difficulties use documented goal-point offsets (+40, 0, −40). A deterministic seeded allocator assigns Jones four separate goals and stores them in snapshots. **The original distribution and seed ordering are not verified**, nor are debt treatment and win evaluation timing. Employer selection is the default Career Center view; future-job exploration is opt-in. Modern Story job/score formulas remain unchanged. AI buys replacements before uniform depletion to avoid a cash-only softlock.
+
+Regression: `tests/classic-goals-competition.test.cjs`, existing Classic banking/work/pawn/AI tests, UI viewport checks; ADR-0019.
+
+## v0.5.19 reference reconciliation (Sierra Quick Reference)
+
+Sierra's printed Quick Reference states that Money goal includes **owned goods**, and Education depends on **units of study**. Classic v0.5.19 now values owned durable goods using a provisional table and credits incomplete coursework proportionally. Original DOS rounding is unverified. A fallback emergency gift protects hopelessly stranded characters, but its $90 amount and eight-week cooldown are not claimed as original. Weekly economy shocks, clothing/electronics quality differences, robbery, security apartments and actual 13-location functional equivalence remain partial. Modern Story not changed.

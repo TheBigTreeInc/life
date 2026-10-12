@@ -42,7 +42,7 @@ test('Ten lessons complete a Classic diploma and provide uncapped graduation boo
  assert.match(result.message,/Graduated/);assert.ok(p.classicDegrees.includes('junior-college'));
  assert.equal(p.dependability,100);assert.equal(p.happiness,67);assert.equal(p.classicProgress['junior-college'],undefined);
  assert.equal(game.actions().find(a=>a.id==='classicStudy:business-admin').enabled,false); // must enroll
- assert.equal(game.scores(p).education,Math.floor(10/60*100));
+ assert.equal(game.scores(p).education,20);
 });
 test('A computer reduces Classic study to nine lessons; complete book set reduces another lesson',()=>{
  const game=g(),p=game.player;assert.equal(game.classicLessons(p),10);
@@ -93,7 +93,7 @@ test('Classic raise requirement increases by five reliability per raise',()=>{
 test('Classic score derives career from Dependability, education from diploma count; modern remains tier-based',()=>{
  const game=g(),p=game.player;p.dependability=60;
  assert.equal(game.scores(p).career,0);p.job='classic-monolith-cook';assert.equal(game.scores(p).career,100);
- p.classicDegrees=['junior-college','trade-school','electronics'];assert.equal(game.scores(p).education,Math.floor((1+9*3)/60*100));
+ p.classicDegrees=['junior-college','trade-school','electronics'];assert.equal(game.scores(p).education,Math.floor((1+9*3)/50*100));
  const modern=new Game({mode:'sandbox',ruleset:'modern'});modern.player.job='director';assert.ok(modern.scores(modern.player).career>0);
 });
 test('Older Classic saves migrate linear education without corrupting Modern saves',()=>{

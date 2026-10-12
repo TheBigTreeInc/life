@@ -13,8 +13,8 @@ test('Original six broker instruments and base prices are modeled independently'
 test('Classic bank $100 transfers cost zero hours and have no interest',()=>{
  const g=classic(),p=g.player;travel(g,'bank');const h=p.hours;p.cash=500;
  assert.equal(offer(g,'deposit:100').hours,0);assert.equal(offer(g,'withdraw:100').hours,0);
- act(g,'deposit:100');assert.equal(p.cash,400);assert.equal(p.bank,200);
- act(g,'withdraw:100');assert.equal(p.cash,500);assert.equal(p.bank,100);assert.equal(p.hours,h);
+ act(g,'deposit:100');assert.equal(p.cash,400);assert.equal(p.bank,100);
+ act(g,'withdraw:100');assert.equal(p.cash,500);assert.equal(p.bank,0);assert.equal(p.hours,h);
  p.hours=0;assert.equal(offer(g,'deposit:100').enabled,true);act(g,'deposit:100');assert.equal(p.cash,400);
  p.bank=1000;g.endTurn();for(let i=0;i<4;i++)g.endTurn();assert.equal(p.bank,1000);
  assert.equal(g.actions().find(x=>x.id==='invest'),undefined);assert.equal(g.actions().find(x=>x.id==='deposit:500'),undefined);
@@ -36,7 +36,7 @@ test('Stock prices change deterministically and portfolios revalue without affec
  g.endTurn();const price=g.classicStockPrices.gold;
  assert.equal(p.invested,price);assert.equal(p.classicPortfolio.gold,1);
  assert.equal(g.classicStockPrices.tbills,100);
- assert.equal(g.player.bank,100);assert.ok(price!==0&&base!==0);
+ assert.equal(g.player.bank,0);assert.ok(price!==0&&base!==0);
  const snapshot=g.snapshot();assert.deepEqual(Game.load(snapshot).snapshot(),snapshot);
 });
 test('Classic bank loans require work, consume 2 hours, count as debt not wealth',()=>{
@@ -88,6 +88,6 @@ test('Legacy Classic investment migrates without silently destroying value',()=>
  const loaded=Game.load(s),p=loaded.player;
  assert.equal(p.invested,240);assert.equal(p.classicLegacyInvestment,240);
  travel(loaded,'bank');act(loaded,'classicBroker');act(loaded,'classicSellLegacy');
- assert.equal(p.invested,0);assert.equal(p.cash,490);
+ assert.equal(p.invested,0);assert.equal(p.cash,440);
  assert.deepEqual(Game.load(loaded.snapshot()).snapshot(),loaded.snapshot());
 });

@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.15",
-  "summary": "v0.5.15: consolidated game heading with Life Loop logo, careers and finances shortcuts; chat unread indicator, co-op room dropdown and New Game in menu; one ticker beneath the city for turn ownership, week, market and hours. Removed dark top bar and pale-green turn banner; original gameplay unchanged.",
+  "version": "0.5.19",
+  "summary": "v0.5.19: documented Classic parity corrections from the original printed Quick Reference; durable goods now count toward Money goals and partial university lessons count toward Education. Two stranded weeks trigger an explicit approximation of the rescue from a relative. Modern Story, multiplayer protocol and cosmetic eras unchanged.",
   "implemented": [
     {
       "id": "LL-001",
@@ -799,6 +799,144 @@
         "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
         "Check ticker shows correct turn, week, market and remaining hours after taking actions."
       ]
+    },
+    {
+      "id": "LL-117",
+      "title": "Classic proportional partial work shifts",
+      "summary": "Allow 1\u20135 remaining-hour shifts, proportional wages based on six-hour/8h-paid standard, proportional energy/happiness and rent garnishment; no Modern time rule changes.",
+      "operator_checks": [
+        "Hire at Monolith Burgers and arrive with 3h left: work exactly 3h, receive half the full-shift gross pay; verify 0h remain.",
+        "With one hour left, verify a small paid shift is available; at zero hours no work is permitted."
+      ]
+    },
+    {
+      "id": "LL-118",
+      "title": "Prevent partial-work progression exploits",
+      "summary": "Accumulate worked hours per contract and give capped Classic XP/dependability +1 only for each accumulated six hours; carry credit across weeks, reset on hire/dismissal, persist in multiplayer snapshots.",
+      "operator_checks": [
+        "Work five one-hour shifts without gaining work statistics, then the sixth one-hour shift and verify exactly one progression credit.",
+        "Change employer and verify partial-hour credit resets and cannot be carried between contracts."
+      ]
+    },
+    {
+      "id": "LL-119",
+      "title": "Classic pawn and resale lifecycle",
+      "summary": "Pawn, redeem through a two-week deadline, and sell unredeemed durable items to another human from a clearly marked second-hand counter at Circuit City; collateral is removed from inventory and shared state. Rates and location remain DOS-unverified.",
+      "operator_checks": [
+        "At Circuit City pawn a computer, verify it leaves inventory, cash rises, and the fixed redemption cost/deadline appear.",
+        "Redeem it by its deadline, or let its pledge expire and buy it using a second local human."
+      ]
+    },
+    {
+      "id": "LL-120",
+      "title": "Pawn persistence and parity regression gate",
+      "summary": "Validate bounded pawn state and owner/item/deadline/price consistency in save/load and multiplayer snapshots; cover full shifts, partial shifts, employer changes, collateral and Modern isolation.",
+      "operator_checks": [
+        "Run node tools/verify.mjs, including tests/classic-work-pawn.test.cjs, and Python Looprd tests.",
+        "Export/import a pawned game, then switch local players to verify the item cannot be double-bought."
+      ]
+    },
+    {
+      "id": "LL-121",
+      "title": "One shared 13-venue board",
+      "summary": "Use a four-column five-row board with 13 business locations for Classic and Modern, central hub and public-garden decor; preserve unique location IDs in save snapshots.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+      ]
+    },
+    {
+      "id": "LL-122",
+      "title": "Dedicated pawn storefront and new Contemporary artwork",
+      "summary": "Move pawn, redeem and second-hand sales out of Circuit City; add optimized illustrated pawn storefront, NPC and historical/Sci-Fi fallbacks; enable pawn actions in both rulesets.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+      ]
+    },
+    {
+      "id": "LL-123",
+      "title": "Career Center qualified-first applications",
+      "summary": "Show eligible jobs by default in both rulesets; allow explicit expansion of future roles with missing qualification details and retain direct-engine rejection behavior.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+      ]
+    },
+    {
+      "id": "LL-124",
+      "title": "Board movement, UX and release verification",
+      "summary": "Make movement distance use physical perimeter positions and add tests, art mapping, workboard, and offline/Pages packaging checks.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+      ]
+    },
+    {
+      "id": "LL-125",
+      "title": "Original Classic starting cash and savings",
+      "summary": "Classic begins with $200 cash, $0 bank; Modern Story retains $250/$100; initial finance history is consistent.",
+      "operator_checks": [
+        "Start a fresh Classic game and check $200 cash and $0 savings; compare with Modern $250/$100."
+      ]
+    },
+    {
+      "id": "LL-126",
+      "title": "Classic goal formulas and win condition",
+      "summary": "Classic wealth/100, raw happiness, 1+9*diplomas, and 1.25*Dependability while employed; compare independent goals to target thresholds.",
+      "operator_checks": [
+        "Check Goals with player unemployed then hired; verify career is zero when unemployed and four targets must all be met to win."
+      ]
+    },
+    {
+      "id": "LL-127",
+      "title": "Jones difficulty and independent goal budget",
+      "summary": "Take It Easy +40, Play Fair equal, Go For Broke -40; allocate deterministic valid rival goal targets near player wealth, save in room snapshots.",
+      "operator_checks": [
+        "At default 200-point human goals try the three Jones difficulties; inspect 240/200/160 AI budgets and save/reload."
+      ]
+    },
+    {
+      "id": "LL-128",
+      "title": "Employer-first hiring and low-cash AI recovery",
+      "summary": "Career Center defaults to one employer at a time, qualified jobs by default; extra jobs via opt-in. AI pre-purchases replacement clothing to avoid nonrecoverable loss of work.",
+      "operator_checks": [
+        "Visit Career Center and select a named workplace. Enable future roles, submit unqualified application; run 100 seeded 60-week Classic AI campaigns."
+      ]
+    },
+    {
+      "id": "LL-129",
+      "title": "Classical goal points regression suite and release verification",
+      "summary": "Tests of initial economy, 4 scoring formulas, rival difficulty, persistence, tamper rejection, employer filtering, Modern isolation, updated workboard/ADR and full ZipRunner source.",
+      "operator_checks": [
+        "Run node tools/verify.mjs, Looprd Python tests and browser smoke tests. Confirm workboard manifest has version 0.5.18 and no private state."
+      ]
+    },
+    {
+      "id": "LL-131",
+      "title": "Printed quick-reference sources as primary Classic mechanics evidence",
+      "summary": "Cross-check first-party Sierra Quick Reference (starting money, four goals, wealth including goods, educational study units, four-week rent) and record divergences against Wiki secondary sources.",
+      "operator_checks": [
+        "Review docs/decisions/ADR-0020-printed-reference-classic-economy.md for reference links, verified facts, and provisional conversions."
+      ]
+    },
+    {
+      "id": "LL-132",
+      "title": "Classic goal scoring accounts for owned goods and incomplete lessons",
+      "summary": "Value owned durable items in money goal and credit progress in enrolled but unfinished university classes without double-counting awarded diplomas; keep Modern scoring unchanged.",
+      "operator_checks": [
+        "In Classic acquire computer and observe the Money goal increase; pawn it and confirm the ownership value leaves the score.",
+        "Study one lesson and confirm education goal progress updates before the diploma is awarded."
+      ]
+    },
+    {
+      "id": "LL-133",
+      "title": "Classic emergency relative rescue with anti-farm guards",
+      "summary": "Model a small emergency gift after two fully stranded weeks with no money, usable outfit, pawnable items or investments, with eight-week cooldown. Trigger amount and timing are provisional, not exact DOS values.",
+      "operator_checks": [
+        "Run two desperate turns without money or clothing and confirm a one-time $90 rescue and finance ledger entry.",
+        "Confirm possessing suitable clothing, bank funds or a pawnable item prevents the rescue."
+      ]
     }
   ],
   "remaining": [
@@ -910,6 +1048,24 @@
       "title": "Production sprite atlas and richer animation set",
       "summary": "Author explicit PNG atlases with trim offsets, body-specific clothing and hat occlusion masks, expand animation clips; current procedural 32x40 art is an initial complete pipeline only.",
       "priority": "medium"
+    },
+    {
+      "id": "LL-130",
+      "title": "Verify original wealth liabilities and Jones random goal distribution",
+      "summary": "Research original DOS economy treatment of outstanding loan/rent debt in wealth, rounding and win timing; compare Jones goal randomization with executable observation. Our seeded distribution is documented approximation.",
+      "priority": "high",
+      "operator_checks": [
+        "Capture original Goals screen for Jones at each difficulty, plus net-asset comparisons with debt and property."
+      ]
+    },
+    {
+      "id": "LL-134",
+      "title": "Original detailed economy, merchandise, events and security parity",
+      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black\u2019s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
+      "priority": "high",
+      "operator_checks": [
+        "Record DOS reference walkthrough for robberies, item breakage, price changes and real estate moves."
+      ]
     }
   ]
 }

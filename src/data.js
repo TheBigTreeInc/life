@@ -8,11 +8,12 @@
     {id:'university',name:'Brightside U',      tag:'EDUCATION',       icon:'🎓', color:'#ad9dff', blurb:'Learn something new, and maybe earn a better paycheck.', cell:[4,2]},
     {id:'office',    name:'Northstar Tower',  tag:'CAREERS',         icon:'🏙️', color:'#9be2ed', blurb:'An inspiring view. An inbox that never ends.', cell:[4,3]},
     {id:'cinema',    name:'Starlight Social',  tag:'HAPPINESS',       icon:'🎟️', color:'#ffafe0', blurb:'The city is more than deadlines. Make a memory.', cell:[4,4]},
-    {id:'bank',      name:'Future Bank',      tag:'MONEY',           icon:'🏦', color:'#8dc0ff', blurb:'A little savings today, a lot less panic tomorrow.', cell:[3,4]},
-    {id:'housing',   name:'Open Door Realty', tag:'HOUSING',         icon:'🔑', color:'#ffd09a', blurb:'More square feet. More rent. More questionable decisions.', cell:[2,4]},
-    {id:'boutique',  name:'Thread Theory',    tag:'WARDROBE',        icon:'👕', color:'#eea9f5', blurb:'Dress for the job you want, not the laundry you forgot.', cell:[1,4]},
-    {id:'tech',      name:'Circuit City',     tag:'TECH & WORK',     icon:'💻', color:'#8ce4db', blurb:'Devices that unlock opportunities. And extremely fancy receipts.', cell:[1,3]},
-    {id:'clinic',    name:'Wellbeing Clinic', tag:'HEALTH',          icon:'🩺', color:'#b2e59b', blurb:'You only get one character. Take care of them.', cell:[1,2]}
+    {id:'bank',      name:'Future Bank',      tag:'MONEY',           icon:'🏦', color:'#8dc0ff', blurb:'A little savings today, a lot less panic tomorrow.', cell:[4,5]},
+    {id:'housing',   name:'Open Door Realty', tag:'HOUSING',         icon:'🔑', color:'#ffd09a', blurb:'More square feet. More rent. More questionable decisions.', cell:[3,5]},
+    {id:'boutique',  name:'Thread Theory',    tag:'WARDROBE',        icon:'👕', color:'#eea9f5', blurb:'Dress for the job you want, not the laundry you forgot.', cell:[2,5]},
+    {id:'tech',      name:'Circuit City',     tag:'TECH & WORK',     icon:'💻', color:'#8ce4db', blurb:'Devices that unlock opportunities. And extremely fancy receipts.', cell:[1,5]},
+    {id:'clinic',    name:'Wellbeing Clinic', tag:'HEALTH',          icon:'🩺', color:'#b2e59b', blurb:'You only get one character. Take care of them.', cell:[1,4]},
+    {id:'pawn',      name:'Second Chance Pawn', tag:'PAWN & REDEEM', icon:'⚖️', color:'#e5be89', blurb:'Give useful things a second chance. Pawn valuables for short-term cash, then redeem them before the deadline.', cell:[1,3]}
   ];
   const citizens = {
     home:{name:'Mira',title:'The neighbor who knows everybody',greeting:'I keep a spare key and unsolicited advice. Both come in handy.',lines:['Even success needs somewhere you can kick off your shoes.','The elevator is broken again. Look at that: free exercise.','You have a whole week ahead of you. Use a little of it for yourself.']},
@@ -26,7 +27,8 @@
     housing:{name:'Beck',title:'Real estate agent with impeccable timing',greeting:'Every property is charming until you meet the plumbing.',lines:['A house is a home. Until the rent is due.','More rooms mean more places to lose your keys.','I sold a loft with a view of another loft. The buyer called it urban character.']},
     boutique:{name:'Rafi',title:'Fashion stylist and amateur comedian',greeting:'Clothes do not make the person. But recruiters do tend to notice.',lines:['Dress for the role, not the weather report.','This jacket has pockets. Actual usable pockets.','Looking confident is cheaper than being confident. Usually.']},
     tech:{name:'Pip',title:'Repair specialist / cable untangler',greeting:'We have gadgets. We also have regrets about some gadgets.',lines:['Have you tried turning it off and remembering to eat?','The best upgrade is still a good night of sleep.','Every computer is fast until you open thirteen spreadsheets.']},
-    clinic:{name:'Dr. Jun',title:'A doctor with a practical streak',greeting:'Hello. I prescribe sleep, food, and fewer heroic workweeks.',lines:['Your body is not an infinite-energy achievement unlock.','A break is maintenance, not a failure to optimize.','The most expensive upgrade is neglecting yourself for a decade.']}
+    clinic:{name:'Dr. Jun',title:'A doctor with a practical streak',greeting:'Hello. I prescribe sleep, food, and fewer heroic workweeks.',lines:['Your body is not an infinite-energy achievement unlock.','A break is maintenance, not a failure to optimize.','The most expensive upgrade is neglecting yourself for a decade.']},
+    pawn:{name:'Morgan',title:'Second-hand merchant and keeper of second chances',greeting:'Everything here has a history. Some things have a redemption deadline.',lines:['A short-term loan can help, but read the redemption slip.','The trick with bargains is knowing what an item is worth to you.','Every item tells a story. This one still has its warranty sticker.']}
   };
   // Branching stories are original. Each visit has two choices and always offers a free exit.
   const encounters = {
@@ -41,7 +43,8 @@
     housing:{title:'The model apartment',story:'Beck invites you to a viewing. There is a rooftop garden, and the closet is bizarrely small.',choices:[{id:'tour',label:'Tour the building',detail:'+5 happiness. New ideas for the future.',effects:{happiness:5}},{id:'ignore',label:'Read the fine print first',detail:'+2 reliability.',effects:{dependability:2}}]},
     boutique:{title:'The interview outfit',story:'Rafi found an unsold jacket that would look great at your next interview.',choices:[{id:'take',label:'Buy the lucky jacket',detail:'$45 · +5 happiness, +3 reliability.',effects:{cash:-45,happiness:5,dependability:3}},{id:'decline',label:'Style what you already own',detail:'+2 happiness.',effects:{happiness:2}}]},
     tech:{title:'The repair café',story:'Pip is teaching neighbors to repair old electronics instead of throwing them away.',choices:[{id:'learn',label:'Help at the repair table',detail:'+5 experience, -3 energy.',effects:{experience:5,energy:-3}},{id:'donate',label:'Give the project $25',detail:'$25 · +6 happiness.',effects:{cash:-25,happiness:6}}]},
-    clinic:{title:'A community health fair',story:'Dr. Jun has organized a free wellbeing check. A queue stretches down the block.',choices:[{id:'stay',label:'Take the checkup',detail:'+12 energy, +3 happiness.',effects:{energy:12,happiness:3}},{id:'volunteer',label:'Help with the sign-up desk',detail:'+4 reliability, +4 happiness.',effects:{dependability:4,happiness:4}}]}
+    clinic:{title:'A community health fair',story:'Dr. Jun has organized a free wellbeing check. A queue stretches down the block.',choices:[{id:'stay',label:'Take the checkup',detail:'+12 energy, +3 happiness.',effects:{energy:12,happiness:3}},{id:'volunteer',label:'Help with the sign-up desk',detail:'+4 reliability, +4 happiness.',effects:{dependability:4,happiness:4}}]},
+    pawn:{title:'The forgotten keepsake',story:'Morgan has found a box of family photographs among unclaimed items and wants to reunite it with its owner.',choices:[{id:'help',label:'Help find the owner',detail:'+6 happiness, +2 reliability.',effects:{happiness:6,dependability:2}},{id:'pass',label:'Wish them good luck',detail:'No cost.',effects:{}}]}
   };
   // Season-length stories join two residents and can permanently improve city services.
   // The chapter definitions are fixed data. All rewards pass through engine allowlists.
@@ -121,7 +124,8 @@
     housing:{title:'Beck’s moving-day network',detail:'2h · +8 happiness, +3 reliability',hours:2,effects:{happiness:8,dependability:3}},
     boutique:{title:'Rafi’s personal styling',detail:'2h · +7 happiness, +3 reliability',hours:2,effects:{happiness:7,dependability:3}},
     tech:{title:'Pip’s paid repair referral',detail:'2h · Earn $45, -4 energy',hours:2,effects:{cash:45,energy:-4}},
-    clinic:{title:'Jun’s wellness check-in',detail:'2h · +23 energy',hours:2,effects:{energy:23}}
+    clinic:{title:'Jun’s wellness check-in',detail:'2h · +23 energy',hours:2,effects:{energy:23}},
+    pawn:{title:'Morgan’s thoughtful appraisal',detail:'2h · +4 experience, +5 reliability',hours:2,effects:{experience:4,dependability:5}}
   };
   const jobs = [
     {id:'server',   name:'Cafe Server',         place:'diner',       wage:14, tier:1, education:0, experience:0, dependability:0, clothes:'casual', track:'Hospitality', caption:'Good tips. Better coffee.'},

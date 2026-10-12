@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.15
-filename: the-life-loop-0.5.15-ziprunner.zip
+version: 0.5.19
+filename: the-life-loop-0.5.19-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -28,3 +28,6 @@ END_ZIPRUNNER_HANDOFF
 art_pack: assets/art/styles/contemporary-default/manifest.json
 art_pack_offline: Embedded optimized WebP imagery in PLAY.html
 art_pack_home_tiers: studio, apartment, loft use distinct player-supplied WebP images; SVG remains a fallback
+notes_classic_0516: Classic 1-5h partial work with proportional pay and six-hour accumulated work-stat credit; Classic-only provisional pawn/redeem/expired resale shared state at Circuit City; no Looprd schema changes.
+
+notes_classic_0518: Classic begins with $200 cash / $0 savings, authentic goal-point stats and Jones difficulty budgets; default classic goal points 200. Employer-first application view with optional full roadmap; AI clothing-sustainability fix. Modern economic engine unchanged. No Looprd schema migration; client version synchronized. Exact Jones goal distribution, debt scoring and original win timing remain unverified.

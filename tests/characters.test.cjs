@@ -39,7 +39,7 @@ test('game embeds appearance in snapshots, survives reload and does not affect c
  const profile=Ch.normalizeProfile({id:'char_abcdef',name:'Aria',skin:'tan',outfit:'creative',personality:'kind'});
  const game=new Game({name:profile.name,character:profile,friend:'Friend',friendCharacter:{skin:'deep',hair:'buzz'},mode:'hotseat',ruleset:'classic'});
  assert.equal(game.players[0].appearance.skin,'tan');assert.equal(game.players[1].appearance.skin,'deep');
- assert.equal(game.players[0].hours,60);assert.equal(game.players[0].cash,250);
+ assert.equal(game.players[0].hours,60);assert.equal(game.players[0].cash,200);
  assert.equal(game.players[0].appearance.id,undefined,'local profile ID is not sent with game snapshots');
  const snap=game.snapshot();const loaded=Game.load(snap);
  assert.deepEqual(loaded.players[0].appearance,game.players[0].appearance);
