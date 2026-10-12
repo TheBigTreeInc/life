@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.20",
-  "summary": "v0.5.20: replace permanent right-side destination actions with board-centered venue decisions. Actions, employer filters and prices are rendered once inside the board; End Turn stays in status ticker; mobile uses City / My Life. Engine and Looprd protocol unchanged.",
+  "version": "0.5.21",
+  "summary": "v0.5.21: resolve all 37 Classic job employer identities to visible 13-location board businesses, mark actual workplace on the board, and align job offers/hire/work/switch messages and Career Center with board labels. Keep original DOS IDs and rules; Modern unchanged.",
   "implemented": [
     {
       "id": "LL-001",
@@ -978,6 +978,34 @@
       "summary": "Prevent stale venue actions across multiplayer turn or room snapshot changes; preserve chat and co-op menus; full packaging regression.",
       "operator_checks": [
         "Host and guest: wrong player blocked; guest travel opens after confirmed room snapshot; verify clean ZIP/Pages and Looprd tests."
+      ]
+    },
+    {
+      "id": "LL-140",
+      "title": "Canonical DOS employer-to-board workplace contract",
+      "summary": "All 37 Classic jobs have a verified venue ID and contemporary board business label; preserve original DOS employer identities and qualifications.",
+      "operator_checks": [
+        "Inspect Classic job at all nine employers: each resolves to one of the 13 board tiles; no unknown workplaces.",
+        "For Z-Mart/Black’s Market, confirm distinct discount and grocery departments at Fresh & Frugal."
+      ]
+    },
+    {
+      "id": "LL-141",
+      "title": "Employer-linked hiring, work and map presentation",
+      "summary": "Show the visible workplace brand in character profile, job offers, hiring and work feedback, Career Center, and work-location map marker.",
+      "operator_checks": [
+        "Apply for Cook at Career Center; character should show The Good Fork, not Monolith Burgers; city marks The Good Fork as WORK HERE.",
+        "Travel to Fresh & Frugal: no Work option; visit The Good Fork: Work is available if dressed and energized.",
+        "Switch employers: confirmation and logs show both relevant board companies."
+      ]
+    },
+    {
+      "id": "LL-142",
+      "title": "Workplace consistency regression and release validation",
+      "summary": "Integrate deterministic mapping regression across Classic, Modern, two shared-market employers and saved job identities.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and the dedicated employer-board-link tests; confirm all 37 Classic roles and 19 Modern roles validate.",
+        "Test at narrow viewport and desktop: work marker visible, board page remains unscrolled; Looprd game snapshots need no schema migration."
       ]
     }
   ],

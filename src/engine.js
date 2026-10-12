@@ -79,6 +79,7 @@ class LifeGame {
   get player(){return this.players[this.active];}
   get jobs(){return this.isClassic?D.classicJobs:D.jobs;}
   getJob(p){return find(this.jobs,p.job);}
+  jobWorkplace(job){return D.jobWorkplace(job);}
   offeredWage(job){return Math.max(1,Math.round(job.wage*this.economy));}
   classicLuck(p){return clamp(30+(10+p.dependability+p.experience+8*this.degreeCount(p))/3,0,100);}
   rentServicesOpen(p){return this.week>=p.classicRentDueWeek;}
@@ -304,7 +305,8 @@ class LifeGame {
     if(at==='agency'){
       for(const job of this.jobs){
         const reasons=this.jobReasons(p,job);
-        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} (${job.employer||this.getPlace(job.place).name})`:`Apply: ${job.name} (${job.employer||this.getPlace(job.place).name})`,`${money(this.offeredWage(job))}/hour · ${job.employer||this.getPlace(job.place).name} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic&&reasons.length?' · Unqualified: '+reasons.join(', '):''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}`,this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id});
+        const workplace=this.jobWorkplace(job);
+        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} · ${workplace.label}`:`Apply: ${job.name} · ${workplace.label}`,`${money(this.offeredWage(job))}/hour · Work at ${workplace.boardName}${workplace.department?' ('+workplace.department+')':''}${this.isClassic?' · Original employer: '+workplace.originalName:''} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic&&reasons.length?' · Unqualified: '+reasons.join(', '):''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}`,this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id,workplace:job.place});
       }
       const raiseReq=p.job&&this.isClassic?this.jobRequirement(this.getJob(p)).dependability+5*(p.classicRaises||0):0;
       const canRaise=p.job&&(this.isClassic?p.dependability>=raiseReq:p.workSessions>=3&&p.raiseWeek<=this.week-4);
@@ -350,7 +352,7 @@ class LifeGame {
       if(j&&j.place===at){
         const shiftHours=this.classicShiftHours(p),income=this.isClassic?this.classicShiftPay(p,shiftHours):this.shiftPay(p);
         const neededEnergy=this.isClassic?Math.max(2,Math.ceil(12*shiftHours/6)):12;
-        push('work',`Work as ${j.name} · ${money(income)}`,`${this.isClassic&&shiftHours<6?`Partial shift · ${shiftHours}h remaining · ${money(income)} proportional pay.`:'6 hours on the clock, paid as an 8-hour shift.'} Requires ${D.clothing[j.clothes].name} or better; current wardrobe is ${this.clothingSummary(p).filter(x=>x.weeks>0).map(x=>x.name+' '+x.weeks+'w').join(', ')||'empty'}.`,shiftHours,0,shiftHours>0&&p.energy>=neededEnergy&&this.isDressedFor(p,j),p.energy<neededEnergy?'Exhausted. Rest first.':`Uniform required: ${D.clothing[j.clothes].name} or better; visit Fresh & Frugal or Thread Theory. All clothing expires by week.`);
+        push('work',`Work at ${this.jobWorkplace(j).label} · ${money(income)}`,`${j.name} · ${this.isClassic&&shiftHours<6?`Partial shift · ${shiftHours}h remaining · ${money(income)} proportional pay.`:'6 hours on the clock, paid as an 8-hour shift.'} Requires ${D.clothing[j.clothes].name} or better; current wardrobe is ${this.clothingSummary(p).filter(x=>x.weeks>0).map(x=>x.name+' '+x.weeks+'w').join(', ')||'empty'}.`,shiftHours,0,shiftHours>0&&p.energy>=neededEnergy&&this.isDressedFor(p,j),p.energy<neededEnergy?'Exhausted. Rest first.':`Uniform required: ${D.clothing[j.clothes].name} or better; visit Fresh & Frugal or Thread Theory. All clothing expires by week.`);
       }
     }
     if(at==='bank'){
@@ -484,17 +486,17 @@ class LifeGame {
         const job=find(this.jobs,arg),prior=this.getJob(p),oldTier=prior?.tier||0;
         if(this.isClassic){
           const missing=this.jobReasons(p,job);
-          if(missing.length){p.happiness=clamp(p.happiness-1,0,100);msg='Application rejected for '+job.employer+' '+job.name+': '+missing.join(', ')+'. Four hours spent.';break;}
+          if(missing.length){p.happiness=clamp(p.happiness-1,0,100);msg='Application rejected for '+this.jobWorkplace(job).label+' '+job.name+': '+missing.join(', ')+'. Four hours spent.';break;}
           if(!job.entryGuaranteed&&(p.classicRejectedOpenings[arg]===this.week||this.rand()*100>=this.classicLuck(p))){
             p.classicRejectedOpenings[arg]=this.week;p.happiness=clamp(p.happiness-1,0,100);
-            msg='No openings for '+job.employer+' '+job.name+' this week. Try another role or return next week.';break;
+            msg='No openings for '+this.jobWorkplace(job).label+' '+job.name+' this week. Try another role or return next week.';break;
           }
         }
         p.job=job.id;p.workSessions=0;p.classicWorkHourCredit=0;p.wage=this.offeredWage(job);
         if(this.isClassic){p.experience+=2;p.dependability=Math.max(10,p.dependability);p.classicRaises=0;}
         if(this.isClassic)p.happiness=clamp(p.happiness+3,0,100);
         else if(!prior||job.tier>oldTier)p.happiness=clamp(p.happiness+4,0,100);
-        msg=prior?`Job changed: left ${prior.name} at ${prior.employer||this.getPlace(prior.place).name}. Now ${job.name} at ${job.employer||this.getPlace(job.place).name}, earning ${money(p.wage)}/hour. Your previous job is no longer available.`:`Hired! ${p.name} is now a ${job.name} at ${job.employer||this.getPlace(job.place).name}, earning ${money(p.wage)}/hour.`;break;
+        msg=prior?`Job changed: left ${prior.name} at ${this.jobWorkplace(prior).label}. Now ${job.name} at ${this.jobWorkplace(job).label}, earning ${money(p.wage)}/hour. Your previous job is no longer available.`:`Hired! ${p.name} is now a ${job.name} at ${this.jobWorkplace(job).label}, earning ${money(p.wage)}/hour.`;break;
       }
       case 'raise':p.wage=this.isClassic?this.offeredWage(this.getJob(p)):p.wage+Math.max(2,Math.ceil(p.wage*.10));p.raiseWeek=this.week;if(this.isClassic)p.classicRaises=(p.classicRaises||0)+1;msg=`Raise approved! Your new wage is ${money(p.wage)}/hour.`;break;
       case 'classicFresh':{
@@ -583,7 +585,7 @@ class LifeGame {
         }else{p.workSessions++;p.experience+=this.rules.workExperience;p.dependability=clamp(p.dependability+this.rules.workDependability,0,100);}
         const energyCost=this.isClassic?Math.ceil(13*shiftHours/6):13;
         p.energy=clamp(p.energy-energyCost,0,100);p.happiness=clamp(p.happiness-(this.isClassic&&shiftHours<6?1:2),0,100);
-        msg=`Worked ${shiftHours}h at ${j.employer||this.getPlace(j.place).name}: +${money(income-garnishment-interest)}${garnishment?` (${money(garnishment)} paid toward back rent${interest?`, $${interest} fee`:''})`:''}.`;
+        msg=`Worked ${shiftHours}h at ${this.jobWorkplace(j).label}: +${money(income-garnishment-interest)}${garnishment?` (${money(garnishment)} paid toward back rent${interest?`, $${interest} fee`:''})`:''}.`;
         if(this.isClassic&&shiftHours<6)msg+=` Partial shift (${money(income)} gross); ${p.classicWorkHourCredit}/6h toward next work-stat credit.`;
         if(this.isClassic&&p.dependability<this.jobRequirement(j).dependability)msg+=' Warning: your reliability is below this employer’s requirement.';
         break;

@@ -317,3 +317,14 @@ See `docs/decisions/ADR-0020-printed-reference-classic-economy.md`.
 - [x] **LL-139** — Guard network requests and multiplayer turns; discard stale venues on turn/location changes. Keep WSS-only chat and Looprd schema unchanged. Add regression and browser acceptance checks.
 
 **Operator acceptance:** Start Classic or Modern; click an already-current tile (0h), a different tile (normal travel cost), and choose actions from the centered menu. Confirm close via Done/Escape is free, filters remain while buying/applying, and global story/job confirmations appear above the menu. On mobile, the whole page never scrolls, but long venue menus may scroll internally. Run `node tools/verify.mjs` and Looprd tests. Real two-device Looprd deployment still requires operator validation. See [ADR-0021](docs/decisions/ADR-0021-board-centered-venue-interactions.md).
+
+
+## v0.5.21 — Employer names tied to actual city businesses
+
+**Artifact:** `the-life-loop-0.5.21-ziprunner.zip` · **Status:** implemented and regression-tested.
+
+- [x] **LL-140** — Canonical and tested Classic employer → board venue contract for all 37 roles; original identity preserved for rules and historical reference.
+- [x] **LL-141** — Visible employer labels and **WORK HERE** marker consistent across board, profile, work button, hiring result, job switch, Career Center and logs.
+- [x] **LL-142** — Job-workplace unit and browser regression; Modern Story and Looprd snapshot semantics unchanged.
+
+**Remaining:** The thirteen shared map locations still combine Z-Mart and Black's Market as separate departments inside Fresh & Frugal; strict original building parity requires expanding/reorganizing the map. References to original DOS names remain visible inside Career Center where relevant.

@@ -760,3 +760,13 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 }
 @media(max-width:390px){.ticker-end-turn span:first-child{font-size:0}.ticker-end-turn span:first-child:before{content:'End';font-size:9px}.venue-window-header .eyebrow{display:none}}
 @media(prefers-reduced-motion:reduce){.venue-layer,.venue-window{animation:none!important;transition:none!important}}
+
+/* v0.5.21: workplace identity maps real board businesses to Classic employer IDs. */
+.workplace-hint{font-size:10px;line-height:1.35;color:#2b5b42;background:#e7f4e2;border:1px solid #b9dcb7;border-radius:9px;margin:8px 0 -1px;padding:6px 8px}
+.workplace-hint b{font-weight:850}
+.board-tile.is-workplace:not(.selected){border-color:#62a577;box-shadow:inset 0 0 0 2px #d0f5c6,0 0 0 1px #3e8658}
+.board-tile.is-workplace .tile-caption{background:#efffde}
+.work-marker{display:inline-flex;align-items:center;gap:2px;font-size:8px;background:#d2f4c6;border:1px solid #76ab76;border-radius:6px;padding:4px 5px;color:#205733;font-weight:900;white-space:nowrap;box-shadow:0 2px 6px #214c2b20}
+.classic-employer-original{display:block;font-size:11px;color:#678477;margin:-2px 0 9px}
+@media(max-width:720px){.work-marker{font-size:8px;padding:3px 4px}.workplace-hint{font-size:10px}}
+@media(max-width:410px){.work-marker{font-size:7px;padding:2px 3px}}

@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.20-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.21-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -165,3 +165,9 @@ See [ADR-0019](docs/decisions/ADR-0019-classic-goals-jones-and-employer-office.m
 ## v0.5.20 — Building actions over the city board
 
 Select a building to open its actual actions in a centered decision window over the board. The permanent right destination pane and mobile Activities tab are gone; City / My Life remain. The ticker has End week. Done or Escape closes the menu without extra time cost. The engine rules, Classic/Modern modes, and Looprd protocol are unchanged. See ADR-0021.
+
+## v0.5.21 — Board-linked Classic employers
+
+Classic job IDs retain the original DOS employer names for rules parity, but hiring, working, character information, and the Career Center now use the business actually shown on the 13-location board. Example: Cook at *Monolith Burgers* (Classic job ID) appears as Cook at **The Good Fork**. The Good Fork board tile is visibly marked **WORK HERE**, and `work` is only available there. No new Classic/Modern rule differences.
+
+The two historical employers Z-Mart and Black's Market are separate discount/grocery **departments** of Fresh & Frugal, the only remaining shared physical-workplace collision. Their names are maintained as original reference labels in the Career Center, while the actual work tile is highlighted. Full one-business-per-DOS-employer parity remains an architectural backlog rather than a hidden behavior. See ADR-0022.

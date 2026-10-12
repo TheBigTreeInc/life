@@ -8,7 +8,7 @@ const action=(g,id)=>g.actions().find(a=>a.id===id);
 
 test('Classic partial work consumes exactly remaining hours and pays proportional 8-hour earnings',()=>{
  const g=classic(),p=cook(g);p.hours=3;const prior={cash:p.cash,exp:p.experience,rel:p.dependability};
- assert.equal(action(g,'work').hours,3);assert.equal(action(g,'work').title,'Work as Cook · $20');
+ assert.equal(action(g,'work').hours,3);assert.equal(action(g,'work').title,'Work at The Good Fork · $20');
  assert.equal(g.act('work').ok,true);assert.equal(p.hours,0);assert.equal(p.cash,prior.cash+20);
  assert.equal(p.classicWorkHourCredit,3);assert.equal(p.workSessions,0);
  assert.equal(p.experience,prior.exp);assert.equal(p.dependability,prior.rel);
