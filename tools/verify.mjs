@@ -84,6 +84,8 @@ if(!load('looprd.yaml').includes('looprd/v1')||!load('looprd.yaml').includes('th
 if(!load('src/network.js').includes('class LifeOnline')||!load('index.html').includes('id="onlineBtn"')||!play.includes('class LifeOnline'))errors.push('Online multiplayer browser adapter missing');
 if(!load('docs/decisions/ADR-0006-online-multiplayer-looprd.md').includes('**Status:** Accepted'))errors.push('Online multiplayer architecture decision missing');
 if(!load('docs/decisions/ADR-0007-responsive-mobile-layout.md').includes('**Status:** Accepted'))errors.push('Responsive UI architecture decision missing');
+if(!load('docs/decisions/ADR-0008-adaptive-drawers-and-turn-ownership.md').includes('**Status:** Accepted'))errors.push('Sliding panels/turn ownership architecture decision missing');
+if(!['LL-078','LL-079','LL-080','LL-081'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-082'))errors.push('v0.5.5 UI/Looprd workboard tasks missing');
 if(!manifest.implemented.some(t=>t.id==='LL-073')||!manifest.implemented.some(t=>t.id==='LL-074')||!manifest.implemented.some(t=>t.id==='LL-075'))errors.push('Mobile UI workboard tasks missing');
 if(!manifest.implemented.some(t=>t.id==='LL-076')||!manifest.implemented.some(t=>t.id==='LL-077'))errors.push('v0.5.4 release synchronization workboard tasks missing');
 if(!load('index.html').includes('id="mobileNav"'))errors.push('Mobile panel controls missing');

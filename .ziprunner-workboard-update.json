@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.4",
-  "summary": "v0.5.4 release: synchronize ZipRunner/GitHub metadata after the v0.5.3 CI repair; ensure manifest, app, parity contract, Looprd release, handoff, website version and archive filename agree; no changes to game mechanics.",
+  "version": "0.5.5",
+  "summary": "v0.5.5: sliding notification-aware story/destination panels, top-right utility menu, explicit multiplayer turn ownership and Looprd server diagnostics; all Classic/Modern mechanics unchanged.",
   "implemented": [
     {
       "id": "LL-001",
@@ -501,6 +501,38 @@
         "Run node tools/verify.mjs after fresh extraction; verify version invariants and full tests succeed.",
         "Commit the entire v0.5.4 source release (including the hidden .ziprunner-workboard-update.json) to GitHub main; inspect the CI Pages run."
       ]
+    },
+    {
+      "id": "LL-078",
+      "title": "Responsive side panel docks",
+      "summary": "Intermediate desktop has collapsible panels; wide desktop keeps both; mobile tabs preserved",
+      "operator_checks": [
+        "Test panels at 1280 and 1600 pixels; test all three mobile tabs at 390px."
+      ]
+    },
+    {
+      "id": "LL-079",
+      "title": "Panel notification circles",
+      "summary": "New story and venue actions raise badges until opened",
+      "operator_checks": [
+        "Switch turns/travel and confirm a badge appears then clears on opening."
+      ]
+    },
+    {
+      "id": "LL-080",
+      "title": "Top-right game menu",
+      "summary": "Move save/load/guide to accessible menu without changing data flows",
+      "operator_checks": [
+        "Export and import a save from the Menu; open How to Play."
+      ]
+    },
+    {
+      "id": "LL-081",
+      "title": "Online turn and Looprd diagnostics",
+      "summary": "Persistent active turn, role, WS/HTTP connectivity and public component info check",
+      "operator_checks": [
+        "Connect two browsers to Looprd; check ownership banner and /info response."
+      ]
     }
   ],
   "remaining": [
@@ -571,6 +603,12 @@
       "id": "LL-072",
       "title": "Native server-authoritative simulation and multi-device resilience",
       "summary": "Migrate simulation validation into a trusted server-side engine for hostile-client resistance and add multi-room expiration/observability, host migration, spectator support, and real deployment acceptance.",
+      "priority": "high"
+    },
+    {
+      "id": "LL-082",
+      "title": "Production Looprd two-browser acceptance",
+      "summary": "Deploy actual server, verify registration, independent turn ownership, WebSocket/fallback, reconnections, invalid command rejection and host-disconnect handling",
       "priority": "high"
     }
   ]

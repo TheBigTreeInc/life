@@ -21,7 +21,7 @@ function makeNetwork(){
   travel:()=>({ok:true,message:'Travel complete'}),act:()=>({ok:true,message:'Worked'}),
   chooseEncounter:()=>({ok:true,message:'Chosen'}),endTurn:()=>{state={...state,active:0};return {ok:true,message:'Turn ended'};}}),
   setGame:next=>{state=next;},render:()=>count++,toast:()=>{}};
- return {Network:ctx.LifeOnline,hook,ws,change:s=>{state=s;},getState:()=>state,requests:api};
+ return {Network:ctx.LifeOnline,hook,ws,ctx,change:s=>{state=s;},getState:()=>state,requests:api};
 }
 test('server FQDN normalizes to Looprd routes and rejects unsafe input',()=>{
  const {Network}=makeNetwork();
@@ -60,4 +60,18 @@ test('online client does not allow host to take guest turn',async()=>{
  r.change({...r.getState(),active:1});let touched=false;
  const denied=await host.execute('travel','bank',()=>{touched=true;return {ok:true};});
  assert.equal(denied.ok,false);assert.equal(touched,false);host.disconnect();
+});
+
+test('Looprd component probe confirms the advertised protocol and rejects missing registration',async()=>{
+ const r=makeNetwork(),client=new r.Network(r.hook);await client.host('localhost:8080');
+ assert.equal(client.infoStatus,'Not checked');
+ r.ctx.fetch=async(url,init)=>({ok:true,json:async()=>({protocol:'the-life-loop/1'})});
+ assert.equal(await client.probe(),'Looprd component registered and responding');
+ assert.equal(client.infoStatus,'Verified: the-life-loop/1');
+ r.ctx.fetch=async()=>({ok:false,status:404});
+ await assert.rejects(()=>client.probe(),/HTTP 404/);
+ assert.equal(client.infoStatus,'HTTP 404');
+ r.ctx.fetch=async()=>({ok:true,json:async()=>({protocol:'different-component/1'})});
+ await assert.rejects(()=>client.probe(),/not recognized/);
+ client.disconnect();
 });

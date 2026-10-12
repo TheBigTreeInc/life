@@ -16,7 +16,7 @@ test('mobile state affects presentation only, preserves engine and sync semantic
  assert.match(js,/mobileView='city'/);
  assert.match(js,/mobileBreakpoint=window\.matchMedia\('\(max-width:1024px\)'\)/);
  assert.match(js,/\.inert=mobileBreakpoint\.matches&&view!==name/);
- assert.match(js,/mobileBreakpoint\.addEventListener\('change',updateMobileAccessibility\)/);
+ assert.match(js,/mobileBreakpoint\.addEventListener\('change',updateLayout\)/);
  assert.match(js,/if\(result\.ok&&mobileBreakpoint\.matches\)setMobileView\('actions'\)/);
  assert.ok(!readFileSync('src/engine.js','utf8').includes('mobileView'));
 });
@@ -36,4 +36,32 @@ test('online setup uses only Looprd server FQDN, preserving friend-code protocol
  assert.match(network,/serverBase\(input\)/);
  assert.match(network,/\+'\/looprd\/the-life-loop\/v1'/);
  assert.match(network,/inviteLink\(\)/);
+});
+
+test('top-right game menu contains save, load and help, with accessible toggle',()=>{
+ for(const id of ['utilityMenuBtn','utilityMenu','saveBtn','loadBtn','guideBtn']) assert.ok(html.includes(`id="${id}"`),id);
+ assert.match(html,/aria-controls="utilityMenu"/);
+ assert.match(js,/setUtilityMenu\(open\)/);
+ assert.match(js,/setUtilityMenu\(false\);guide\(\)/);
+ assert.match(css,/\.utility-menu\[hidden\]/);
+});
+test('story and destination have dock toggles and notification circles',()=>{
+ for(const id of ['storyDrawerBtn','destinationDrawerBtn','storyBadge','destinationBadge','mobileStoryBadge','mobileActionsBadge','drawerScrim']) assert.ok(html.includes(`id="${id}"`),id);
+ assert.match(css,/@media\(min-width:1025px\) and \(max-width:1599px\)/);
+ assert.match(css,/@media\(min-width:1600px\)/);
+ assert.match(js,/function setDrawer\(which\)/);
+ assert.match(js,/function refreshBadges\(\)/);
+ assert.match(js,/function markViewed\(which\)/);
+});
+test('active turn banner reports ownership and connection state for both players',()=>{
+ for(const id of ['turnBanner','turnHeadline','turnDetails','turnConnection','turnLamp']) assert.ok(html.includes(`id="${id}"`),id);
+ assert.match(js,/net\.ownTurn\(\)/);
+ assert.match(js,/You are \$\{net\.role===/);
+ assert.match(js,/net\.socketOpen\?'● WS live'/);
+});
+test('multiplayer room UI exposes an explicit Looprd component API probe',()=>{
+ assert.match(js,/id="checkLooprd"/);
+ assert.match(js,/net\.probe\(\)/);
+ assert.match(js,/Room version:/);
+ assert.match(js,/Component schema:/);
 });

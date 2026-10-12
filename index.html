@@ -20,13 +20,27 @@
         <button class="text-button" id="onlineBtn" type="button" aria-label="Online multiplayer">◎ <span>Online co-op</span></button>
         <button class="text-button" id="careerBtn" type="button" aria-label="Career pathways">🎓 <span>Careers</span></button>
         <button class="text-button" id="financeBtn" type="button" aria-label="Financial history">▥ <span>Finances</span></button>
-        <button class="text-button" id="guideBtn" type="button">? <span>How to play</span></button>
-        <button class="text-button" id="saveBtn" type="button">↓ <span>Save</span></button>
-        <button class="text-button" id="loadBtn" type="button">↑ <span>Load</span></button>
         <button class="text-button new-button" id="newBtn" type="button">+ <span>New game</span></button>
+        <div class="utility-holder">
+          <button class="text-button utility-trigger" id="utilityMenuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="utilityMenu" aria-label="Game menu">☰ <span>Menu</span></button>
+          <div class="utility-menu" id="utilityMenu" role="menu" hidden>
+            <button type="button" role="menuitem" id="saveBtn">↓ Save game</button>
+            <button type="button" role="menuitem" id="loadBtn">↑ Load game</button>
+            <button type="button" role="menuitem" id="guideBtn">? How to play</button>
+          </div>
+        </div>
       </div>
     </header>
 
+    <div class="turn-banner" id="turnBanner" role="status" aria-live="polite">
+      <span class="turn-lamp" id="turnLamp" aria-hidden="true"></span>
+      <strong id="turnHeadline">Your turn</strong>
+      <span id="turnDetails">Local game</span>
+      <button id="turnConnection" type="button" aria-label="Open online room details">◎ Multiplayer details ↗</button>
+    </div>
+    <div class="drawer-rail drawer-left"><button type="button" id="storyDrawerBtn" class="drawer-toggle" aria-controls="gameLife" aria-expanded="false" aria-label="Open Your Story">♥ Your Story <span id="storyBadge" class="notification-circle" hidden>1</span></button></div>
+    <div class="drawer-rail drawer-right"><button type="button" id="destinationDrawerBtn" class="drawer-toggle" aria-controls="gameActions" aria-expanded="false" aria-label="Open Your Destination">↗ Your Destination <span id="destinationBadge" class="notification-circle" hidden>1</span></button></div>
+    <button type="button" class="drawer-scrim" id="drawerScrim" aria-label="Close side panel" hidden></button>
     <div class="mobile-summary" id="mobileSummary" aria-label="Current turn summary" aria-live="off">
       <div><span>WEEK</span><strong id="mobileWeek">01</strong></div>
       <div><span>TIME LEFT</span><strong id="mobileHours">60h</strong></div>
@@ -35,7 +49,7 @@
     </div>
     <div class="game-layout">
       <aside class="sidebar pane" id="gameLife">
-        <div class="pane-heading"><span class="eyebrow">YOUR STORY</span><span id="turnCounter" class="tag">YOUR TURN</span></div>
+        <div class="pane-heading"><span class="eyebrow">YOUR STORY</span><span id="turnCounter" class="tag">YOUR TURN</span><button type="button" class="pane-close" data-close-drawer="story" aria-label="Close Your Story">×</button></div>
         <section class="profile-card" id="profile"></section>
         <div class="status-columns" id="balances"></div>
         <section class="status-section">
@@ -65,7 +79,7 @@
       </main>
 
       <aside class="action-pane pane" id="gameActions">
-        <div class="pane-heading"><span class="eyebrow">YOUR DESTINATION</span><span class="tiny-pulse">● EXPLORE THE CITY</span></div>
+        <div class="pane-heading"><span class="eyebrow">YOUR DESTINATION</span><span class="tiny-pulse">● EXPLORE THE CITY</span><button type="button" class="pane-close" data-close-drawer="actions" aria-label="Close Your Destination">×</button></div>
         <div id="venue"></div>
         <div class="action-panel-heading"><span>What will you do?</span><span id="actionsCount" class="muted micro"></span></div>
         <div class="actions-scroller" id="actions"></div>
@@ -78,10 +92,10 @@
     </div>
     <nav class="mobile-nav" id="mobileNav" aria-label="Game panels">
       <button type="button" data-mobile-tab="city" aria-controls="gameCity" aria-pressed="true"><span aria-hidden="true">▦</span><strong>City</strong></button>
-      <button type="button" data-mobile-tab="actions" aria-controls="gameActions" aria-pressed="false"><span aria-hidden="true">↗</span><strong>Activities</strong></button>
-      <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong></button>
+      <button type="button" data-mobile-tab="actions" aria-controls="gameActions" aria-pressed="false"><span aria-hidden="true">↗</span><strong>Activities</strong><span id="mobileActionsBadge" class="notification-circle" hidden>1</span></button>
+      <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.4</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.5</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="overlay" class="overlay" aria-modal="true" role="dialog"></div>

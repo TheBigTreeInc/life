@@ -6,6 +6,28 @@ const Art=window.LifeArt;
 const SAVE_KEY='the-life-loop-v1';
 let game=new Game();let net;let toastTimer;let didShowWin=false;let classicEmployerFilter="all";
 let mobileView='city';
+let openDrawer=null;
+let lastStoryFingerprint=null,lastDestinationFingerprint=null;
+let unreadStory=0,unreadDestination=0;
+const wideScreen=window.matchMedia('(min-width:1600px)');
+const drawerScreen=window.matchMedia('(min-width:1025px) and (max-width:1599px)');
+const panelVisible=which=>wideScreen.matches||(mobileBreakpoint.matches?mobileView===(which==='story'?'life':'actions'):openDrawer===which);
+function refreshBadges(){
+ const pairs=[['story',unreadStory,['storyBadge','mobileStoryBadge']],['actions',unreadDestination,['destinationBadge','mobileActionsBadge']]];
+ for(const [kind,count,ids] of pairs){for(const id of ids){const badge=$(id);badge.hidden=!count;badge.textContent=String(Math.min(count,9))+(count>9?'+':'');badge.setAttribute('aria-label',`${count} new ${kind==='story'?'story updates':'destination updates'}`);}}
+}
+function markViewed(which){if(which==='story')unreadStory=0;else unreadDestination=0;refreshBadges();}
+function closeDrawer(){openDrawer=null;document.body.dataset.openDrawer='';$('drawerScrim').hidden=true;for(const [which,id] of [['story','storyDrawerBtn'],['actions','destinationDrawerBtn']])$(id).setAttribute('aria-expanded','false');}
+function setDrawer(which){
+ if(!drawerScreen.matches)return;
+ if(openDrawer===which){closeDrawer();return;}
+ openDrawer=which;document.body.dataset.openDrawer=which;$('drawerScrim').hidden=false;
+ for(const [name,id] of [['story','storyDrawerBtn'],['actions','destinationDrawerBtn']])$(id).setAttribute('aria-expanded',String(name===which));
+ markViewed(which);
+}
+function updateLayout(){closeDrawer();updateMobileAccessibility();if(wideScreen.matches){markViewed('story');markViewed('actions');}}
+function setUtilityMenu(open){$('utilityMenu').hidden=!open;$('utilityMenuBtn').setAttribute('aria-expanded',String(open));}
+
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>'$'+Math.floor(n).toLocaleString('en-US');
@@ -22,6 +44,7 @@ function setMobileView(view,{scroll=true}={}){
  for(const [name,id] of [['city','gameCity'],['actions','gameActions'],['life','gameLife']]){
   $(id).inert=mobileBreakpoint.matches&&view!==name;
  }
+ if(view==='life')markViewed('story');if(view==='actions')markViewed('actions');
  if(scroll&&mobileBreakpoint.matches)window.scrollTo({top:0,behavior:'instant'});
 }
 function updateMobileAccessibility(){setMobileView(mobileView,{scroll:false});}
@@ -43,7 +66,23 @@ function render(){
  $('mobileCash').textContent=fmt(p.cash);
  $('mobilePlayer').textContent=p.name;
  $('economy').textContent=game.economy>=1.06?'MARKET BOOMING':game.economy<=.94?'MARKET COOLING':'MARKET STABLE';
- $('turnCounter').textContent=p.id==='player'?'YOUR TURN':p.isAI?'RIVAL TURN':p.name.toUpperCase()+' TURN';
+ $('turnCounter').textContent=p.name.toUpperCase()+' TURN';
+ const online=!!net?.role,ours=!online||net.ownTurn();
+ const ourName=net?.role==='guest'?(game.players.find(x=>x.id==='friend')?.name||'Friend'):(game.players.find(x=>x.id==='player')?.name||'Host');
+ const rivalName=net?.role==='guest'?(game.players.find(x=>x.id==='player')?.name||'Host'):(game.players.find(x=>x.id==='friend')?.name||'Friend');
+ let turnTitle=online?(ours?'YOUR TURN':`${p.name.toUpperCase()}’S TURN`):`${p.name.toUpperCase()}’S TURN`;
+ if(online&&!net.joined&&net.role==='host')turnTitle='WAITING FOR YOUR FRIEND TO JOIN';
+ const roleLine=online?`You are ${net.role==='host'?'the host':'the guest'} (${ourName}) · ${ours?'You can act now':`Waiting for ${p.name}`} · ${net.joined?'2 connected':'1 connected'}`:`Local game · ${p.hours} hours remaining`;
+ $('turnHeadline').textContent=turnTitle;$('turnDetails').textContent=roleLine;
+ $('turnBanner').dataset.owner=ours?'self':'other';$('turnBanner').dataset.online=String(online);
+ $('turnLamp').title=online?(net.socketOpen?'WebSocket connected':net.lastSyncAt?'HTTP fallback / retrying':'Waiting for Looprd'):'Local play';
+ $('turnConnection').textContent=online?`${net.socketOpen?'● WS live':net.lastSyncAt?'○ HTTP fallback':'○ Connecting'} · Room ${net.code} ↗`:'◎ Start online co-op ↗';
+ if($('roomTurnText'))$('roomTurnText').textContent=net.ownTurn()?'YOUR TURN':`WAITING FOR ${game.player.name}`;
+ if($('roomParticipants'))$('roomParticipants').textContent=`Current player: ${game.player.name} · You: ${net.role} · Remote: ${net.guestName||'Not named yet'} · ${net.joined?'2 joined':'1 joined'}`;
+ if($('roomTransport'))$('roomTransport').textContent=`WebSocket: ${net.socketOpen?'Connected':'Not connected (HTTP polling fallback)'} · HTTP: ${net.lastSyncAt?'Last room response '+new Date(net.lastSyncAt).toLocaleTimeString():'Awaiting room response'}`;
+ if($('roomVersion'))$('roomVersion').textContent=`Room version: ${net.version} · ${net.endpoint}`;
+ if($('roomComponent'))$('roomComponent').textContent=`Component schema: ${net.infoStatus}`;
+ 
  $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨'}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?`${esc(j.name)} · ${esc(j.employer||placeLabel(j.place))} · ${fmt(p.wage)}/h`:'Unemployed · Apply at Career Center'}</div></div></div><div class="profile-mini"><span>📍 <b>${esc(placeLabel(current.id))}</b></span><span class="pill">${esc(D.dwellings[p.home].name)}</span></div>`;
  $('balances').innerHTML=`<div class="stat-card"><div class="stat-label">CASH ON HAND</div><div class="stat-number">${fmt(p.cash)}</div><div class="stat-note">Ready to spend</div></div><div class="stat-card"><div class="stat-label">NET WORTH</div><div class="stat-number">${fmt(game.wealth(p))}</div><div class="stat-note">Including savings${p.rentDebt?' · debt':''}</div></div>`;
  const goalLabels={wealth:'💰 Wealth',happiness:'☀️ Happiness',education:'🎓 Education',career:'🚀 Career'};
@@ -88,6 +127,15 @@ function render(){
  }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>');
  $('hint').innerHTML=`<b>✦ TODAY'S TIP</b><br/>${esc(hint(p))}`;
  $('onlineBtn').textContent=net?.indicator()||'◎ Online co-op';
+ const visibleMessages=game.messages.filter(m=>m.actor==='system'||m.actor===p.id||m.actor==='jones');
+ const storyFingerprint=JSON.stringify([p.id,game.week,...visibleMessages.slice(-6).map(m=>[m.actor,m.message,m.week])]);
+ const destinationFingerprint=JSON.stringify([p.id,p.location,game.week,game.actions().filter(a=>a.enabled).map(a=>a.id)]);
+ if(lastStoryFingerprint!==null&&storyFingerprint!==lastStoryFingerprint&&!panelVisible('story'))unreadStory=Math.min(9,unreadStory+1);
+ if(lastDestinationFingerprint!==null&&destinationFingerprint!==lastDestinationFingerprint&&!panelVisible('actions'))unreadDestination=Math.min(9,unreadDestination+1);
+ if(lastDestinationFingerprint===null&&!panelVisible('actions')&&game.actions().some(a=>a.enabled))unreadDestination=1;
+ lastStoryFingerprint=storyFingerprint;lastDestinationFingerprint=destinationFingerprint;
+ if(panelVisible('story'))unreadStory=0;if(panelVisible('actions'))unreadDestination=0;
+ refreshBadges();
  $('endTurnBtn').disabled=!!game.winner||(!!net?.role&&!net.ownTurn())||!!net?.busy;
  $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'Wrap up this week';
  if(game.winner&&!didShowWin){didShowWin=true;showWinner();}
@@ -97,10 +145,11 @@ function onlineDialog(){
  const connected=!!net.role;
  const server=esc(net.endpoint?window.LifeOnline.serverBase(net.endpoint):window.LifeOnline.suggestedServer());
  showModal(`<section class="modal compact" aria-label="Online co-op"><div class="modal-head"><div><span class="eyebrow dark">PLAY TOGETHER FROM ANYWHERE</span><h2>Online co-op</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div>
- ${connected?`<p class="modal-lead"><strong>${esc(net.role==='host'?'You are hosting':'You are connected')}</strong> · Game code <strong class="code-value">${esc(net.code)}</strong><br/>${esc(net.notice)} · ${net.joined?'Two players connected':'Waiting for a friend'}</p><div class="online-controls"><button class="modal-secondary" id="copyInvite">Copy invitation link</button><button class="modal-secondary" id="disconnectOnline">Disconnect</button></div>`:
+ ${connected?`<p class="modal-lead"><strong>${esc(net.role==='host'?'You are hosting':'You are connected as guest')}</strong> · Game code <strong class="code-value">${esc(net.code)}</strong><br/>${esc(net.notice)} · ${net.joined?'Two players joined the room':'Waiting for a friend'}</p><div class="room-diagnostics" id="roomDiagnostics"><strong>Room status — <span id="roomTurnText">${net.ownTurn()?'YOUR TURN':`WAITING FOR ${esc(game.player.name)}`}</span></strong><span id="roomParticipants">Current player: ${esc(game.player.name)} · You: ${esc(net.role)} · Remote: ${esc(net.guestName||'Not named yet')}</span><span id="roomVersion">Looprd API: ${esc(net.endpoint)} · Room version: ${net.version}</span><span id="roomTransport">WebSocket: ${net.socketOpen?'Connected':'Not connected (HTTP polling fallback)'} · HTTP: ${net.lastSyncAt?'Last room response '+new Date(net.lastSyncAt).toLocaleTimeString():'Awaiting room response'}</span><span id="roomComponent">Component schema: ${esc(net.infoStatus)}</span><button type="button" class="modal-secondary" id="checkLooprd">Check Looprd component API</button></div><div class="online-controls"><button class="modal-secondary" id="copyInvite">Copy invitation link</button><button class="modal-secondary" id="disconnectOnline">Disconnect</button></div>`:
  `<p class="modal-lead">To host, choose <b>New Game → Online with a friend</b>. To join, enter the friend's code and Looprd server FQDN below.</p><form id="joinOnlineForm"><label class="field-label">LOOPRD SERVER FQDN<input class="form-input" name="url" type="text" required autocomplete="url" placeholder="api.server.country" value="${server}" /><small>Use your API server address only; /looprd/the-life-loop/v1 is added automatically.</small></label><label class="field-label">FRIEND CODE<input class="form-input" name="code" id="inviteCode" maxlength="15" autocomplete="off" placeholder="ABCD234567" required value="${esc(new URLSearchParams(location.search).get('join')||'')}" /></label><label class="field-label">YOUR DISPLAY NAME<input class="form-input" name="name" maxlength="24" value="Friend" required /></label><button class="modal-primary" type="submit">Join friend's game ↗</button></form>`}
  <p class="modal-footnote">Multiplayer requires an external Looprd server over HTTPS/WSS when hosted on GitHub Pages. Invitation links include the server address and game code, never participant tokens. Participant tokens are kept in your browser session. The host must remain connected for guest turns.</p></section>`);
  if(connected){
+  $('checkLooprd').addEventListener('click',async()=>{const button=$('checkLooprd');button.disabled=true;try{const outcome=await net.probe();toast(outcome);}catch(e){toast('Looprd check failed: '+e.message,true);}finally{if($('overlay').classList.contains('open')&&$('overlay').querySelector('#roomDiagnostics'))onlineDialog();}});
   $('copyInvite').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(net.inviteLink());toast('Invite link copied');}catch(e){toast('Copy unavailable: '+e.message,true);}});
   $('disconnectOnline').addEventListener('click',()=>{net.disconnect();closeOverlay();toast('Disconnected from multiplayer');});
  }else{
@@ -213,19 +262,28 @@ $('board').addEventListener('click',async e=>{const btn=e.target.closest('[data-
 $('actions').addEventListener('change',e=>{if(e.target.id==='classicEmployerFilter'){classicEmployerFilter=e.target.value;render();}});
 $('actions').addEventListener('click',async e=>{const btn=e.target.closest('[data-act]');if(!btn||btn.disabled)return;const actionId=btn.dataset.act,location=game.player.location;if(actionId.startsWith('apply:')&&confirmEmploymentSwitch(actionId))return;const result=await net.execute('act',actionId,()=>game.act(actionId));if(result.ok&&net.role!=='guest'){store();render();if(actionId==='chat'&&!game.pendingEncounter)showSmallTalk(result.message,location);}toast(result.message,!result.ok);});
 $('endTurnBtn').addEventListener('click',async()=>{const result=await net.execute('endTurn',null,()=>game.endTurn());if(result.ok&&net.role!=='guest'){store();render();}toast(result.message,!result.ok);});
-$('guideBtn').addEventListener('click',guide);
+$('guideBtn').addEventListener('click',()=>{setUtilityMenu(false);guide();});
 $('financeBtn').addEventListener('click',showFinances);
 $('careerBtn').addEventListener('click',showCareers);
 $('newBtn').addEventListener('click',()=>newGameDialog());
+$('utilityMenuBtn').addEventListener('click',()=>setUtilityMenu($('utilityMenu').hidden));
+$('saveBtn').addEventListener('click',()=>setUtilityMenu(false));
+$('loadBtn').addEventListener('click',()=>setUtilityMenu(false));
+$('storyDrawerBtn').addEventListener('click',()=>setDrawer('story'));
+$('destinationDrawerBtn').addEventListener('click',()=>setDrawer('actions'));
+$('drawerScrim').addEventListener('click',closeDrawer);
+document.querySelectorAll('[data-close-drawer]').forEach(b=>b.addEventListener('click',closeDrawer));
+document.addEventListener('click',e=>{if(!e.target.closest('.utility-holder'))setUtilityMenu(false);});
+$('turnConnection').addEventListener('click',onlineDialog);
 $('mobileNav').addEventListener('click',e=>{const tab=e.target.closest('[data-mobile-tab]');if(tab)setMobileView(tab.dataset.mobileTab);});
-mobileBreakpoint.addEventListener('change',updateMobileAccessibility);
+mobileBreakpoint.addEventListener('change',updateLayout);wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);
 setMobileView('city',{scroll:false});
 $('onlineBtn').addEventListener('click',onlineDialog);
 $('saveBtn').addEventListener('click',saveExport);
 $('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
 $('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
 $('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){setUtilityMenu(false);closeDrawer();if($('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();}});
 net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast});
 render();newGameDialog(true);
 net.resume().then(reconnected=>{if(reconnected){$('overlay').dataset.kind='';closeOverlay();toast('Reconnected to room '+net.code);}else if(new URLSearchParams(location.search).has('join'))onlineDialog();});

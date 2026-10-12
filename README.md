@@ -1,4 +1,4 @@
-# The Life Loop — v0.5.4
+# The Life Loop — v0.5.5
 
 **Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.4-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.5-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -74,3 +74,9 @@ Commit `.ziprunner-workboard-update.json`, `ZIPRUNNER_HANDOFF.txt`, `WORKBOARD.m
 ## v0.5.4 — ZipRunner release metadata revision
 
 This release corrects the previously unversioned v0.5.3 CI/workboard repair. All deployment-relevant version markers now agree (`package.json`, `.ziprunner-workboard-update.json`, `docs/parity-contract.json`, `looprd.yaml`, `ZIPRUNNER_HANDOFF.txt`, and the browser footer). The packaging script derives its artifact name from `package.json`. **No gameplay or save-format changes.** Commit the whole release to `main` to avoid the stale-manifest Pages error.
+
+## Sliding panels and turn clarity — v0.5.5
+
+On laptop and mid-size desktop displays (1025–1599px), Your Story and Your Destination are slide-out edge panels. Orange notification circles indicate new story information or newly available destination actions; viewing clears the indicator. On large desktop screens (1600px and above) both panels stay visible. The phone/tablet City/Activities/My life tabs continue to work and display the same notifications.
+
+Save, Load and How to Play are now under the top-right Menu. The persistent turn banner states whose turn it is, whether you may act, host/guest identity, and live WebSocket versus HTTP fallback status. Open Online co-op for room diagnostics and a **Check Looprd component API** button; this requests `/looprd/the-life-loop/v1/info` and expects protocol `the-life-loop/1`. This is an API registration check, **not** proof of a production-ready deployment or correct two-machine synchronization; verify against a real Looprd instance. No simulation or protocol changes.

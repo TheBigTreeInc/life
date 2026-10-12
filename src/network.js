@@ -11,7 +11,7 @@ class LifeOnline {
  constructor(hooks){
   this.h=hooks;this.role=null;this.code='';this.token='';this.version=0;this.endpoint='';
   this.socket=null;this.busy=false;this.polling=false;this.timer=null;this.reconnectTimer=null;
-  this.joined=false;this.guestName='';this.lastResultId='';this.commandInFlight=null;this.unpublished=false;this.notice='Offline';
+  this.joined=false;this.guestName='';this.lastSyncAt=null;this.socketOpen=false;this.infoStatus='Not checked';this.lastResultId='';this.commandInFlight=null;this.unpublished=false;this.notice='Offline';
  }
  static serverBase(input){
   const raw=String(input??'').trim();
@@ -48,23 +48,23 @@ class LifeOnline {
  }
  forget(){try{sessionStorage.removeItem(STORAGE);}catch{}}
  connect(){
-  if(this.socket){this.socket.onclose=null;this.socket.close();}
+  this.socketOpen=false;if(this.socket){this.socket.onclose=null;this.socket.close();}
   clearTimeout(this.reconnectTimer);
   if(!this.role)return;
   const url=this.endpoint.replace(/^http/,'ws')+'/events';
   try{
    const socket=new WebSocket(url);this.socket=socket;
-   socket.onopen=()=>{socket.send(JSON.stringify({subscribe:'pulses'}));this.notice='Connected';this.h.render();};
+   socket.onopen=()=>{this.socketOpen=true;socket.send(JSON.stringify({subscribe:'pulses'}));this.notice='Connected';this.h.render();};
    socket.onmessage=event=>{try{const msg=JSON.parse(event.data);if(msg.resource==='pulses')this.sync();}catch{}};
-   socket.onerror=()=>{this.notice='Reconnecting';this.h.render();};
-   socket.onclose=()=>{if(this.socket!==socket||!this.role)return;this.notice='Reconnecting';this.h.render();this.reconnectTimer=setTimeout(()=>this.connect(),2500);};
+   socket.onerror=()=>{this.socketOpen=false;this.notice='Reconnecting';this.h.render();};
+   socket.onclose=()=>{if(this.socket!==socket||!this.role)return;this.socketOpen=false;this.notice='Reconnecting';this.h.render();this.reconnectTimer=setTimeout(()=>this.connect(),2500);};
   }catch(e){this.notice='WebSocket unavailable';this.h.toast(e.message,true);}
   clearInterval(this.timer);
   // Looprd events are best-effort; a status fetch also recovers missed updates.
   this.timer=setInterval(()=>this.sync(),5000);
  }
  disconnect(){
-  this.role=null;this.code='';this.token='';this.version=0;this.joined=false;this.notice='Offline';this.busy=false;
+  this.role=null;this.code='';this.token='';this.version=0;this.joined=false;this.notice='Offline';this.busy=false;this.socketOpen=false;this.lastSyncAt=null;this.infoStatus='Not checked';
   clearInterval(this.timer);clearTimeout(this.reconnectTimer);
   if(this.socket){this.socket.onclose=null;this.socket.close();this.socket=null;}
   this.commandInFlight=null;this.unpublished=false;this.forget();this.h.render();
@@ -88,7 +88,7 @@ class LifeOnline {
   try{
    Object.assign(this,saved);this.endpoint=LifeOnline.validateEndpoint(saved.endpoint);
    const info=await this.api({op:'status',code:this.code,token:this.token});
-   this.version=info.version;this.joined=info.joined;this.guestName=info.guestName;
+   this.version=info.version;this.joined=info.joined;this.guestName=info.guestName;this.lastSyncAt=Date.now();
    this.h.setGame(info.state);this.connect();this.h.render();if(this.role==='host'){if(this.unpublished&&!info.pending&&!this.busy){try{await this.publish();this.unpublished=false;}catch{}}await this.process(info);}
    return true;
   }catch(err){this.disconnect();this.h.toast('Could not reconnect: '+err.message,true);return false;}
@@ -159,7 +159,9 @@ class LifeOnline {
   this.polling=true;
   try{
    const info=await this.api({op:'status',code:this.code,token:this.token});
-   this.joined=info.joined;this.guestName=info.guestName;
+   const previousStatus=[this.joined,this.guestName,this.notice].join('|');
+   this.joined=info.joined;this.guestName=info.guestName;this.lastSyncAt=Date.now();this.notice=this.socketOpen?'Connected':'HTTP fallback active';
+   if(previousStatus!==[this.joined,this.guestName,this.notice].join('|'))this.h.render();
    if(info.version>this.version){
     this.version=info.version;this.h.setGame(info.state);this.h.render();
    }
@@ -168,8 +170,17 @@ class LifeOnline {
     this.h.toast(info.lastResult.message||'Turn updated',!info.lastResult.ok);
    }
    if(this.role==='host'){if(this.unpublished&&!info.pending&&!this.busy){try{await this.publish();this.unpublished=false;}catch{}}await this.process(info);}
-  }catch(e){this.notice='Connection interrupted';}
+  }catch(e){if(this.notice!=='Connection interrupted'){this.notice='Connection interrupted';this.h.render();}}
   finally{this.polling=false;}
+ }
+ async probe(){
+  if(!this.endpoint)throw Error('Connect to a Looprd server first');
+  let response;
+  try{response=await fetch(this.endpoint+'/info',{method:'GET',mode:'cors',cache:'no-store'});}catch(e){this.infoStatus='Network / CORS failure';throw Error('Cannot reach the Looprd component info endpoint: '+e.message);}
+  if(!response.ok){this.infoStatus='HTTP '+response.status;throw Error('Component info returned HTTP '+response.status+' — verify Looprd loaded looprd.yaml');}
+  let data;try{data=await response.json();}catch{this.infoStatus='Invalid JSON';throw Error('Unexpected component info response');}
+  if(data.protocol!=='the-life-loop/1'){this.infoStatus='Wrong component protocol';throw Error('The server responded, but the Life Loop component schema was not recognized');}
+  this.infoStatus='Verified: the-life-loop/1';return 'Looprd component registered and responding';
  }
  indicator(){
   if(!this.role)return '◎ Online co-op';

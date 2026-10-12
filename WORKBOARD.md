@@ -1,6 +1,6 @@
 # The Life Loop — workboard v0.5.4
 
-Full-source release: `the-life-loop-0.5.4-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.5-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -166,3 +166,13 @@ This release makes no gameplay or online protocol changes. Private state and loc
 - [ ] Operator: validate the GitHub Pages Actions build, website and Looprd discovery after deployment.
 
 No changes to gameplay, saved games, or Looprd database schema.
+
+## v0.5.5 — Sliding panes, game menu, online turn diagnostics
+
+- [x] **LL-078** — Responsive side drawers for Your Story/Your Destination at 1025–1599px; automatic three-column layout at 1600px+ and existing mobile navigation.
+- [x] **LL-079** — Notification circles for new story/venue updates, cleared by visiting the panel; larger screen panels remain visible.
+- [x] **LL-080** — Top-right Save, Load, How to Play menu with keyboard and outside-click handling.
+- [x] **LL-081** — Persistent multiplayer turn ownership, host/guest and transport status; Looprd component info probe and room version diagnostics.
+- [ ] **LL-082 (high)** — Production acceptance: deploy `looprd.yaml` on a real Looprd server, verify GET `/looprd/the-life-loop/v1/info`, WebSocket subscription, 2-browser turns/reconnects and unauthorized command rejection.
+
+Operator: run `node tools/verify.mjs`; check widths 390, 1024, 1280, 1600; open slide-out panels and menu; connect as two users, confirm distinct OWN/WAITING labels in both browsers. `the-life-loop-0.5.5-ziprunner.zip` must include the updated hidden manifest. No runtime/config/private files included.
