@@ -1,94 +1,65 @@
-# The Life Loop — v0.4.1
+# The Life Loop — v0.5.3
 
-A modern, original, offline-capable life simulation inspired by the *genre* of 1990s life-board games. Includes original characters, locations, dialogue, SVG art, economics, and gameplay. **No original Sierra assets are included.**
+**Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
-## Play
+## This pass
 
-- **Windows:** Extract the ZIP and run `PLAY.bat`, or double-click `PLAY.html` in Chrome/Edge/Firefox.
-- **macOS / Linux:** Open `PLAY.html` in a browser.
-- No internet, npm installation, or server required to play. The standalone file includes all source JavaScript and CSS.
-- The game autosaves to browser storage when permitted. Use **Save** / **Load** to export and import portable JSON files.
-- Development: `npm test`, `node tools/verify.mjs`, `npm run build`; `npm start` hosts the modular `index.html` at port 8080.
+- Classic: 37 documented floppy DOS positions with original base wages, stat requirements, degrees and uniforms; two CD-only jobs are excluded. Nine employers are represented using existing 12 city tiles (Z-Mart and Black’s Market share a venue).
+- Classic: 4h job applications, failure costs, seeded qualification-sensitive openings, repeat refusal lockout and guaranteed cook job. Existing job is kept on failed applications.
+- Classic: 4h raises based on posted offered wages instead of automatic 10% boosts.
+- Classic: $325 starter rent, manually paid in cash every four weeks at the Rent Office; extensions, arrears and half-wage garnishment + interest.
+- New employer filter at the Career Center and roadmap references; the rest of the original mechanical backlog remains documented.
+- Save migration from v0.4.6 Classic jobs, plus Classic-only state fields; Modern untouched.
+- 120 gameplay tests, including Classic banking and refrigerated food, plus offline UI checks.
 
-## Core gameplay
+## How to play
 
-The player has 40 discretionary hours every week. Travel uses hours. Work requires suitable clothing and qualifications and earns money/experience; degrees unlock better careers. Balance food, rent, health, entertainment, housing, banking, investments, and four adjustable victory goals. Play solo versus an automated competitor, two-person hotseat (and rival), or solo sandbox.
+1. Open `PLAY.html` in Chrome/Edge (offline) or run `PLAY.bat` on Windows.
+2. Start **New Game**, choose Classic or Modern, set era and goals.
+3. Classic: visit Career Center, use employer filter, apply for a role, work at its actual workplace tile.
+4. Classic: in **week 4**, go to Open Door Realty (the modern board stand-in for the Rent Office) and pay the $325 rent in **cash**. The office reopens on future due weeks.
+5. Export JSON save backups; browsers isolate local saves by origin, so file:// saves will not automatically appear on GitHub Pages.
 
-The 12 city buildings have individual shopkeepers, illustrated scenes, and original two-choice story encounters.
+## Verification and architecture
 
-## What's new in v0.4.0: seasonal narratives and financial history
-
-- **Three connected NPC stories, nine chapters:** Mira/Nia (community pantry), Theo/Pip (paid repair apprenticeships), Sol/Jun (inclusive arts nights). Each arc has 3 branching episodes unlocked by completing its host's original introduction, sufficient trust (18/25/35), and at least two weeks between chapters. Final chapter requires at least 10 trust with the partner resident.
-- **Real persistent consequences:** Both involved residents respond to your choices. Some personal-benefit options cost trust with the partner. Completing the community-minded final chapter permanently improves food prices (−5%), wages (+5%) or leisure tickets (−8%) for every player. Choosing the alternative has no city-wide bonus. A matching City Pulse venue adds a small, visible extra story reward.
-- **Finance dialog:** Click **Finances** on the top bar to view an offline SVG chart of wallet cash vs. net worth, transactions, current 4-week inflow/outflow and life milestones. The ledger tracks actual before/after account balances. Bank/investment *transfers* do not count as income. Weekly expenses, rent, arrears, savings interest, and investment returns are included. History keeps at most 260 weeks; ledger keeps at most 160 entries.
-- **Save migration:** v0.1–v0.3 save files load with blank story and finance records; v0.4 stores story stages, trust outcomes, public projects, ledgers, weekly history, and milestones. In-progress seasonal conversations resume after import.
-- **Everything from v0.3 stays:** 12 illustrated buildings and NPCs, relationships/favors, 10 rotating events, career/education/economy, adjustable goals, AI opponent, hotseat and offline saves.
-
-## Publish to GitHub Pages (v0.4.1)
-
-The game is fully static. A GitHub Actions workflow in `.github/workflows/pages.yml` verifies gameplay, builds `dist/index.html` from `PLAY.html`, and publishes only that file. No server, backend, credentials, npm dependencies, or external game assets are needed by visitors.
-
-1. In GitHub, create a **public** repository named `the-life-loop` (or reuse an existing repo). GitHub Free Pages is supported for public repositories. This project package **cannot** create a repository or enable Pages for you.
-2. Push the entire **extracted project contents** to the repository default `main` branch, including the hidden `.github/workflows/pages.yml`. Example:
-
-   ```bash
-   git init
-   git add .
-   git commit -m "Publish The Life Loop v0.4.1"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USER/the-life-loop.git
-   git push -u origin main
-   ```
-
-   If ZipRunner already maintains `.git` for the project, **do not** reinitialize it. Instead use its configured Git identity/remote to commit and push the complete v0.4.1 sources to `main`. Git push is operator-controlled.
-3. Open **Repository → Settings → Pages → Build and deployment → Source → GitHub Actions**.
-4. Open **Actions → Deploy The Life Loop to GitHub Pages**. If no run started yet, click **Run workflow** on `main` (or push a commit). After a successful run, the site URL appears in the deployment and in Settings → Pages.
-5. Typical public URL: `https://YOUR_USER.github.io/the-life-loop/` (exact URL depends on owner, repository, and any custom domain).
-
-**For future releases:** ZipRunner can verify the package and (when a Git remote and write credentials are set up) push commits to `main`. The workflow redeploys automatically. The GitHub-hosted site is HTTPS and browser saves remain **local to each device/browser**; they are not synced to GitHub. Players can still manually **Save** and **Load** JSON backups. Older saves continue to migrate.
-
-**Local dry run** (Node.js 20.11+):
-
-```bash
+```sh
 node tools/verify.mjs
-npm run build:pages
-python -m http.server 8080 --directory dist
 ```
 
-Then open http://localhost:8080/ . Only `dist/index.html` and `.nojekyll` are published; no Sierra game files, tokens, or original DOS resources are included.
+Read `ARCHITECTURE.md`, `docs/parity-matrix.md`, `docs/classic-job-table.md` and `docs/decisions/ADR-0004-original-jobs-and-manual-rent.md` before gameplay changes. ZipRunner should apply `.ziprunner-workboard-update.json` only after verify succeeds. `node tools/build-pages.mjs` produces the static Pages site in `dist/`.
 
-## ZipRunner installation
+## Limitations
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.4.1-ziprunner.zip` · Full source flat-root ZIP.
+Original DOS gameplay has **not** been run side by side here. Era visuals are new, not extracted assets. Exact historical price swings and loan approvals, pawn, spoilage medical bills, market crashes, special apartment behavior, four-player hotseat and the map's original nine storefront distinctions are still incomplete. Do not redistribute the original DOS archive in this package.
 
-Download to `C:\Users\dorbi\source\_ziprunner_inbox`, then let ZipRunner apply it to project `the-life-loop`. There is **no wrapping folder**. Source is complete; it is not a delta patch. The archive includes `.ziprunner-workboard-update.json` in the root, schema `ziprunner.workboard-update.v1`. The workboard update must only be applied **after successful verification**. Local Git and settings folders are not included in the source ZIP; ZipRunner should preserve them.
+## GitHub Pages
 
-**Build/verify:** `node tools/verify.mjs` from the extracted project directory. Run this before any Git actions. This rebuilds `PLAY.html`, validates metadata and runs the test suite (48 tests). Requires Node.js **20.11+** for `import.meta.dirname`; it does not need dependencies or network access. The ZIP already contains a prebuilt `PLAY.html` for systems without Node.
+Push the flat-root source to a public repository on `main` and set Settings → Pages → GitHub Actions. `.github/workflows/pages.yml` verifies and publishes the game automatically. No Git push or live Pages deployment is performed by the ZIP.
 
-The portable `the-life-loop.zr` declares a build command and preservation hints, but **does not configure secrets or perform Git commits or pushes**. Any Git identity/permission is managed in the operator's local ZipRunner settings.
+## ZipRunner
 
-## Project structure
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.1-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
-```text
-PLAY.html                          Playable offline single-file game (generated)
-PLAY.bat                           Windows launcher
-.github/workflows/pages.yml         CI deployment to GitHub Pages
-/tools/build-pages.mjs             Copy validated offline game into dist/index.html
-index.html / styles.css            Modular UI, city pulse, NPC trust display
-src/data.js                        Places, nine arc chapters, city events, favors, jobs
-src/engine.js                      Game rules, story progression, finance ledger, migration, AI
-src/art.js                         Original SVG characters and buildings
-src/app.js                         Browser rendering, finance SVG and input
-package.json                       Build/test tasks
-tests/game.test.cjs                Engine regressions, balance, migration
-/ tools/build-offline.mjs          Generate PLAY.html
-/ tools/verify.mjs                 Validate package and run tests
-/ tools/package-ziprunner.py       Rebuild and create release ZIP
-.ziprunner-workboard-update.json   Mandatory ZipRunner workboard update
-WORKBOARD.md                       Delivery tracking and operator QA
-ZIPRUNNER_HANDOFF.txt              ZipRunner ingestion handoff
-```
 
-## Test evidence and limits
+## Classic economy improvements — v0.5.1
 
-48 Node regression tests pass. GitHub Pages is configured but production deployment has not been completed because a target repository and Pages settings are required. The offline one-file build was loaded into in-memory Chromium, exercised at 1440px and 390px widths, including start, an initial story, seasonal chapter, finance dashboard and weekly advance, with no browser JavaScript errors. The infrastructure blocks normal URL/file navigation, so **direct Windows `PLAY.html` opening and actual ZipRunner import are still operator checks**. Cross-platform layout testing is ongoing. No Git push was performed.
+- At the **bank**, transfer $100 at a time at no action-hour cost. Apply for loans (2 hours); make recurring $45 principal + $5 interest payments. Enter the **broker** (2 hours) to trade one unit at a time across six separate instruments including 3%-fee T-Bills.
+- At **Black’s Market** (the Fresh & Frugal board tile in Contemporary), purchase one, two or four portions of fresh food ($55/$100/$190 base), newspaper or lottery tickets. A fridge stores six; adding a freezer expands storage to twelve. Fresh food is consumed automatically at weekly transitions. Spoilage creates a provisional doctor charge.
+- All six quoted base instrument prices are based on published gameplay references. Stock volatility, bank loan approval, doctor charge and original economic event probabilities remain **approximations**; consult ADR-0005 for scope.
+- Prior Classic savings and generic investment saves continue to work; old investments can be redeemed through the broker. Existing Modern saves and rules are unaffected.
+
+**Tests:** `node tools/verify.mjs` (includes `tests/classic-banking-food.test.cjs`).
+
+
+## Online co-op with Looprd (v0.5.2)
+
+You can host a game in the browser with **New Game → Online co-op**, choose a Looprd endpoint, and share a ten-character friend code. A second player uses **Online co-op → Join** or the generated link. Both browsers connect to Looprd WebSocket events; game commands use authenticated HTTP because dapi/Looprd v1 does not offer bidirectional WebSocket RPC. A persistent Looprd host (not GitHub Pages alone) is required. See [docs/looprd-multiplayer.md](docs/looprd-multiplayer.md) for source registration, CORS, HTTPS/WSS, security and tests. Legacy hotseat/single-player still work without a server.
+
+
+## Mobile and Looprd FQDN improvements — v0.5.3
+
+Phones and tablets use the City, Activities and My life bottom tabs. Tap a building in City to navigate and automatically see its actions. The top summary shows the active player, week, remaining hours and cash. On phones the city map becomes a two-column illustrated storefront grid; larger buttons, scrollable setup dialogs and safe-area padding make touch use practical. Nothing about these views changes Classic or Modern rules.
+
+For **Online co-op**, enter only the Looprd API server FQDN, such as `api.server.country` (or `https://api.server.country`); the game appends `/looprd/the-life-loop/v1` and automatically uses `wss://` for event notifications. Invitations carry the FQDN and friend code, not participant credentials. GitHub Pages serves the frontend; multiplayer requires a separately running Looprd server with CORS/origin configuration.
+
+Read [ADR-0007](docs/decisions/ADR-0007-responsive-mobile-layout.md). Desktop keeps the three-panel view. Full two-device, real iOS and real Android verification remains a deployment/operator check.

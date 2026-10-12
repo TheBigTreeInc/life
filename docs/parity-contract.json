@@ -1,0 +1,229 @@
+{
+  "schema": "the-life-loop.parity-contract.v1",
+  "architecture_revision": "1.4",
+  "release": "0.5.3",
+  "implementation_baseline": "0.5.1",
+  "policy": "Original core mechanics are authoritative; modern presentation must not change economic outcomes; modern gameplay additions must be opt-in.",
+  "mechanics": [
+    {
+      "id": "TURN-001",
+      "title": "Per-player weekly turns",
+      "target": "One turn per player; week advances after all players finish.",
+      "current": "Turn order supports 1–2 humans and AI; 4-human original maximum unavailable.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
+      "acceptance": "Four humans complete a week in correct order without taking actions for each other."
+    },
+    {
+      "id": "TIME-001",
+      "title": "60-hour weekly budget",
+      "target": "Start each player turn with 60 hours, original modifier exceptions recorded.",
+      "current": "Classic uses 60h (Modern retains 40h), hunger penalties still simplified.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Locations",
+      "acceptance": "Fresh game starts with 60 hours; no duplicated time deductions; imported games handled by migration policy."
+    },
+    {
+      "id": "TIME-002",
+      "title": "Movement and building entry",
+      "target": "Distance-based movement; entering a building costs 2h.",
+      "current": "Classic adds 2h per travel entry on top of simplified ring distance; DOS distance is unverified.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hour",
+      "acceptance": "Move around ring, reenter building, track exact expected time with original observations."
+    },
+    {
+      "id": "TIME-003",
+      "title": "Action time accounting",
+      "target": "Full work session 6h paid for 8h; job application 4h; study 6h; relaxing 6h.",
+      "current": "Classic 4h application and 6h relaxation; work 6h/8h pay, study 6h. Partial-work handling unimplemented.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hour",
+      "acceptance": "Full and partial work, success/failure application and study action charge documented hours."
+    },
+    {
+      "id": "JOB-001",
+      "title": "Single job, workplace locking",
+      "target": "Exactly one primary job; work only at its workplace; switching replaces role.",
+      "current": "Implemented with explicit switch confirmation.",
+      "status": "implemented",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Jobs",
+      "acceptance": "Two hired positions never coexist; former employer denies shifts; current one allows work."
+    },
+    {
+      "id": "JOB-002",
+      "title": "Applications and openings",
+      "target": "Requirements + chance-based no openings; failed applications still consume time.",
+      "current": "Classic now uses the 37-job DOS/floppy catalog, stat/diploma qualification rejection (+4h/-1 Happiness), qualification-sensitive openings chance and same-week rejection lockout; original RNG order still unverified.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Employment_Office",
+      "acceptance": "Under-qualified and no-opening attempts use original rejection/time rules."
+    },
+    {
+      "id": "JOB-003",
+      "title": "Work-stat gains and caps",
+      "target": "+1 experience/+1 dependability per work session up to job/degree caps.",
+      "current": "Classic stat caps now use the DOS 37-job requirement data and completed diploma counts; XP/Dependability capped per authentic role. Work/dismissal edge cases still require DOS comparison.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Jobs",
+      "acceptance": "Repeated entry-job shifts reach cap, not infinity; changing jobs/degrees affects cap."
+    },
+    {
+      "id": "JOB-004",
+      "title": "Dependability and firing",
+      "target": "20 initial, -3 per week; low stat warnings and dismissal on work attempts.",
+      "current": "Classic starts Dependability 20 and decays 3/week; hiring below 10 resets it, low reliability warns, and work attempts below job requirement−5 dismiss without pay. Exact messages/DOS edges unverified.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Dependibility",
+      "acceptance": "Week decay, hire minimum, warning threshold and firing reproduced with seeded results."
+    },
+    {
+      "id": "JOB-006",
+      "title": "DOS-floppy employment catalog",
+      "target": "37 original DOS positions with employer, base wage, XP, Dependability, diplomas and uniforms; preserve CD-only distinction.",
+      "current": "37 documented floppy positions implemented in Classic data; two CD-only jobs omitted; shared modern building venues not 1:1; exact DOS binary comparison pending.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/List_of_Jobs",
+      "acceptance": "Every Classic role is tested against the documented table, with no Modern Story catalog changes."
+    },
+    {
+      "id": "JOB-005",
+      "title": "Wages and raises",
+      "target": "8h pay for full 6h work, current wage; raise prerequisites, wage changes and risks.",
+      "current": "Classic uses documented $5–$25 base hourly wages, listed-wage raises (+4h) and half-shift garnishment/$2 interest. Original macroeconomy pricing curve and partial shifts remain different.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Jobs",
+      "acceptance": "Pay matches applied wage, raise refusal/cost, garnishment and role switching exact."
+    },
+    {
+      "id": "EDU-001",
+      "title": "Eleven branching degrees",
+      "target": "11 permanent named degrees with prerequisite edges and possible multi-course progress.",
+      "current": "11 named diplomas and original prerequisite graph now feed 37 DOS job qualifications; course availability/end-condition and original implementation variants still unverified.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Degrees",
+      "acceptance": "All 11 degrees reachable through correct graph; job-specific combinations enforced."
+    },
+    {
+      "id": "EDU-002",
+      "title": "Course time and benefits",
+      "target": "Enroll fees and 6h lessons, usually 10 lessons; studies can benefit from durables.",
+      "current": "Classic enrollment $50, ten 6h lessons (1–5h partial final time permitted), computer and three-book study aids, graduation +5 happiness/reliability. Enrollment queue and item details require DOS validation.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hi-Tech_U",
+      "acceptance": "Enroll, alternate courses, complete 10 lessons, adjust for valid aids, graduate."
+    },
+    {
+      "id": "ITEM-001",
+      "title": "Weekly uniform consumption",
+      "target": "Three tiers, weekly wear including unworn; higher tier satisfies lower; budget/premium durations.",
+      "current": "Implemented week-based casual/formal/business clothing with tier substitution.",
+      "status": "implemented",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
+      "acceptance": "An unused outfit ages each week; expired uniform blocks work; superior outfit substitutes."
+    },
+    {
+      "id": "ITEM-002",
+      "title": "Durables and supply market",
+      "target": "Durables have benefits, wear/breakage/theft risks; shops rotate stock.",
+      "current": "Ownable items but limited damage and original stock variety.",
+      "status": "partial",
+      "priority": "P2",
+      "source_url": "https://wiki-origin.giantbomb.com/wiki/Games/Jones_in_the_Fast_Lane",
+      "acceptance": "Buying durable modifies right mechanic; breakdown, theft and changing stock reproducible."
+    },
+    {
+      "id": "ECON-001",
+      "title": "Rent cycle and debt",
+      "target": "Rent due every 4th week; manual payment/extensions; garnishment/arrears consequences.",
+      "current": "Classic cash-paid $325 rent due week 4, four-week billing, extensions, arrears and half-shift wage garnishment with $2 remaining-debt fee. Advanced payments, rental switching, DOS exact timing still partial.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
+      "acceptance": "Choose rent office payment; miss it and observe prescribed arrears, garnishment, extension."
+    },
+    {
+      "id": "ECON-002",
+      "title": "Weekly food and storage",
+      "target": "Fresh food/fast food choices, perishability, fridge and weekend consequences.",
+      "current": "Classic market has original 1/2/4 fresh-food portions ($55/$100/$190), one weekly use, refrigerator capacity 6 and freezer capacity 12, spoilage of unrefrigerated leftovers. Doctor bill and fast-food menu are still approximations.",
+      "status": "partial",
+      "priority": "P2",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
+      "acceptance": "Compare 4-week food inventory with/without fridge; validate spoiled food and week events."
+    },
+    {
+      "id": "ECON-003",
+      "title": "Bank, loans and investments",
+      "target": "Savings; loans/repayment; investment categories; differing liquid-cash risk.",
+      "current": "Classic separate six-stock broker with documented base prices, $100 deposits/withdrawals, no savings interest, loans and $45 principal+$5 interest payments, defaults. Volatility/credit approval formula and random crash/theft remain approximate/missing.",
+      "status": "partial",
+      "priority": "P2",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Bank",
+      "acceptance": "Document and replicate loan interest/default, 6 markets, cash theft exposure."
+    },
+    {
+      "id": "ECON-004",
+      "title": "Pawn, repossession and durable economy",
+      "target": "Pawn valuables, redeem within time window, other players can buy unredeemed goods.",
+      "current": "No equivalent pawn-shop simulation.",
+      "status": "missing",
+      "priority": "P2",
+      "source_url": "https://wiki-origin.giantbomb.com/wiki/Games/Jones_in_the_Fast_Lane",
+      "acceptance": "Pawn item, redeem within window, let it expire, other player buys it."
+    },
+    {
+      "id": "EVT-001",
+      "title": "Economic cycles and random losses",
+      "target": "Events may cause robberies, job loss, weekends; timing differs by DOS edition.",
+      "current": "Classic disables non-original civic modifiers/opportunities; original economic/random event distribution absent.",
+      "status": "partial",
+      "priority": "P2",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
+      "acceptance": "Edition-specific seeded economic/robbery weekend events follow original windows and effects."
+    },
+    {
+      "id": "GOAL-001",
+      "title": "Four adjustable goals",
+      "target": "Wealth, happiness, education and career; win when all chosen thresholds achieved.",
+      "current": "Four configurable goals exist, but advancement formulas differ.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://en.wikipedia.org/wiki/Jones_in_the_Fast_Lane",
+      "acceptance": "Known reference states produce expected goal scores and victory trigger."
+    },
+    {
+      "id": "GOAL-002",
+      "title": "Education/career scoring",
+      "target": "Education ≈1+9/degrees; career ≈1.25×dependability in secondary reference.",
+      "current": "Classic degree score 1+9×diplomas and employed career score 1.25×Dependability; Modern story keeps tier and linear education scoring. Other goal formulas still simplified.",
+      "status": "partial",
+      "priority": "P1",
+      "source_url": "https://jonesinthefastlane.fandom.com/wiki/Dependibility",
+      "acceptance": "Compare all four formula outputs against original observations, including unemployment."
+    },
+    {
+      "id": "MOD-001",
+      "title": "Optional modern content isolation",
+      "target": "Original rule outcomes must be same with cosmetic/UI modernizations.",
+      "current": "Classic original-style jobs, rent, bank and fresh-food services isolated from Modern Story, whose original 19 jobs, auto-rent, generic investments, savings interest and groceries are unchanged. World era remains cosmetic.",
+      "status": "partial",
+      "priority": "P0",
+      "source_url": "https://en.wikipedia.org/wiki/Jones_in_the_Fast_Lane",
+      "acceptance": "Classic ruleset suppresses non-original mechanical bonuses while keeping dialog optional."
+    }
+  ]
+}

@@ -124,27 +124,116 @@
     clinic:{title:'Jun’s wellness check-in',detail:'2h · +23 energy',hours:2,effects:{energy:23}}
   };
   const jobs = [
-    {id:'server',   name:'Cafe Server',         place:'diner',       wage:14, tier:1, education:0, experience:0, dependability:0, clothes:'none',    caption:'Good tips. Better coffee.'},
-    {id:'stock',    name:'Store Associate',     place:'market',      wage:16, tier:1, education:0, experience:0, dependability:0, clothes:'none',    caption:'Aisle three needs a hero.'},
+    {id:'server',   name:'Cafe Server',         place:'diner',       wage:14, tier:1, education:0, experience:0, dependability:0, clothes:'casual', track:'Hospitality', caption:'Good tips. Better coffee.'},
+    {id:'stock',    name:'Store Associate',     place:'market',      wage:16, tier:1, education:0, experience:0, dependability:0, clothes:'casual', track:'Retail', caption:'Aisle three needs a hero.'},
     {id:'repair',   name:'Device Technician',   place:'tech',        wage:24, tier:2, education:1, experience:8, dependability:12, clothes:'casual', caption:'Have you tried turning it off?'},
     {id:'teller',   name:'Bank Associate',      place:'bank',        wage:28, tier:3, education:1, experience:12,dependability:15, clothes:'casual', caption:'Counting on your future.'},
     {id:'tutor',    name:'University Tutor',    place:'university',  wage:38, tier:4, education:2, experience:18,dependability:22, clothes:'casual', caption:'The answers were inside you.'},
     {id:'analyst',  name:'Business Analyst',    place:'office',      wage:52, tier:5, education:2, experience:25,dependability:28, clothes:'formal', caption:'All the charts, all the time.'},
     {id:'engineer', name:'Senior Engineer',     place:'tech',        wage:72, tier:6, education:3, experience:35,dependability:38, clothes:'casual', caption:'Build what comes next.'},
-    {id:'director', name:'Strategy Director',   place:'office',      wage:105,tier:7, education:4, experience:48,dependability:45, clothes:'formal', caption:'You have become the meeting.'}
+    {id:'director', name:'Strategy Director',   place:'office',      wage:105,tier:7, education:4, experience:48,dependability:45, clothes:'formal', track:'Business', caption:'You have become the meeting.'},
+    // Added branches are alternatives to the existing eight roles. Legacy job IDs remain stable.
+    {id:'cook',name:'Line Cook',place:'diner',wage:15,tier:1,education:0,experience:0,dependability:0,clothes:'casual',track:'Hospitality',caption:'A hot pan and a cool head.'},
+    {id:'kitchenlead',name:'Kitchen Supervisor',place:'diner',wage:29,tier:3,education:1,experience:16,dependability:21,clothes:'formal',course:'service',track:'Hospitality',caption:'Keep the kitchen moving.'},
+    {id:'storelead',name:'Retail Supervisor',place:'market',wage:30,tier:3,education:1,experience:17,dependability:20,clothes:'formal',course:'service',track:'Retail',caption:'Keep the shelves and team stocked.'},
+    {id:'storemanager',name:'Store Manager',place:'market',wage:44,tier:4,education:2,experience:28,dependability:31,clothes:'formal',course:'leadership',track:'Retail',caption:'A budget with aisles.'},
+    {id:'stylist',name:'Wardrobe Stylist',place:'boutique',wage:23,tier:2,education:0,experience:9,dependability:13,clothes:'casual',track:'Retail',caption:'Dress for your ambitions.'},
+    {id:'boutiquelead',name:'Boutique Manager',place:'boutique',wage:46,tier:4,education:2,experience:29,dependability:30,clothes:'formal',course:'leadership',track:'Retail',caption:'Make an impression.'},
+    {id:'techlead',name:'Technical Lead',place:'tech',wage:53,tier:5,education:2,experience:30,dependability:31,clothes:'formal',course:'digital',track:'Technology',caption:'Take ownership of the next release.'},
+    {id:'banklead',name:'Bank Supervisor',place:'bank',wage:56,tier:5,education:2,experience:33,dependability:35,clothes:'formal',course:'finance',track:'Finance',caption:'Good decisions compound.'},
+    {id:'bankmanager',name:'Bank Manager',place:'bank',wage:85,tier:6,education:3,experience:44,dependability:43,clothes:'business',course:'leadership',track:'Finance',caption:'Meet the quarterly targets.'},
+    {id:'professor',name:'University Professor',place:'university',wage:87,tier:6,education:4,experience:40,dependability:39,clothes:'business',course:'leadership',track:'Academia',caption:'Teach the next generation.'},
+    {id:'officelead',name:'Operations Manager',place:'office',wage:90,tier:6,education:3,experience:43,dependability:42,clothes:'business',course:'leadership',track:'Business',caption:'Organize the chaos.'}
   ];
+  // Classic DOS/floppy job table (37 positions). CD-only QT Janitor and Socket Clerk intentionally excluded.
+  // All roles preserve original wage/stat/degree/uniform data; shared modern building tiles represent some employers.
+  const classicJobs = [{"id":"classic-zmart-clerk","name":"Clerk","employer":"Z-Mart","place":"market","wage":5,"tier":2,"clothes":"casual","track":"Z-Mart","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-zmart-assistant-manager","name":"Assistant Manager","employer":"Z-Mart","place":"market","wage":7,"tier":2,"clothes":"formal","track":"Z-Mart","experience":20,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-zmart-manager","name":"Manager","employer":"Z-Mart","place":"market","wage":8,"tier":3,"clothes":"business","track":"Z-Mart","experience":30,"dependability":30,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-monolith-cook","name":"Cook","employer":"Monolith Burgers","place":"diner","wage":5,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":0,"dependability":10,"degrees":[],"entryGuaranteed":true},{"id":"classic-monolith-clerk","name":"Clerk","employer":"Monolith Burgers","place":"diner","wage":6,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-monolith-assistant-manager","name":"Assistant Manager","employer":"Monolith Burgers","place":"diner","wage":7,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":20,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-monolith-manager","name":"Manager","employer":"Monolith Burgers","place":"diner","wage":8,"tier":3,"clothes":"formal","track":"Monolith Burgers","experience":30,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-qt-salesperson","name":"Salesperson","employer":"QT Clothing","place":"boutique","wage":8,"tier":3,"clothes":"formal","track":"QT Clothing","experience":30,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-qt-assistant-manager","name":"Assistant Manager","employer":"QT Clothing","place":"boutique","wage":9,"tier":3,"clothes":"business","track":"QT Clothing","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-qt-manager","name":"Manager","employer":"QT Clothing","place":"boutique","wage":12,"tier":4,"clothes":"business","track":"QT Clothing","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-socket-salesperson","name":"Salesperson","employer":"Socket City","place":"tech","wage":7,"tier":2,"clothes":"formal","track":"Socket City","experience":30,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-socket-electronics-repairman","name":"Electronics Repairman","employer":"Socket City","place":"tech","wage":11,"tier":3,"clothes":"casual","track":"Socket City","experience":40,"dependability":40,"degrees":["electronics"],"entryGuaranteed":false},{"id":"classic-socket-manager","name":"Manager","employer":"Socket City","place":"tech","wage":14,"tier":4,"clothes":"business","track":"Socket City","experience":40,"dependability":40,"degrees":["electronics","junior-college"],"entryGuaranteed":false},{"id":"classic-hitech-janitor","name":"Janitor","employer":"Hi-Tech U","place":"university","wage":5,"tier":2,"clothes":"casual","track":"Hi-Tech U","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-hitech-teacher","name":"Teacher","employer":"Hi-Tech U","place":"university","wage":11,"tier":3,"clothes":"formal","track":"Hi-Tech U","experience":40,"dependability":50,"degrees":["academic"],"entryGuaranteed":false},{"id":"classic-hitech-professor","name":"Professor","employer":"Hi-Tech U","place":"university","wage":20,"tier":6,"clothes":"formal","track":"Hi-Tech U","experience":50,"dependability":60,"degrees":["research"],"entryGuaranteed":false},{"id":"classic-factory-janitor","name":"Janitor","employer":"Factory","place":"office","wage":7,"tier":2,"clothes":"casual","track":"Factory","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-factory-assembly-worker","name":"Assembly Worker","employer":"Factory","place":"office","wage":8,"tier":3,"clothes":"casual","track":"Factory","experience":30,"dependability":30,"degrees":["trade-school"],"entryGuaranteed":false},{"id":"classic-factory-secretary","name":"Secretary","employer":"Factory","place":"office","wage":9,"tier":3,"clothes":"formal","track":"Factory","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-factory-machinist-s-helper","name":"Machinist's Helper","employer":"Factory","place":"office","wage":10,"tier":3,"clothes":"casual","track":"Factory","experience":40,"dependability":40,"degrees":["pre-engineering"],"entryGuaranteed":false},{"id":"classic-factory-executive-secretary","name":"Executive Secretary","employer":"Factory","place":"office","wage":18,"tier":5,"clothes":"business","track":"Factory","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-factory-machinist","name":"Machinist","employer":"Factory","place":"office","wage":19,"tier":5,"clothes":"casual","track":"Factory","experience":50,"dependability":50,"degrees":["engineering"],"entryGuaranteed":false},{"id":"classic-factory-department-manager","name":"Department Manager","employer":"Factory","place":"office","wage":22,"tier":6,"clothes":"business","track":"Factory","experience":60,"dependability":60,"degrees":["junior-college","engineering"],"entryGuaranteed":false},{"id":"classic-factory-engineer","name":"Engineer","employer":"Factory","place":"office","wage":23,"tier":6,"clothes":"business","track":"Factory","experience":60,"dependability":60,"degrees":["junior-college","engineering"],"entryGuaranteed":false},{"id":"classic-factory-general-manager","name":"General Manager","employer":"Factory","place":"office","wage":25,"tier":7,"clothes":"business","track":"Factory","experience":70,"dependability":70,"degrees":["business-admin","engineering"],"entryGuaranteed":false},{"id":"classic-bank-janitor","name":"Janitor","employer":"Bank","place":"bank","wage":6,"tier":2,"clothes":"casual","track":"Bank","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-bank-teller","name":"Teller","employer":"Bank","place":"bank","wage":10,"tier":3,"clothes":"formal","track":"Bank","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-bank-assistant-manager","name":"Assistant Manager","employer":"Bank","place":"bank","wage":14,"tier":4,"clothes":"business","track":"Bank","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-bank-manager","name":"Manager","employer":"Bank","place":"bank","wage":19,"tier":5,"clothes":"business","track":"Bank","experience":60,"dependability":60,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-bank-broker","name":"Broker","employer":"Bank","place":"bank","wage":22,"tier":6,"clothes":"business","track":"Bank","experience":70,"dependability":70,"degrees":["business-admin","academic"],"entryGuaranteed":false},{"id":"classic-blacks-janitor","name":"Janitor","employer":"Black's Market","place":"market","wage":6,"tier":2,"clothes":"casual","track":"Black's Market","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-blacks-checker","name":"Checker","employer":"Black's Market","place":"market","wage":8,"tier":3,"clothes":"casual","track":"Black's Market","experience":20,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-blacks-butcher","name":"Butcher","employer":"Black's Market","place":"market","wage":12,"tier":4,"clothes":"casual","track":"Black's Market","experience":30,"dependability":30,"degrees":["trade-school"],"entryGuaranteed":false},{"id":"classic-blacks-assistant-manager","name":"Assistant Manager","employer":"Black's Market","place":"market","wage":15,"tier":4,"clothes":"formal","track":"Black's Market","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-blacks-manager","name":"Manager","employer":"Black's Market","place":"market","wage":18,"tier":5,"clothes":"business","track":"Black's Market","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-rent-groundskeeper","name":"Groundskeeper","employer":"Rent Office","place":"housing","wage":7,"tier":2,"clothes":"casual","track":"Rent Office","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-rent-apartment-manager","name":"Apartment Manager","employer":"Rent Office","place":"housing","wage":9,"tier":3,"clothes":"casual","track":"Rent Office","experience":30,"dependability":30,"degrees":["junior-college"],"entryGuaranteed":false}];
+  // Classic has eleven independent diplomas with prerequisites; Modern keeps its four-stage ladder.
+  // Lesson count, enrollment, +5 graduation reliability, and cap formula follow original mechanics.
+  const classicDegrees = [
+    {id:'junior-college',name:'Junior College',requires:[]},
+    {id:'trade-school',name:'Trade School',requires:[]},
+    {id:'business-admin',name:'Business Administration',requires:['junior-college']},
+    {id:'academic',name:'Academic',requires:['junior-college']},
+    {id:'electronics',name:'Electronics',requires:['trade-school']},
+    {id:'pre-engineering',name:'Pre-Engineering',requires:['trade-school']},
+    {id:'engineering',name:'Engineering',requires:['pre-engineering']},
+    {id:'graduate-school',name:'Graduate School',requires:['academic']},
+    {id:'post-doctoral',name:'Post-Doctoral',requires:['graduate-school']},
+    {id:'research',name:'Research',requires:['post-doctoral']},
+    {id:'publishing',name:'Publishing',requires:['research']}
+  ];
+  // Provisional bridge mapping original-style required diplomas onto our existing jobs.
+  // Job names, wages and places are still Life Loop originals, NOT the Sierra job table.
+  const classicJobRequirements = {
+    server:{experience:10,dependability:10,degrees:[]},
+    cook:{experience:0,dependability:10,degrees:[]},
+    stock:{experience:10,dependability:10,degrees:[]},
+    repair:{experience:20,dependability:20,degrees:['electronics']},
+    teller:{experience:30,dependability:30,degrees:['junior-college']},
+    tutor:{experience:40,dependability:50,degrees:['academic']},
+    analyst:{experience:40,dependability:40,degrees:['business-admin']},
+    engineer:{experience:60,dependability:60,degrees:['junior-college','engineering']},
+    director:{experience:70,dependability:70,degrees:['business-admin','engineering']},
+    kitchenlead:{experience:20,dependability:30,degrees:['junior-college']},
+    storelead:{experience:20,dependability:20,degrees:[]},
+    storemanager:{experience:30,dependability:30,degrees:['junior-college']},
+    stylist:{experience:20,dependability:20,degrees:[]},
+    boutiquelead:{experience:40,dependability:40,degrees:['business-admin']},
+    techlead:{experience:40,dependability:40,degrees:['electronics']},
+    banklead:{experience:50,dependability:50,degrees:['business-admin']},
+    bankmanager:{experience:60,dependability:60,degrees:['business-admin']},
+    professor:{experience:50,dependability:60,degrees:['research']},
+    officelead:{experience:60,dependability:60,degrees:['business-admin','engineering']}
+  };
   const degrees = [
     {name:'Foundations Certificate', sessions:2, cost:55},
     {name:'Associate Diploma',      sessions:3, cost:85},
     {name:'Bachelor Degree',        sessions:4, cost:125},
     {name:'Master Degree',          sessions:5, cost:170}
   ];
+  // Standalone practical qualifications supplement, rather than replace, the existing four academic degrees.
+  const courses = [
+    {id:'service',name:'Service & Supervision',sessions:2,cost:60,education:0,detail:'Hospitality and retail leadership'},
+    {id:'digital',name:'Digital Systems',sessions:2,cost:85,education:1,detail:'Technical team leadership'},
+    {id:'finance',name:'Finance & Compliance',sessions:2,cost:100,education:1,detail:'Banking progression'},
+    {id:'leadership',name:'People Leadership',sessions:3,cost:135,education:2,detail:'Senior management and academic leadership'}
+  ];
+  const clothing = {
+    casual:{name:'Casual clothes',rank:1},
+    formal:{name:'Dress clothes',rank:2},
+    business:{name:'Business suit',rank:3}
+  };
+  const clothingOffers = {
+    market:[{id:'casual',cost:35,weeks:9},{id:'formal',cost:90,weeks:9}],
+    boutique:[{id:'casual',cost:73,weeks:11},{id:'formal',cost:125,weeks:13},{id:'business',cost:295,weeks:13}]
+  };
   const dwellings = {
     studio:{name:'Starter Studio', rent:230, comfort:0},
     apartment:{name:'Sunny Apartment', rent:380, comfort:4},
     loft:{name:'Skyline Loft', rent:620, comfort:8}
   };
+  // Original Bank markets (wiki base prices); exact per-week volatility formula is not yet reproduced.
+  const classicStocks = [
+    {id:'tbills',name:'T-Bills',base:100}, {id:'gold',name:'Gold',base:413},
+    {id:'silver',name:'Silver',base:14}, {id:'pork',name:'Pork Bellies',base:20},
+    {id:'blue',name:'Blue Chip Stocks',base:49}, {id:'penny',name:'Penny Stocks',base:7}
+  ];
+  const classicFreshFood = [{units:1,cost:55},{units:2,cost:100},{units:4,cost:190}];
   const GOAL_KEYS = ['wealth','happiness','education','career'];
-  root.LifeData = {places,citizens,encounters,headlines,cityEvents,favors,storyArcs,jobs,degrees,dwellings,GOAL_KEYS};
+
+  // Era selection changes presentation only. Venue IDs, actions, prices and qualification data are shared.
+  const worldEras = {
+    historical: {label:'Historical',city:'Willowford',description:'Gas lamps, brick storefronts and a bustling old-town high street.',
+      names:['The Boarding House','The Guild Hall','Market Square','The Copper Kettle','Royal Academy','The Counting House','Grand Playhouse','The Treasury','Estate Office','The Tailor','Inventors Workshop','The Infirmary']},
+    current: {label:'Contemporary',city:'New Day City',description:'A lively modern city, familiar shops and bright everyday optimism.',names:places.map(p=>p.name)},
+    scifi: {label:'Sci-Fi',city:'Neon Meridian',description:'Orbiting shuttles, holographic signs and towering neon arcologies.',
+      names:['Habitat Pod','Career Nexus','Hydroponics Bay','Star Diner','Orbital Institute','Helix Spire','HoloTheater','Credits Exchange','Habitat Registry','Synthwear Studio','Quantum Works','MediCore']}
+  };
+  const RULESETS = {
+    classic:{id:'classic',name:'Classic Rules (in progress)',hours:60,applicationHours:4,restHours:6,dependabilityStart:20,dependabilityDecay:3,workExperience:1,workDependability:1,entryHours:2,optionalStories:false},
+    modern:{id:'modern',name:'Modern Story',hours:40,applicationHours:3,restHours:5,dependabilityStart:10,dependabilityDecay:1,workExperience:5,workDependability:5,entryHours:0,optionalStories:true}
+  };
+  root.LifeData = {worldEras,RULESETS,places,citizens,encounters,headlines,cityEvents,favors,storyArcs,jobs,classicJobs,degrees,classicDegrees,classicJobRequirements,courses,clothing,clothingOffers,dwellings,classicStocks,classicFreshFood,GOAL_KEYS};
   if (typeof module !== 'undefined' && module.exports) module.exports = root.LifeData;
 })(typeof window !== 'undefined' ? window : globalThis);

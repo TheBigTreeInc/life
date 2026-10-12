@@ -1,8 +1,8 @@
 {
   "name": "the-life-loop",
-  "version": "0.4.1",
+  "version": "0.5.3",
   "private": true,
-  "description": "Original offline life simulation featuring three seasonal NPC story arcs, lasting city projects and a financial history dashboard",
+  "description": "Online two-human friend-code co-op via Looprd HTTP actions and WebSocket room notifications; Classic and Modern preserved",
   "scripts": {
     "start": "python -m http.server 8080",
     "build": "node tools/build-offline.mjs",

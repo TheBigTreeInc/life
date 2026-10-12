@@ -30,7 +30,7 @@ test('university graduates after required sessions',()=>{
 test('cannot work without outfit at higher-tier jobs',()=>{
  const g=game();g.player.education=4;g.player.experience=100;g.player.dependability=100;
  visit(g,'agency');act(g,'apply:director');visit(g,'office');assert.equal(g.act('work').ok,false);
- g.player.owned.push('formal');assert.equal(g.act('work').ok,true);
+ g.player.clothing.formal=13;assert.equal(g.act('work').ok,true);
 });
 test('cash and time requirements are enforced',()=>{
  const g=game();visit(g,'boutique');g.player.cash=5;
@@ -388,4 +388,199 @@ test('invalid story states and city projects are not accepted from unknown IDs',
  const g=game(),s=g.snapshot();s.cityProjects={other:true,neighbors:false};
  s.players[0].storyProgress={other:{chapter:3,lastWeek:1},neighbors:{chapter:999,lastWeek:1}};
  const copy=Game.load(s);assert.deepEqual(copy.cityProjects,{});assert.deepEqual(copy.player.storyProgress,{});
+});
+
+// Employment parity tests compare documented 1991 Jones behavior with The Life Loop.
+test('employment parity: a new character cannot take a regular shift before hiring',()=>{
+ const g=game();
+ visit(g,'diner');assert.equal(g.actions().some(a=>a.id==='work'),false);
+ assert.equal(g.act('work').ok,false);
+ visit(g,'bank');assert.equal(g.act('work').ok,false);
+});
+test('employment parity: one active job, and the shift is offered only by its employer',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');
+ assert.equal(g.player.job,'server');
+ assert.equal(g.actions().find(a=>a.id==='apply:server').enabled,false);
+ visit(g,'market');assert.equal(g.actions().some(a=>a.id==='work'),false);
+ assert.equal(g.act('work').ok,false);
+ visit(g,'diner');assert.equal(g.actions().find(a=>a.id==='work').enabled,true);
+ const cash=g.player.cash;act(g,'work');assert.equal(g.player.cash,cash+14*8);
+});
+test('employment parity: accepting a second job explicitly replaces the first, never stacks',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');
+ visit(g,'diner');act(g,'work');
+ visit(g,'agency');
+ const offer=g.actions().find(a=>a.id==='apply:stock');
+ assert.equal(offer.replacesJob,true);
+ assert.match(offer.detail,/Replaces your current job/);
+ const hours=g.player.hours,priorWage=g.player.wage;
+ act(g,'apply:stock');
+ assert.equal(g.player.job,'stock');assert.equal(g.player.wage,16);
+ assert.equal(g.player.workSessions,0);
+ assert.equal(g.player.hours,hours-3);
+ assert.notEqual(g.player.wage,priorWage);
+ assert.match(g.messages[0].message,/left Cafe Server/);
+ visit(g,'diner');assert.equal(g.actions().some(a=>a.id==='work'),false);
+ visit(g,'market');const cash=g.player.cash;act(g,'work');assert.equal(g.player.cash,cash+16*8);
+});
+test('employment parity: failed applications cannot end or replace the existing contract',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');
+ const hours=g.player.hours;
+ assert.equal(g.act('apply:director').ok,false);
+ assert.equal(g.act('apply:server').ok,false);
+ assert.equal(g.player.job,'server');assert.equal(g.player.hours,hours);
+});
+test('employment parity: lateral job swapping does not infinitely increase happiness',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');
+ const happiness=g.player.happiness;
+ act(g,'apply:stock');act(g,'apply:server');
+ assert.equal(g.player.happiness,happiness);
+});
+test('employment parity: temporary work is unemployed-only, limited to one gig per week',()=>{
+ const g=game();
+ act(g,'freelance');
+ assert.equal(g.player.cash,306);assert.equal(g.player.oddJobWeek,1);
+ assert.equal(g.act('freelance').ok,false);
+ g.endTurn();assert.equal(g.week,2);
+ assert.equal(g.actions().find(a=>a.id==='freelance').enabled,true);
+ visit(g,'agency');act(g,'apply:server');visit(g,'home');
+ assert.equal(g.actions().find(a=>a.id==='freelance').enabled,false);
+ assert.equal(g.act('freelance').ok,false);
+});
+test('employment parity: education and finances are independent of current job',()=>{
+ const g=game();g.player.cash=1000;
+ visit(g,'agency');act(g,'apply:server');
+ visit(g,'university');act(g,'study');
+ assert.equal(g.player.job,'server');
+ visit(g,'bank');act(g,'deposit:100');
+ assert.equal(g.player.job,'server');
+ visit(g,'diner');assert.equal(g.act('work').ok,true);
+});
+test('employment parity: job contract, pay and old-save migration survive roundtrips',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');
+ const saved=g.snapshot();saved.players.forEach(p=>delete p.oddJobWeek);
+ const restored=Game.load(saved);
+ assert.equal(restored.player.job,'server');assert.equal(restored.player.wage,14);
+ assert.equal(restored.player.oddJobWeek,0);
+ visit(restored,'diner');assert.equal(restored.act('work').ok,true);
+ assert.deepEqual(Game.load(restored.snapshot()).snapshot(),restored.snapshot());
+});
+test('employment parity: AI holds at most one job throughout a longer economic campaign',()=>{
+ const g=new Game({seed:903});
+ for(let w=0;w<90&&!g.winner;w++){
+   g.endTurn();
+   const p=g.players.find(p=>p.isAI),j=g.getJob(p);
+   assert.ok(j,`AI lost its employment in week ${g.week}`);
+   assert.equal(typeof p.job,'string');
+   assert.ok(p.hours>=0&&p.cash>=0);
+ }
+});
+
+
+// v0.4.3: closer parity with Sierra's weekly consumable clothing and careers.
+test('wardrobe starts with six weeks of casual clothing and no other outfits',()=>{
+ const g=game();assert.deepEqual(g.player.clothing,{casual:6,formal:0,business:0});
+ assert.equal(g.player.coursesCompleted.length,0);
+ assert.equal(g.player.courseProgress.service,undefined);
+});
+test('all clothing ages one week, including unused dress and business outfits',()=>{
+ const g=game();const p=g.player;p.clothing.formal=4;p.clothing.business=2;
+ g.endTurn();assert.deepEqual(p.clothing,{casual:5,formal:3,business:1});
+ g.endTurn();assert.deepEqual(p.clothing,{casual:4,formal:2,business:0});
+ assert.ok(g.messages.some(m=>m.message.includes('business suit have worn out')));
+});
+test('casual clothing is required for every entry-level paid shift',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');visit(g,'diner');
+ g.player.clothing={casual:0,formal:0,business:0};
+ assert.equal(g.actions().find(a=>a.id==='work').enabled,false);
+ assert.match(g.act('work').message,/Uniform required/);
+});
+test('better outfits satisfy lower uniform requirements, never vice versa',()=>{
+ const g=game();visit(g,'agency');act(g,'apply:server');visit(g,'diner');
+ g.player.clothing={casual:0,formal:3,business:0};act(g,'work');
+ g.player.clothing.formal=0;g.player.clothing.business=3;act(g,'work');
+ const h=game();h.player.education=4;h.player.experience=99;h.player.dependability=99;
+ visit(h,'agency');act(h,'apply:director');visit(h,'office');
+ h.player.clothing={casual:10,formal:0,business:0};assert.equal(h.act('work').ok,false);
+ h.player.clothing.business=2;act(h,'work');
+});
+test('cheap outfits and boutique outfits add different weeks and can be repurchased',()=>{
+ const g=game();const p=g.player;p.cash=1000;visit(g,'market');
+ let price=g.actions().find(a=>a.id==='clothes:casual:market').price;
+ act(g,'clothes:casual:market');assert.equal(p.clothing.casual,15);
+ assert.equal(p.cash,1000-price);
+ visit(g,'boutique');act(g,'clothes:casual:boutique');assert.equal(p.clothing.casual,26);
+ act(g,'clothes:casual:boutique');assert.equal(p.clothing.casual,37);
+ act(g,'clothes:business:boutique');assert.equal(p.clothing.business,13);
+});
+test('shopping for clothes cannot bypass money and time checks',()=>{
+ const g=game();visit(g,'boutique');g.player.cash=0;
+ assert.equal(g.act('clothes:business:boutique').ok,false);
+ assert.equal(g.player.clothing.business,0);
+ g.player.cash=900;g.player.hours=0;
+ assert.equal(g.act('clothes:business:boutique').ok,false);
+ assert.equal(g.player.clothing.business,0);
+});
+test('four distinct certificates have lessons and unlock specialized job offers',()=>{
+ const g=game();const p=g.player;p.cash=3000;p.education=4;p.experience=100;p.dependability=100;
+ visit(g,'agency');assert.equal(g.actions().find(a=>a.id==='apply:bankmanager').enabled,false);
+ visit(g,'university');
+ for(const c of require('../src/data.js').courses){
+  for(let k=0;k<c.sessions;k++){if(g.player.hours<5)g.endTurn();act(g,'course:'+c.id);}
+  assert.ok(p.coursesCompleted.includes(c.id));
+  assert.equal(g.actions().find(a=>a.id==='course:'+c.id).enabled,false);
+  assert.equal(p.courseProgress[c.id],undefined);
+ }
+ visit(g,'agency');assert.equal(g.actions().find(a=>a.id==='apply:bankmanager').enabled,true);
+ act(g,'apply:bankmanager');assert.equal(p.job,'bankmanager');
+});
+test('course lessons are blocked by degree prerequisites and no cash spent',()=>{
+ const g=game();visit(g,'university');const cash=g.player.cash;
+ assert.equal(g.act('course:leadership').ok,false);
+ assert.equal(g.player.cash,cash);
+ assert.equal(g.actions().find(a=>a.id==='course:service').enabled,true);
+});
+test('new workplaces offer shifts only to their active employee',()=>{
+ const g=game();const p=g.player;p.education=4;p.experience=100;p.dependability=100;p.coursesCompleted=['leadership'];
+ visit(g,'agency');act(g,'apply:boutiquelead');visit(g,'boutique');
+ p.clothing.formal=13;assert.equal(g.actions().find(a=>a.id==='work').enabled,true);
+ act(g,'work');visit(g,'market');assert.equal(g.actions().some(a=>a.id==='work'),false);
+});
+test('save migration turns old permanent clothing flags into week counters',()=>{
+ const g=game();const old=g.snapshot();const p=old.players[0];
+ delete p.clothing;delete p.coursesCompleted;delete p.courseProgress;
+ p.owned=['formal','casual','computer'];p.job='director';p.education=4;
+ const reloaded=Game.load(old);const c=reloaded.player;
+ assert.equal(c.clothing.formal,13);assert.equal(c.clothing.casual,11);
+ assert.deepEqual(c.owned,['computer']);assert.deepEqual(c.coursesCompleted,[]);
+ assert.equal(c.job,'director');
+});
+test('new save preserves consumed clothing and partially completed coursework',()=>{
+ const g=game();g.player.clothing={casual:2,formal:0,business:9};
+ g.player.courseProgress={service:1};g.player.coursesCompleted=['digital'];
+ const restored=Game.load(g.snapshot());
+ assert.deepEqual(restored.snapshot(),g.snapshot());
+});
+test('wardrobe and certifications are isolated between hotseat players',()=>{
+ const g=new Game({mode:'hotseat'});g.player.clothing.business=9;
+ g.player.courseProgress.service=1;
+ g.endTurn();assert.equal(g.player.id,'friend');
+ assert.equal(g.player.clothing.business,0);
+ assert.equal(g.player.courseProgress.service,undefined);
+});
+test('repeated weekly aging never produces negative clothes',()=>{
+ const g=game();for(let k=0;k<60;k++)g.endTurn();
+ for(const [key,amount] of Object.entries(g.player.clothing))assert.ok(amount>=0,key);
+});
+
+test('rival replenishes clothing and stays economically healthy in 100 seeded campaigns',()=>{
+ for(let seed=0;seed<100;seed++){
+  const g=new Game({seed:seed*701+13});
+  for(let week=0;week<130&&!g.winner;week++)g.endTurn();
+  const p=g.players.find(x=>x.isAI);
+  assert.ok(p.job,`seed ${seed} is unemployed`);
+  assert.equal(p.rentDebt,0,`seed ${seed} in arrears`);
+  assert.equal(p.hunger,0,`seed ${seed} is hungry`);
+  if(!g.winner)assert.equal(g.isDressedFor(p,g.getJob(p)),true,`seed ${seed} cannot work`);
+ }
 });

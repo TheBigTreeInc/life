@@ -1,0 +1,144 @@
+# Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
+apiVersion: looprd/v1
+component: the-life-loop
+release: 0.5.3
+api:
+  version: v1
+auth:
+  mode: public
+database:
+  backend: sqlite
+  schemaVersion: 1
+models:
+  Room:
+    fields:
+      id:
+        type: integer
+        primaryKey: true
+        generated: true
+      codeHash:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      hostHash:
+        type: string
+        maxLength: 64
+        required: true
+      guestHash:
+        type: string
+        maxLength: 64
+      guestName:
+        type: string
+        maxLength: 24
+      state:
+        type: json
+        required: true
+      pending:
+        type: json
+      lastResult:
+        type: json
+      version:
+        type: integer
+        required: true
+      signal:
+        type: integer
+        required: true
+      touched:
+        type: integer
+        required: true
+  Pulse:
+    fields:
+      id:
+        type: integer
+        primaryKey: true
+        generated: true
+      signal:
+        type: integer
+        required: true
+resources:
+  pulses:
+    model: Pulse
+    path: /pulses
+    operations:
+    - get
+websocket:
+  path: /events
+  resources:
+  - pulses
+handlers:
+- path: /session
+  method: POST
+  kind: python
+  source: "# Bundled inline in looprd.yaml. The Python handler is trusted Looprd code.\n# Looprd v1 WebSockets are\
+    \ SUBSCRIPTION ONLY; mutations use HTTP.\nimport hashlib\nimport hmac\nimport json\nimport secrets\nimport time\n\
+    import sqlalchemy as sa\nfrom starlette.concurrency import run_in_threadpool\n\nALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'\n\
+    TTL = 48 * 3600\nRoom = sa.table('Room',\n    sa.column('id', sa.Integer), sa.column('codeHash', sa.String),\n\
+    \    sa.column('hostHash', sa.String), sa.column('guestHash', sa.String),\n    sa.column('guestName', sa.String),\
+    \ sa.column('state', sa.JSON),\n    sa.column('pending', sa.JSON), sa.column('lastResult', sa.JSON),\n    sa.column('version',\
+    \ sa.Integer), sa.column('signal', sa.Integer),\n    sa.column('touched', sa.Integer))\n\ndef digest(value):\n\
+    \    return hashlib.sha256(value.encode('utf-8')).hexdigest()\n\ndef fail(reason):\n    return {'ok': False,\
+    \ 'error': reason}\n\ndef valid_snapshot(state):\n    if not isinstance(state, dict) or not isinstance(state.get('players'),\
+    \ list):\n        return False\n    if state.get('settings', {}).get('mode') != 'hotseat' or len(state['players'])\
+    \ != 3:\n        return False\n    if [x.get('id') for x in state['players']] != ['player', 'friend', 'jones']:\n\
+    \        return False\n    try:\n        return len(json.dumps(state, separators=(',', ':'))) < 360000\n   \
+    \ except (TypeError, ValueError):\n        return False\n\ndef execute(body, sessions):\n    if not isinstance(body,\
+    \ dict):\n        return fail('Invalid request'), None\n    op = body.get('op')\n    now = int(time.time())\n\
+    \    event = None\n    with sessions.begin() as db:\n        if op == 'create':\n            state = body.get('state')\n\
+    \            if not valid_snapshot(state):\n                return fail('A valid two-human hotseat game is required'),\
+    \ None\n            db.execute(sa.delete(Room).where(Room.c.touched < now - TTL))\n            host = secrets.token_urlsafe(32)\n\
+    \            code = ''.join(secrets.choice(ALPHABET) for _ in range(10))\n            # The random join code\
+    \ is not used as the privileged host token.\n            db.execute(sa.insert(Room).values(codeHash=digest(code),\
+    \ hostHash=digest(host),\n                guestHash=None, guestName=None, state=state, pending=None, lastResult=None,\n\
+    \                version=1, signal=0, touched=now))\n            return {'ok': True, 'code': code, 'token':\
+    \ host, 'role': 'host', 'version': 1, 'state': state, 'joined': False}, None\n        code = str(body.get('code')\
+    \ or '').strip().upper()\n        if len(code) != 10 or any(x not in ALPHABET for x in code):\n            return\
+    \ fail('Invalid game code'), None\n        record = db.execute(sa.select(Room).where(Room.c.codeHash == digest(code))).mappings().first()\n\
+    \        if record is None or record['touched'] < now - TTL:\n            return fail('Session not found or\
+    \ expired'), None\n        rid = record['id']\n        if op == 'join':\n            if record['guestHash']:\n\
+    \                return fail('This game already has two people'), None\n            guest = secrets.token_urlsafe(32)\n\
+    \            name = str(body.get('name') or 'Friend').strip()[:24] or 'Friend'\n            db.execute(sa.update(Room).where(Room.c.id\
+    \ == rid).values(guestHash=digest(guest),\n                guestName=name, touched=now, signal=record['signal']\
+    \ + 1))\n            event = {'component':'the-life-loop', 'resource':'pulses', 'action':'updated',\n      \
+    \          'id':rid, 'data':{'id':rid, 'signal':record['signal']+1}}\n            return {'ok':True, 'role':'guest',\
+    \ 'code':code, 'token':guest,\n                'state':record['state'], 'version':record['version'], 'joined':True},\
+    \ event\n        token = str(body.get('token') or '')\n        hashed = digest(token)\n        host = hmac.compare_digest(hashed,\
+    \ record['hostHash']) if token else False\n        guest = bool(token and record['guestHash'] and hmac.compare_digest(hashed,\
+    \ record['guestHash']))\n        if not (host or guest):\n            return fail('Invalid or expired participant\
+    \ token'), None\n        if op == 'status':\n            return {'ok':True, 'role':'host' if host else 'guest',\
+    \ 'state':record['state'],\n                'version':record['version'], 'joined':bool(record['guestHash']),\n\
+    \                'guestName':record['guestName'], 'pending':record['pending'] if host else None,\n         \
+    \       'lastResult':record['lastResult']}, None\n        if op == 'send':\n            if not guest:\n    \
+    \            return fail('Only the guest can submit remote turns'), None\n            active = record['state'].get('active')\n\
+    \            players = record['state'].get('players', [])\n            if not isinstance(active,int) or not\
+    \ 0<=active<len(players) or players[active].get('id')!='friend':\n                return fail('It is not your\
+    \ turn'), None\n            if record['pending'] is not None:\n                return fail('Previous action\
+    \ is still processing'), None\n            if body.get('version') != record['version']:\n                return\
+    \ fail('State changed: resynchronize first'), None\n            command = body.get('command')\n            if\
+    \ not isinstance(command,dict) or command.get('type') not in ['travel','act','endTurn','choose']:\n        \
+    \        return fail('Unknown game action'), None\n            arg = command.get('arg')\n            if command['type']!='endTurn'\
+    \ and (not isinstance(arg,str) or len(arg)>100 or not arg):\n                return fail('Invalid action argument'),\
+    \ None\n            action = {'id':secrets.token_hex(12), 'type':command['type'], 'arg':arg}\n            db.execute(sa.update(Room).where(Room.c.id\
+    \ == rid).values(pending=action,\n                touched=now, signal=record['signal']+1))\n            event\
+    \ = {'component':'the-life-loop', 'resource':'pulses', 'action':'updated',\n                'id':rid, 'data':{'id':rid,\
+    \ 'signal':record['signal']+1}}\n            return {'ok':True, 'queued':action['id']}, event\n        if op\
+    \ == 'publish':\n            if not host:\n                return fail('Only the host can publish game state'),\
+    \ None\n            state = body.get('state')\n            if not valid_snapshot(state):\n                return\
+    \ fail('Invalid game snapshot'), None\n            if body.get('version') != record['version']:\n          \
+    \      return fail('Stale game version'), None\n            pending = record['pending']\n            if pending\
+    \ and body.get('commandId') != pending['id']:\n                return fail('A remote command must be acknowledged\
+    \ first'), None\n            new_version = record['version']+1\n            last_result = {'commandId':pending['id'],\
+    \ 'ok':bool(body.get('actionOk')),\n                'message':str(body.get('message') or '')[:300]} if pending\
+    \ else None\n            db.execute(sa.update(Room).where(Room.c.id == rid).values(\n                state=state,\
+    \ pending=None, version=new_version, signal=record['signal']+1,\n                lastResult=last_result, touched=now))\n\
+    \            event = {'component':'the-life-loop', 'resource':'pulses', 'action':'updated',\n              \
+    \  'id':rid, 'data':{'id':rid, 'signal':record['signal']+1}}\n            return {'ok':True, 'version':new_version},\
+    \ event\n        return fail('Unknown operation'), None\n\nasync def handle(ctx):\n    outcome, event = await\
+    \ run_in_threadpool(execute, ctx.body, ctx.session_factory)\n    if event is not None:\n        ctx.publish(event)\
+    \   # after successful transaction commit\n    return outcome\n"
+- path: /info
+  kind: response
+  response:
+    protocol: the-life-loop/1
+    transport: HTTP commands + Looprd WebSocket notifications
+    auth: room-scoped capability tokens

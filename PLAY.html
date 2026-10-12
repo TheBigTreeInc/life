@@ -111,6 +111,166 @@
 .finance-milestones li{margin-bottom:8px}.finance-milestones b{color:#408458}
 @media(max-width:720px){.finance-modal{padding:16px}.finance-metrics{gap:5px}.finance-metrics>div{padding:9px}.finance-metrics span{font-size:8px}.finance-metrics strong{font-size:16px}.finance-bottom{grid-template-columns:1fr}.finance-legend{font-size:9px;gap:5px}.finance-table{font-size:10px}}
 
+/* 0.4.2 — make one-employer switches explicit */
+.employment-comparison{display:grid;grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);gap:7px;align-items:center;margin:18px 0 8px}.employment-comparison>div:not(.employment-switch-arrow){display:flex;flex-direction:column;gap:6px;background:#f2f7ed;border:1px solid #d9e7d4;padding:14px;border-radius:12px;min-width:0}.employment-comparison small{font-size:9px;font-weight:900;color:#83988c;letter-spacing:1px}.employment-comparison strong{font-size:13px;color:#2e5240}.employment-comparison span{font-size:10px;color:#607c69;overflow-wrap:anywhere}.employment-switch-arrow{font-size:17px;font-weight:900;color:#6d9776;text-align:center}
+
+/* v0.4.3: visible consumable clothing meter */
+.wardrobe-status{margin-top:10px;padding:10px 12px;border:1px solid #adc8b2;border-radius:12px;background:#f1f8ee;color:#21452e}.wardrobe-status>strong{display:block;font-size:.73rem;letter-spacing:.05em;margin-bottom:5px}.wardrobe-line{display:flex;justify-content:space-between;font-size:.83rem;gap:10px;margin:3px 0}.wardrobe-line b{font-variant-numeric:tabular-nums}.wardrobe-line.wardrobe-low{color:#9d3e27;font-weight:700}.wardrobe-status small{display:block;line-height:1.4;opacity:.8;margin-top:7px}
+
+/* v0.4.3: cross-industry career roadmap */
+.careers-modal{width:min(1020px,calc(100vw - 30px));max-height:min(90vh,950px);overflow:auto}
+.careers-wardrobe{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:11px 13px;border-radius:13px;background:#eef5ea;border:1px solid #c5d9c8}
+.careers-wardrobe b{margin-right:8px}.careers-wardrobe span{padding:5px 8px;border-radius:8px;background:white;font-size:.83rem}.careers-wardrobe small{color:#5a6d5c;flex-basis:100%}
+.career-section-title{margin:18px 0 10px}.career-courses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.career-course{padding:11px 13px;background:#f5f8f4;border:1px solid #d5e2d4;border-radius:11px;display:flex;flex-direction:column;gap:3px}
+.career-course span{font-size:12px;opacity:.76}.career-course b{font-size:12px;color:#2c7552}
+.career-tracks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.career-track{border:1px solid #d8e0d7;border-radius:12px;padding:12px;min-width:0}.career-track h3{margin:0 0 7px;color:#22543f}
+.career-role{border-top:1px solid #e5eae4;padding:9px 0;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.career-role.active{background:#e4f3df;border-radius:7px;padding:9px 5px}.career-role>div{min-width:0;flex:1}
+.career-role strong{display:block;font-size:13px}.career-role small{display:block;color:#5b6f60;font-size:11px;margin-top:3px;overflow-wrap:anywhere}.career-status{font-size:9px;font-weight:800;color:#31644d;text-align:right;max-width:120px;overflow-wrap:anywhere}
+@media(max-width:720px){.career-tracks,.career-courses{grid-template-columns:1fr}.careers-modal{padding:15px}.career-role{gap:5px}.career-status{font-size:9px;max-width:110px}}
+
+/* v0.4.6 - Classic career and education parity. Rules and era are independent. */
+.new-settings-block{margin:16px 0 18px}.new-settings-block .section-heading{margin-bottom:9px}
+.setup-options{display:grid;gap:10px}.setup-rules{grid-template-columns:repeat(2,minmax(0,1fr))}.setup-eras{grid-template-columns:repeat(3,minmax(0,1fr))}
+.setup-choice{display:flex;align-items:flex-start;gap:9px;background:#f3f6ef;border:2px solid #dae6d9;border-radius:13px;padding:12px;cursor:pointer;min-width:0;position:relative;transition:border-color .15s,background .15s,transform .15s}
+.setup-choice:has(input:checked){border-color:#2c7652;background:#e9f8e5;box-shadow:0 0 0 2px #afdba270}
+.setup-choice:has(input:focus-visible){outline:3px solid #74a7ef;outline-offset:3px}
+.setup-choice>input{margin:4px 0 0;flex:0 0 15px;accent-color:#297953}
+.setup-choice-text{min-width:0;display:flex;flex-direction:column;gap:4px;line-height:1.35}.setup-choice-text b{font-size:13px;color:#244532}
+.setup-choice-text small{font-size:10px;color:#53675a}.setup-choice-text em{font-style:normal;font-size:9px;color:#4d7d58;font-weight:800}
+.setup-era-art{height:85px;min-width:0;width:100%;overflow:hidden;border-radius:9px;border:1px solid #cedfcb;background:#dbe9d9;position:relative}
+.setup-era-art svg{width:100%;height:100%;display:block;object-fit:cover}
+.era-option{flex-direction:column;align-items:stretch;padding:8px}.era-option>input{position:absolute;right:11px;top:12px;z-index:2;background:#fff}.era-option .setup-choice-text{padding:1px 5px 4px}
+.setup-explain{font-size:10px;color:#667968;margin:8px 2px 0;line-height:1.4}
+[hidden]{display:none!important}
+body[data-era="historical"]{--paper:#f3e9d6;--cream:#f9f1df;--accent:#edce88;--dark:#403329;--ink:#352a23;--ink2:#655040}
+body[data-era="historical"] .main-area{background:#efe5d0;background-image:radial-gradient(circle at 25% 5%,#fff6dc,transparent 55%)}
+body[data-era="historical"] .hub{background:#433b34}
+body[data-era="historical"] .hub-news{border-color:#f3cb81}
+body[data-era="historical"] .board-tile.selected{outline-color:#815832}
+body[data-era="historical"] .board-tile.selected .tile-caption{background:#fff1cc}
+body[data-era="historical"] .venue-scene{background:#eed4a8}
+body[data-era="historical"] .npc-avatar{background:#e8d9bd}
+body[data-era="scifi"]{--paper:#e4f0f8;--cream:#e8f5fa;--accent:#74f6ec;--dark:#152b48;--ink:#173147;--ink2:#476478}
+body[data-era="scifi"] .main-area{background:#e2eef6;background-image:radial-gradient(circle at 25% 5%,#f4faff,transparent 55%)}
+body[data-era="scifi"] .hub{background:#122945}
+body[data-era="scifi"] .hub-news{border-color:#64f4df}
+body[data-era="scifi"] .board-tile.selected{outline-color:#14c8c3}
+body[data-era="scifi"] .board-tile.selected .tile-caption{background:#d9fcfc}
+body[data-era="scifi"] .venue-scene{background:#163251}
+body[data-era="scifi"] .npc-avatar{background:linear-gradient(145deg,#456a91,#152942)}
+body[data-era="scifi"] .pulse-panel{background:#ebf5ff}
+@media(max-width:610px){.setup-rules{grid-template-columns:1fr}.setup-eras{gap:5px}.setup-era-art{height:65px}.setup-choice-text b{font-size:11px}.setup-choice-text small{font-size:9px}.era-option{padding:5px}}
+@media(prefers-reduced-motion:reduce){.setup-choice{transition:none}}
+/* Narrower board cells need less display typography, particularly on mobile. */
+.hub-title{font-size:clamp(19px,2vw,29px);max-width:215px;letter-spacing:-.65px;line-height:1.06}
+.hub-news{font-size:9px;margin-top:6px;line-height:1.27;max-height:33px}
+.pulse-panel{align-items:center}.pulse-story{min-width:0}.pulse-story p{margin:3px 0!important}
+@media(max-width:720px){.hub-title{font-size:19px}.hub-news{font-size:7px;max-height:25px}.hub-flag{font-size:6px;white-space:normal}.hub-hours{font-size:20px}}
+
+/* Original-era jobs share some modern city destinations. Filter by employer to preserve navigation. */
+.agency-filter{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px;border:1px solid #d7e6d8;background:#f6faf5;border-radius:10px;margin-bottom:10px;font-weight:700;color:#355743}
+.agency-filter select{max-width:100%;font:inherit;padding:9px 12px;background:white;color:#153621;border:1px solid #aac8b2;border-radius:8px;min-width:170px}
+@media(max-width:620px){.agency-filter{align-items:stretch;flex-direction:column}.agency-filter select{width:100%}}
+
+/* v0.5.3 — mobile-first navigation without changing desktop mechanics.
+   Game panel selection is view state only: it never changes the simulation. */
+.mobile-nav,.mobile-summary{display:none}
+@media(max-width:1024px){
+ html{scroll-padding-top:12px}
+ body{min-width:0}
+ .shell{min-width:0;min-height:100dvh}
+ .topbar{height:auto;min-height:70px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:11px 15px 8px;align-items:center}
+ .identity{min-width:0}.brand-sub{letter-spacing:.8px}
+ .top-center{grid-column:2;grid-row:1;padding:8px 10px;white-space:nowrap;font-size:9px}
+ .top-center #economy,.top-separator{display:none}
+ .head-actions{grid-column:1/-1;grid-row:2;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;-webkit-overflow-scrolling:touch;gap:3px;padding-bottom:3px}
+ .text-button{min-height:42px;flex:0 0 auto;background:#ffffff10;font-size:12px;padding:10px 12px}
+ .text-button span{display:inline}.new-button{margin-left:2px}
+ .game-layout{display:block;min-height:0;width:100%;flex:1}
+ body[data-mobile-view="city"] .sidebar,body[data-mobile-view="city"] .action-pane,
+ body[data-mobile-view="actions"] .sidebar,body[data-mobile-view="actions"] .main-area,
+ body[data-mobile-view="life"] .main-area,body[data-mobile-view="life"] .action-pane{display:none!important}
+ .main-area{padding:22px clamp(12px,3vw,32px) 26px;min-width:0}
+ .sidebar{border-right:none;padding:20px clamp(15px,3vw,32px) 30px;gap:18px}
+ .action-pane{border-left:none;padding:20px clamp(15px,3vw,32px) 30px;min-height:0;display:flex;gap:13px}
+ .actions-scroller{overflow:visible;max-height:none;min-height:0;flex:none;margin:0;padding:0}
+ .board-frame{max-width:820px;margin:0 auto}
+ .board-heading{max-width:820px;margin:0 auto 18px}
+ .board-grid{grid-template-rows:repeat(4,minmax(122px,1fr));aspect-ratio:1.35}
+ .time-strip,.pulse-panel,.journal,.journal-header{max-width:820px;margin-left:auto;margin-right:auto}
+ .profile-card,.status-columns,.status-section{max-width:800px}
+ .venue-scene{height:clamp(160px,30vw,245px)}
+ .action-footer{position:static;padding-bottom:10px}
+ .mobile-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fff;border-bottom:1px solid #d8e6dc;padding:10px clamp(9px,3vw,28px);gap:5px}
+ .mobile-summary>div{display:flex;flex-direction:column;gap:3px;align-items:center;min-width:0}
+ .mobile-summary>div+div{border-left:1px solid #e1e9df}
+ .mobile-summary span{font-size:9px;font-weight:800;letter-spacing:.6px;color:#678576}
+ .mobile-summary strong{font-size:clamp(13px,2.8vw,19px);font-weight:900;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+ .mobile-nav{position:sticky;bottom:0;z-index:25;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:#f8fbf8;padding:8px max(9px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-left));border-top:1px solid #cbdcd0;box-shadow:0 -9px 26px #203e2d18}
+ .mobile-nav button{border:1px solid transparent;border-radius:11px;min-height:55px;min-width:0;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#547363;font-size:14px;letter-spacing:0}
+ .mobile-nav button span{font-size:20px;line-height:1}.mobile-nav button strong{font-size:13px}
+ .mobile-nav button[aria-pressed="true"]{color:#153d2c;background:#dcefe2;border-color:#b5d7bd}
+ .mobile-nav button:focus-visible{outline:3px solid #368869;outline-offset:-1px}
+ .site-footer{padding:12px 16px;flex-wrap:wrap}
+ .overlay{padding:12px;overscroll-behavior:contain}
+ .modal{max-height:calc(100dvh - 24px);width:min(720px,100%);overscroll-behavior:contain}
+ .modal-primary,.modal-secondary,.form-input,.form-select,.story-choice{min-height:46px}
+ input[type="range"]{touch-action:pan-y;min-height:30px}
+}
+@media(max-width:720px){
+ .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:9px 12px 6px}
+ .head-actions{gap:4px}.text-button span{display:inline}
+ .sidebar{display:flex}.sidebar .status-section{display:block;width:auto;padding-right:0}
+ .profile-card{display:block}
+ .board-grid{grid-template-rows:repeat(4,minmax(100px,1fr));aspect-ratio:1.3}
+ .action-pane{display:flex;padding:16px}
+ .actions-scroller{max-height:none}
+ .modal{padding:18px;max-height:calc(100dvh - 18px)}
+ .mobile-summary{padding:9px 6px}
+ .mobile-nav button{flex-direction:column;gap:1px;min-height:54px}
+ .mobile-nav button strong{font-size:12px}
+}
+@media(max-width:600px){
+ .top-center{font-size:9px}
+ .brand-sub{display:none}
+ .logo-symbol{width:34px;height:34px;font-size:26px;border-radius:10px}
+ .board-heading h1{font-size:clamp(26px,7vw,34px)}
+ .board-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;aspect-ratio:auto;gap:9px}
+ .board-tile{grid-area:auto!important;min-height:145px;padding:9px;border-radius:13px;touch-action:manipulation}
+ .board-tile .tile-art{right:auto;left:4px;top:20px;max-width:100%}
+ .board-tile .tile-art svg{transform:scale(1.23)}
+ .board-tile .tile-caption{margin:0 -5px -5px;width:calc(100% + 10px);padding:7px}
+ .board-tile .tile-name{font-size:12px;line-height:1.2}
+ .board-tile .tile-tag{font-size:9px}
+ .board-tile .tile-num{font-size:10px}
+ .board-tile .you-marker,.board-tile .pulse-marker{font-size:8px;padding:4px}
+ .hub{grid-area:auto!important;grid-column:1/-1;order:-1;min-height:164px;padding:16px}
+ .hub-title{font-size:25px}.hub-news{font-size:11px;max-height:none}
+ .hub-flag{font-size:9px}.hub-week{font-size:10px}.hub-hours{font-size:26px}
+ .time-strip{padding:11px;flex-wrap:wrap}.hour-pips{order:3;flex-basis:100%}
+ .status-columns{gap:8px}.stat-number{font-size:22px}
+ .overlay{padding:0;align-items:flex-end}
+ .modal{width:100%;max-height:94dvh;border-radius:20px 20px 0 0;padding:20px 16px max(18px,env(safe-area-inset-bottom));box-shadow:0 -12px 55px #06191458}
+ .setup-eras{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .setup-era-art{height:70px}
+ .form-input,.form-select{font-size:16px} /* prevent automatic iOS zoom */
+ .toast{max-width:calc(100vw - 20px);bottom:calc(87px + env(safe-area-inset-bottom))}
+}
+@media(max-width:355px){.mobile-summary span{font-size:8px}.mobile-summary strong{font-size:12px}.setup-era-art{height:52px}.board-tile{min-height:135px}}
+
+/* Readable mobile actions, including original 37-job Classic directory. */
+@media(max-width:1024px){
+ .action-card{min-height:58px;padding:13px 12px;margin-bottom:10px;touch-action:manipulation}
+ .action-name{font-size:14px;line-height:1.32}
+ .action-desc{font-size:12px;line-height:1.4;color:#597568}
+ .action-meta{font-size:11px;flex-shrink:0}
+ .agency-filter{position:sticky;top:0;z-index:5;box-shadow:0 2px 10px #21432a0d}
+ .end-turn-btn{min-height:52px}
+ .toast{bottom:calc(88px + env(safe-area-inset-bottom))}
+}
+
 </style>
 </head>
 <body>
@@ -122,6 +282,8 @@
       </div>
       <div class="top-center"><span class="live-dot"></span><span id="topWeek">WEEK 01</span><span class="top-separator"></span><span id="economy">MARKET STABLE</span></div>
       <div class="head-actions">
+        <button class="text-button" id="onlineBtn" type="button" aria-label="Online multiplayer">◎ <span>Online co-op</span></button>
+        <button class="text-button" id="careerBtn" type="button" aria-label="Career pathways">🎓 <span>Careers</span></button>
         <button class="text-button" id="financeBtn" type="button" aria-label="Financial history">▥ <span>Finances</span></button>
         <button class="text-button" id="guideBtn" type="button">? <span>How to play</span></button>
         <button class="text-button" id="saveBtn" type="button">↓ <span>Save</span></button>
@@ -130,8 +292,14 @@
       </div>
     </header>
 
+    <div class="mobile-summary" id="mobileSummary" aria-label="Current turn summary" aria-live="off">
+      <div><span>WEEK</span><strong id="mobileWeek">01</strong></div>
+      <div><span>TIME LEFT</span><strong id="mobileHours">60h</strong></div>
+      <div><span>CASH</span><strong id="mobileCash">$0</strong></div>
+      <div><span>PLAYER</span><strong id="mobilePlayer">You</strong></div>
+    </div>
     <div class="game-layout">
-      <aside class="sidebar pane">
+      <aside class="sidebar pane" id="gameLife">
         <div class="pane-heading"><span class="eyebrow">YOUR STORY</span><span id="turnCounter" class="tag">YOUR TURN</span></div>
         <section class="profile-card" id="profile"></section>
         <div class="status-columns" id="balances"></div>
@@ -150,7 +318,7 @@
         <div class="sidebar-bottom"><span>✦</span> Progress isn't always a straight line.</div>
       </aside>
 
-      <main class="main-area">
+      <main class="main-area" id="gameCity">
         <div class="board-heading"><div><span class="eyebrow dark">WELCOME TO</span><h1>New Day City<span class="sun-icon">✳</span></h1></div><div class="move-hint"><span class="arrow-round">↗</span><div>GO PLACES. DO THINGS.<br><strong>MAKE IT COUNT.</strong></div></div></div>
         <div class="board-frame">
           <div class="board-grid" id="board"></div>
@@ -161,7 +329,7 @@
         <div class="journal" id="journal" aria-live="polite"></div>
       </main>
 
-      <aside class="action-pane pane">
+      <aside class="action-pane pane" id="gameActions">
         <div class="pane-heading"><span class="eyebrow">YOUR DESTINATION</span><span class="tiny-pulse">● EXPLORE THE CITY</span></div>
         <div id="venue"></div>
         <div class="action-panel-heading"><span>What will you do?</span><span id="actionsCount" class="muted micro"></span></div>
@@ -173,7 +341,12 @@
         </div>
       </aside>
     </div>
-    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.4.1</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Game panels">
+      <button type="button" data-mobile-tab="city" aria-controls="gameCity" aria-pressed="true"><span aria-hidden="true">▦</span><strong>City</strong></button>
+      <button type="button" data-mobile-tab="actions" aria-controls="gameActions" aria-pressed="false"><span aria-hidden="true">↗</span><strong>Activities</strong></button>
+      <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong></button>
+    </nav>
+    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.3</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="overlay" class="overlay" aria-modal="true" role="dialog"></div>
@@ -305,28 +478,117 @@
     clinic:{title:'Jun’s wellness check-in',detail:'2h · +23 energy',hours:2,effects:{energy:23}}
   };
   const jobs = [
-    {id:'server',   name:'Cafe Server',         place:'diner',       wage:14, tier:1, education:0, experience:0, dependability:0, clothes:'none',    caption:'Good tips. Better coffee.'},
-    {id:'stock',    name:'Store Associate',     place:'market',      wage:16, tier:1, education:0, experience:0, dependability:0, clothes:'none',    caption:'Aisle three needs a hero.'},
+    {id:'server',   name:'Cafe Server',         place:'diner',       wage:14, tier:1, education:0, experience:0, dependability:0, clothes:'casual', track:'Hospitality', caption:'Good tips. Better coffee.'},
+    {id:'stock',    name:'Store Associate',     place:'market',      wage:16, tier:1, education:0, experience:0, dependability:0, clothes:'casual', track:'Retail', caption:'Aisle three needs a hero.'},
     {id:'repair',   name:'Device Technician',   place:'tech',        wage:24, tier:2, education:1, experience:8, dependability:12, clothes:'casual', caption:'Have you tried turning it off?'},
     {id:'teller',   name:'Bank Associate',      place:'bank',        wage:28, tier:3, education:1, experience:12,dependability:15, clothes:'casual', caption:'Counting on your future.'},
     {id:'tutor',    name:'University Tutor',    place:'university',  wage:38, tier:4, education:2, experience:18,dependability:22, clothes:'casual', caption:'The answers were inside you.'},
     {id:'analyst',  name:'Business Analyst',    place:'office',      wage:52, tier:5, education:2, experience:25,dependability:28, clothes:'formal', caption:'All the charts, all the time.'},
     {id:'engineer', name:'Senior Engineer',     place:'tech',        wage:72, tier:6, education:3, experience:35,dependability:38, clothes:'casual', caption:'Build what comes next.'},
-    {id:'director', name:'Strategy Director',   place:'office',      wage:105,tier:7, education:4, experience:48,dependability:45, clothes:'formal', caption:'You have become the meeting.'}
+    {id:'director', name:'Strategy Director',   place:'office',      wage:105,tier:7, education:4, experience:48,dependability:45, clothes:'formal', track:'Business', caption:'You have become the meeting.'},
+    // Added branches are alternatives to the existing eight roles. Legacy job IDs remain stable.
+    {id:'cook',name:'Line Cook',place:'diner',wage:15,tier:1,education:0,experience:0,dependability:0,clothes:'casual',track:'Hospitality',caption:'A hot pan and a cool head.'},
+    {id:'kitchenlead',name:'Kitchen Supervisor',place:'diner',wage:29,tier:3,education:1,experience:16,dependability:21,clothes:'formal',course:'service',track:'Hospitality',caption:'Keep the kitchen moving.'},
+    {id:'storelead',name:'Retail Supervisor',place:'market',wage:30,tier:3,education:1,experience:17,dependability:20,clothes:'formal',course:'service',track:'Retail',caption:'Keep the shelves and team stocked.'},
+    {id:'storemanager',name:'Store Manager',place:'market',wage:44,tier:4,education:2,experience:28,dependability:31,clothes:'formal',course:'leadership',track:'Retail',caption:'A budget with aisles.'},
+    {id:'stylist',name:'Wardrobe Stylist',place:'boutique',wage:23,tier:2,education:0,experience:9,dependability:13,clothes:'casual',track:'Retail',caption:'Dress for your ambitions.'},
+    {id:'boutiquelead',name:'Boutique Manager',place:'boutique',wage:46,tier:4,education:2,experience:29,dependability:30,clothes:'formal',course:'leadership',track:'Retail',caption:'Make an impression.'},
+    {id:'techlead',name:'Technical Lead',place:'tech',wage:53,tier:5,education:2,experience:30,dependability:31,clothes:'formal',course:'digital',track:'Technology',caption:'Take ownership of the next release.'},
+    {id:'banklead',name:'Bank Supervisor',place:'bank',wage:56,tier:5,education:2,experience:33,dependability:35,clothes:'formal',course:'finance',track:'Finance',caption:'Good decisions compound.'},
+    {id:'bankmanager',name:'Bank Manager',place:'bank',wage:85,tier:6,education:3,experience:44,dependability:43,clothes:'business',course:'leadership',track:'Finance',caption:'Meet the quarterly targets.'},
+    {id:'professor',name:'University Professor',place:'university',wage:87,tier:6,education:4,experience:40,dependability:39,clothes:'business',course:'leadership',track:'Academia',caption:'Teach the next generation.'},
+    {id:'officelead',name:'Operations Manager',place:'office',wage:90,tier:6,education:3,experience:43,dependability:42,clothes:'business',course:'leadership',track:'Business',caption:'Organize the chaos.'}
   ];
+  // Classic DOS/floppy job table (37 positions). CD-only QT Janitor and Socket Clerk intentionally excluded.
+  // All roles preserve original wage/stat/degree/uniform data; shared modern building tiles represent some employers.
+  const classicJobs = [{"id":"classic-zmart-clerk","name":"Clerk","employer":"Z-Mart","place":"market","wage":5,"tier":2,"clothes":"casual","track":"Z-Mart","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-zmart-assistant-manager","name":"Assistant Manager","employer":"Z-Mart","place":"market","wage":7,"tier":2,"clothes":"formal","track":"Z-Mart","experience":20,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-zmart-manager","name":"Manager","employer":"Z-Mart","place":"market","wage":8,"tier":3,"clothes":"business","track":"Z-Mart","experience":30,"dependability":30,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-monolith-cook","name":"Cook","employer":"Monolith Burgers","place":"diner","wage":5,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":0,"dependability":10,"degrees":[],"entryGuaranteed":true},{"id":"classic-monolith-clerk","name":"Clerk","employer":"Monolith Burgers","place":"diner","wage":6,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-monolith-assistant-manager","name":"Assistant Manager","employer":"Monolith Burgers","place":"diner","wage":7,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":20,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-monolith-manager","name":"Manager","employer":"Monolith Burgers","place":"diner","wage":8,"tier":3,"clothes":"formal","track":"Monolith Burgers","experience":30,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-qt-salesperson","name":"Salesperson","employer":"QT Clothing","place":"boutique","wage":8,"tier":3,"clothes":"formal","track":"QT Clothing","experience":30,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-qt-assistant-manager","name":"Assistant Manager","employer":"QT Clothing","place":"boutique","wage":9,"tier":3,"clothes":"business","track":"QT Clothing","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-qt-manager","name":"Manager","employer":"QT Clothing","place":"boutique","wage":12,"tier":4,"clothes":"business","track":"QT Clothing","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-socket-salesperson","name":"Salesperson","employer":"Socket City","place":"tech","wage":7,"tier":2,"clothes":"formal","track":"Socket City","experience":30,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-socket-electronics-repairman","name":"Electronics Repairman","employer":"Socket City","place":"tech","wage":11,"tier":3,"clothes":"casual","track":"Socket City","experience":40,"dependability":40,"degrees":["electronics"],"entryGuaranteed":false},{"id":"classic-socket-manager","name":"Manager","employer":"Socket City","place":"tech","wage":14,"tier":4,"clothes":"business","track":"Socket City","experience":40,"dependability":40,"degrees":["electronics","junior-college"],"entryGuaranteed":false},{"id":"classic-hitech-janitor","name":"Janitor","employer":"Hi-Tech U","place":"university","wage":5,"tier":2,"clothes":"casual","track":"Hi-Tech U","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-hitech-teacher","name":"Teacher","employer":"Hi-Tech U","place":"university","wage":11,"tier":3,"clothes":"formal","track":"Hi-Tech U","experience":40,"dependability":50,"degrees":["academic"],"entryGuaranteed":false},{"id":"classic-hitech-professor","name":"Professor","employer":"Hi-Tech U","place":"university","wage":20,"tier":6,"clothes":"formal","track":"Hi-Tech U","experience":50,"dependability":60,"degrees":["research"],"entryGuaranteed":false},{"id":"classic-factory-janitor","name":"Janitor","employer":"Factory","place":"office","wage":7,"tier":2,"clothes":"casual","track":"Factory","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-factory-assembly-worker","name":"Assembly Worker","employer":"Factory","place":"office","wage":8,"tier":3,"clothes":"casual","track":"Factory","experience":30,"dependability":30,"degrees":["trade-school"],"entryGuaranteed":false},{"id":"classic-factory-secretary","name":"Secretary","employer":"Factory","place":"office","wage":9,"tier":3,"clothes":"formal","track":"Factory","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-factory-machinist-s-helper","name":"Machinist's Helper","employer":"Factory","place":"office","wage":10,"tier":3,"clothes":"casual","track":"Factory","experience":40,"dependability":40,"degrees":["pre-engineering"],"entryGuaranteed":false},{"id":"classic-factory-executive-secretary","name":"Executive Secretary","employer":"Factory","place":"office","wage":18,"tier":5,"clothes":"business","track":"Factory","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-factory-machinist","name":"Machinist","employer":"Factory","place":"office","wage":19,"tier":5,"clothes":"casual","track":"Factory","experience":50,"dependability":50,"degrees":["engineering"],"entryGuaranteed":false},{"id":"classic-factory-department-manager","name":"Department Manager","employer":"Factory","place":"office","wage":22,"tier":6,"clothes":"business","track":"Factory","experience":60,"dependability":60,"degrees":["junior-college","engineering"],"entryGuaranteed":false},{"id":"classic-factory-engineer","name":"Engineer","employer":"Factory","place":"office","wage":23,"tier":6,"clothes":"business","track":"Factory","experience":60,"dependability":60,"degrees":["junior-college","engineering"],"entryGuaranteed":false},{"id":"classic-factory-general-manager","name":"General Manager","employer":"Factory","place":"office","wage":25,"tier":7,"clothes":"business","track":"Factory","experience":70,"dependability":70,"degrees":["business-admin","engineering"],"entryGuaranteed":false},{"id":"classic-bank-janitor","name":"Janitor","employer":"Bank","place":"bank","wage":6,"tier":2,"clothes":"casual","track":"Bank","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-bank-teller","name":"Teller","employer":"Bank","place":"bank","wage":10,"tier":3,"clothes":"formal","track":"Bank","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-bank-assistant-manager","name":"Assistant Manager","employer":"Bank","place":"bank","wage":14,"tier":4,"clothes":"business","track":"Bank","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-bank-manager","name":"Manager","employer":"Bank","place":"bank","wage":19,"tier":5,"clothes":"business","track":"Bank","experience":60,"dependability":60,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-bank-broker","name":"Broker","employer":"Bank","place":"bank","wage":22,"tier":6,"clothes":"business","track":"Bank","experience":70,"dependability":70,"degrees":["business-admin","academic"],"entryGuaranteed":false},{"id":"classic-blacks-janitor","name":"Janitor","employer":"Black's Market","place":"market","wage":6,"tier":2,"clothes":"casual","track":"Black's Market","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-blacks-checker","name":"Checker","employer":"Black's Market","place":"market","wage":8,"tier":3,"clothes":"casual","track":"Black's Market","experience":20,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-blacks-butcher","name":"Butcher","employer":"Black's Market","place":"market","wage":12,"tier":4,"clothes":"casual","track":"Black's Market","experience":30,"dependability":30,"degrees":["trade-school"],"entryGuaranteed":false},{"id":"classic-blacks-assistant-manager","name":"Assistant Manager","employer":"Black's Market","place":"market","wage":15,"tier":4,"clothes":"formal","track":"Black's Market","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-blacks-manager","name":"Manager","employer":"Black's Market","place":"market","wage":18,"tier":5,"clothes":"business","track":"Black's Market","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-rent-groundskeeper","name":"Groundskeeper","employer":"Rent Office","place":"housing","wage":7,"tier":2,"clothes":"casual","track":"Rent Office","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-rent-apartment-manager","name":"Apartment Manager","employer":"Rent Office","place":"housing","wage":9,"tier":3,"clothes":"casual","track":"Rent Office","experience":30,"dependability":30,"degrees":["junior-college"],"entryGuaranteed":false}];
+  // Classic has eleven independent diplomas with prerequisites; Modern keeps its four-stage ladder.
+  // Lesson count, enrollment, +5 graduation reliability, and cap formula follow original mechanics.
+  const classicDegrees = [
+    {id:'junior-college',name:'Junior College',requires:[]},
+    {id:'trade-school',name:'Trade School',requires:[]},
+    {id:'business-admin',name:'Business Administration',requires:['junior-college']},
+    {id:'academic',name:'Academic',requires:['junior-college']},
+    {id:'electronics',name:'Electronics',requires:['trade-school']},
+    {id:'pre-engineering',name:'Pre-Engineering',requires:['trade-school']},
+    {id:'engineering',name:'Engineering',requires:['pre-engineering']},
+    {id:'graduate-school',name:'Graduate School',requires:['academic']},
+    {id:'post-doctoral',name:'Post-Doctoral',requires:['graduate-school']},
+    {id:'research',name:'Research',requires:['post-doctoral']},
+    {id:'publishing',name:'Publishing',requires:['research']}
+  ];
+  // Provisional bridge mapping original-style required diplomas onto our existing jobs.
+  // Job names, wages and places are still Life Loop originals, NOT the Sierra job table.
+  const classicJobRequirements = {
+    server:{experience:10,dependability:10,degrees:[]},
+    cook:{experience:0,dependability:10,degrees:[]},
+    stock:{experience:10,dependability:10,degrees:[]},
+    repair:{experience:20,dependability:20,degrees:['electronics']},
+    teller:{experience:30,dependability:30,degrees:['junior-college']},
+    tutor:{experience:40,dependability:50,degrees:['academic']},
+    analyst:{experience:40,dependability:40,degrees:['business-admin']},
+    engineer:{experience:60,dependability:60,degrees:['junior-college','engineering']},
+    director:{experience:70,dependability:70,degrees:['business-admin','engineering']},
+    kitchenlead:{experience:20,dependability:30,degrees:['junior-college']},
+    storelead:{experience:20,dependability:20,degrees:[]},
+    storemanager:{experience:30,dependability:30,degrees:['junior-college']},
+    stylist:{experience:20,dependability:20,degrees:[]},
+    boutiquelead:{experience:40,dependability:40,degrees:['business-admin']},
+    techlead:{experience:40,dependability:40,degrees:['electronics']},
+    banklead:{experience:50,dependability:50,degrees:['business-admin']},
+    bankmanager:{experience:60,dependability:60,degrees:['business-admin']},
+    professor:{experience:50,dependability:60,degrees:['research']},
+    officelead:{experience:60,dependability:60,degrees:['business-admin','engineering']}
+  };
   const degrees = [
     {name:'Foundations Certificate', sessions:2, cost:55},
     {name:'Associate Diploma',      sessions:3, cost:85},
     {name:'Bachelor Degree',        sessions:4, cost:125},
     {name:'Master Degree',          sessions:5, cost:170}
   ];
+  // Standalone practical qualifications supplement, rather than replace, the existing four academic degrees.
+  const courses = [
+    {id:'service',name:'Service & Supervision',sessions:2,cost:60,education:0,detail:'Hospitality and retail leadership'},
+    {id:'digital',name:'Digital Systems',sessions:2,cost:85,education:1,detail:'Technical team leadership'},
+    {id:'finance',name:'Finance & Compliance',sessions:2,cost:100,education:1,detail:'Banking progression'},
+    {id:'leadership',name:'People Leadership',sessions:3,cost:135,education:2,detail:'Senior management and academic leadership'}
+  ];
+  const clothing = {
+    casual:{name:'Casual clothes',rank:1},
+    formal:{name:'Dress clothes',rank:2},
+    business:{name:'Business suit',rank:3}
+  };
+  const clothingOffers = {
+    market:[{id:'casual',cost:35,weeks:9},{id:'formal',cost:90,weeks:9}],
+    boutique:[{id:'casual',cost:73,weeks:11},{id:'formal',cost:125,weeks:13},{id:'business',cost:295,weeks:13}]
+  };
   const dwellings = {
     studio:{name:'Starter Studio', rent:230, comfort:0},
     apartment:{name:'Sunny Apartment', rent:380, comfort:4},
     loft:{name:'Skyline Loft', rent:620, comfort:8}
   };
+  // Original Bank markets (wiki base prices); exact per-week volatility formula is not yet reproduced.
+  const classicStocks = [
+    {id:'tbills',name:'T-Bills',base:100}, {id:'gold',name:'Gold',base:413},
+    {id:'silver',name:'Silver',base:14}, {id:'pork',name:'Pork Bellies',base:20},
+    {id:'blue',name:'Blue Chip Stocks',base:49}, {id:'penny',name:'Penny Stocks',base:7}
+  ];
+  const classicFreshFood = [{units:1,cost:55},{units:2,cost:100},{units:4,cost:190}];
   const GOAL_KEYS = ['wealth','happiness','education','career'];
-  root.LifeData = {places,citizens,encounters,headlines,cityEvents,favors,storyArcs,jobs,degrees,dwellings,GOAL_KEYS};
+
+  // Era selection changes presentation only. Venue IDs, actions, prices and qualification data are shared.
+  const worldEras = {
+    historical: {label:'Historical',city:'Willowford',description:'Gas lamps, brick storefronts and a bustling old-town high street.',
+      names:['The Boarding House','The Guild Hall','Market Square','The Copper Kettle','Royal Academy','The Counting House','Grand Playhouse','The Treasury','Estate Office','The Tailor','Inventors Workshop','The Infirmary']},
+    current: {label:'Contemporary',city:'New Day City',description:'A lively modern city, familiar shops and bright everyday optimism.',names:places.map(p=>p.name)},
+    scifi: {label:'Sci-Fi',city:'Neon Meridian',description:'Orbiting shuttles, holographic signs and towering neon arcologies.',
+      names:['Habitat Pod','Career Nexus','Hydroponics Bay','Star Diner','Orbital Institute','Helix Spire','HoloTheater','Credits Exchange','Habitat Registry','Synthwear Studio','Quantum Works','MediCore']}
+  };
+  const RULESETS = {
+    classic:{id:'classic',name:'Classic Rules (in progress)',hours:60,applicationHours:4,restHours:6,dependabilityStart:20,dependabilityDecay:3,workExperience:1,workDependability:1,entryHours:2,optionalStories:false},
+    modern:{id:'modern',name:'Modern Story',hours:40,applicationHours:3,restHours:5,dependabilityStart:10,dependabilityDecay:1,workExperience:5,workDependability:5,entryHours:0,optionalStories:true}
+  };
+  root.LifeData = {worldEras,RULESETS,places,citizens,encounters,headlines,cityEvents,favors,storyArcs,jobs,classicJobs,degrees,classicDegrees,classicJobRequirements,courses,clothing,clothingOffers,dwellings,classicStocks,classicFreshFood,GOAL_KEYS};
   if (typeof module !== 'undefined' && module.exports) module.exports = root.LifeData;
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -338,14 +600,15 @@ const D = root.LifeData || (typeof require === 'function' ? require('./data.js')
 const find = (arr,id)=>arr.find(x=>x.id===id);
 const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
 const money = n=>'$'+Math.floor(n).toLocaleString('en-US');
-const WEEK_HOURS = 40;
+const validRuleset = key=>Object.hasOwn(D.RULESETS,key)?key:'modern';
+const validEra = key=>Object.hasOwn(D.worldEras,key)?key:'current';
 class LifeGame {
   constructor(settings={}) {
     const goal = settings.goals || {};
     const mode = ['solo','hotseat','sandbox'].includes(settings.mode) ? settings.mode : 'solo';
-    this.settings={mode, goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,clamp(Number(goal[k])||60,10,100)]))};
+    this.settings={mode, ruleset:validRuleset(settings.ruleset), era:validEra(settings.era), goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,clamp(Number(goal[k])||60,10,100)]))};
     this.seed = Number.isSafeInteger(settings.seed) ? settings.seed : 314159;
-    this.week=1; this.economy=1; this.active=0; this.winner=null; this.sequence=0; this.pendingEncounter=null; this.bulletin=D.headlines[0]; this.cityEventId=D.cityEvents[0].id; this.cityEventStart=1; this.cityProjects={};
+    this.week=1; this.economy=1; this.active=0; this.winner=null; this.sequence=0; this.pendingEncounter=null; this.bulletin=D.headlines[0]; this.cityEventId=D.cityEvents[0].id; this.cityEventStart=1; this.cityProjects={};this.classicStockPrices=Object.fromEntries(D.classicStocks.map(x=>[x.id,x.base]));
     this.messages=[];
     const name=(settings.name||'You').trim().slice(0,24)||'You';
     this.players=[this.createPlayer('player',name,false,'#b3f485')];
@@ -354,19 +617,53 @@ class LifeGame {
     this.log(`Week 1. A fresh start, a pocketful of hope, and ${money(this.players[0].cash)} in cash.`, 'good');
   }
   createPlayer(id,name,isAI,color) {
-    return {id,name,isAI,color,location:'home',hours:WEEK_HOURS,cash:250,bank:100,invested:0,debt:0,rentDebt:0,
-      happiness:62,energy:84,hunger:0,education:0,credits:0,experience:0,dependability:10,job:null,wage:0,workSessions:0,
-      home:'studio',groceries:1,fed:false,owned:[],weekActions:0,raiseWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:250,bank:100,invested:0,debt:0,netWorth:350}],milestones:[]};
+    return {id,name,isAI,color,location:'home',hours:this.rules.hours,cash:250,bank:100,invested:0,debt:0,rentDebt:0,
+      happiness:62,energy:84,hunger:0,education:0,credits:0,experience:this.isClassic?10:0,dependability:this.rules.dependabilityStart,job:null,wage:0,workSessions:0,classicDegrees:[],classicProgress:{},classicEnrolled:[],classicEnrollmentCredits:0,classicDismissals:0,classicRaises:0,classicRejectedOpenings:{},classicRent:325,classicRentDueWeek:4,classicExtensions:0,classicExtensionAttemptWeek:0,classicEverDebt:false,classicPortfolio:Object.fromEntries(D.classicStocks.map(x=>[x.id,0])),classicLegacyInvestment:0,classicBrokerOpen:false,classicLoanDefaults:0,classicLoanPaidThrough:0,classicFoodPurchasedWeek:0,
+      home:'studio',groceries:1,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:250,bank:100,invested:0,debt:0,netWorth:350}],milestones:[]};
   }
+  get rules(){return D.RULESETS[this.settings.ruleset];}
+  get isClassic(){return this.settings.ruleset==='classic';}
   get player(){return this.players[this.active];}
-  getJob(p){return find(D.jobs,p.job);}
+  get jobs(){return this.isClassic?D.classicJobs:D.jobs;}
+  getJob(p){return find(this.jobs,p.job);}
+  offeredWage(job){return Math.max(1,Math.round(job.wage*this.economy));}
+  classicLuck(p){return clamp(30+(10+p.dependability+p.experience+8*this.degreeCount(p))/3,0,100);}
+  rentServicesOpen(p){return this.week>=p.classicRentDueWeek;}
+
+  degreeCount(p){return Array.isArray(p.classicDegrees)?p.classicDegrees.length:0;}
+  jobRequirement(job){return this.isClassic?{experience:job.experience,dependability:job.dependability,degrees:job.degrees}:{experience:job.experience,dependability:job.dependability,degrees:[]};}
+  classicLessons(p){return 10-(p.owned.includes('computer')?1:0)-( ['encyclopedia','dictionary','atlas'].every(id=>p.owned.includes(id))?1:0);}
+  classicDegreeAvailable(p,d){return d.requires.every(id=>p.classicDegrees.includes(id));}
+  classicWorkCaps(p,job){const r=this.jobRequirement(job),bonus=5*this.degreeCount(p);return {experience:10+r.experience+bonus,dependability:20+r.dependability+bonus};}
+  classicFoodCapacity(p){return p.owned.includes('fridge')?(p.owned.includes('freezer')?12:6):Infinity;}
+  classicStockValue(p){return D.classicStocks.reduce((n,s)=>n+(p.classicPortfolio[s.id]||0)*this.classicStockPrices[s.id],0)+(p.classicLegacyInvestment||0);}
+  syncClassicInvested(p){if(this.isClassic)p.invested=this.classicStockValue(p);}
+  classicFoodPrice(units){const item=D.classicFreshFood.find(x=>x.units===units);return Math.max(1,Math.round(item.cost*this.economy));}
+  classicLoanLimit(p){const job=this.getJob(p);return job?Math.max(0,Math.floor(((job.wage*32+p.cash+p.bank-p.debt)*0.75)*(0.8**p.classicLoanDefaults)/100)*100):0;}
   getPlace(id){return find(D.places,id);}
+  clothingWeeks(p,tier){return Math.max(0,Math.floor(Number(p.clothing?.[tier])||0));}
+  isDressedFor(p,job){
+    if(!job)return false;
+    const need=D.clothing[job.clothes]?.rank||1;
+    return Object.keys(D.clothing).some(k=>D.clothing[k].rank>=need&&this.clothingWeeks(p,k)>0);
+  }
+  clothingSummary(p){return Object.entries(D.clothing).map(([k,v])=>({id:k,name:v.name,weeks:this.clothingWeeks(p,k)}));}
+  canAffordClothes(p,job){
+    if(this.isDressedFor(p,job))return true;
+    const need=D.clothing[job.clothes]?.rank||1;
+    const cheapest=[...D.clothingOffers.market,...D.clothingOffers.boutique].filter(x=>D.clothing[x.id].rank>=need).sort((a,b)=>a.cost-b.cost)[0];
+    return !!cheapest&&p.cash>=this.price(cheapest.cost,'retail')+120;
+  }
+  cheapestClothingOffer(job){
+    const rank=D.clothing[job.clothes]?.rank||1;
+    return [...D.clothingOffers.market.map(x=>({...x,venue:'market'})),...D.clothingOffers.boutique.map(x=>({...x,venue:'boutique'}))].filter(x=>D.clothing[x.id].rank>=rank).sort((a,b)=>a.cost-b.cost)[0];
+  }
   rand(){this.seed=(1664525*this.seed+1013904223)>>>0;return this.seed/4294967296;}
-  get cityEvent(){return D.cityEvents.find(e=>e.id===this.cityEventId)||D.cityEvents[0];}
+  get cityEvent(){return this.isClassic?D.cityEvents[0]:(D.cityEvents.find(e=>e.id===this.cityEventId)||D.cityEvents[0]);}
   get cityIndex(){return Math.floor((this.week-1)/4);}
   // A neutral public sector index and event-specific pricing. Whole-dollar tickets.
-  price(base,sector){let multiplier=this.cityEvent.prices[sector]||1;for(const arc of D.storyArcs)if(arc.sector===sector&&this.cityProjects[arc.id])multiplier*=arc.bonus;return Math.max(1,Math.round(base*multiplier));}
-  shiftPay(p){return Math.max(1,Math.round(p.wage*8*this.cityEvent.wage*(this.cityProjects.secondchance?1.05:1)));}
+  price(base,sector){let multiplier=this.isClassic?1:(this.cityEvent.prices[sector]||1);for(const arc of (this.isClassic?[]:D.storyArcs))if(arc.sector===sector&&this.cityProjects[arc.id])multiplier*=arc.bonus;return Math.max(1,Math.round(base*multiplier));}
+  shiftPay(p){return Math.max(1,Math.round(p.wage*8*(this.isClassic?1:this.cityEvent.wage)*(this.isClassic?1:(this.cityProjects.secondchance?1.05:1))));}
   relationship(p,placeId){return clamp(Number(p.relationships?.[placeId])||0,0,100);}
   relationshipName(p,placeId){const value=this.relationship(p,placeId);return value>=55?'Trusted friend':value>=18?'Friendly':value>=7?'Acquaintance':'Stranger';}
   npcLine(placeId,p=this.player){
@@ -429,8 +726,8 @@ class LifeGame {
     const actual={
       wealth:Math.max(0,this.wealth(p)/ (600 + g.wealth*140) *100),
       happiness:p.happiness/(35+g.happiness*.6)*100,
-      education:(p.education + (p.education<4?p.credits/D.degrees[p.education].sessions:0))/ (g.education/25)*100,
-      career:(job?job.tier:0)/(Math.max(1,Math.ceil(g.career/15)))*100
+      education:this.isClassic?((1+9*this.degreeCount(p))/g.education*100):(p.education + (p.education<4?p.credits/D.degrees[p.education].sessions:0))/ (g.education/25)*100,
+      career:this.isClassic?((job?1.25*p.dependability:0)/g.career*100):(job?job.tier:0)/(Math.max(1,Math.ceil(g.career/15)))*100
     };
     const out={}; for(const key of D.GOAL_KEYS) out[key]=clamp(Math.floor(actual[key]),0,100);
     return out;
@@ -447,7 +744,7 @@ class LifeGame {
   travelCost(from,to){
     const a=D.places.findIndex(p=>p.id===from),b=D.places.findIndex(p=>p.id===to);
     if(a<0||b<0)return Infinity;
-    return a===b?0:1+Math.floor(Math.min(Math.abs(a-b),D.places.length-Math.abs(a-b))/3);
+    return a===b?0:this.rules.entryHours+1+Math.floor(Math.min(Math.abs(a-b),D.places.length-Math.abs(a-b))/3);
   }
   travel(target) {
     if(this.winner)return {ok:false,message:'This game is finished.'};
@@ -457,15 +754,24 @@ class LifeGame {
     const cost=this.travelCost(p.location,target);
     if(cost>p.hours)return {ok:false,message:`Need ${cost} hours to travel. End the week to continue.`};
     if(cost===0)return {ok:true,message:`Already at ${dest.name}.`};
-    p.hours-=cost;p.location=target;p.weekActions++;
+    p.hours-=cost;p.location=target;p.weekActions++;if(this.isClassic)p.classicBrokerOpen=false;
     this.log(`${p.name} visited ${dest.name} · ${cost}h travel`,'travel',p.id);
     return {ok:true,message:`Welcome to ${dest.name}.`};
   }
   jobReasons(p,job){
     const reasons=[];
-    if(p.education<job.education) reasons.push(`Education ${job.education}`);
-    if(p.experience<job.experience) reasons.push(`${job.experience} experience`);
-    if(p.dependability<job.dependability) reasons.push(`${job.dependability} reliability`);
+    if(this.isClassic){
+      const req=this.jobRequirement(job);
+      for(const id of req.degrees)if(!p.classicDegrees.includes(id))reasons.push(D.classicDegrees.find(d=>d.id===id).name);
+      if(p.experience<req.experience)reasons.push(`${req.experience} experience`);
+      // Original rule: minimum-10 jobs may be applied for even with zero reliability.
+      if(p.dependability<req.dependability&&req.dependability!==10)reasons.push(`${req.dependability} reliability`);
+    }else{
+      if(p.education<job.education) reasons.push(`Education ${job.education}`);
+      if(p.experience<job.experience) reasons.push(`${job.experience} experience`);
+      if(p.dependability<job.dependability) reasons.push(`${job.dependability} reliability`);
+      if(job.course&&!p.coursesCompleted?.includes(job.course))reasons.push(`${find(D.courses,job.course).name} course`);
+    }
     return reasons;
   }
   actions(p=this.player){
@@ -473,8 +779,8 @@ class LifeGame {
     const push=(id,title,detail,hours=0,price=0,valid=true,reason='',meta={})=>{
       t.push({id,title,detail,hours,price,enabled:valid&&p.hours>=hours&&p.cash>=price,reason:!valid?reason:p.hours<hours?'Not enough time':p.cash<price?'Not enough cash':'',...meta});
     };
-    if(D.citizens[at])push('chat',`Talk to ${D.citizens[at].name}`,`Meet ${D.citizens[at].title.toLowerCase()}. Discover a little story.`,1,0,p.talkedWeek?.[at]!==this.week,'Already caught up this week');
-    if(!p.isAI){
+    if(!this.isClassic&&D.citizens[at])push('chat',`Talk to ${D.citizens[at].name}`,`Meet ${D.citizens[at].title.toLowerCase()}. Discover a little story.`,1,0,p.talkedWeek?.[at]!==this.week,'Already caught up this week');
+    if(!this.isClassic&&!p.isAI){
       const friend=this.relationship(p,at),last=p.favorsUsed?.[at]||0,favor=D.favors[at];
       if(favor)push('favor',favor.title,favor.detail,favor.hours,0,friend>=18&&(!last||this.week-last>=4),friend<18?`Requires Friendly relationship (18 trust; now ${friend}).`: `Available again in week ${last+4}`,{special:'friend'});
       const event=this.cityEvent;
@@ -483,58 +789,112 @@ class LifeGame {
         push('pulse',event.opportunity.title,event.opportunity.detail,event.opportunity.hours,0,!done,done?'Already joined this city event':'',{special:'city'});
       }
     }
-    if(!p.isAI)for(const arc of D.storyArcs.filter(x=>x.host===at)){
+    if(!this.isClassic&&!p.isAI)for(const arc of D.storyArcs.filter(x=>x.host===at)){
       const status=this.storyStatus(p,arc);if(status.chapter>=arc.chapters.length)continue;
       push('arc:'+arc.id,`Story · ${arc.title}`,`Chapter ${status.chapter+1}/${arc.chapters.length} · ${arc.chapters[status.chapter].title}`,2,0,status.enabled,status.reason,{special:'story'});
     }
     if(at==='home'){
-      push('relax','Take a breather','Get +16 happiness and +24 energy.',5,0,p.happiness<100||p.energy<100,'Already feeling great');
-      push('freelance',p.owned.includes('computer')?'Freelance online':'Help a neighbor',p.owned.includes('computer')?'Earn $165 doing remote gigs.':'Earn $56 doing odd jobs.',6,0,p.energy>=14,'Need more energy');
-      if(p.groceries>0) push('cook','Cook something nice','Use one grocery portion. Stay fed and feel better.',2,0,!p.fed,'Already fed this week');
+      push('relax','Take a breather','Get +16 happiness and +24 energy.',this.rules.restHours,0,p.happiness<100||p.energy<100,'Already feeling great');
+      // Casual paid errands are a safety net for unemployment, not a second workplace.
+      const gigReady=!p.job&&p.oddJobWeek!==this.week&&p.energy>=14;
+      if(!this.isClassic)push('freelance',p.owned.includes('computer')?'One-off online contract':'Temporary odd job',p.owned.includes('computer')?'Unemployed fallback: earn $165 once this week.':'Unemployed fallback: earn $56 once this week.',6,0,gigReady,p.job?'You already have a primary job. Work at your employer instead.':p.oddJobWeek===this.week?'Only one odd job per week.':'Need more energy');
+      if(!this.isClassic&&p.groceries>0) push('cook','Cook something nice','Use one grocery portion. Stay fed and feel better.',2,0,!p.fed,'Already fed this week');
     }
     if(at==='agency'){
-      for(const job of D.jobs){
+      for(const job of this.jobs){
         const reasons=this.jobReasons(p,job);
-        push('apply:'+job.id,job.name,`${money(Math.round(job.wage*this.economy))}/hour · ${this.getPlace(job.place).name}`,3,0,reasons.length===0&&p.job!==job.id,reasons.join(' · ')||(p.job===job.id?'Current job':''),{tier:job.tier,req:job});
+        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} (${job.employer||this.getPlace(job.place).name})`:`Apply: ${job.name} (${job.employer||this.getPlace(job.place).name})`,`${money(this.offeredWage(job))}/hour · ${job.employer||this.getPlace(job.place).name} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic&&reasons.length?' · Unqualified: '+reasons.join(', '):''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}`,this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id});
       }
-      push('raise','Negotiate a raise',`Request a higher wage at your current job.`,2,0,!!p.job&&p.workSessions>=3&&p.raiseWeek<=this.week-4&&(p.wage<Math.round(this.getJob(p).wage*1.5)),!p.job?'Get a job first':p.workSessions<3?'Work 3 shifts first':p.raiseWeek>this.week-4?'Wait a few weeks before another raise':'Already near this role’s pay ceiling');
+      const raiseReq=p.job&&this.isClassic?this.jobRequirement(this.getJob(p)).dependability+5*(p.classicRaises||0):0;
+      const canRaise=p.job&&(this.isClassic?p.dependability>=raiseReq:p.workSessions>=3&&p.raiseWeek<=this.week-4);
+      push('raise','Negotiate a raise',this.isClassic?`4 hours · listed wage ${money(p.job?this.offeredWage(this.getJob(p)):0)}/h · requires ${raiseReq} Dependability. Only awarded if offered rate exceeds current pay.`:`Request a higher wage at your current job.`,this.isClassic?4:2,0,!!canRaise&&(this.isClassic?(p.job&&p.wage<this.offeredWage(this.getJob(p))):(p.wage<Math.round(this.getJob(p).wage*1.5))),!p.job?'Get a job first':this.isClassic?`Need ${raiseReq} reliability and an improved listed wage`:p.workSessions<3?'Work 3 shifts first':p.raiseWeek>this.week-4?'Wait a few weeks before another raise':'Already near this role’s pay ceiling');
     }
     if(at==='market'){
+      for(const offer of D.clothingOffers.market)push(`clothes:${offer.id}:market`,`Budget ${D.clothing[offer.id].name.toLowerCase()}`,`Add ${offer.weeks} weeks of clothing. All outfits age weekly, even if unworn.`,1,this.price(offer.cost,'retail'));
+      if(this.isClassic){
+        for(const offer of D.classicFreshFood)push('classicFresh:'+offer.units,`Buy ${offer.units} week${offer.units>1?'s':''} of fresh food`,`Black's Market · storage ${p.owned.includes('fridge')?(p.owned.includes('freezer')?'12':'6'):'none'} portions · prevents hunger. +${offer.units} happiness on first food purchase this week.`,0,this.classicFoodPrice(offer.units),p.groceries+offer.units<=this.classicFoodCapacity(p),'Fridge or freezer capacity exceeded');
+        push('classicNewspaper','Read the weekly newspaper',this.bulletin,1,1);
+        push('classicLottery','Buy 10 lottery tickets','Original-style $10 bundle; lottery results settle next week.',0,10);
+      }else{
       push('groceries','Buy groceries','One week of food. Prevent hunger penalties.',1,this.price(24,'food'));
       push('bulkFood','Stock the fridge','Three food portions for less.',1,this.price(59,'food'),p.owned.includes('fridge'),'Requires a refrigerator');
-      push('lottery','Try a lucky ticket','A $12 gamble. Drawn at the weekend.',1,12);
+      push('lottery','Try a lucky ticket','A $12 gamble. Drawn at the weekend.',1,12);}
     }
     if(at==='diner') push('meal','Enjoy a hot meal','Fill up, +7 happiness, +8 energy.',2,this.price(20,'food'),!p.fed,'Already eaten this week');
     if(at==='university') {
+      if(this.isClassic){
+        push('enroll','Pay university enrollment',`$50 buys one course enrollment; ${p.classicEnrollmentCredits} unused. No time required.`,0,50,true,'');
+        for(const degree of D.classicDegrees){
+          const done=p.classicDegrees.includes(degree.id),open=this.classicDegreeAvailable(p,degree);
+          const prog=p.classicProgress[degree.id]||0,started=p.classicEnrolled.includes(degree.id);
+          const slots=p.classicEnrolled.length<4;
+          const prerequisite=degree.requires.filter(id=>!p.classicDegrees.includes(id)).map(id=>D.classicDegrees.find(d=>d.id===id).name).join(', ');
+          const enabled=p.hours>0&&!done&&open&&(started||(p.classicEnrollmentCredits>0&&slots));
+          push('classicStudy:'+degree.id,`Study: ${degree.name}`,`${prog}/${this.classicLessons(p)} lessons · 6h per lesson · ${started?'Enrolled':'Requires 1 paid enrollment'}${prerequisite?' · Prerequisite: '+prerequisite:''}`,
+            Math.min(6,p.hours),0,enabled,done?'Degree completed':!open?'Requires '+prerequisite:!slots&&!started?'Four courses already active':'Pay the enrollment fee first');
+          // The 6-hour lesson may use the last 1–5h, per the original rules; zero hours cannot study.
+        }
+      }else{
       if(p.education<4){const d=D.degrees[p.education];
         push('study',`Study: ${d.name}`,`Lesson ${p.credits+1}/${d.sessions} · Gain qualifications for better jobs.`,6,this.price(d.cost,'tuition'));
       } else push('studyDone','Education complete','You have earned every qualification.',0,0,false,'Maximum education');
+      for(const course of D.courses){
+        const done=p.coursesCompleted?.includes(course.id),prog=p.courseProgress?.[course.id]||0;
+        push('course:'+course.id,`Short course: ${course.name}`,`${course.detail} · Lesson ${prog+1}/${course.sessions} · Education ${course.education}+`,5,this.price(course.cost,'tuition'),!done&&p.education>=course.education,done?'Certificate already earned':`Requires Education ${course.education}`);
+      }
+      }
     }
-    if(at==='office'||at==='tech'||at==='bank'||at==='market'||at==='diner'||at==='university'){
+    if(this.jobs.some(j=>j.place===at)){
       const j=this.getJob(p);
-      if(j&&j.place===at) push('work',`Work a shift · ${money(this.shiftPay(p))}`,'6 hours on the clock, paid as an 8-hour shift.',6,0,p.energy>=12&&(j.clothes==='none'||p.owned.includes(j.clothes)),p.energy<12?'Exhausted. Rest first.':`Requires ${j.clothes} clothing`);
+      if(j&&j.place===at) push('work',`Work as ${j.name} · ${money(this.shiftPay(p))}`,`6 hours on the clock, paid as an 8-hour shift. Requires ${D.clothing[j.clothes].name} or better; current wardrobe is ${this.clothingSummary(p).filter(x=>x.weeks>0).map(x=>x.name+' '+x.weeks+'w').join(', ')||'empty'}.`,6,0,p.energy>=12&&this.isDressedFor(p,j),p.energy<12?'Exhausted. Rest first.':`Uniform required: ${D.clothing[j.clothes].name} or better; visit Fresh & Frugal or Thread Theory. All clothing expires by week.`);
     }
     if(at==='bank'){
-      for(const amount of [100,500]){
-        push('deposit:'+amount,`Deposit ${money(amount)}`,'Move cash into protected savings.',1,amount);
-        push('withdraw:'+amount,`Withdraw ${money(amount)}`,'Take money out of savings.',1,0,p.bank>=amount,'Not enough savings');
+      if(this.isClassic){
+        push('deposit:100','Deposit $100','Transfers in $100 portions. No bank interest or action time.',0,100);
+        push('withdraw:100','Withdraw $100','Transfers in $100 portions. No action time.',0,0,p.bank>=100,'Insufficient savings');
+        const loanLimit=this.classicLoanLimit(p);
+        push('classicLoanApply','Apply for a bank loan',`2 hours · Approximate credit limit ${money(loanLimit)}; a poor job or existing debt may prevent approval.`,2,0,loanLimit>=100&&p.debt===0,p.debt>0?'Repay your current loan first':'A paying job and stronger finances are required');
+        if(p.debt>0)push('classicLoanPay','Make a loan payment',`$${Math.min(45,p.debt)} toward principal plus $5 bank interest. Must pay at least once per month.`,0,Math.min(45,p.debt)+5);
+        push('classicBroker','See the investment broker','2 hours to enter. Buy and sell one unit at a time, without extra hours.',2,0,!p.classicBrokerOpen,'Broker already open this visit');
+        if(p.classicBrokerOpen){
+          for(const stock of D.classicStocks){
+            const value=this.classicStockPrices[stock.id],owned=p.classicPortfolio[stock.id]||0;
+            push('classicBuyStock:'+stock.id,`Buy 1 ${stock.name}`,`${money(value)} each · owned ${owned}. Prices fluctuate by week.`,0,value);
+            push('classicSellStock:'+stock.id,`Sell 1 ${stock.name}`,`Sell for ${money(stock.id==='tbills'?97:value)} · owned ${owned}.`,0,0,owned>0,'No holdings');
+          }
+          if(p.classicLegacyInvestment>0)push('classicSellLegacy','Liquidate legacy investment',`Convert old save portfolio (${money(p.classicLegacyInvestment)}) to cash.`,0,0);
+        }
+      }else{
+        for(const amount of [100,500]){
+          push('deposit:'+amount,`Deposit ${money(amount)}`,'Move cash into protected savings.',1,amount);
+          push('withdraw:'+amount,`Withdraw ${money(amount)}`,'Take money out of savings.',1,0,p.bank>=amount,'Not enough savings');
+        }
+        push('deposit:all','Deposit all cash','Leave your wallet empty for a quieter weekend.',1,0,p.cash>0,'No cash to deposit');
+        push('invest','Invest $200','Buy into a changing market. Potential gains or losses.',1,200);
+        push('sell','Sell investments','Cash out your entire portfolio.',1,0,p.invested>0,'No investments');
       }
-      push('deposit:all','Deposit all cash','Leave your wallet empty for a quieter weekend.',1,0,p.cash>0,'No cash to deposit');
-      push('invest','Invest $200','Buy into a changing market. Potential gains or losses.',1,200);
-      push('sell','Sell investments','Cash out your entire portfolio.',1,0,p.invested>0,'No investments');
     }
     if(at==='housing'){
+      if(this.isClassic){
+        const open=this.rentServicesOpen(p);
+        push('classicPayRent','Pay one month of rent',`$${p.classicRent} cash only · next due week ${p.classicRentDueWeek}. ${open?'Rent Office is open.':'Office opens when rent is due.'}`,1,p.classicRent,open,'Rent Office closed outside rent week / extension');
+        if(p.rentDebt>0)push('classicClearArrears','Clear rent arrears',`Pay ${money(p.rentDebt)} in cash, stopping future wage garnishment.`,1,p.rentDebt,open,'Office closed');
+        push('classicRentExtension','Request a one-week extension',`Chance: ${p.classicEverDebt?'0':Math.max(25,100-p.classicExtensions*25)}%. One request per week.`,1,0,open&&!p.classicEverDebt&&p.classicExtensionAttemptWeek!==this.week,p.classicEverDebt?'Already incurred rent debt; extensions unavailable.':p.classicExtensionAttemptWeek===this.week?'Already requested this week':'Available only when rent is due');
+      }else{
       push('upgrade:apartment','Move into a sunny apartment','Better lifestyle · monthly rent $380 · deposit $440.',3,440,p.home==='studio','Available from starter studio');
       push('upgrade:loft','Move into a skyline loft','Luxury living · monthly rent $620 · deposit $950.',3,950,p.home!=='loft'&&p.home!=='studio','Requires sunny apartment');
       if(p.rentDebt>0)push('rentDebt','Pay back rent',`Clear overdue rent: ${money(p.rentDebt)}.`,1,p.rentDebt);
+      }
     }
     if(at==='boutique'){
-      push('buy:casual','Get work-ready clothes','Unlock intermediate jobs and get +4 happiness.',1,this.price(85,'retail'),!p.owned.includes('casual'),'Already owned');
-      push('buy:formal','Buy a smart outfit','Unlock high-level office careers. +7 happiness.',1,this.price(235,'retail'),!p.owned.includes('formal'),'Already owned');
+      for(const offer of D.clothingOffers.boutique)push(`clothes:${offer.id}:boutique`,`Quality ${D.clothing[offer.id].name.toLowerCase()}`,`Add ${offer.weeks} weeks. A better uniform also qualifies for lower-tier jobs.`,1,this.price(offer.cost,'retail'));
     }
     if(at==='tech'){
       push('buy:fridge','Buy a refrigerator','Keep bulk groceries fresh across weeks.',2,this.price(255,'retail'),!p.owned.includes('fridge'),'Already owned');
+      if(this.isClassic)push('buy:freezer','Buy a freezer', 'Expands fresh-food capacity from six to twelve portions. Requires a fridge.',2,this.price(330,'retail'),p.owned.includes('fridge')&&!p.owned.includes('freezer'),!p.owned.includes('fridge')?'Buy a refrigerator first':'Already owned');
       push('buy:computer','Get a home computer','Better side gigs and occasional online income.',2,this.price(590,'retail'),!p.owned.includes('computer'),'Already owned');
+      if(this.isClassic)for(const [id,label,cost] of [['dictionary','Dictionary',90],['atlas','Atlas',110],['encyclopedia','Encyclopedia',165]])
+        push('buy:'+id,'Buy '+label,'Collect all three books for one fewer lesson per Classic diploma.',2,this.price(cost,'retail'),!p.owned.includes(id),'Already owned');
     }
     if(at==='cinema'){
       push('movie','See a movie','A little escapism. +18 happiness.',3,this.price(42,'leisure'));
@@ -550,6 +910,15 @@ class LifeGame {
     const a=this.actions().find(x=>x.id===id);
     if(!a)return {ok:false,message:'That action is not available here.'};
     if(!a.enabled)return {ok:false,message:a.reason||'Action is unavailable.'};
+    if(id==='work'&&this.isClassic){
+      const job=this.getJob(p),req=this.jobRequirement(job);
+      if(p.dependability<req.dependability-5){
+        p.job=null;p.wage=0;p.workSessions=0;p.classicRaises=0;
+        p.classicDismissals=(p.classicDismissals||0)+1;p.happiness=clamp(p.happiness-8,0,100);
+        const message=`Dismissed from ${job.name}: reliability fell below ${Math.max(0,req.dependability-5)}. Reapply after improving your record.`;
+        this.log(message,'warn',p.id);this.milestone(p,message);this.checkWin();return {ok:true,message};
+      }
+    }
     const before=this.accounts(p);p.cash-=a.price;p.hours-=a.hours;p.weekActions++;
     let msg='';const [key,arg]=id.split(':');
     switch(key){
@@ -586,19 +955,86 @@ class LifeGame {
       case 'relax':p.happiness=clamp(p.happiness+16,0,100);p.energy=clamp(p.energy+24,0,100);msg='You took a well-earned break. Life feels lighter.';break;
       case 'freelance':{
         const income=p.owned.includes('computer')?165:56;
-        p.cash+=income;p.energy=clamp(p.energy-12,0,100);p.experience+=1;
+        p.cash+=income;p.energy=clamp(p.energy-12,0,100);p.experience+=1;p.oddJobWeek=this.week;
         msg=`Side hustle complete. Earned ${money(income)}.`;break;
       }
       case 'cook':p.groceries--;p.fed=true;p.happiness=clamp(p.happiness+5,0,100);p.energy=clamp(p.energy+7,0,100);msg='A homemade meal hits the spot.';break;
       case 'apply':{
-        const job=find(D.jobs,arg);p.job=job.id;p.workSessions=0;p.wage=Math.max(1,Math.round(job.wage*this.economy));p.happiness=clamp(p.happiness+4,0,100);
-        msg=`Hired! ${p.name} is now a ${job.name}, earning ${money(p.wage)}/hour.`;break;
+        const job=find(this.jobs,arg),prior=this.getJob(p),oldTier=prior?.tier||0;
+        if(this.isClassic){
+          const missing=this.jobReasons(p,job);
+          if(missing.length){p.happiness=clamp(p.happiness-1,0,100);msg='Application rejected for '+job.employer+' '+job.name+': '+missing.join(', ')+'. Four hours spent.';break;}
+          if(!job.entryGuaranteed&&(p.classicRejectedOpenings[arg]===this.week||this.rand()*100>=this.classicLuck(p))){
+            p.classicRejectedOpenings[arg]=this.week;p.happiness=clamp(p.happiness-1,0,100);
+            msg='No openings for '+job.employer+' '+job.name+' this week. Try another role or return next week.';break;
+          }
+        }
+        p.job=job.id;p.workSessions=0;p.wage=this.offeredWage(job);
+        if(this.isClassic){p.experience+=2;p.dependability=Math.max(10,p.dependability);p.classicRaises=0;}
+        if(this.isClassic)p.happiness=clamp(p.happiness+3,0,100);
+        else if(!prior||job.tier>oldTier)p.happiness=clamp(p.happiness+4,0,100);
+        msg=prior?`Job changed: left ${prior.name} at ${prior.employer||this.getPlace(prior.place).name}. Now ${job.name} at ${job.employer||this.getPlace(job.place).name}, earning ${money(p.wage)}/hour. Your previous job is no longer available.`:`Hired! ${p.name} is now a ${job.name} at ${job.employer||this.getPlace(job.place).name}, earning ${money(p.wage)}/hour.`;break;
       }
-      case 'raise':p.wage+=Math.max(2,Math.ceil(p.wage*.10));p.raiseWeek=this.week;msg=`Raise approved! Your new wage is ${money(p.wage)}/hour.`;break;
+      case 'raise':p.wage=this.isClassic?this.offeredWage(this.getJob(p)):p.wage+Math.max(2,Math.ceil(p.wage*.10));p.raiseWeek=this.week;if(this.isClassic)p.classicRaises=(p.classicRaises||0)+1;msg=`Raise approved! Your new wage is ${money(p.wage)}/hour.`;break;
+      case 'classicFresh':{
+        if(!this.isClassic)throw Error('Classic market action in Modern Story');
+        const units=Number(arg);
+        if(!D.classicFreshFood.some(o=>o.units===units)||p.groceries+units>this.classicFoodCapacity(p))throw Error('Food capacity exceeded');
+        p.groceries+=units;
+        if(p.classicFoodPurchasedWeek!==this.week){p.happiness=clamp(p.happiness+units,0,100);p.classicFoodPurchasedWeek=this.week;}
+        msg=`Bought ${units} weeks of food. Pantry now has ${p.groceries} portions.`;break;
+      }
+      case 'classicNewspaper':msg=`Newspaper: ${this.bulletin}`;break;
+      case 'classicLottery':p.lottery+=10;msg='Bought ten lottery tickets. The draw takes place next week.';break;
       case 'groceries':p.groceries++;msg='Groceries bought. You can cook at home or they will be used at the weekend.';break;
       case 'bulkFood':p.groceries+=3;msg='Your fridge is ready for several weeks of meals.';break;
       case 'lottery':p.lottery++;msg='Ticket bought! The draw is on Sunday.';break;
       case 'meal':p.fed=true;p.happiness=clamp(p.happiness+7,0,100);p.energy=clamp(p.energy+8,0,100);msg='A warm meal and a moment to breathe.';break;
+      case 'clothes':{
+        const offer=D.clothingOffers[p.location]?.find(x=>x.id===arg);
+        // Guard against corrupted/forged action metadata.
+        if(!offer||id!==`clothes:${arg}:${p.location}`)throw Error('Invalid outfit purchase');
+        p.clothing[arg]=Math.min(260,this.clothingWeeks(p,arg)+offer.weeks);
+        if(p.location==='boutique'&&arg!=='casual')p.happiness=clamp(p.happiness+(arg==='business'?7:4),0,100);
+        msg=`Purchased ${D.clothing[arg].name.toLowerCase()}: +${offer.weeks} weeks (now ${p.clothing[arg]} weeks).`;
+        break;
+      }
+      case 'enroll':{
+        if(!this.isClassic)throw Error('Classic enrollment unavailable in Modern Story');
+        p.classicEnrollmentCredits=Math.min(20,p.classicEnrollmentCredits+1);
+        msg=`Enrollment paid: ${p.classicEnrollmentCredits} unused course enrollment${p.classicEnrollmentCredits===1?'':'s'}.`;
+        break;
+      }
+      case 'classicStudy':{
+        if(!this.isClassic)throw Error('Classic lessons unavailable in Modern Story');
+        const degree=D.classicDegrees.find(x=>x.id===arg);
+        if(!degree||p.classicDegrees.includes(arg)||!this.classicDegreeAvailable(p,degree))throw Error('Degree unavailable');
+        if(!p.classicEnrolled.includes(arg)){
+          if(!p.classicEnrollmentCredits||p.classicEnrolled.length>=4)throw Error('Enrollment required or four active courses');
+          p.classicEnrollmentCredits--;p.classicEnrolled.push(arg);
+        }
+        p.classicProgress[arg]=(p.classicProgress[arg]||0)+1;
+        p.energy=clamp(p.energy-8,0,100);
+        if(p.classicProgress[arg]>=this.classicLessons(p)){
+          p.classicDegrees.push(arg);delete p.classicProgress[arg];
+          p.classicEnrolled=p.classicEnrolled.filter(id=>id!==arg);
+          p.dependability=clamp(p.dependability+5,0,100);
+          p.happiness=clamp(p.happiness+5,0,100);
+          msg=`Graduated: ${degree.name}! +5 reliability, higher work-stat limits and new qualifications.`;
+        }else msg=`Studied ${degree.name}: ${p.classicProgress[arg]}/${this.classicLessons(p)} lessons.`;
+        break;
+      }
+      case 'course':{
+        const course=find(D.courses,arg);
+        if(!course||p.coursesCompleted.includes(course.id))throw Error('Invalid course');
+        p.courseProgress[arg]=(p.courseProgress[arg]||0)+1;
+        p.experience+=2;p.dependability=clamp(p.dependability+1,0,100);p.energy=clamp(p.energy-7,0,100);
+        if(p.courseProgress[arg]>=course.sessions){
+          p.coursesCompleted.push(arg);delete p.courseProgress[arg];p.happiness=clamp(p.happiness+5,0,100);
+          msg=`Course completed: ${course.name}! New job applications are now available.`;
+        }else msg=`Studied ${course.name} (${p.courseProgress[arg]}/${course.sessions}).`;
+        break;
+      }
       case 'study':{
         const d=D.degrees[p.education];p.credits++;p.experience+=2;p.energy=clamp(p.energy-10,0,100);p.happiness=clamp(p.happiness-2,0,100);
         if(p.credits>=d.sessions){p.education++;p.credits=0;p.happiness=clamp(p.happiness+12,0,100);msg=`Graduated! You earned the ${d.name}. New careers await.`;}
@@ -606,11 +1042,65 @@ class LifeGame {
         break;
       }
       case 'work':{
-        const j=this.getJob(p);const income=this.shiftPay(p);const garnishment=p.rentDebt>0?Math.min(p.rentDebt,Math.round(income*.25)):0;
-        p.cash+=income-garnishment;p.rentDebt-=garnishment;p.workSessions++;p.experience+=5;p.dependability=clamp(p.dependability+5,0,100);
+        const j=this.getJob(p);const income=this.shiftPay(p);
+        const garnishment=p.rentDebt>0?Math.min(p.rentDebt,Math.floor(income*(this.isClassic?.5:.25))):0;
+        const interest=this.isClassic&&garnishment>0&&garnishment<p.rentDebt?2:0;
+        p.cash+=income-garnishment-interest;p.rentDebt-=garnishment;p.workSessions++;
+        if(this.isClassic){
+          const caps=this.classicWorkCaps(p,j);
+          p.experience=Math.min(caps.experience,p.experience+1);
+          p.dependability=Math.min(caps.dependability,p.dependability+1);
+        }else{p.experience+=this.rules.workExperience;p.dependability=clamp(p.dependability+this.rules.workDependability,0,100);}
         p.energy=clamp(p.energy-13,0,100);p.happiness=clamp(p.happiness-2,0,100);
-        msg=`Worked at ${this.getPlace(j.place).name}: +${money(income-garnishment)}${garnishment?` (${money(garnishment)} paid toward back rent)`:''}.`;
+        msg=`Worked at ${j.employer||this.getPlace(j.place).name}: +${money(income-garnishment-interest)}${garnishment?` (${money(garnishment)} paid toward back rent${interest?`, $${interest} fee`:''})`:''}.`;
+        if(this.isClassic&&p.dependability<this.jobRequirement(j).dependability)msg+=' Warning: your reliability is below this employer’s requirement.';
         break;
+      }
+      case 'classicPayRent':{
+        if(!this.isClassic||!this.rentServicesOpen(p))throw Error('Rent service unavailable');
+        p.classicRentDueWeek+=4;msg=`Rent paid in cash, ${money(p.classicRent)}. Next payment due in week ${p.classicRentDueWeek}.`;break;
+      }
+      case 'classicClearArrears':{
+        if(!this.isClassic||!this.rentServicesOpen(p))throw Error('Rent service unavailable');
+        msg=`Cleared ${money(p.rentDebt)} of old rent debt.`;p.rentDebt=0;break;
+      }
+      case 'classicRentExtension':{
+        if(!this.isClassic||!this.rentServicesOpen(p)||p.classicEverDebt||p.classicExtensionAttemptWeek===this.week)throw Error('Rent extension unavailable');
+        p.classicExtensionAttemptWeek=this.week;
+        const chance=Math.max(25,100-p.classicExtensions*25);
+        if(this.rand()*100<chance){p.classicRentDueWeek=this.week+1;p.classicExtensions++;msg=`One-week rent extension approved. Deadline: week ${p.classicRentDueWeek}.`;}
+        else{p.happiness=clamp(p.happiness-1,0,100);msg='Rent extension refused. Pay this week or the account falls into arrears.';}
+        break;
+      }
+      case 'classicLoanApply':{
+        if(!this.isClassic||p.debt>0)throw Error('Cannot open another loan');
+        const amount=this.classicLoanLimit(p);
+        if(amount<100)throw Error('Loan too small');
+        p.cash+=amount;p.debt+=amount;
+        msg=`Loan approved: received ${money(amount)} cash. Pay $45 principal + $5 interest at the bank at least monthly.`;break;
+      }
+      case 'classicLoanPay':{
+        if(!this.isClassic||p.debt<=0)throw Error('No loan');
+        const principal=Math.min(45,p.debt);p.debt-=principal;
+        const month=Math.ceil(this.week/4);
+        p.classicLoanPaidThrough=Math.max(p.classicLoanPaidThrough,month-1)+1;
+        msg=`Bank loan payment: ${money(principal)} principal and $5 interest. Next covered month ${p.classicLoanPaidThrough}.`;break;
+      }
+      case 'classicBroker':p.classicBrokerOpen=true;msg='Broker desk opened: six markets available for trading.';break;
+      case 'classicBuyStock':{
+        if(!this.isClassic||!p.classicBrokerOpen||!D.classicStocks.some(x=>x.id===arg))throw Error('Broker unavailable');
+        p.classicPortfolio[arg]=(p.classicPortfolio[arg]||0)+1;this.syncClassicInvested(p);
+        msg=`Bought 1 ${D.classicStocks.find(x=>x.id===arg).name} for ${money(a.price)}.`;break;
+      }
+      case 'classicSellStock':{
+        if(!this.isClassic||!p.classicBrokerOpen||(p.classicPortfolio[arg]||0)<1)throw Error('Holding unavailable');
+        p.classicPortfolio[arg]--;const proceeds=arg==='tbills'?97:this.classicStockPrices[arg];p.cash+=proceeds;
+        this.syncClassicInvested(p);msg=`Sold 1 ${D.classicStocks.find(x=>x.id===arg).name} for ${money(proceeds)}.`;break;
+      }
+      case 'classicSellLegacy':{
+        if(!this.isClassic||!p.classicBrokerOpen||p.classicLegacyInvestment<=0)throw Error('No old investments');
+        p.cash+=p.classicLegacyInvestment;p.classicLegacyInvestment=0;this.syncClassicInvested(p);
+        msg='Legacy portfolio liquidated at its saved value.';break;
       }
       case 'deposit':{const amount=arg==='all'?p.cash:Number(arg);if(arg==='all')p.cash-=amount;p.bank+=amount;msg=`Deposited ${money(amount)} safely into your account.`;break;}
       case 'withdraw':p.bank-=Number(arg);p.cash+=Number(arg);msg=`Withdrew ${money(Number(arg))}.`;break;
@@ -624,8 +1114,8 @@ class LifeGame {
       case 'checkup':p.energy=clamp(p.energy+42,0,100);p.hunger=0;p.happiness=clamp(p.happiness+5,0,100);msg='Feeling restored. You can face the week again.';break;
       default:return {ok:false,message:'Not implemented.'};
     }
-    this.recordChange(p,before,msg,['work','freelance','raise'].includes(key)?'work':['deposit','withdraw','invest','sell'].includes(key)?'banking':['buy','groceries','bulkFood','meal','lottery'].includes(key)?'shopping':['upgrade','rentDebt'].includes(key)?'housing':['study'].includes(key)?'education':['favor','pulse'].includes(key)?'community':'activity');
-    if(key==='apply'||key==='upgrade'||(key==='study'&&msg.startsWith('Graduated')))this.milestone(p,msg);
+    this.recordChange(p,before,msg,['work','freelance','raise'].includes(key)?'work':['deposit','withdraw','invest','sell'].includes(key)?'banking':['buy','clothes','groceries','bulkFood','meal','lottery'].includes(key)?'shopping':['upgrade','rentDebt'].includes(key)?'housing':['study','classicStudy','enroll','course'].includes(key)?'education':['favor','pulse'].includes(key)?'community':'activity');
+    if(key==='apply'||key==='upgrade'||((key==='study'||key==='classicStudy')&&msg.startsWith('Graduated'))||(key==='course'&&msg.startsWith('Course completed')))this.milestone(p,msg);
     this.log(msg, key==='apply'||key==='study'||key==='upgrade'?'good':'info',p.id);
     this.checkWin();
     return {ok:true,message:msg};
@@ -675,10 +1165,17 @@ class LifeGame {
   weekend(p) {
     const parts=[];
     if(!p.fed){
-      if(p.groceries>0){p.groceries--;parts.push('A pantry meal kept hunger away.');}
+      if(p.groceries>0){p.groceries--;if(this.isClassic)p.hunger=Math.max(0,p.hunger-1);parts.push('A pantry meal kept hunger away.');}
       else {p.hunger=clamp(p.hunger+1,0,4);p.happiness=clamp(p.happiness-8,0,100);parts.push('You went hungry. Next week will be harder.');}
     }else p.hunger=Math.max(0,p.hunger-1);
-    if(!p.owned.includes('fridge')&&p.groceries>0){p.groceries=0;parts.push('Unused fresh groceries spoiled without a fridge.');}
+    if(this.isClassic){
+      const capacity=this.classicFoodCapacity(p);
+      if(p.groceries>capacity){p.groceries=capacity;parts.push('Extra food spoiled beyond storage capacity.');}
+      if(!p.owned.includes('fridge')&&p.groceries>0){
+        p.groceries=0;const fee=Math.min(p.cash,25);p.cash-=fee;
+        parts.push(`Food spoiled without refrigeration; medical costs ${money(fee)} (approximate rule).`);
+      }
+    }else if(!p.owned.includes('fridge')&&p.groceries>0){p.groceries=0;parts.push('Unused fresh groceries spoiled without a fridge.');}
     if(p.weekendPass){p.happiness=clamp(p.happiness+13,0,100);parts.push('An amazing weekend adventure lifted your spirits.');p.weekendPass=false;}
     if(p.lottery){for(let n=0;n<p.lottery;n++){if(this.rand()<.10){const win=this.rand()<.10?450:95;p.cash+=win;parts.push(`Lottery winner! You collected ${money(win)}.`);}}
       p.lottery=0;
@@ -701,39 +1198,73 @@ class LifeGame {
   newWeek() {
     this.week++;
     this.bulletin=D.headlines[(this.week-1)%D.headlines.length];
+    if(this.isClassic){
+      // Original markets have six per-instrument prices. Exact Sierra random formula is unverified.
+      const drift=(this.economy-1)*0.08;
+      for(const stock of D.classicStocks){
+        if(stock.id==='tbills')continue;
+        const previous=this.classicStockPrices[stock.id];
+        const next=Math.round(previous*(1+drift+(this.rand()-.5)*.16));
+        this.classicStockPrices[stock.id]=clamp(next,Math.floor(stock.base*.5),Math.ceil(stock.base*2.5));
+      }
+    }
     if(this.week%4===1){
       const old=this.economy;this.economy=clamp(Math.round((old+(this.rand()-.46)*.12)*100)/100,.84,1.24);
       const choices=D.cityEvents.filter(e=>e.id!==this.cityEventId);
       this.cityEventId=choices[Math.floor(this.rand()*choices.length)].id;
       this.cityEventStart=this.week;
-      this.log(`CITY PULSE: ${this.cityEvent.title}. ${this.cityEvent.description}`,'news','system');
+      if(!this.isClassic)this.log(`CITY PULSE: ${this.cityEvent.title}. ${this.cityEvent.description}`,'news','system');
       this.log(`New month. The local economy is ${this.economy>old?'heating up':this.economy<old?'cooling off':'holding steady'} (${Math.round(this.economy*100)}%).`,'news','system');
     }
     for(const p of this.players){
+      // Original-inspired weekly wardrobe wear; each garment ages regardless of what was worn.
+      for(const garment of Object.keys(D.clothing)){
+        const old=this.clothingWeeks(p,garment);
+        p.clothing[garment]=Math.max(0,old-1);
+        if(old>1&&p.clothing[garment]===1)this.log(`${p.name}'s ${D.clothing[garment].name.toLowerCase()} have one week left.`, 'warn',p.id);
+        if(old===1)this.log(`${p.name}'s ${D.clothing[garment].name.toLowerCase()} have worn out. Buy a replacement before working.`, 'warn',p.id);
+      }
       const beforeWeekend=this.accounts(p);
+      if(this.isClassic)this.syncClassicInvested(p);
       const notes=this.weekend(p);
       this.recordChange(p,beforeWeekend,'Weekend living expenses and windfalls','living');
+      if(this.isClassic){
+        // Rent becomes due at the end of week 4, 8, 12...; a granted extension shifts just this deadline.
+        if(this.week>p.classicRentDueWeek){
+          const beforeRent=this.accounts(p);
+          p.rentDebt+=p.classicRent;p.classicRentDueWeek+=4;p.classicEverDebt=true;
+          p.happiness=clamp(p.happiness-7,0,100);
+          notes.push(`${money(p.classicRent)} unpaid rent became debt. Future wages may be garnished.`);
+          this.recordChange(p,beforeRent,'Unpaid Classic rent','housing');
+        }
+      }
+      if(this.isClassic&&this.week%4===1&&p.debt>0){
+        const dueMonth=Math.floor((this.week-1)/4);
+        if(p.classicLoanPaidThrough<dueMonth){p.classicLoanDefaults++;p.happiness=clamp(p.happiness-3,0,100);notes.push('Bank loan payment missed: -3 happiness and worse future credit.');}
+      }
       if(this.week%4===1){
-        const beforeRent=this.accounts(p);
-        const rent=Math.round(D.dwellings[p.home].rent);
-        const pay=Math.min(rent,p.cash+p.bank);const cash=Math.min(pay,p.cash);p.cash-=cash;
-        const fromBank=pay-cash;p.bank-=fromBank;p.rentDebt+=rent-pay;
-        if(rent-pay>0){p.happiness=clamp(p.happiness-7,0,100);notes.push(`${money(rent-pay)} rent went unpaid.`);}
-        else notes.push(`${money(rent)} monthly rent paid.`);
-        this.recordChange(p,beforeRent,'Monthly rent · '+D.dwellings[p.home].name,'housing');
+        if(!this.isClassic){
+          const beforeRent=this.accounts(p);
+          const rent=Math.round(D.dwellings[p.home].rent);
+          const pay=Math.min(rent,p.cash+p.bank);const cash=Math.min(pay,p.cash);p.cash-=cash;
+          const fromBank=pay-cash;p.bank-=fromBank;p.rentDebt+=rent-pay;
+          if(rent-pay>0){p.happiness=clamp(p.happiness-7,0,100);notes.push(`${money(rent-pay)} rent went unpaid.`);}
+          else notes.push(`${money(rent)} monthly rent paid.`);
+          this.recordChange(p,beforeRent,'Monthly rent · '+D.dwellings[p.home].name,'housing');
+        }
         const beforeMarket=this.accounts(p);
-        if(p.invested>0){const percent=(this.rand()-.45)*.28;p.invested=Math.max(0,Math.round(p.invested*(1+percent)));notes.push(`Investments moved ${percent>=0?'+':''}${Math.round(percent*100)}%.`);}
-        p.bank+=Math.floor(p.bank*.006);
+        if(!this.isClassic&&p.invested>0){const percent=(this.rand()-.45)*.28;p.invested=Math.max(0,Math.round(p.invested*(1+percent)));notes.push(`Investments moved ${percent>=0?'+':''}${Math.round(percent*100)}%.`);}
+        if(!this.isClassic)p.bank+=Math.floor(p.bank*.006);
         this.recordChange(p,beforeMarket,'Investment returns and savings interest','investment');
       }
-      p.hours=clamp(WEEK_HOURS-(p.hunger>0?p.hunger*3:0),14,WEEK_HOURS);
+      p.hours=clamp(this.rules.hours-(p.hunger>0?p.hunger*3:0),14,this.rules.hours);
       p.energy=clamp(p.energy+38-p.hunger*4,0,100);
       p.happiness=clamp(p.happiness-2+D.dwellings[p.home].comfort,0,100);
-      p.dependability=clamp(p.dependability-1,0,100);p.fed=false;p.weekActions=0;
+      p.dependability=clamp(p.dependability-this.rules.dependabilityDecay,0,100);p.fed=false;p.weekActions=0;
       this.recordHistory(p);
       if(notes.length)this.log(`${p.name}: ${notes.join(' ')}`,p.hunger>0?'warn':'news',p.id);
     }
-    this.log(`It's week ${this.week}. Forty-ish new hours, infinite ways to spend them.`,'good','system');
+    this.log(`It's week ${this.week}. ${this.rules.hours} possible hours, infinite ways to spend them.`,'good','system');
     this.checkWin();
   }
   endTurn(){
@@ -757,7 +1288,7 @@ class LifeGame {
       return this.travel(dest).ok;
     };
     const perform=(id)=>{const a=this.actions().find(x=>x.id===id);return !!a?.enabled&&this.act(id).ok;};
-    const usable=job=>job&&(job.clothes==='none'||p.owned.includes(job.clothes));
+    const usable=job=>job&&this.isDressedFor(p,job);
     let studyCount=0,workCount=0,restCount=0,loops=0;
     while(p.hours>=2&&!this.winner&&loops++<28){
       let current=this.getJob(p);
@@ -766,38 +1297,61 @@ class LifeGame {
         if(p.location!=='bank'){if(moveTo('bank',1))continue;}
         else if(perform('withdraw:100'))continue;
       }
+      if(this.isClassic&&this.rentServicesOpen(p)&&p.cash<p.classicRent&&p.bank>=100&&p.cash+p.bank>=p.classicRent&&p.hours>=5){
+        if(p.location!=='bank'){if(moveTo('bank',1))continue;}
+        else if(perform('withdraw:100'))continue;
+      }
+      // In Classic, a conscious trip to the Rent Office is necessary before the deadline.
+      if(this.isClassic&&this.rentServicesOpen(p)&&p.cash>=p.classicRent&&p.hours>=4){
+        if(p.location!=='housing'){if(moveTo('housing',1))continue;}
+        else if(perform('classicPayRent'))continue;
+      }
       // Never accept a promotion that leaves us unable to afford the required wardrobe.
-      const qualified=D.jobs.filter(j=>!this.jobReasons(p,j).length&&
-        (j.clothes==='none'||p.owned.includes(j.clothes)||p.cash>(j.clothes==='formal'?235:85)+250));
+      const qualified=this.jobs.filter(j=>!this.jobReasons(p,j).length&&this.canAffordClothes(p,j));
       qualified.sort((a,b)=>b.tier-a.tier||b.wage-a.wage);
-      const better=qualified[0];
+      const better=this.isClassic&&!current
+        ?qualified.find(j=>j.id==='classic-monolith-cook')||qualified[0]
+        :qualified[0];
       if(better&&(!current||better.tier>current.tier||(better.tier===current.tier&&better.wage>current.wage*1.18))&&p.hours>=7){
-        if(better.clothes!=='none'&&!p.owned.includes(better.clothes)){
-          if(p.location!=='boutique'){if(moveTo('boutique',1))continue;}
-          else if(perform('buy:'+better.clothes))continue;
+        if(!this.isDressedFor(p,better)){
+          const offer=this.cheapestClothingOffer(better);
+          if(offer&&p.location!==offer.venue){if(moveTo(offer.venue,1))continue;}
+          else if(offer&&perform(`clothes:${offer.id}:${offer.venue}`))continue;
         }else{
           if(p.location!=='agency'){if(moveTo('agency',3))continue;}
           else if(perform('apply:'+better.id))continue;
         }
       }
       current=this.getJob(p);
+      // Clothes age each week, so the competitor must replace them before trying to work.
+      if(current&&!usable(current)&&p.hours>=3){
+        const offer=this.cheapestClothingOffer(current);
+        if(offer&&p.cash>=this.price(offer.cost,'retail')){
+          if(p.location!==offer.venue){if(moveTo(offer.venue,1))continue;}
+          else if(perform(`clothes:${offer.id}:${offer.venue}`))continue;
+        }
+      }
       // Make food a priority, but keep enough for a paycheck or an emergency errand.
-      if(!p.fed&&p.groceries===0&&p.cash>=75&&p.hours>=4){
+      if(!p.fed&&p.groceries===0&&p.cash>=(this.isClassic?this.classicFoodPrice(1):this.price(24,'food'))&&p.hours>=4){
         if(p.location!=='market'){if(moveTo('market',1))continue;}
-        else if(perform('groceries'))continue;
+        else if(perform(this.isClassic?'classicFresh:1':'groceries'))continue;
       }
       // Study at a sustainable pace: maintain a rent buffer and earn in between terms.
-      const degree=D.degrees[p.education];
-      if(degree&&this.week%2===0&&studyCount<1&&p.cash>degree.cost+320&&p.hours>=9&&p.energy>=34&&p.workSessions>=2){
+      const degree=this.isClassic?D.classicDegrees.find(d=>!p.classicDegrees.includes(d.id)&&this.classicDegreeAvailable(p,d)):D.degrees[p.education];
+      if(degree&&this.week%2===0&&studyCount<1&&p.cash>(this.isClassic?650:degree.cost+320)&&p.hours>=9&&p.energy>=34&&p.workSessions>=2){
         if(p.location!=='university'){if(moveTo('university',6))continue;}
-        else if(perform('study')){studyCount++;continue;}
+        else if(this.isClassic){
+          if(!p.classicEnrollmentCredits&&!p.classicEnrolled.includes(degree.id)){if(perform('enroll'))continue;}
+          if(perform('classicStudy:'+degree.id)){studyCount++;continue;}
+        }else if(perform('study')){studyCount++;continue;}
       }
-      if(current&&usable(current)&&workCount<2&&p.energy>=21&&p.hours>=6){
+      if(current&&usable(current)&&workCount<(this.isClassic?5:2)&&p.energy>=18&&p.hours>=6){
         if(p.location!==current.place){if(moveTo(current.place,6))continue;}
         else if(perform('work')){workCount++;continue;}
       }
-      // When broke, a home side gig can restart the economy, even if the current job is inaccessible.
-      if(p.cash<150&&p.energy>=14&&p.hours>=7){
+      // An unemployed player may take one temporary odd job per week to avoid softlocking.
+      // Once hired, the AI must earn its shift wage at the assigned workplace.
+      if(!current&&p.cash<150&&p.energy>=14&&p.hours>=7){
         if(p.location!=='home'){if(moveTo('home',6))continue;}
         else if(perform('freelance'))continue;
       }
@@ -809,32 +1363,81 @@ class LifeGame {
         if(p.location!=='agency'){if(moveTo('agency',2))continue;}
         else if(perform('raise'))continue;
       }
-      if(p.groceries===0&&p.cash>=24&&p.hours>=3){
+      if(p.groceries===0&&p.cash>=(this.isClassic?this.classicFoodPrice(1):24)&&p.hours>=3){
         if(p.location!=='market'){if(moveTo('market',1))continue;}
-        else if(perform('groceries'))continue;
+        else if(perform(this.isClassic?'classicFresh:1':'groceries'))continue;
       }
       if(p.cash>=1100&&p.hours>=3){
         if(p.location!=='bank'){if(moveTo('bank',1))continue;}
-        else if(perform('deposit:500'))continue;
+        else if(perform(this.isClassic?'deposit:100':'deposit:500'))continue;
       }
       break;
     }
     this.log(`${p.name} has finished plotting their next big move.`,'muted',p.id);
   }
 
-  snapshot(){return JSON.parse(JSON.stringify({settings:this.settings,seed:this.seed,week:this.week,economy:this.economy,active:this.active,winner:this.winner,sequence:this.sequence,messages:this.messages,players:this.players,pendingEncounter:this.pendingEncounter,bulletin:this.bulletin,cityEventId:this.cityEventId,cityEventStart:this.cityEventStart,cityProjects:this.cityProjects}));}
+  snapshot(){return JSON.parse(JSON.stringify({settings:this.settings,seed:this.seed,week:this.week,economy:this.economy,active:this.active,winner:this.winner,sequence:this.sequence,messages:this.messages,players:this.players,pendingEncounter:this.pendingEncounter,bulletin:this.bulletin,cityEventId:this.cityEventId,cityEventStart:this.cityEventStart,cityProjects:this.cityProjects,classicStockPrices:this.classicStockPrices}));}
   static load(obj){
     if(!obj||typeof obj!=='object'||!Array.isArray(obj.players)||!obj.players.length||!obj.settings||!Number.isInteger(obj.week)||obj.week<1||obj.week>10000)throw Error('Invalid save file.');
-    const game=new LifeGame({mode:obj.settings.mode,goals:obj.settings.goals});
+    const game=new LifeGame({mode:obj.settings.mode,goals:obj.settings.goals,ruleset:obj.settings.ruleset,era:obj.settings.era});
     if(obj.players.length!==game.players.length)throw Error('Save format has an unexpected number of players.');
     for(let i=0;i<obj.players.length;i++){
-      const p=obj.players[i];if(!p||p.id!==game.players[i].id||!D.places.some(l=>l.id===p.location)||!Number.isFinite(p.cash)||!Number.isFinite(p.hours)||p.cash<0||p.bank<0||p.hours<0||p.hours>40||p.owned?.length>50)throw Error('Invalid player state.');
-      if(p.job&&!find(D.jobs,p.job))throw Error('Invalid job in save.');
+      const p=obj.players[i];if(!p||p.id!==game.players[i].id||!D.places.some(l=>l.id===p.location)||!Number.isFinite(p.cash)||!Number.isFinite(p.hours)||p.cash<0||p.bank<0||p.hours<0||p.hours>game.rules.hours||p.owned?.length>50)throw Error('Invalid player state.');
+      if(p.job&&!find(game.jobs,p.job)&&!(game.isClassic&&find(D.jobs,p.job)))throw Error('Invalid job in save.');
       if(!Object.hasOwn(D.dwellings,p.home))throw Error('Invalid housing in save.');
     }
+    game.classicStockPrices=Object.fromEntries(D.classicStocks.map(x=>[x.id,Number.isInteger(obj.classicStockPrices?.[x.id])&&obj.classicStockPrices[x.id]>=Math.max(1,Math.floor(x.base*.5))&&obj.classicStockPrices[x.id]<=Math.ceil(x.base*2.5)?obj.classicStockPrices[x.id]:x.base]));
     game.players=obj.players;
     for(const p of game.players){
+      const legacyPortfolio=p.classicPortfolio===undefined;
+      p.classicPortfolio=p.classicPortfolio&&typeof p.classicPortfolio==='object'&&!Array.isArray(p.classicPortfolio)?
+        Object.fromEntries(D.classicStocks.map(x=>[x.id,clamp(Math.floor(Number(p.classicPortfolio[x.id])||0),0,100000)])):Object.fromEntries(D.classicStocks.map(x=>[x.id,0]));
+      p.classicLegacyInvestment=legacyPortfolio&&game.isClassic?Math.max(0,Number(p.invested)||0):clamp(Math.floor(Number(p.classicLegacyInvestment)||0),0,100000000);
+      p.classicBrokerOpen=p.classicBrokerOpen===true&&p.location==='bank';
+      p.classicLoanDefaults=clamp(Math.floor(Number(p.classicLoanDefaults)||0),0,10000);
+      p.classicLoanPaidThrough=clamp(Math.floor(Number(p.classicLoanPaidThrough)||0),0,10000);
+      p.classicFoodPurchasedWeek=clamp(Math.floor(Number(p.classicFoodPurchasedWeek)||0),0,obj.week);
+      if(game.isClassic)game.syncClassicInvested(p);
+      // Migrate pre-0.5 Classic employment to a genuine DOS role. Wages stay as earned.
+      if(game.isClassic&&p.job&&!find(D.classicJobs,p.job)){
+        const legacy=find(D.jobs,p.job);
+        const group={server:'classic-monolith-clerk',cook:'classic-monolith-cook',stock:'classic-zmart-clerk',teller:'classic-bank-teller',
+          tutor:'classic-hitech-teacher',analyst:'classic-factory-secretary',repair:'classic-socket-electronics-repairman',
+          engineer:'classic-factory-engineer',director:'classic-factory-general-manager',kitchenlead:'classic-monolith-assistant-manager',
+          storelead:'classic-zmart-assistant-manager',storemanager:'classic-zmart-manager',stylist:'classic-qt-salesperson',
+          boutiquelead:'classic-qt-manager',techlead:'classic-socket-manager',banklead:'classic-bank-assistant-manager',
+          bankmanager:'classic-bank-manager',professor:'classic-hitech-professor',officelead:'classic-factory-department-manager'};
+        p.job=group[legacy.id]||'classic-monolith-cook';
+      }
+      p.classicRejectedOpenings=p.classicRejectedOpenings&&typeof p.classicRejectedOpenings==='object'&&!Array.isArray(p.classicRejectedOpenings)?
+        Object.fromEntries(Object.entries(p.classicRejectedOpenings).filter(([id,week])=>D.classicJobs.some(j=>j.id===id)&&Number.isInteger(week)&&week<=obj.week&&week>=1)):{};
+      p.classicRent=Number.isFinite(p.classicRent)&&p.classicRent>=1?Math.floor(p.classicRent):325;
+      p.classicRentDueWeek=Number.isInteger(p.classicRentDueWeek)&&p.classicRentDueWeek>=4?p.classicRentDueWeek:4+4*Math.floor((obj.week-1)/4);
+      p.classicExtensions=Number.isInteger(p.classicExtensions)?clamp(p.classicExtensions,0,100):0;
+      p.classicExtensionAttemptWeek=Number.isInteger(p.classicExtensionAttemptWeek)?clamp(p.classicExtensionAttemptWeek,0,obj.week):0;
+      p.classicEverDebt=p.classicEverDebt===true||(game.isClassic&&p.rentDebt>0);
       p.contacts=Number.isFinite(p.contacts)?clamp(p.contacts,0,100):0;
+      p.oddJobWeek=Number.isInteger(p.oddJobWeek)&&p.oddJobWeek>=0&&p.oddJobWeek<=obj.week?p.oddJobWeek:0;
+      // Pre-0.4.3 wardrobes were permanent owned flags. Convert them once on load.
+      const legacyClothing=!p.clothing||typeof p.clothing!=='object'||Array.isArray(p.clothing);
+      p.clothing=Object.fromEntries(Object.keys(D.clothing).map(k=>[k,legacyClothing?(k==='casual'?Math.max(6,p.owned?.includes('casual')?11:0):p.owned?.includes(k)?13:0):clamp(Math.floor(Number(p.clothing[k])||0),0,260)]));
+      // The saved equipment inventory now holds durable appliances, not consumable outfits.
+      p.owned=(p.owned||[]).filter(x=>!Object.hasOwn(D.clothing,x));
+      p.coursesCompleted=Array.isArray(p.coursesCompleted)?[...new Set(p.coursesCompleted.filter(k=>D.courses.some(c=>c.id===k)))]:[];
+      // Classic v0.4.5 used the Modern four-stage ladder; migrate to four valid branching diplomas.
+      // Modern saves are never modified by the new classic degree subsystem.
+      const oldClassic=!Array.isArray(p.classicDegrees);
+      const migrated=['junior-college','trade-school','business-admin','electronics'];
+      p.classicDegrees=oldClassic&&game.isClassic?migrated.slice(0,clamp(Math.floor(Number(p.education)||0),0,4)):
+        [...new Set((p.classicDegrees||[]).filter(id=>D.classicDegrees.some(d=>d.id===id)))];
+      const validDegree=id=>D.classicDegrees.some(d=>d.id===id)&&!p.classicDegrees.includes(id);
+      p.classicProgress=p.classicProgress&&typeof p.classicProgress==='object'&&!Array.isArray(p.classicProgress)?Object.fromEntries(Object.entries(p.classicProgress).filter(([id,n])=>validDegree(id)&&Number.isInteger(n)&&n>0&&n<=10)):{};
+      p.classicEnrolled=Array.isArray(p.classicEnrolled)?[...new Set(p.classicEnrolled.filter(validDegree))].slice(0,4):[];
+      p.classicEnrollmentCredits=Number.isInteger(p.classicEnrollmentCredits)?clamp(p.classicEnrollmentCredits,0,20):0;
+      p.classicDismissals=Number.isInteger(p.classicDismissals)?clamp(p.classicDismissals,0,10000):0;
+      p.classicRaises=Number.isInteger(p.classicRaises)?clamp(p.classicRaises,0,100):0;
+      if(oldClassic&&game.isClassic){p.experience=Math.max(10,p.experience);if(p.credits>0){const d=D.classicDegrees.find(d=>!p.classicDegrees.includes(d.id)&&d.requires.every(id=>p.classicDegrees.includes(id)));if(d){p.classicProgress[d.id]=Math.min(9,p.credits);p.classicEnrolled.push(d.id);}}}
+      p.courseProgress=p.courseProgress&&typeof p.courseProgress==='object'&&!Array.isArray(p.courseProgress)?Object.fromEntries(Object.entries(p.courseProgress).filter(([k,n])=>D.courses.some(c=>c.id===k)&&Number.isInteger(n)&&n>0&&n<find(D.courses,k).sessions&&!p.coursesCompleted.includes(k))):{};
       p.talkedWeek=p.talkedWeek&&typeof p.talkedWeek==='object'&&!Array.isArray(p.talkedWeek)?p.talkedWeek:{};
       p.seenEncounters=Array.isArray(p.seenEncounters)?p.seenEncounters.filter(id=>!!D.encounters[id]):[];
       const validPlaces=new Set(D.places.map(loc=>loc.id));
@@ -908,10 +1511,29 @@ const people={
  tech:{skin:'#c78e6c',hair:'#3e4b59',shirt:'#4a9996',style:'side'},
  clinic:{skin:'#b77f60',hair:'#493e47',shirt:'#90c7aa',style:'curly'}
 };
-function person(id,small=false){
+// Entirely original procedural SVG architecture; unlike a CSS tint, each era has distinct silhouettes and street furniture.
+function eraScene(id,compact,era){
+ const venue=themes[id]||themes.home;
+ const idx=Object.keys(themes).indexOf(id),name=venue.label;
+ if(era==='historical'){
+  const walls=['#ceac83','#d8b3a0','#c7bd98','#cab7a2'][idx%4],timber='#654a3b';
+  const shops=['market','diner','boutique','tech'].includes(id),steeple=['university','bank','clinic'].includes(id);
+  const beams=Array.from({length:5},(_,i)=>`<path d="M${198+i*50} 128v143m0-141 51 73m0-73-51 73" stroke="${timber}" stroke-width="5" fill="none" opacity=".85"/>`).join('');
+  const windows=Array.from({length:4},(_,i)=>`<path d="M${210+i*54} 168v-27q14-18 28 0v27z" fill="#a9c1a7" stroke="${timber}" stroke-width="5"/><path d="M${224+i*54} 141v27" stroke="#f0dfb4" stroke-width="2"/>`).join('');
+  const street=Array.from({length:19},(_,i)=>`<path d="M${(i*67)%650-15} ${292+(i%4)*11}h39" stroke="#8f8a78" stroke-width="2" opacity=".6"/>`).join('');
+  return `<svg class="scene-art era-scene era-historical${compact?' is-mini':''}" viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Historical timber and brick ${name.toLowerCase()} in Willowford"><defs><linearGradient id="evening-${id}" x2="0" y2="1"><stop stop-color="#eddcb0"/><stop offset="1" stop-color="#f6e3bc"/></linearGradient></defs><rect width="640" height="340" fill="url(#evening-${id})"/><circle cx="528" cy="64" r="34" fill="#fff0bc"/><path d="M0 244v-94l57-24v118m15 0v-118l62-32v150m354 0v-97l64-20v117m16 0v-140l72-36v176" fill="#9fa393"/><path d="M0 277h640v63H0z" fill="#a9a18e"/>${street}<rect x="187" y="126" width="270" height="147" fill="${walls}" stroke="${timber}" stroke-width="7"/>${beams}${windows}<path d="M171 132L316 ${steeple?31:58} 473 132Z" fill="#885a50" stroke="${timber}" stroke-width="8"/>${steeple?'<path d="M294 63V9l22-12 22 12v54" fill="#b38e70" stroke="#6a4a3d" stroke-width="5"/>':''}${shops?'<path d="M194 212h255l-16 20H209Z" fill="#d0aa75" stroke="#79523e" stroke-width="4"/>':''}<rect x="298" y="223" width="37" height="49" rx="15" fill="#604b3c"/><circle cx="329" cy="246" r="3" fill="#e6c980"/><path d="M231 113h180l5 24H226z" fill="#473d36"/><text x="320" y="130" text-anchor="middle" fill="#f7e3b3" font-size="15" font-family="Georgia,serif" font-weight="bold">${name}</text><path d="M111 274v-88m0 0q11-16 23-1" stroke="#443f35" stroke-width="6" fill="none"/><path d="M99 190l12-18 12 18-12 19z" fill="#ffd687"/><path d="M532 272v-81m0 0q-9-14-18-2" stroke="#443f35" stroke-width="5" fill="none"/><path d="M521 194l11-17 11 17-11 16z" fill="#ffdd97"/><path d="M6 280h628" stroke="#ddd4bc" stroke-width="6"/></svg>`;
+ }
+ const glow=['#2cffd3','#fa70ec','#95b9ff','#ffca74'][idx%4],glass=['#18345a','#28305c','#1f4258','#334066'][idx%4];
+ const towerHeight=idx%3===0?22:idx%3===1?54:72;
+ const litWindows=Array.from({length:15},(_,i)=>`<rect x="${223+(i%5)*44}" y="${126+Math.floor(i/5)*44}" width="19" height="23" rx="3" fill="${i%3===0?'#c2faff':glow}" opacity=".7"/>`).join('');
+ return `<svg class="scene-art era-scene era-scifi${compact?' is-mini':''}" viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sci-fi neon arcology ${name.toLowerCase()} in Neon Meridian"><defs><linearGradient id="orbit-${id}" x2="0" y2="1"><stop stop-color="#101934"/><stop offset="1" stop-color="#365d79"/></linearGradient><linearGradient id="shine-${id}" x2="1" y2="0"><stop stop-color="${glass}"/><stop offset="1" stop-color="#406b8c"/></linearGradient></defs><rect width="640" height="340" fill="url(#orbit-${id})"/><circle cx="527" cy="65" r="34" fill="#d9e6ff" opacity=".8"/><ellipse cx="527" cy="65" rx="62" ry="13" stroke="#a5d8ff" stroke-width="3" fill="none" transform="rotate(-22 527 65)"/><g fill="#9de0ff">${Array.from({length:21},(_,i)=>`<circle cx="${(i*83+9)%635}" cy="${(i*47+17)%151}" r="${i%3===0?2:1}" opacity=".75"/>`).join('')}</g><path d="M0 255V116l68-22v161m13 0V73h52v182m377 0V58h58v197m14 0V98h58v157" fill="#1b2d4a" stroke="#4d77a2" stroke-width="3"/><path d="M0 274h640v66H0" fill="#112b45"/><path d="M0 283h640m-640 31h640" stroke="${glow}" stroke-width="3" opacity=".65"/><path d="M50 310h80m45 0h80m45 0h80m45 0h80" stroke="#dffaff" stroke-width="3"/><path d="M190 ${towerHeight+55}h260l19 220H172z" fill="url(#shine-${id})" stroke="${glow}" stroke-width="7"/><path d="M201 ${towerHeight+55}l20-29h202l20 29" fill="#122640" stroke="${glow}" stroke-width="5"/><path d="M215 ${towerHeight+60}v198m208-198v198" stroke="${glow}" stroke-width="4" opacity=".5"/>${litWindows}<path d="M228 97h184v35H228Z" fill="#111c3b" stroke="${glow}" stroke-width="4"/><text x="320" y="121" fill="${glow}" font-size="17" font-weight="900" font-family="system-ui,sans-serif" letter-spacing="1.5" text-anchor="middle">${name}</text><rect x="290" y="231" width="60" height="46" rx="12" fill="#0e1c32" stroke="${glow}" stroke-width="5"/><path d="M320 236v37" stroke="${glow}" stroke-width="2"/><g transform="translate(95 177)"><path d="M-46 4Q-6-20 46 4l-17 12h-58z" fill="#a5edff" stroke="${glow}" stroke-width="4"/><path d="M-27 4h54" stroke="#fff" stroke-width="3"/><path d="M-26 22h-14m53 0h25" stroke="${glow}" stroke-width="4"/></g><path d="M485 224l23-42 23 42" stroke="${glow}" stroke-width="5" fill="none"/><circle cx="508" cy="174" r="6" fill="#e1fcff"/></svg>`;
+}
+
+function person(id,small=false,era='current'){
  const p=people[id]||people.home;
+ const accessory=era==='historical'?'<path d="M27 34h65l-6-13H34z" fill="#64483f"/><path d="M40 84l20 21 20-21" fill="#f6e7d3"/>':era==='scifi'?'<path d="M23 57q36-18 74 0v10q-36-7-74 0z" fill="#78eeff" opacity=".78"/><path d="M43 90l17 15 17-15" stroke="#9df7f4" stroke-width="5" fill="none"/>':'';
  const hair=p.style==='curly'?'<circle cx="47" cy="36" r="17"/><circle cx="74" cy="34" r="18"/><circle cx="60" cy="28" r="20"/>':p.style==='bun'?'<circle cx="87" cy="30" r="14"/><path d="M36 53Q32 17 61 19Q95 17 88 55Z"/>':'<path d="M34 55Q31 21 61 20Q90 18 90 55Q78 43 69 37Q51 49 34 55Z"/>';
- return `<svg class="person-art${small?' person-small':''}" viewBox="0 0 120 124" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="60" cy="117" rx="43" ry="6" fill="#1b433e19"/><path d="M13 120Q16 84 45 83L61 91 75 83Q104 83 107 120Z" fill="${p.shirt}"/><path d="M51 78V95Q60 107 69 95V78" fill="${p.skin}"/><g fill="${p.hair}">${hair}</g><ellipse cx="60" cy="59" rx="29" ry="33" fill="${p.skin}"/><path d="M35 53Q33 25 57 24Q81 21 88 44Q72 48 65 38Q49 52 35 53" fill="${p.hair}"/><ellipse cx="49" cy="60" rx="2.5" ry="3" fill="#30363b"/><ellipse cx="72" cy="60" rx="2.5" ry="3" fill="#30363b"/><path d="M51 76Q61 85 71 75" stroke="#985f55" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="37" cy="69" rx="5" ry="3" fill="#e779704b"/><ellipse cx="82" cy="69" rx="5" ry="3" fill="#e779704b"/><path d="M28 120Q42 105 47 93M92 120Q78 105 73 93" stroke="#ffffff45" stroke-width="2" fill="none"/></svg>`;
+ return `<svg class="person-art${small?' person-small':''}" viewBox="0 0 120 124" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="60" cy="117" rx="43" ry="6" fill="#1b433e19"/><path d="M13 120Q16 84 45 83L61 91 75 83Q104 83 107 120Z" fill="${p.shirt}"/><path d="M51 78V95Q60 107 69 95V78" fill="${p.skin}"/><g fill="${p.hair}">${hair}</g><ellipse cx="60" cy="59" rx="29" ry="33" fill="${p.skin}"/><path d="M35 53Q33 25 57 24Q81 21 88 44Q72 48 65 38Q49 52 35 53" fill="${p.hair}"/><ellipse cx="49" cy="60" rx="2.5" ry="3" fill="#30363b"/><ellipse cx="72" cy="60" rx="2.5" ry="3" fill="#30363b"/><path d="M51 76Q61 85 71 75" stroke="#985f55" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="37" cy="69" rx="5" ry="3" fill="#e779704b"/><ellipse cx="82" cy="69" rx="5" ry="3" fill="#e779704b"/><path d="M28 120Q42 105 47 93M92 120Q78 105 73 93" stroke="#ffffff45" stroke-width="2" fill="none"/>${accessory}</svg>`;
 }
 function motif(type, x=324,y=171){
  const icons={
@@ -929,7 +1551,8 @@ function motif(type, x=324,y=171){
  cross:`<path d="M${x-12} ${y-36}h24v25h25v23h-25v25h-24v-25h-25v-23h25z" fill="#fef8e8"/>`
  };return icons[type]||icons.star;
 }
-function scene(id,compact=false){
+function scene(id,compact=false,era='current'){
+ if(era==='historical'||era==='scifi')return eraScene(id,compact,era);
  const t=themes[id]||themes.home;
  const windows=(count=3)=>Array.from({length:count},(_,i)=>`<rect x="${238+i*69}" y="${123}" width="43" height="52" rx="4" fill="#cbe9df" stroke="${t.trim}" stroke-width="6"/><path d="M${260+i*69} 126v46m-20-24h40" stroke="#ffffffaa" stroke-width="4"/>`).join('');
  const baseX=t.form==='house'?214:t.form==='tower'?224:188;
@@ -946,48 +1569,257 @@ if(typeof module!=='undefined'&&module.exports)module.exports=root.LifeArt;
 
 </script>
   <script>
+/* Life Loop remote hotseat adapter for Looprd / dapi v1.
+ * Commands use authenticated room HTTP requests; WebSockets announce durable version changes.
+ * Looprd's native websocket is subscription-only, not a bidirectional RPC channel.
+ * The host runs the existing deterministic LifeGame engine and publishes accepted snapshots.
+ */
+(function(root){
+'use strict';
+const STORAGE='life-loop-online-session';
+const ENDPOINT='life-loop-server-url';
+class LifeOnline {
+ constructor(hooks){
+  this.h=hooks;this.role=null;this.code='';this.token='';this.version=0;this.endpoint='';
+  this.socket=null;this.busy=false;this.polling=false;this.timer=null;this.reconnectTimer=null;
+  this.joined=false;this.guestName='';this.lastResultId='';this.commandInFlight=null;this.unpublished=false;this.notice='Offline';
+ }
+ static serverBase(input){
+  const raw=String(input??'').trim();
+  if(!raw)throw Error('Enter your Looprd server address (for example api.server.country)');
+  if(/[\\\s]/.test(raw))throw Error('Invalid server address');
+  const hasScheme=/^[a-z][a-z0-9+.-]*:\/\//i.test(raw);
+  const local=/^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?(?:\/|$)/i.test(raw);
+  let u;
+  try{u=new URL(hasScheme?raw:(local?'http://':'https://')+raw);}catch{throw Error('Invalid Looprd server address');}
+  if(!['http:','https:'].includes(u.protocol)||u.username||u.password||u.search||u.hash)throw Error('Enter only the server address, without credentials, query or fragment');
+  if(u.protocol==='http:'&&!['localhost','127.0.0.1','[::1]'].includes(u.hostname))throw Error('Use HTTPS for a remote Looprd server');
+  if(!u.hostname||u.hostname.includes('%'))throw Error('Invalid server hostname');
+  // Accept the v0.5.2 stored component endpoint for seamless migration, but no arbitrary paths.
+  if(!['/','/looprd/the-life-loop/v1','/looprd/the-life-loop/v1/'].includes(u.pathname))throw Error('Enter the base server FQDN only; /looprd/the-life-loop/v1 is automatic');
+  return u.origin;
+ }
+ static suggestedServer(){
+  const fromLink=new URLSearchParams(location.search||'').get('server');
+  if(fromLink){try{return LifeOnline.serverBase(fromLink);}catch{return '';}}
+  let saved=null;try{saved=localStorage.getItem(ENDPOINT);}catch{}
+  if(saved){try{return LifeOnline.serverBase(saved);}catch{}}
+  return '';
+ }
+ static validateEndpoint(input){return LifeOnline.serverBase(input)+'/looprd/the-life-loop/v1';}
+ async api(payload){
+  const response=await fetch(this.endpoint+'/session',{method:'POST',mode:'cors',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!response.ok)throw Error('Looprd returned HTTP '+response.status);
+  const data=await response.json();
+  if(!data.ok)throw Error(data.error||'Session request rejected');
+  return data;
+ }
+ persist(){
+  try{sessionStorage.setItem(STORAGE,JSON.stringify({role:this.role,code:this.code,token:this.token,endpoint:this.endpoint}));localStorage.setItem(ENDPOINT,LifeOnline.serverBase(this.endpoint));}catch{ /* Browser storage can be disabled. Session still works while page stays open. */ }
+ }
+ forget(){try{sessionStorage.removeItem(STORAGE);}catch{}}
+ connect(){
+  if(this.socket){this.socket.onclose=null;this.socket.close();}
+  clearTimeout(this.reconnectTimer);
+  if(!this.role)return;
+  const url=this.endpoint.replace(/^http/,'ws')+'/events';
+  try{
+   const socket=new WebSocket(url);this.socket=socket;
+   socket.onopen=()=>{socket.send(JSON.stringify({subscribe:'pulses'}));this.notice='Connected';this.h.render();};
+   socket.onmessage=event=>{try{const msg=JSON.parse(event.data);if(msg.resource==='pulses')this.sync();}catch{}};
+   socket.onerror=()=>{this.notice='Reconnecting';this.h.render();};
+   socket.onclose=()=>{if(this.socket!==socket||!this.role)return;this.notice='Reconnecting';this.h.render();this.reconnectTimer=setTimeout(()=>this.connect(),2500);};
+  }catch(e){this.notice='WebSocket unavailable';this.h.toast(e.message,true);}
+  clearInterval(this.timer);
+  // Looprd events are best-effort; a status fetch also recovers missed updates.
+  this.timer=setInterval(()=>this.sync(),5000);
+ }
+ disconnect(){
+  this.role=null;this.code='';this.token='';this.version=0;this.joined=false;this.notice='Offline';this.busy=false;
+  clearInterval(this.timer);clearTimeout(this.reconnectTimer);
+  if(this.socket){this.socket.onclose=null;this.socket.close();this.socket=null;}
+  this.commandInFlight=null;this.unpublished=false;this.forget();this.h.render();
+ }
+ async host(url){
+  this.disconnect();this.endpoint=LifeOnline.validateEndpoint(url);
+  const initial=this.h.getGame().snapshot();
+  const data=await this.api({op:'create',state:initial});
+  Object.assign(this,{role:'host',code:data.code,token:data.token,version:data.version,joined:false,notice:'Waiting for friend'});
+  this.persist();this.connect();this.h.render();return data;
+ }
+ async join(url,code,name){
+  this.disconnect();this.endpoint=LifeOnline.validateEndpoint(url);
+  const data=await this.api({op:'join',code:code.trim().toUpperCase().replace(/[-\s]/g,''),name});
+  Object.assign(this,{role:'guest',code:data.code,token:data.token,version:data.version,joined:true,notice:'Connected'});
+  this.h.setGame(data.state);this.persist();this.connect();this.h.render();return data;
+ }
+ async resume(){
+  let saved;try{saved=JSON.parse(sessionStorage.getItem(STORAGE)||'null');}catch{return false;}
+  if(!saved||!saved.role)return false;
+  try{
+   Object.assign(this,saved);this.endpoint=LifeOnline.validateEndpoint(saved.endpoint);
+   const info=await this.api({op:'status',code:this.code,token:this.token});
+   this.version=info.version;this.joined=info.joined;this.guestName=info.guestName;
+   this.h.setGame(info.state);this.connect();this.h.render();if(this.role==='host'){if(this.unpublished&&!info.pending&&!this.busy){try{await this.publish();this.unpublished=false;}catch{}}await this.process(info);}
+   return true;
+  }catch(err){this.disconnect();this.h.toast('Could not reconnect: '+err.message,true);return false;}
+ }
+ ownTurn(){
+  if(!this.role)return true;
+  const id=this.h.getGame().player.id;
+  return (this.role==='host'&&id==='player')||(this.role==='guest'&&id==='friend');
+ }
+ async execute(type,arg,fn){
+  if(this.busy)return {ok:false,message:'The previous action is still synchronizing.'};
+  if(this.role&&!this.ownTurn())return {ok:false,message:'Your friend is taking their turn.'};
+  if(this.role==='guest'){
+   this.busy=true;
+   try{
+    await this.api({op:'send',code:this.code,token:this.token,version:this.version,command:{type,arg}});
+    return {ok:true,message:'Sent to host · awaiting confirmation'};
+   }catch(e){await this.sync();return {ok:false,message:e.message};}
+   finally{this.busy=false;this.h.render();}
+  }
+  const result=fn();
+  if(this.role==='host'&&result.ok){
+   this.busy=true;
+   try{await this.publish(null,result);this.unpublished=false;}catch(e){this.unpublished=true;this.h.toast('Network sync failed (will retry): '+e.message,true);}
+   finally{this.busy=false;}
+  }
+  return result;
+ }
+ async publish(commandId=null,result={ok:true,message:'Updated'}){
+  const info=await this.api({op:'publish',code:this.code,token:this.token,version:this.version,
+   state:this.h.getGame().snapshot(),commandId,actionOk:result.ok,message:result.message});
+  this.version=info.version;this.h.render();return info;
+ }
+ async process(info){
+  if(this.busy||this.role!=='host')return;
+  const g=this.h.getGame();
+  if(info.guestName&&g.players.find(p=>p.id==='friend')?.name!==info.guestName&&!info.pending){
+   g.players.find(p=>p.id==='friend').name=info.guestName;
+   this.busy=true;try{await this.publish();}finally{this.busy=false;}
+   return;
+  }
+  const cmd=info.pending;if(!cmd)return;
+  this.busy=true;
+  try{
+   let result;
+   if(this.commandInFlight?.id===cmd.id){result=this.commandInFlight.result;}
+   else{
+    result={ok:false,message:'It is not the friend’s turn'};
+    if(g.player.id==='friend'){
+     if(cmd.type==='travel')result=g.travel(cmd.arg);
+     else if(cmd.type==='act')result=g.act(cmd.arg);
+     else if(cmd.type==='choose')result=g.chooseEncounter(cmd.arg);
+     else if(cmd.type==='endTurn')result=g.endTurn();
+     else result={ok:false,message:'Unknown game action'};
+    }
+    this.commandInFlight={id:cmd.id,result};
+   }
+   // Preserve the applied command in memory until Looprd accepts the acknowledgement;
+   // a lost HTTP reply must never cause a second local shift/expense.
+   await this.publish(cmd.id,result);
+   this.commandInFlight=null;
+   this.h.toast('Friend: '+result.message,!result.ok);
+  }catch(e){this.h.toast('Remote action failed: '+e.message,true);}
+  finally{this.busy=false;this.h.render();}
+ }
+ async sync(){
+  if(!this.role||this.polling)return;
+  this.polling=true;
+  try{
+   const info=await this.api({op:'status',code:this.code,token:this.token});
+   this.joined=info.joined;this.guestName=info.guestName;
+   if(info.version>this.version){
+    this.version=info.version;this.h.setGame(info.state);this.h.render();
+   }
+   if(this.role==='guest'&&info.lastResult?.commandId!==this.lastResultId&&info.lastResult){
+    this.lastResultId=info.lastResult.commandId;
+    this.h.toast(info.lastResult.message||'Turn updated',!info.lastResult.ok);
+   }
+   if(this.role==='host'){if(this.unpublished&&!info.pending&&!this.busy){try{await this.publish();this.unpublished=false;}catch{}}await this.process(info);}
+  }catch(e){this.notice='Connection interrupted';}
+  finally{this.polling=false;}
+ }
+ indicator(){
+  if(!this.role)return '◎ Online co-op';
+  return `${this.role==='host'?'♟ Hosting':'♟ Joined'} · ${this.code} · ${this.notice}`;
+ }
+ inviteLink(){const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('join',this.code);url.searchParams.set('server',LifeOnline.serverBase(this.endpoint));return url.href;}
+}
+root.LifeOnline=LifeOnline;
+})(typeof window!=='undefined'?window:globalThis);
+
+</script>
+  <script>
 (function(){
 'use strict';
 const D=window.LifeData;
 const Game=window.LifeGame;
 const Art=window.LifeArt;
 const SAVE_KEY='the-life-loop-v1';
-let game=new Game();let toastTimer;let didShowWin=false;
+let game=new Game();let net;let toastTimer;let didShowWin=false;let classicEmployerFilter="all";
+let mobileView='city';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>'$'+Math.floor(n).toLocaleString('en-US');
 const percent=n=>Math.max(0,Math.min(100,Math.round(n)))+'%';
 const place=id=>D.places.find(x=>x.id===id);
-const job=id=>D.jobs.find(x=>x.id===id);
-const icon={arc:'📖',favor:'🤝',pulse:'✷',chat:'💬',work:'⚒',relax:'☀',freelance:'💸',cook:'🍳',apply:'✉',raise:'↗',groceries:'🥬',bulkFood:'🥕',lottery:'🎲',meal:'🍲',study:'📖',deposit:'↘',withdraw:'↗',invest:'📊',sell:'📉',upgrade:'🏠',rentDebt:'✓',buy:'🛍',movie:'🎬',pass:'🎉',checkup:'🩺'};
+const mobileBreakpoint=window.matchMedia('(max-width:1024px)');
+function setMobileView(view,{scroll=true}={}){
+ if(!['city','actions','life'].includes(view))return;
+ mobileView=view;document.body.dataset.mobileView=view;
+ for(const tab of document.querySelectorAll('[data-mobile-tab]')){
+  const active=tab.dataset.mobileTab===view;
+  tab.setAttribute('aria-pressed',String(active));
+ }
+ for(const [name,id] of [['city','gameCity'],['actions','gameActions'],['life','gameLife']]){
+  $(id).inert=mobileBreakpoint.matches&&view!==name;
+ }
+ if(scroll&&mobileBreakpoint.matches)window.scrollTo({top:0,behavior:'instant'});
+}
+function updateMobileAccessibility(){setMobileView(mobileView,{scroll:false});}
+const job=id=>game.getJob({job:id});
+const eraMeta=()=>D.worldEras[game.settings.era];
+const placeLabel=id=>eraMeta().names[D.places.findIndex(p=>p.id===id)]||place(id)?.name||id;
+const icon={arc:'📖',favor:'🤝',pulse:'✷',chat:'💬',work:'⚒',relax:'☀',freelance:'💸',cook:'🍳',apply:'✉',raise:'↗',groceries:'🥬',bulkFood:'🥕',lottery:'🎲',meal:'🍲',study:'📖',deposit:'↘',withdraw:'↗',invest:'📊',sell:'📉',upgrade:'🏠',rentDebt:'✓',buy:'🛍',movie:'🎬',pass:'🎉',checkup:'🩺',clothes:'👔',course:'📚',enroll:'📝',classicStudy:'🎓',classicFresh:'🥬',classicNewspaper:'📰',classicLottery:'🎟️',classicLoanApply:'🏦',classicLoanPay:'💵',classicBroker:'📊',classicBuyStock:'📈',classicSellStock:'📉',classicSellLegacy:'📤'};
 function toast(msg,error=false){const el=$('toast');el.textContent=msg;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3100);}
-function store(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(game.snapshot()));}catch(e){/* Local files may deny localStorage; manual export remains available. */}}
+function store(){if(net?.role==='guest')return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(game.snapshot()));}catch(e){/* Local files may deny localStorage; manual export remains available. */}}
 function restore(){try{const data=localStorage.getItem(SAVE_KEY);return data?JSON.parse(data):null;}catch(e){return null;}}
 function render(){
  const p=game.player,j=game.getJob(p),score=game.scores(p),current=place(p.location);
+ document.body.dataset.era=game.settings.era;
+ document.body.dataset.ruleset=game.settings.ruleset;
+ document.querySelector('.board-heading h1').innerHTML=esc(eraMeta().city)+'<span class="sun-icon">✳</span>';
  $('topWeek').textContent='WEEK '+String(game.week).padStart(2,'0');
+ $('mobileWeek').textContent=String(game.week).padStart(2,'0');
+ $('mobileHours').textContent=p.hours+'h';
+ $('mobileCash').textContent=fmt(p.cash);
+ $('mobilePlayer').textContent=p.name;
  $('economy').textContent=game.economy>=1.06?'MARKET BOOMING':game.economy<=.94?'MARKET COOLING':'MARKET STABLE';
  $('turnCounter').textContent=p.id==='player'?'YOUR TURN':p.isAI?'RIVAL TURN':p.name.toUpperCase()+' TURN';
- $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨'}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?esc(j.name):'Unemployed · Full-time dreamer'}</div></div></div><div class="profile-mini"><span>📍 <b>${esc(current.name)}</b></span><span class="pill">${esc(D.dwellings[p.home].name)}</span></div>`;
+ $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨'}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?`${esc(j.name)} · ${esc(j.employer||placeLabel(j.place))} · ${fmt(p.wage)}/h`:'Unemployed · Apply at Career Center'}</div></div></div><div class="profile-mini"><span>📍 <b>${esc(placeLabel(current.id))}</b></span><span class="pill">${esc(D.dwellings[p.home].name)}</span></div>`;
  $('balances').innerHTML=`<div class="stat-card"><div class="stat-label">CASH ON HAND</div><div class="stat-number">${fmt(p.cash)}</div><div class="stat-note">Ready to spend</div></div><div class="stat-card"><div class="stat-label">NET WORTH</div><div class="stat-number">${fmt(game.wealth(p))}</div><div class="stat-note">Including savings${p.rentDebt?' · debt':''}</div></div>`;
  const goalLabels={wealth:'💰 Wealth',happiness:'☀️ Happiness',education:'🎓 Education',career:'🚀 Career'};
  $('goals').innerHTML=D.GOAL_KEYS.map(k=>`<div class="goal-item"><div class="goal-title"><strong>${goalLabels[k]}</strong><span class="goal-percent">${score[k]}%</span></div><div class="track" role="progressbar" aria-label="${k}" aria-valuenow="${score[k]}" aria-valuemin="0" aria-valuemax="100"><div style="width:${percent(score[k])}"></div></div></div>`).join('');
  const wellbeing=[{name:'Energy',value:p.energy,sub:p.energy+' / 100'},{name:'Happiness',value:p.happiness,sub:p.happiness+' / 100'},{name:'Reliability',value:p.dependability,sub:p.dependability+' / 100'}];
  $('wellbeing').innerHTML=wellbeing.map(v=>`<div class="wellness-row"><span>${esc(v.name)}</span><strong>${esc(v.sub)}</strong></div><div class="track small-track"><div style="width:${percent(v.value)}"></div></div>`).join('')+
- `<div class="wellness-row"><span>Experience</span><strong>${p.experience} XP</strong></div><div class="wellness-row"><span>Food for this week</span><strong>${p.fed?'FED':p.groceries>0?'PANTRY '+p.groceries:'NONE'}</strong></div>`;
+ `<div class="wellness-row"><span>Experience</span><strong>${p.experience} XP</strong></div><div class="wellness-row"><span>Food for this week</span><strong>${p.fed?'FED':p.groceries>0?'PANTRY '+p.groceries:'NONE'}</strong></div><div class="wardrobe-status"><strong>👕 WARDROBE · WEEKS LEFT</strong>${game.clothingSummary(p).map(x=>`<span class="wardrobe-line ${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)} <b>${x.weeks}w</b></span>`).join('')}<small>All outfits age each week. Better outfits also cover lower-level uniforms.</small></div><div class="wellness-row"><span>${game.isClassic?'Classic diplomas':'Certificates'}</span><strong>${game.isClassic?game.degreeCount(p)+' / '+D.classicDegrees.length:p.coursesCompleted.length+' / '+D.courses.length}</strong></div>${game.isClassic?`<div class="wellness-row"><span>University enrollments</span><strong>${p.classicEnrollmentCredits} unused · ${p.classicEnrolled.length}/4 active</strong></div>`:''}`;
  $('leaderboard').innerHTML=[...game.players].sort((a,b)=>game.progress(b)-game.progress(a)).map(x=>{
  const role=game.getJob(x)?.name||'Getting started';return `<div class="leader-entry ${x.id===p.id?'active':''}"><span class="leader-dot" style="background:${esc(x.color)}"></span><div class="leader-data"><div class="leader-name">${esc(x.name)}</div><div class="leader-role">${esc(role)}</div></div><strong class="leader-score">${game.progress(x)}%</strong></div>`;
  }).join('');
  $('board').innerHTML=D.places.map((loc,index)=>{
  const cost=game.travelCost(p.location,loc.id),hasHuman=game.players.some(x=>!x.isAI&&x.location===loc.id);
- const eventHere=game.cityEvent.venue===loc.id;
+ const eventHere=!game.isClassic&&game.cityEvent.venue===loc.id;
  const rival=game.players.some(x=>x.isAI&&x.location===loc.id);
- return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''}" data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="Visit ${esc(loc.name)}${cost?' · '+cost+' hour'+(cost!==1?'s':''):' · current location'}" aria-label="${esc(loc.name)}, ${cost?'travel '+cost+' hours':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.id,true)}</div><div class="tile-caption"><div class="tile-name">${esc(loc.name)}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
- }).join('')+`<div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> THE HEART OF IT ALL</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div><div class="hub-sub">${p.hours>0?'Tap a building to travel. Every hour is yours to spend.':'That’s your week! Wrap it up to start a new one.'}</div></div><div class="hub-bottom"><div class="hub-week">WEEK ${String(game.week).padStart(2,'0')}<br/>THE LIFE LOOP</div><div class="hub-hours">${p.hours}<small>HOURS LEFT</small></div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`;
- $('timeStrip').innerHTML=`<div class="time-label"><strong>⏱ &nbsp; Your weekly time</strong><br/>Every decision takes a little time</div><div class="hour-pips">${Array.from({length:20},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / 40 h</div>`;
+ return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''}" ${net?.role&&(!net.ownTurn()||net.busy)?'disabled':''} data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="Visit ${esc(placeLabel(loc.id))}${cost?' · '+cost+' hour'+(cost!==1?'s':''):' · current location'}" aria-label="${esc(placeLabel(loc.id))}, ${cost?'travel '+cost+' hours':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.id,true,game.settings.era)}</div><div class="tile-caption"><div class="tile-name">${esc(placeLabel(loc.id))}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
+ }).join('')+`<div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div><div class="hub-sub">${p.hours>0?'Tap a building to travel. Every hour is yours to spend.':'That’s your week! Wrap it up to start a new one.'}</div></div><div class="hub-bottom"><div class="hub-week">WEEK ${String(game.week).padStart(2,'0')}<br/>THE LIFE LOOP</div><div class="hub-hours">${p.hours}<small>OF ${game.rules.hours} HOURS</small></div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+ $('timeStrip').innerHTML=`<div class="time-label"><strong>⏱ &nbsp; Your weekly time</strong><br/>Every decision takes a little time</div><div class="hour-pips">${Array.from({length:game.rules.hours/2},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / ${game.rules.hours} h</div>`;
+ $('cityPulse').hidden=game.isClassic;
  const event=game.cityEvent,prices=Object.entries(event.prices).map(([sector,mult])=>`${sector} ${Math.round((mult-1)*100)>0?'+':''}${Math.round((mult-1)*100)}%`),pay=event.wage!==1?`shift pay +${Math.round((event.wage-1)*100)}%`:'';
- const legacies=D.storyArcs.filter(a=>game.cityProjects[a.id]).map(a=>`${a.title} · ${a.sector==='wage'?'+5% shift wages':a.sector==='food'?'−5% food':'−8% leisure'}`);
- $('cityPulse').innerHTML=`<div class="pulse-icon">✷</div><div class="pulse-story"><span class="pulse-kicker">CITY PULSE · WEEKS ${game.cityEventStart}–${game.cityEventStart+3}</span><strong>${esc(event.title)}</strong><p>${esc(event.description)}</p><div class="pulse-mods">${[...prices,pay].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')||'<span>No price changes</span>'}${legacies.map(x=>`<span class="legacy-tag">★ ${esc(x)}</span>`).join('')}</div></div><div class="pulse-call"><span>COMMUNITY OPPORTUNITY</span><b>${esc(event.opportunity.title)}</b><small>At ${esc(place(event.venue).name)} · ${event.opportunity.hours}h · ${p.cityParticipation?.[game.cityEventStart]?'Already joined':'Available this month'}</small></div>`;
+ const legacies=D.storyArcs.filter(a=>!game.isClassic&&game.cityProjects[a.id]).map(a=>`${a.title} · ${a.sector==='wage'?'+5% shift wages':a.sector==='food'?'−5% food':'−8% leisure'}`);
+ $('cityPulse').innerHTML=`<div class="pulse-icon">✷</div><div class="pulse-story"><span class="pulse-kicker">CITY PULSE · WEEKS ${game.cityEventStart}–${game.cityEventStart+3}</span><strong>${esc(event.title)}</strong><p>${esc(event.description)}</p><div class="pulse-mods">${[...prices,pay].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')||'<span>No price changes</span>'}${legacies.map(x=>`<span class="legacy-tag">★ ${esc(x)}</span>`).join('')}</div></div><div class="pulse-call"><span>COMMUNITY OPPORTUNITY</span><b>${esc(event.opportunity.title)}</b><small>At ${esc(placeLabel(event.venue))} · ${event.opportunity.hours}h · ${p.cityParticipation?.[game.cityEventStart]?'Already joined':'Available this month'}</small></div>`;
  const symbols={good:'✦',info:'●',warn:'!',news:'☼',muted:'·',travel:'↗'};
  $('journal').innerHTML=game.messages.filter(m=>m.actor==='system'||m.actor===p.id||m.actor==='jones').slice(0,10).map(m=>`<div class="journal-line ${esc(m.type)}"><span class="journal-icon">${symbols[m.type]||'·'}</span><span class="journal-message">${esc(m.message)}</span><span class="journal-week">W${m.week}</span></div>`).join('');
  const idx=D.places.indexOf(current)+1;
@@ -997,36 +1829,74 @@ function render(){
  const localArc=D.storyArcs.find(a=>a.host===current.id);
  const arcInfo=localArc?game.storyStatus(p,localArc):null;
  const relatedArcs=D.storyArcs.filter(a=>a.partner===current.id);
- const storyHelp=localArc?`<div class="arc-progress"><b>📖 ${esc(localArc.title)}</b><span>${arcInfo.chapter>=3?'Story complete':`Chapter ${arcInfo.chapter+1}/3`}</span><small>${esc(arcInfo.chapter>=3?'A chapter of city history you helped write.':arcInfo.reason||'Next chapter is available in the activity list.')}</small></div>`:'';
- const links=relatedArcs.filter(a=>(p.storyProgress?.[a.id]?.chapter||0)>0).map(a=>`<span class="story-partner">↗ ${esc(citizen.name)} is part of ${esc(a.title)}</span>`).join('');
- $('venue').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id)}</div><div class="venue-level"><h2>${esc(current.name)}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / 12</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship"><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}<div class="location-visit">↗ &nbsp; You're here. Speak to ${esc(citizen.name)} or choose an activity below.</div>`;
- const actions=game.actions();$('actionsCount').textContent=actions.filter(a=>a.enabled).length+' available';
- $('actions').innerHTML=actions.length?actions.map(a=>{
-   const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
- }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>';
+ const storyHelp=!game.isClassic&&localArc?`<div class="arc-progress"><b>📖 ${esc(localArc.title)}</b><span>${arcInfo.chapter>=3?'Story complete':`Chapter ${arcInfo.chapter+1}/3`}</span><small>${esc(arcInfo.chapter>=3?'A chapter of city history you helped write.':arcInfo.reason||'Next chapter is available in the activity list.')}</small></div>`:'';
+ const links=(game.isClassic?[]:relatedArcs).filter(a=>(p.storyProgress?.[a.id]?.chapter||0)>0).map(a=>`<span class="story-partner">↗ ${esc(citizen.name)} is part of ${esc(a.title)}</span>`).join('');
+ $('venue').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id,false,game.settings.era)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / 12</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}<div class="location-visit">↗ &nbsp; ${j?(current.id===j.place?`Your workplace · ${esc(j.employer?j.employer+' · '+j.name:j.name)} · ${fmt(p.wage)}/hour. Take a shift below.`:`Employed at ${esc(j.employer||placeLabel(j.place))} as ${esc(j.name)}. Only that workplace offers regular paid shifts.`):'Unemployed · Visit Career Center to find your first permanent job.'} ${game.isClassic?'Choose a city activity below.':'Speak to '+esc(citizen.name)+' or choose an activity below.'}</div>`;
+ const allActions=game.actions();
+ const classicEmployment=game.isClassic&&p.location==='agency';
+ const employers=classicEmployment?[...new Set(game.jobs.map(j=>j.employer))]:[];
+ const actions=classicEmployment&&classicEmployerFilter!=='all'?allActions.filter(a=>!a.id.startsWith('apply:')||a.req?.employer===classicEmployerFilter):allActions;
+ const filterHtml=classicEmployment?`<label class="agency-filter"><span>Employer · ${allActions.filter(a=>a.id.startsWith('apply:')).length} original DOS positions</span><select id="classicEmployerFilter" aria-label="Filter Classic jobs by employer"><option value="all">All employers</option>${employers.map(e=>`<option value="${esc(e)}" ${e===classicEmployerFilter?'selected':''}>${esc(e)}</option>`).join('')}</select></label>`:'';
+ $('actionsCount').textContent=actions.filter(a=>a.enabled).length+' available';
+ $('actions').innerHTML=filterHtml+(actions.length?actions.map(a=>{
+   const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled&&(!net?.role||net.ownTurn())&&!net?.busy?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
+ }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>');
  $('hint').innerHTML=`<b>✦ TODAY'S TIP</b><br/>${esc(hint(p))}`;
- $('endTurnBtn').disabled=!!game.winner;
- $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':'Wrap up this week';
+ $('onlineBtn').textContent=net?.indicator()||'◎ Online co-op';
+ $('endTurnBtn').disabled=!!game.winner||(!!net?.role&&!net.ownTurn())||!!net?.busy;
+ $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'Wrap up this week';
  if(game.winner&&!didShowWin){didShowWin=true;showWinner();}
- if(game.pendingEncounter&&$('overlay').dataset.kind!=='encounter')showEncounter();
+ if(game.pendingEncounter&&(!net?.role||net.ownTurn())&&$('overlay').dataset.kind!=='encounter')showEncounter();
+}
+function onlineDialog(){
+ const connected=!!net.role;
+ const server=esc(net.endpoint?window.LifeOnline.serverBase(net.endpoint):window.LifeOnline.suggestedServer());
+ showModal(`<section class="modal compact" aria-label="Online co-op"><div class="modal-head"><div><span class="eyebrow dark">PLAY TOGETHER FROM ANYWHERE</span><h2>Online co-op</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div>
+ ${connected?`<p class="modal-lead"><strong>${esc(net.role==='host'?'You are hosting':'You are connected')}</strong> · Game code <strong class="code-value">${esc(net.code)}</strong><br/>${esc(net.notice)} · ${net.joined?'Two players connected':'Waiting for a friend'}</p><div class="online-controls"><button class="modal-secondary" id="copyInvite">Copy invitation link</button><button class="modal-secondary" id="disconnectOnline">Disconnect</button></div>`:
+ `<p class="modal-lead">To host, choose <b>New Game → Online with a friend</b>. To join, enter the friend's code and Looprd server FQDN below.</p><form id="joinOnlineForm"><label class="field-label">LOOPRD SERVER FQDN<input class="form-input" name="url" type="text" required autocomplete="url" placeholder="api.server.country" value="${server}" /><small>Use your API server address only; /looprd/the-life-loop/v1 is added automatically.</small></label><label class="field-label">FRIEND CODE<input class="form-input" name="code" id="inviteCode" maxlength="15" autocomplete="off" placeholder="ABCD234567" required value="${esc(new URLSearchParams(location.search).get('join')||'')}" /></label><label class="field-label">YOUR DISPLAY NAME<input class="form-input" name="name" maxlength="24" value="Friend" required /></label><button class="modal-primary" type="submit">Join friend's game ↗</button></form>`}
+ <p class="modal-footnote">Multiplayer requires an external Looprd server over HTTPS/WSS when hosted on GitHub Pages. Invitation links include the server address and game code, never participant tokens. Participant tokens are kept in your browser session. The host must remain connected for guest turns.</p></section>`);
+ if(connected){
+  $('copyInvite').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(net.inviteLink());toast('Invite link copied');}catch(e){toast('Copy unavailable: '+e.message,true);}});
+  $('disconnectOnline').addEventListener('click',()=>{net.disconnect();closeOverlay();toast('Disconnected from multiplayer');});
+ }else{
+  $('joinOnlineForm').addEventListener('submit',async e=>{
+   e.preventDefault();const fd=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;
+   try{await net.join(String(fd.get('url')),String(fd.get('code')),String(fd.get('name')));closeOverlay();toast('Connected to '+net.code+'!');}
+   catch(err){toast('Cannot join: '+err.message,true);btn.disabled=false;}
+  });
+ }
 }
 function hint(p){
  if(!p.job)return 'Start with the Career Center. Even a small paycheck is a big first step.';
  if(p.hunger>0)return 'You missed some meals. Get groceries or eat at The Good Fork.';
- if(p.cash<65&&p.energy>14)return `Working at ${place(job(p.job).place).name} can refill your wallet.`;
+ if(!game.isDressedFor(p,game.getJob(p)))return 'Your uniform is worn out. Buy more clothing at Fresh & Frugal or Thread Theory before working.';
+ if(p.cash<65&&p.energy>14)return `Working at ${placeLabel(job(p.job).place)} can refill your wallet.`;
  if(p.energy<22)return 'Rest at home or visit the Wellbeing Clinic to recover energy.';
  if(p.rentDebt>0)return `You owe ${fmt(p.rentDebt)} in rent. Work income is partly garnished until it is paid.`;
  if(p.education<2)return 'Consider studying at Brightside U for better career opportunities.';
- if(!p.owned.includes('casual'))return 'Some better jobs require work-ready clothes from Thread Theory.';
- if(p.cash>500)return 'Savings at Future Bank protect your cash and earn a little interest.';
+ if(p.clothing.casual<=1&&p.clothing.formal<=1&&p.clothing.business<=1)return 'Your clothes are nearly worn out; stock up at Fresh & Frugal or Thread Theory.';
+ if(p.cash>500)return game.isClassic?'Bank deposits protect against theft, but earn no interest. Stocks and T-Bills are separate investments.':'Savings at '+placeLabel('bank')+' protect your cash and earn a little interest.';
  if(game.relationship(p,p.location)>=18&&game.actions().some(a=>a.id==='favor'&&a.enabled))return 'A local friend can lend a hand! Look for the friendship favor among your activities.';
- return 'Visit the City Pulse opportunity before the month ends; events move every four weeks.';
+ return game.isClassic?'Focus on employment, education, food and rent. Job applications can fail even when qualified.':'Visit the City Pulse opportunity before the month ends; events move every four weeks.';
 }
 function closeOverlay(){if(game.pendingEncounter&&$('overlay').dataset.kind==='encounter')return;$('overlay').classList.remove('open');$('overlay').dataset.kind='';$('overlay').innerHTML='';}
 function showModal(html,kind='modal'){$('overlay').dataset.kind=kind;$('overlay').innerHTML=html;$('overlay').classList.add('open');}
+function confirmEmploymentSwitch(actionId){
+ const p=game.player,oldJob=game.getJob(p),nextJob=job(actionId.split(':')[1]);
+ if(!oldJob||!nextJob||oldJob.id===nextJob.id)return false;
+ showModal(`<section class="modal compact" aria-label="Confirm job change"><div class="modal-head"><div><span class="eyebrow dark">ONE ACTIVE JOB AT A TIME</span><h2>Change employers?</h2></div><button class="modal-close" data-close aria-label="Cancel job change">×</button></div><p class="modal-lead">A successful application replaces your current position. If you are refused, you keep your existing job. You cannot work for both employers.</p><div class="employment-comparison"><div><small>CURRENT POSITION</small><strong>${esc(oldJob.name)}</strong><span>${esc(oldJob.employer||placeLabel(oldJob.place))} · ${fmt(p.wage)}/hour</span></div><div class="employment-switch-arrow">→</div><div><small>NEW POSITION</small><strong>${esc(nextJob.name)}</strong><span>${esc(nextJob.employer||placeLabel(nextJob.place))} · ${fmt(game.offeredWage(nextJob))}/hour</span></div></div><p class="modal-footnote">Applying costs ${game.rules.applicationHours} hours. If the application succeeds, the new job replaces your old one. A rejection costs time but never cancels your existing job.</p><button class="modal-primary" id="confirmEmploymentBtn" type="button">Apply for new position</button><button class="modal-secondary" data-close type="button">Keep my current job</button></section>`);
+ $('confirmEmploymentBtn').addEventListener('click',async()=>{
+   const result=await net.execute('act',actionId,()=>game.act(actionId));
+   closeOverlay();
+   if(result.ok&&net.role!=='guest'){store();render();}
+   toast(result.message,!result.ok);
+ });
+ $('confirmEmploymentBtn').focus();
+ return true;
+}
 function showSmallTalk(message,placeId){
  const citizen=D.citizens[placeId];
- showModal(`<section class="modal compact story-modal"><div class="story-head"><div class="story-character">${Art.person(placeId)}</div><div><span class="eyebrow dark">A MOMENT IN THE CITY</span><h2>A chat with ${esc(citizen.name)}</h2><div class="story-byline">${esc(citizen.title)}</div></div></div><p class="story-prose">${esc(message)}</p><button class="modal-primary" type="button" data-close>Back to the city ↗</button></section>`);
+ showModal(`<section class="modal compact story-modal"><div class="story-head"><div class="story-character">${Art.person(placeId,false,game.settings.era)}</div><div><span class="eyebrow dark">A MOMENT IN THE CITY</span><h2>A chat with ${esc(citizen.name)}</h2><div class="story-byline">${esc(citizen.title)}</div></div></div><p class="story-prose">${esc(message)}</p><button class="modal-primary" type="button" data-close>Back to the city ↗</button></section>`);
 }
 function showEncounter(){
  const encounter=game.encounter();if(!encounter)return;
@@ -1034,21 +1904,31 @@ function showEncounter(){
  const arc=D.storyArcs.find(a=>a.id===game.pendingEncounter.arcId);
  const arcLabel=arc?`${arc.title.toUpperCase()} · CHAPTER ${encounter.chapterIndex+1}/${encounter.chaptersTotal}`:`A NEW DAY CITY STORY · WEEK ${game.week}`;
  const footnote=arc?`Your decision changes trust with ${D.citizens[arc.host].name} and ${D.citizens[arc.partner].name}. Chapters unfold over multiple weeks. Some choices change the whole city.`:'Your choice is remembered by this resident. Getting involved builds trust; declining may reduce it.';
- showModal(`<section class="modal story-modal" aria-label="Conversation with ${esc(citizen.name)}"><div class="story-head"><div class="story-character">${Art.person(placeId)}</div><div><span class="eyebrow dark">${esc(arcLabel)}</span><h2>${esc(encounter.title)}</h2><div class="story-byline">${esc(citizen.name)} · ${esc(citizen.title)}</div></div></div><p class="story-prose">“${esc(encounter.story)}”</p><p class="story-question">How do you respond?</p><div class="story-options">${encounter.choices.map(choice=>{const needed=Math.max(0,-(choice.effects.cash||0));const enabled=p.cash>=needed;return `<button type="button" class="story-choice" data-choose="${esc(choice.id)}" ${enabled?'':'disabled'}><span class="story-choice-name">${esc(choice.label)}</span><small>${esc(enabled?choice.detail:'Requires '+fmt(needed)+' cash')}</small><span class="story-chevron">↗</span></button>`;}).join('')}</div><div class="modal-footnote">${esc(footnote)}${encounter.cityBoost?' · City Pulse bonus: +3 experience, +2 happiness.':''}</div></section>`,'encounter');
+ showModal(`<section class="modal story-modal" aria-label="Conversation with ${esc(citizen.name)}"><div class="story-head"><div class="story-character">${Art.person(placeId,false,game.settings.era)}</div><div><span class="eyebrow dark">${esc(arcLabel)}</span><h2>${esc(encounter.title)}</h2><div class="story-byline">${esc(citizen.name)} · ${esc(citizen.title)}</div></div></div><p class="story-prose">“${esc(encounter.story)}”</p><p class="story-question">How do you respond?</p><div class="story-options">${encounter.choices.map(choice=>{const needed=Math.max(0,-(choice.effects.cash||0));const enabled=p.cash>=needed;return `<button type="button" class="story-choice" data-choose="${esc(choice.id)}" ${enabled?'':'disabled'}><span class="story-choice-name">${esc(choice.label)}</span><small>${esc(enabled?choice.detail:'Requires '+fmt(needed)+' cash')}</small><span class="story-chevron">↗</span></button>`;}).join('')}</div><div class="modal-footnote">${esc(footnote)}${encounter.cityBoost?' · City Pulse bonus: +3 experience, +2 happiness.':''}</div></section>`,'encounter');
  $('overlay').querySelector('[data-choose]:not(:disabled)')?.focus();
 }
 function newGameDialog(isInitial=false){
  const saved=restore();
- showModal(`<section class="modal" aria-label="Create a new game"><div class="modal-head"><div><span class="eyebrow dark">WELCOME TO YOUR NEXT CHAPTER</span><h2>Life is what you make it. <span style="color:#6ba86a">✳</span></h2><p class="modal-lead">Set your goals, pick your competition, and make the most of 40 hours each week.<br/>You can earn, learn, shop, recharge, and live a little.</p></div>${isInitial?'':'<button class="modal-close" data-close aria-label="Close">×</button>'}</div>
- <form id="startForm"><div class="new-form"><label><div class="field-label">YOUR NAME</div><input class="form-input" name="name" maxlength="24" value="You" required /></label><label><div class="field-label">GAME MODE</div><select class="form-select" id="gameMode" name="mode"><option value="solo">Solo vs. The Rival (AI)</option><option value="hotseat">2 humans + The Rival</option><option value="sandbox">Relaxed · Play alone</option></select></label><label id="friendField" style="display:none;grid-column:1/-1"><div class="field-label">PLAYER 2 NAME</div><input class="form-input" name="friend" maxlength="24" value="Player 2" /></label></div>
+ showModal(`<section class="modal" aria-label="Create a new game"><div class="modal-head"><div><span class="eyebrow dark">WELCOME TO YOUR NEXT CHAPTER</span><h2>Life is what you make it. <span style="color:#6ba86a">✳</span></h2><p class="modal-lead">Set your goals, pick your competition, and choose Classic or Modern rules, and explore a different era.<br/>You can earn, learn, shop, recharge, and live a little.</p></div>${isInitial?'':'<button class="modal-close" data-close aria-label="Close">×</button>'}</div>
+ <form id="startForm"><div class="new-form"><label><div class="field-label">YOUR NAME</div><input class="form-input" name="name" maxlength="24" value="You" required /></label><label><div class="field-label">GAME MODE</div><select class="form-select" id="gameMode" name="mode"><option value="solo">Solo vs. The Rival (AI)</option><option value="hotseat">2 humans · same computer</option><option value="online">Online co-op · friend code + Looprd</option><option value="sandbox">Relaxed · Play alone</option></select></label><label id="friendField" style="display:none;grid-column:1/-1"><div class="field-label">PLAYER 2 NAME</div><input class="form-input" name="friend" maxlength="24" value="Player 2" /></label><label id="onlineServerField" style="display:none;grid-column:1/-1"><div class="field-label">LOOPRD SERVER FQDN</div><input class="form-input" name="onlineServer" id="onlineServer" autocomplete="url" value="${esc(window.LifeOnline.suggestedServer())}" placeholder="api.server.country" /><small>Enter only the API server address; /looprd/the-life-loop/v1 is automatic. The room code appears after creation.</small></label></div>
+ <div class="new-settings-block" aria-label="Ruleset selection"><div class="section-heading"><span>GAME RULES</span><span class="muted micro">CHANGES GAMEPLAY</span></div><div class="setup-options setup-rules">
+ <label class="setup-choice"><input type="radio" name="ruleset" value="classic" checked/><span class="setup-choice-text"><b>♟ Classic Rules</b><small>60h weeks · 11 diplomas · dismissal risk · career caps</small><em>Original parity is still in progress</em></span></label>
+ <label class="setup-choice"><input type="radio" name="ruleset" value="modern"/><span class="setup-choice-text"><b>✦ Modern Story</b><small>40-hour weeks · friendships · civic projects and events</small><em>Existing game balance</em></span></label></div></div>
+ <div class="new-settings-block" aria-label="World era selection"><div class="section-heading"><span>WORLD ERA</span><span class="muted micro">VISUALS ONLY · SAME ECONOMY</span></div><div class="setup-options setup-eras">${Object.entries(D.worldEras).map(([key,era])=>`<label class="setup-choice era-option"><input type="radio" name="era" value="${key}" ${key==='current'?'checked':''}/><span class="setup-era-art">${Art.scene('office',true,key)}</span><span class="setup-choice-text"><b>${esc(era.label)}</b><small>${esc(era.city)}</small></span></label>`).join('')}</div><p class="setup-explain">The era changes buildings, citizens' outfits, and city names. It does not change wages, prices or career rules.</p></div>
  <div class="goal-settings"><div class="section-heading"><span>Choose your life goals</span><span class="muted micro">LOWER = SHORTER GAME</span></div>${D.GOAL_KEYS.map((key,i)=>`<label class="modal-goal"><span>${{wealth:'💰 Wealth',happiness:'☀️ Happiness',education:'🎓 Education',career:'🚀 Career'}[key]}</span><input type="range" class="range" name="${key}" min="10" max="100" step="5" value="${[40,55,50,45][i]}" aria-label="${key} goal"/><strong data-range-value="${key}">${[40,55,50,45][i]}%</strong></label>`).join('')}</div>
  <button class="modal-primary" type="submit">Let's get living &nbsp; ↗</button></form>${saved?'<button class="modal-secondary" type="button" id="resumeBtn">↺ &nbsp; Continue your saved game (week '+Number(saved.week||1)+')</button>':''}<div class="modal-footnote">Autosaves after every action · Completely offline · Original artwork and code</div></section>`);
- $('gameMode').addEventListener('change',e=>{$('friendField').style.display=e.target.value==='hotseat'?'block':'none';});
+ $('gameMode').addEventListener('change',e=>{$('friendField').style.display=['hotseat','online'].includes(e.target.value)?'block':'none';$('onlineServerField').style.display=e.target.value==='online'?'block':'none';$('onlineServer').required=e.target.value==='online';});
  $('startForm').addEventListener('input',e=>{if(e.target.type==='range'){const el=document.querySelector(`[data-range-value="${e.target.name}"]`);if(el)el.textContent=e.target.value+'%';}});
- $('startForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);game=new Game({name:String(f.get('name')),mode:String(f.get('mode')),friend:String(f.get('friend')||''),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(f.get(k))]))});didShowWin=false;store();closeOverlay();render();toast('Welcome to New Day City. Your story starts now!');});
+ $('startForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.currentTarget),online=f.get('mode')==='online';
+ if(net.role)net.disconnect();
+ game=new Game({name:String(f.get('name')),mode:online?'hotseat':String(f.get('mode')),friend:String(f.get('friend')||''),ruleset:String(f.get('ruleset')||'modern'),era:String(f.get('era')||'current'),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(f.get(k))]))});
+ didShowWin=false;store();closeOverlay();render();
+ if(online){try{await net.host(String(f.get('onlineServer')));onlineDialog();toast('Room created! Share '+net.code+' with your friend.');}catch(err){toast('Server did not create a room: '+err.message,true);newGameDialog();}}
+ else toast('Welcome to '+eraMeta().city+' · '+game.rules.name+'!');
+});
  if($('resumeBtn'))$('resumeBtn').addEventListener('click',()=>{try{game=Game.load(saved);didShowWin=!!game.winner;closeOverlay();render();toast('Welcome back!');}catch(e){toast('Saved game could not be loaded: '+e.message,true);}});
 }
-function guide(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">THE PLAYER'S FIELD GUIDE</span><h2>Make every week count.</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div><p class="modal-lead">Like the classic 1990s life-board games, you race to reach four goals at the same time: wealth, happiness, education and career.</p><div class="guide-grid"><div class="guide-item"><b>💬 Build friendships</b>Talk each week, make meaningful story choices, and earn trust. At 18 trust, each local offers a special favor every four weeks.</div><div class="guide-item"><b>📖 Follow seasonal stories</b>After meeting a resident, earn trust to unlock three-stage shared stories. Chapter choices affect two residents, and can permanently improve city prices or wages.</div><div class="guide-item"><b>▥ Track your finances</b>Open Finances to see net worth, recent transactions, monthly expenses and your milestones. Moving money between accounts is not income.</div><div class="guide-item"><b>✷ Follow the City Pulse</b>A new event every four weeks changes prices and wages. Visit its featured venue for a once-per-event opportunity.</div><div class="guide-item"><b>📍 Travel costs time</b>Click any building on the city board to visit it. Farther destinations cost more hours.</div><div class="guide-item"><b>💼 Your first job</b>Visit Career Center, apply for an entry-level job, then travel to the workplace to earn money.</div><div class="guide-item"><b>🎓 Better work needs education</b>Take courses at Brightside U, build experience by working, and gain reliability to unlock promotions.</div><div class="guide-item"><b>🥑 Food, rent, and energy</b>Eat each week, pay monthly rent, rest when tired, and keep an emergency fund.</div><div class="guide-item"><b>💰 Spend or save</b>New clothing unlocks jobs, home upgrades improve your lifestyle, and savings protect your finances.</div><div class="guide-item"><b>🏁 Beat the competition</b>The Rival takes a turn each week. Meet all four personal goal targets before they do to win.</div></div><p class="modal-lead" style="margin:16px 0 0">Every turn represents a week of life with up to 40 hours of discretionary time. Any unused time expires on Sunday. Your game saves locally after each action.</p><button type="button" class="modal-primary" data-close>Got it, let's play ↗</button></section>`);}
+function guide(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">THE PLAYER'S FIELD GUIDE</span><h2>Make every week count.</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div><p class="modal-lead">Like the classic 1990s life-board games, you race to reach four goals at the same time: wealth, happiness, education and career.</p><div class="guide-grid"><div class="guide-item"><b>🕰️ Rules & era</b>Selected rules: ${esc(game.rules.name)} · ${game.rules.hours} hours/week. World: ${esc(eraMeta().label)} (${esc(eraMeta().city)}). Historical and Sci-Fi change only the presentation.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>💬 Build friendships</b>Talk each week, make meaningful story choices, and earn trust. At 18 trust, each local offers a special favor every four weeks.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>📖 Follow seasonal stories</b>After meeting a resident, earn trust to unlock three-stage shared stories. Chapter choices affect two residents, and can permanently improve city prices or wages.</div><div class="guide-item"><b>▥ Track your finances</b>Open Finances to see net worth, recent transactions, monthly expenses and your milestones. Moving money between accounts is not income.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>✷ Follow the City Pulse</b>A new event every four weeks changes prices and wages. Visit its featured venue for a once-per-event opportunity.</div><div class="guide-item"><b>📍 Travel costs time</b>Click any building on the city board to visit it. Farther destinations cost more hours.</div><div class="guide-item"><b>💼 One active job</b>Get hired at Career Center, work only at your employer, and apply there again to change jobs. Switching replaces your old position; you cannot hold two regular jobs.</div><div class="guide-item"><b>🎓 Career pathways</b>Classic has 11 branching diplomas and original DOS occupations; Modern has four staged degrees and specialist certificates. Careers span retail, hospitality, technology, finance, and management.</div><div class="guide-item"><b>🥑 Food, rent, and energy</b>Eat each week, pay monthly rent, rest when tired, and keep an emergency fund. In Classic, visit the Rent Office (Open Door Realty in the current era) during week 4 and every fourth week thereafter to pay rent in cash. Black’s Market offers fresh food in 1/2/4-week bundles; refrigeration holds 6 portions, a freezer expands it to 12. The bank handles monthly loans and six markets with no savings interest.</div><div class="guide-item"><b>👔 Clothing expires</b>Start with 6 weeks of casual clothes. All clothing wears down once each week, even unused. Dress and business outfits cover lower job requirements. Cheap clothes last less time.</div><div class="guide-item"><b>🏁 Beat the competition</b>The Rival takes a turn each week. Meet all four personal goal targets before they do to win.</div></div><p class="modal-lead" style="margin:16px 0 0">Every turn represents a week of life with up to ${game.rules.hours} hours of discretionary time in ${game.isClassic?'Classic (in-progress)':'Modern Story'} rules. Any unused time expires on Sunday. Your game saves locally after each action.</p><button type="button" class="modal-primary" data-close>Got it, let's play ↗</button></section>`);}
 function showWinner(){const p=game.players.find(x=>x.id===game.winner);if(!p)return;showModal(`<section class="modal compact winner-center"><div class="winner-art">🏆</div><span class="eyebrow dark">THE FINISH LINE</span><h2>${esc(p.name)} did it!</h2><p class="modal-lead">Four life goals achieved in ${game.week} weeks.<br/>The race was about money, joy, knowledge, and finding your place. What a ride.</p><button class="modal-primary" id="playAgainBtn" type="button">A new life awaits ↗</button><button class="modal-secondary" data-close>Look back at the city</button></section>`);$('playAgainBtn').addEventListener('click',()=>newGameDialog());}
 function loadDialog(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">PICK UP WHERE YOU LEFT OFF</span><h2>Welcome back.</h2></div><button class="modal-close" data-close>×</button></div><p class="modal-lead">Restore your latest local autosave or import a saved game JSON file.</p><button class="modal-primary" id="loadLocal">Restore local autosave</button><button class="modal-secondary" id="loadFile">Import a .json file</button><p class="modal-footnote">Loading replaces the current game. Export a save first if you want to keep it.</p></section>`);
  $('loadLocal').addEventListener('click',()=>{try{const data=restore();if(!data)throw Error('No autosave found');game=Game.load(data);didShowWin=!!game.winner;closeOverlay();render();store();toast('Saved game restored.');}catch(e){toast(e.message,true);}});
@@ -1065,19 +1945,45 @@ function showFinances(){
  const milestones=f.milestones.length?f.milestones.map(m=>`<li><b>W${m.week}</b> ${esc(m.text)}</li>`).join(''):'<li>Your first milestone is still ahead.</li>';
  showModal(`<section class="modal finance-modal" aria-label="Financial history"><div class="modal-head"><div><span class="eyebrow dark">YOUR FINANCIAL STORY · WEEK ${game.week}</span><h2>Where the money goes.</h2><p class="modal-lead">${esc(p.name)} · Actual account changes, not estimated spending</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="finance-metrics"><div><span>NET WORTH</span><strong>${fmt(f.netWorth)}</strong></div><div><span>LAST 4 WEEKS · GAINS</span><strong>${fmt(f.income)}</strong></div><div><span>LAST 4 WEEKS · COSTS</span><strong>${fmt(f.expenses)}</strong></div></div><div class="finance-chart-heading"><b>Wealth over time</b><div class="finance-legend"><span>● Net worth</span><span>● Cash</span></div></div>${graph}<p class="finance-help">Transfers between cash, savings and investments are tracked but not counted as earnings. Weekend bills, rent, interest and investment performance are included in the net change.</p><div class="finance-bottom"><div><h3>Latest transactions</h3><div class="finance-table-scroll"><table class="finance-table"><thead><tr><th>Week</th><th>Activity</th><th>Type</th><th>Net change</th></tr></thead><tbody>${entries}</tbody></table></div></div><div><h3>Life milestones</h3><ol class="finance-milestones">${milestones}</ol></div></div></section>`);
 }
+function showCareers(){
+ if(game.pendingEncounter){toast('Finish the current conversation first.',true);return;}
+ const p=game.player;
+ const tracks=Object.groupBy?Object.groupBy(game.jobs,j=>j.track||({repair:'Technology',teller:'Finance',tutor:'Academia',analyst:'Business',engineer:'Technology',director:'Business'}[j.id]||'General')):game.jobs.reduce((o,j)=>{const k=j.track||({repair:'Technology',teller:'Finance',tutor:'Academia',analyst:'Business',engineer:'Technology',director:'Business'}[j.id]||'General');(o[k]??=[]).push(j);return o;},{});
+ const jobs=Object.entries(tracks).sort((a,b)=>a[0].localeCompare(b[0])).map(([track,roles])=>`<div class="career-track"><h3>${esc(track)}</h3>${roles.slice().sort((a,b)=>a.tier-b.tier).map(j=>{
+   const reasons=game.jobReasons(p,j);
+   const classicReq=game.isClassic?game.jobRequirement(j):null;
+   const isCurrent=p.job===j.id;
+   const dressed=game.isDressedFor(p,j);
+   return `<div class="career-role ${isCurrent?'active':''}"><div><strong>${esc(j.name)}</strong><small>${esc(j.employer||placeLabel(j.place))} · Level ${j.tier} · ${fmt(j.wage)}/hour base</small><small>${esc(D.clothing[j.clothes].name)} or better${game.isClassic?` · XP ${classicReq.experience} · Reliability ${classicReq.dependability}${classicReq.degrees.length?' · '+classicReq.degrees.map(id=>D.classicDegrees.find(x=>x.id===id).name).join(' + '):''}`:j.course?' · '+esc(D.courses.find(c=>c.id===j.course).name):''}</small></div><span class="career-status">${isCurrent?'CURRENT JOB':reasons.length?esc(reasons.join(' · ')):dressed?'READY TO APPLY':'UNIFORM NEEDED FOR SHIFTS'}</span></div>`;
+ }).join('')}</div>`).join('');
+ const certs=game.isClassic?D.classicDegrees.map(d=>{
+    const prereqs=d.requires.map(id=>D.classicDegrees.find(x=>x.id===id).name);
+    const completed=p.classicDegrees.includes(d.id);
+    return `<div class="career-course"><strong>${esc(d.name)}</strong><span>${prereqs.length?'Requires '+esc(prereqs.join(' + ')):'Available initially'} · ${game.classicLessons(p)} lessons at 6h · $50 enrollment · +5 reliability on graduation</span><b>${completed?'✓ Degree':`${p.classicProgress[d.id]||0}/${game.classicLessons(p)} lessons${p.classicEnrolled.includes(d.id)?' · ACTIVE':''}`}</b></div>`;
+  }).join(''):D.courses.map(c=>`<div class="career-course"><strong>${esc(c.name)}</strong><span>${esc(c.detail)} · ${c.sessions} lessons at ${fmt(c.cost)} base each · requires Education ${c.education}</span><b>${p.coursesCompleted.includes(c.id)?'✓ Complete':`${p.courseProgress[c.id]||0}/${c.sessions} sessions`}</b></div>`).join('');
+ showModal(`<section class="modal careers-modal" aria-label="Career progression roadmap"><div class="modal-head"><div><span class="eyebrow dark">YOUR CAREER ROADMAP</span><h2>Find your next chapter.</h2><p class="modal-lead">One job at a time. Apply at the Career Center; shifts require clothing at your workplace. ${game.isClassic?'Classic applications require the listed degrees, Experience and Dependability. Every job has its own stat caps; reliability below requirement − 5 causes dismissal when you try to work.':'Job offers depend on education, experience, reliability, and sometimes a short course.'}</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="careers-wardrobe"><b>Current wardrobe</b>${game.clothingSummary(p).map(x=>`<span class="${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)}: ${x.weeks}w</span>`).join('')}<small>Every category ages once per week, whether used or not.</small></div><h3 class="career-section-title">${game.isClassic?'Eleven Classic diplomas · university':'Specialist certificates · Brightside U'}</h3><div class="career-courses">${certs}</div><h3 class="career-section-title">Career paths</h3><div class="career-tracks">${jobs}</div><p class="modal-footnote">${game.isClassic?'Reference-based Classic progression. 37 documented DOS/floppy jobs, wages, uniforms and degrees are active. Two CD-only jobs and some location/building mechanics are not yet included.':'Base pay changes with the economy at hiring. Current wages can differ after raises. Buying clothing is separate from being eligible to apply.'}</p><button class="modal-primary" data-close type="button">Return to the city</button></section>`);
+}
 function saveExport(){const file=new Blob([JSON.stringify({format:'the-life-loop-v1',...game.snapshot()},null,2)],{type:'application/json'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download=`the-life-loop-week-${String(game.week).padStart(2,'0')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Save file exported!');}
-$('board').addEventListener('click',e=>{const btn=e.target.closest('[data-travel]');if(!btn)return;const result=game.travel(btn.dataset.travel);if(result.ok){store();render();}toast(result.message,!result.ok);});
-$('actions').addEventListener('click',e=>{const btn=e.target.closest('[data-act]');if(!btn||btn.disabled)return;const actionId=btn.dataset.act,location=game.player.location;const result=game.act(actionId);if(result.ok){store();render();if(actionId==='chat'&&!game.pendingEncounter)showSmallTalk(result.message,location);}toast(result.message,!result.ok);});
-$('endTurnBtn').addEventListener('click',()=>{const result=game.endTurn();if(result.ok){store();render();toast('Next chapter: week '+game.week+'!');}else toast(result.message,true);});
+$('board').addEventListener('click',async e=>{const btn=e.target.closest('[data-travel]');if(!btn)return;const result=await net.execute('travel',btn.dataset.travel,()=>game.travel(btn.dataset.travel));if(result.ok&&net.role!=='guest'){store();render();}if(result.ok&&mobileBreakpoint.matches)setMobileView('actions');toast(result.message,!result.ok);});
+$('actions').addEventListener('change',e=>{if(e.target.id==='classicEmployerFilter'){classicEmployerFilter=e.target.value;render();}});
+$('actions').addEventListener('click',async e=>{const btn=e.target.closest('[data-act]');if(!btn||btn.disabled)return;const actionId=btn.dataset.act,location=game.player.location;if(actionId.startsWith('apply:')&&confirmEmploymentSwitch(actionId))return;const result=await net.execute('act',actionId,()=>game.act(actionId));if(result.ok&&net.role!=='guest'){store();render();if(actionId==='chat'&&!game.pendingEncounter)showSmallTalk(result.message,location);}toast(result.message,!result.ok);});
+$('endTurnBtn').addEventListener('click',async()=>{const result=await net.execute('endTurn',null,()=>game.endTurn());if(result.ok&&net.role!=='guest'){store();render();}toast(result.message,!result.ok);});
 $('guideBtn').addEventListener('click',guide);
 $('financeBtn').addEventListener('click',showFinances);
+$('careerBtn').addEventListener('click',showCareers);
 $('newBtn').addEventListener('click',()=>newGameDialog());
+$('mobileNav').addEventListener('click',e=>{const tab=e.target.closest('[data-mobile-tab]');if(tab)setMobileView(tab.dataset.mobileTab);});
+mobileBreakpoint.addEventListener('change',updateMobileAccessibility);
+setMobileView('city',{scroll:false});
+$('onlineBtn').addEventListener('click',onlineDialog);
 $('saveBtn').addEventListener('click',saveExport);
-$('loadBtn').addEventListener('click',loadDialog);
-$('overlay').addEventListener('click',e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=game.chooseEncounter(choice.dataset.choose);if(r.ok){$('overlay').dataset.kind='';closeOverlay();store();render();}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
-$('filePicker').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
+$('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
+$('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
+$('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();});
+net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast});
 render();newGameDialog(true);
+net.resume().then(reconnected=>{if(reconnected){$('overlay').dataset.kind='';closeOverlay();toast('Reconnected to room '+net.code);}else if(new URLSearchParams(location.search).has('join'))onlineDialog();});
 })();
 
 </script>
