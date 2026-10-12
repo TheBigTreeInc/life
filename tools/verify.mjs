@@ -89,7 +89,10 @@ if(!['LL-078','LL-079','LL-080','LL-081'].every(id=>manifest.implemented.some(t=
 if(!manifest.implemented.some(t=>t.id==='LL-073')||!manifest.implemented.some(t=>t.id==='LL-074')||!manifest.implemented.some(t=>t.id==='LL-075'))errors.push('Mobile UI workboard tasks missing');
 if(!manifest.implemented.some(t=>t.id==='LL-076')||!manifest.implemented.some(t=>t.id==='LL-077'))errors.push('v0.5.4 release synchronization workboard tasks missing');
 if(!load('index.html').includes('id="mobileNav"'))errors.push('Mobile panel controls missing');
+if(!load('index.html').includes('src/characters.js')||!load('PLAY.html').includes('the-life-loop-characters-v1')||!load('src/app.js').includes('showCharacterLibrary('))errors.push('Browser-local character creator missing');
+if(!load('docs/decisions/ADR-0009-offline-reusable-character-profiles.md').includes('**Status:** Accepted'))errors.push('Character creator architecture decision missing');
+if(!['LL-083','LL-084','LL-085'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-086'))errors.push('Character creator workboard tasks missing');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

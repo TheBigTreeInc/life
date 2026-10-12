@@ -135,3 +135,7 @@ The Life Loop supports a two-human remote hotseat session as an opt-in New Game 
 ## 12. Mobile presentation and FQDN-only Looprd setup (ADR-0007, v0.5.3)
 
 At phone/tablet widths the three desktop panels become independent accessible views for City, Activities and My life, with a persistent compact turn summary. Travel selects the local Activities view automatically; no engine state or online messages change. Small viewports display storefronts in a two-column illustrated grid. The backend address is supplied by the user as a Looprd API server FQDN; the browser derives the standard `/looprd/the-life-loop/v1` route (not the `/_looprd` management route). See [ADR-0007](docs/decisions/ADR-0007-responsive-mobile-layout.md).
+
+## v0.5.6 — Local identities as presentation-only profiles
+
+Reusable character profiles use a separate browser-local store, not the authoritative game engine's progression database. Only allowlisted appearance fields are embedded in a player snapshot; no character-creation field affects wages, goal progression, time, luck or Classic parity. See [ADR-0009](docs/decisions/ADR-0009-offline-reusable-character-profiles.md).

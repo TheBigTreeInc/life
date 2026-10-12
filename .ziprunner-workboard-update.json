@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.5",
-  "summary": "v0.5.5: sliding notification-aware story/destination panels, top-right utility menu, explicit multiplayer turn ownership and Looprd server diagnostics; all Classic/Modern mechanics unchanged.",
+  "version": "0.5.6",
+  "summary": "v0.5.6: browser-local reusable character creator with customizable portrait and personality, selected in solo, hotseat and multiplayer join, save-game appearance persistence; no Classic or Modern rules changes.",
   "implemented": [
     {
       "id": "LL-001",
@@ -533,6 +533,30 @@
       "operator_checks": [
         "Connect two browsers to Looprd; check ownership banner and /info response."
       ]
+    },
+    {
+      "id": "LL-083",
+      "title": "Local multi-character library",
+      "summary": "Create, edit, select and delete up to sixteen independent characters in browser localStorage, with no account or Looprd database dependency.",
+      "operator_checks": [
+        "Create two characters; select each; reload; delete one; verify remaining character persists."
+      ]
+    },
+    {
+      "id": "LL-084",
+      "title": "In-game character studio and portraits",
+      "summary": "Responsive character editor with skin tone, hairstyle and color, outfit, favorite color, expression and personality; displayed in UI and New Game.",
+      "operator_checks": [
+        "Test profile editor at 320px and 1280px; preview and sidebar portrait must match selected choices."
+      ]
+    },
+    {
+      "id": "LL-085",
+      "title": "Character save integration and regression",
+      "summary": "Copy cosmetic character appearance into individual game player snapshots, handle legacy saves without appearance, preserve identical game mechanics and offline standalone build.",
+      "operator_checks": [
+        "Start Classic and Modern from a saved character; export/import; check the same portrait and 60h/40h rules unchanged."
+      ]
     }
   ],
   "remaining": [
@@ -610,6 +634,12 @@
       "title": "Production Looprd two-browser acceptance",
       "summary": "Deploy actual server, verify registration, independent turn ownership, WebSocket/fallback, reconnections, invalid command rejection and host-disconnect handling",
       "priority": "high"
+    },
+    {
+      "id": "LL-086",
+      "title": "Cross-device character portability and live multi-device identity",
+      "summary": "Optional explicit character-library export/import, guest appearance updates transmitted through Looprd schema after validated production integration, and actual Android/iOS browser-storage checks.",
+      "priority": "medium"
     }
   ]
 }

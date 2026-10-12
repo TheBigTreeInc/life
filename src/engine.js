@@ -1,6 +1,7 @@
 (function (root) {
 'use strict';
 const D = root.LifeData || (typeof require === 'function' ? require('./data.js') : null);
+const Characters = root.LifeCharacters || (typeof require === 'function' ? require('./characters.js') : null);
 const find = (arr,id)=>arr.find(x=>x.id===id);
 const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
 const money = n=>'$'+Math.floor(n).toLocaleString('en-US');
@@ -16,7 +17,12 @@ class LifeGame {
     this.messages=[];
     const name=(settings.name||'You').trim().slice(0,24)||'You';
     this.players=[this.createPlayer('player',name,false,'#b3f485')];
-    if(mode==='hotseat') this.players.push(this.createPlayer('friend',(settings.friend||'Player 2').trim().slice(0,24)||'Player 2',false,'#f8b3df'));
+    if(settings.character)this.players[0].appearance=Characters.normalizeAppearance(settings.character);
+    if(mode==='hotseat'){
+      const friend=this.createPlayer('friend',(settings.friend||'Player 2').trim().slice(0,24)||'Player 2',false,'#f8b3df');
+      if(settings.friendCharacter)friend.appearance=Characters.normalizeAppearance(settings.friendCharacter);
+      this.players.push(friend);
+    }
     if(mode!=='sandbox') this.players.push(this.createPlayer('jones','The Rival',true,'#b6b0ff'));
     this.log(`Week 1. A fresh start, a pocketful of hope, and ${money(this.players[0].cash)} in cash.`, 'good');
   }
@@ -793,6 +799,7 @@ class LifeGame {
     game.classicStockPrices=Object.fromEntries(D.classicStocks.map(x=>[x.id,Number.isInteger(obj.classicStockPrices?.[x.id])&&obj.classicStockPrices[x.id]>=Math.max(1,Math.floor(x.base*.5))&&obj.classicStockPrices[x.id]<=Math.ceil(x.base*2.5)?obj.classicStockPrices[x.id]:x.base]));
     game.players=obj.players;
     for(const p of game.players){
+      if(p.appearance)p.appearance=Characters.normalizeAppearance(p.appearance);
       const legacyPortfolio=p.classicPortfolio===undefined;
       p.classicPortfolio=p.classicPortfolio&&typeof p.classicPortfolio==='object'&&!Array.isArray(p.classicPortfolio)?
         Object.fromEntries(D.classicStocks.map(x=>[x.id,clamp(Math.floor(Number(p.classicPortfolio[x.id])||0),0,100000)])):Object.fromEntries(D.classicStocks.map(x=>[x.id,0]));

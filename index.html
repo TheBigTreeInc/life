@@ -24,6 +24,7 @@
         <div class="utility-holder">
           <button class="text-button utility-trigger" id="utilityMenuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="utilityMenu" aria-label="Game menu">☰ <span>Menu</span></button>
           <div class="utility-menu" id="utilityMenu" role="menu" hidden>
+            <button type="button" role="menuitem" id="charactersBtn">◉ My characters</button>
             <button type="button" role="menuitem" id="saveBtn">↓ Save game</button>
             <button type="button" role="menuitem" id="loadBtn">↑ Load game</button>
             <button type="button" role="menuitem" id="guideBtn">? How to play</button>
@@ -95,12 +96,13 @@
       <button type="button" data-mobile-tab="actions" aria-controls="gameActions" aria-pressed="false"><span aria-hidden="true">↗</span><strong>Activities</strong><span id="mobileActionsBadge" class="notification-circle" hidden>1</span></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.5</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.6</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="overlay" class="overlay" aria-modal="true" role="dialog"></div>
   <input id="filePicker" type="file" accept=".json,application/json" hidden />
   <script src="src/data.js"></script>
+  <script src="src/characters.js"></script>
   <script src="src/engine.js"></script>
   <script src="src/art.js"></script>
   <script src="src/network.js"></script>

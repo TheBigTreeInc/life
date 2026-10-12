@@ -1,6 +1,6 @@
 # The Life Loop — workboard v0.5.4
 
-Full-source release: `the-life-loop-0.5.5-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.6-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -175,4 +175,13 @@ No changes to gameplay, saved games, or Looprd database schema.
 - [x] **LL-081** — Persistent multiplayer turn ownership, host/guest and transport status; Looprd component info probe and room version diagnostics.
 - [ ] **LL-082 (high)** — Production acceptance: deploy `looprd.yaml` on a real Looprd server, verify GET `/looprd/the-life-loop/v1/info`, WebSocket subscription, 2-browser turns/reconnects and unauthorized command rejection.
 
-Operator: run `node tools/verify.mjs`; check widths 390, 1024, 1280, 1600; open slide-out panels and menu; connect as two users, confirm distinct OWN/WAITING labels in both browsers. `the-life-loop-0.5.5-ziprunner.zip` must include the updated hidden manifest. No runtime/config/private files included.
+Operator: run `node tools/verify.mjs`; check widths 390, 1024, 1280, 1600; open slide-out panels and menu; connect as two users, confirm distinct OWN/WAITING labels in both browsers. `the-life-loop-0.5.6-ziprunner.zip` must include the updated hidden manifest. No runtime/config/private files included.
+
+## v0.5.6 — Local reusable character creator
+
+- [x] **LL-083** — Browser-local library of up to sixteen independently selectable profiles. Create, edit, delete, and switch characters; no remote account or shared browser session needed.
+- [x] **LL-084** — Character studio with illustrated preview, skin tones, hair style/color, outfit, favorite color, expression, and descriptive personality. Accessible from New Game and the top-right menu.
+- [x] **LL-085** — Embed validated cosmetic appearance in saved-game snapshots without changing Classic/Modern mechanics, support old save files, and add automated regression coverage.
+- [ ] **LL-086 (medium)** — Optional explicit portable character-library export/import, live guest portrait propagation through separately validated Looprd protocol, and Android/iOS persistence acceptance.
+
+**Operator QA:** Create multiple characters in a browser; verify persistence after refresh and independent profile selection. Check quick-name play without profiles, local two-player character selection and online join display-name selection. Confirm save/import retains appearance, existing Classic saves still load, and private profile lists are not packaged or sent to Looprd. `the-life-loop-0.5.6-ziprunner.zip` is a full-source ZipRunner archive.
