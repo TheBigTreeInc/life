@@ -4,7 +4,7 @@ const D=window.LifeData;
 const Game=window.LifeGame;
 const Art=window.LifeArt;
 const Characters=window.LifeCharacters;
-// Rollback switch: keep the editor, assets and compiler in source, but do not expose or use them.
+// Feature switch remains OFF: editor, assets and compiler preserved but not exposed.
 const ENABLE_CHARACTER_CUSTOMIZATION=false;
 const SetupPrefs=window.LifeSetupPreferences;
 const preferencesStorage=(()=>{try{return window.localStorage;}catch{return null;}})();
@@ -13,25 +13,18 @@ const SAVE_KEY='the-life-loop-v1';
 let game=new Game();let net;let toastTimer;let didShowWin=false;let classicEmployerFilter="";let showFutureJobApplications=false;
 let mobileView='city';
 let openDrawer=null;
-let lastStoryFingerprint=null,lastDestinationFingerprint=null;
-let unreadStory=0,unreadDestination=0;
+let lastStoryFingerprint=null;
+let unreadStory=0;
+let venueInteraction={open:false,locationId:null,playerId:null,pending:false,lastMessage:""};
+let venueFocusReturn=null;let pendingGuestVenue=null;
 const wideScreen=window.matchMedia('(min-width:1600px)');
 const drawerScreen=window.matchMedia('(min-width:1025px) and (max-width:1599px)');
-const panelVisible=which=>wideScreen.matches||(mobileBreakpoint.matches?mobileView===(which==='story'?'life':'actions'):openDrawer===which);
-function refreshBadges(){
- const pairs=[['story',unreadStory,['storyBadge','mobileStoryBadge']],['actions',unreadDestination,['destinationBadge','mobileActionsBadge']]];
- for(const [kind,count,ids] of pairs){for(const id of ids){const badge=$(id);badge.hidden=!count;badge.textContent=String(Math.min(count,9))+(count>9?'+':'');badge.setAttribute('aria-label',`${count} new ${kind==='story'?'story updates':'destination updates'}`);}}
-}
-function markViewed(which){if(which==='story')unreadStory=0;else unreadDestination=0;refreshBadges();}
-function closeDrawer(){openDrawer=null;document.body.dataset.openDrawer='';$('drawerScrim').hidden=true;for(const [which,id] of [['story','storyDrawerBtn'],['actions','destinationDrawerBtn']])$(id).setAttribute('aria-expanded','false');}
-function setDrawer(which){
- if(!drawerScreen.matches)return;
- if(openDrawer===which){closeDrawer();return;}
- openDrawer=which;document.body.dataset.openDrawer=which;$('drawerScrim').hidden=false;
- for(const [name,id] of [['story','storyDrawerBtn'],['actions','destinationDrawerBtn']])$(id).setAttribute('aria-expanded',String(name===which));
- markViewed(which);
-}
-function updateLayout(){closeDrawer();updateMobileAccessibility();if(wideScreen.matches){markViewed('story');markViewed('actions');}}
+const panelVisible=which=>wideScreen.matches||(mobileBreakpoint.matches?mobileView==='life':openDrawer==='story');
+function refreshBadges(){for(const id of ['storyBadge','mobileStoryBadge']){const badge=$(id);badge.hidden=!unreadStory;badge.textContent=String(Math.min(unreadStory,9));badge.setAttribute('aria-label',`${unreadStory} new story updates`);}}
+function markViewed(which){if(which==='story'){unreadStory=0;refreshBadges();}}
+function closeDrawer(){openDrawer=null;document.body.dataset.openDrawer='';$('drawerScrim').hidden=true;$('storyDrawerBtn').setAttribute('aria-expanded','false');}
+function setDrawer(which){if(which!=='story'||!drawerScreen.matches)return;if(openDrawer===which){closeDrawer();return;}openDrawer='story';document.body.dataset.openDrawer='story';$('drawerScrim').hidden=false;$('storyDrawerBtn').setAttribute('aria-expanded','true');markViewed('story');}
+function updateLayout(){closeDrawer();updateMobileAccessibility();if(wideScreen.matches)markViewed('story');}
 function setUtilityMenu(open){if(open)setCoopMenu(false);$('utilityMenu').hidden=!open;$('utilityMenuBtn').setAttribute('aria-expanded',String(open));}
 function setCoopMenu(open){if(open)setUtilityMenu(false);$('coopMenu').hidden=!open;$('onlineBtn').setAttribute('aria-expanded',String(open));}
 
@@ -43,16 +36,17 @@ const percent=n=>Math.max(0,Math.min(100,Math.round(n)))+'%';
 const place=id=>D.places.find(x=>x.id===id);
 const mobileBreakpoint=window.matchMedia('(max-width:1024px)');
 function setMobileView(view,{scroll=true}={}){
- if(!['city','actions','life'].includes(view))return;
+ if(!['city','life'].includes(view))return;
  mobileView=view;document.body.dataset.mobileView=view;
  for(const tab of document.querySelectorAll('[data-mobile-tab]')){
   const active=tab.dataset.mobileTab===view;
   tab.setAttribute('aria-pressed',String(active));
  }
- for(const [name,id] of [['city','gameCity'],['actions','gameActions'],['life','gameLife']]){
+ for(const [name,id] of [['city','gameCity'],['life','gameLife']]){
   $(id).inert=mobileBreakpoint.matches&&view!==name;
  }
- if(view==='life')markViewed('story');if(view==='actions')markViewed('actions');
+ if(venueInteraction.open)updateVenueAccessibility();
+ if(view==='life')markViewed('story');
  if(scroll&&mobileBreakpoint.matches)window.scrollTo({top:0,behavior:'instant'});
 }
 function updateMobileAccessibility(){setMobileView(mobileView,{scroll:false});}
@@ -63,8 +57,46 @@ const icon={arc:'📖',favor:'🤝',pulse:'✷',chat:'💬',work:'⚒',relax:'�
 function toast(msg,error=false){const el=$('toast');el.textContent=msg;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3100);}
 function store(){if(net?.role==='guest')return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(game.snapshot()));}catch(e){/* Local files may deny localStorage; manual export remains available. */}}
 function restore(){try{const data=localStorage.getItem(SAVE_KEY);return data?JSON.parse(data):null;}catch(e){return null;}}
+function updateVenueAccessibility(){
+ const open=venueInteraction.open;
+ for(const id of ['board','mobileNav'])$(id).inert=open;
+ document.querySelector('.city-toolbar').inert=open;
+ $('gameLife').inert=open||(mobileBreakpoint.matches&&mobileView!=='life');
+}
+function openVenue(locationId,{focus=true}={}){
+ if(game.player.location!==locationId||game.winner||(net?.role&&!net.ownTurn()))return false;
+ if(venueInteraction.locationId!==locationId){classicEmployerFilter='';showFutureJobApplications=false;}
+ venueInteraction={open:true,locationId,playerId:game.player.id,pending:false,lastMessage:''};
+ venueFocusReturn=Array.from($('board').querySelectorAll('[data-travel]')).find(b=>b.dataset.travel===locationId)||null;
+ setMobileView('city',{scroll:false});closeDrawer();render();updateVenueAccessibility();
+ if(focus)$('venueTitle').focus({preventScroll:true});
+ return true;
+}
+function closeVenue({restoreFocus=true}={}){
+ if(!venueInteraction.open)return;
+ venueInteraction.open=false;venueInteraction.pending=false;venueInteraction.lastMessage='';
+ $('venueLayer').hidden=true;updateVenueAccessibility();
+ $('endTurnBtn').disabled=!!game.winner||(!!net?.role&&!net.ownTurn())||!!net?.busy||venueInteraction.pending;
+ const target=Array.from($('board').querySelectorAll('[data-travel]')).find(b=>b.dataset.travel===venueInteraction.locationId);
+ if(restoreFocus&&(target||venueFocusReturn)?.isConnected)(target||venueFocusReturn).focus({preventScroll:true});
+}
+function refreshVenueAfterAction(result){if(!venueInteraction.open)return;venueInteraction.lastMessage=result.message||'';if(result.ok&&net?.role==='guest'){closeVenue({restoreFocus:false});return;}render();}
+function venueFocusTrap(e){
+ if(!venueInteraction.open||$('overlay').classList.contains('open'))return;
+ if(e.key!=='Tab')return;
+ const enabled=Array.from($('venueLayer .venue-window').querySelectorAll('button:not([disabled]),select:not([disabled]),input:not([disabled]),[tabindex="-1"]')).filter(el=>el.getClientRects().length);
+ if(!enabled.length)return;
+ const first=enabled[0],last=enabled.at(-1);
+ if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+ else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+}
 function render(){
  const p=game.player,j=game.getJob(p),score=game.scores(p),current=place(p.location);
+ if(venueInteraction.open&&(venueInteraction.locationId!==p.location||venueInteraction.playerId!==p.id||game.winner||(net?.role&&!net.ownTurn())))closeVenue({restoreFocus:false});
+ const venueScroll=$('venueActions').scrollTop;
+ const venueFocused=document.activeElement?.dataset?.act;
+ const venueFocusedField=['classicEmployerFilter','careerShowAll'].includes(document.activeElement?.id)?document.activeElement.id:null;
+
  document.body.dataset.era=game.settings.era;
  document.body.dataset.ruleset=game.settings.ruleset;
  $('cityName').textContent=eraMeta().city.toUpperCase();
@@ -130,7 +162,7 @@ function render(){
  const relatedArcs=D.storyArcs.filter(a=>a.partner===current.id);
  const storyHelp=!game.isClassic&&localArc?`<div class="arc-progress"><b>📖 ${esc(localArc.title)}</b><span>${arcInfo.chapter>=3?'Story complete':`Chapter ${arcInfo.chapter+1}/3`}</span><small>${esc(arcInfo.chapter>=3?'A chapter of city history you helped write.':arcInfo.reason||'Next chapter is available in the activity list.')}</small></div>`:'';
  const links=(game.isClassic?[]:relatedArcs).filter(a=>(p.storyProgress?.[a.id]?.chapter||0)>0).map(a=>`<span class="story-partner">↗ ${esc(citizen.name)} is part of ${esc(a.title)}</span>`).join('');
- $('venue').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id,false,game.settings.era,p.home)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / ${D.places.length}</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}`;
+ $('venueSummary').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id,false,game.settings.era,p.home)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / ${D.places.length}</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}`;
  const allActions=game.actions();
  const classicEmployment=game.isClassic&&p.location==='agency';
  if(classicEmployment&&(!classicEmployerFilter||!game.jobs.some(j=>j.employer===classicEmployerFilter))){
@@ -147,23 +179,25 @@ function render(){
  });
  const filterHtml=p.location==='agency'?`<div class="agency-hiring-panel"><strong>${qualified.length} positions match your qualifications</strong><small>${jobApplications.length-qualified.length} other positions in the career roadmap. Qualifications don't guarantee an opening.</small><label class="agency-expand"><input id="careerShowAll" type="checkbox" ${showFutureJobApplications?'checked':''}/> Show future jobs and missing requirements</label>${classicEmployment?`<label class="agency-filter"><span>APPLY AT EMPLOYER</span><select id="classicEmployerFilter" aria-label="Choose an employer"><option value="all" ${classicEmployerFilter==='all'?'selected':''}>All employers · Overview</option>${employers.map(e=>`<option value="${esc(e)}" ${e===classicEmployerFilter?'selected':''}>${esc(e)} · ${game.jobs.filter(j=>j.employer===e&&!game.jobReasons(p,j).length).length} eligible</option>`).join('')}</select></label><small>Choose a workplace to see its jobs. Qualified roles are shown first; future positions are optional.</small>`:''}</div>`:'';
  $('actionsCount').textContent=actions.filter(a=>a.enabled).length+' available';
- $('actions').innerHTML=filterHtml+(actions.length?actions.map(a=>{
-   const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled&&(!net?.role||net.ownTurn())&&!net?.busy?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
- }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>');
- $('hint').innerHTML=`<b>✦ TODAY'S TIP</b><br/>${esc(hint(p))}`;
+ $('venueActions').innerHTML=venueInteraction.open?(filterHtml+(actions.length?actions.map(a=>{
+   const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled&&(!net?.role||net.ownTurn())&&!net?.busy&&!venueInteraction.pending?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
+ }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>')):'';
+ $('venueTitle').textContent=placeLabel(current.id);
+ $('venueDescription').textContent=current.blurb;
+ const feedback=$('venueFeedback'); feedback.textContent=venueInteraction.lastMessage;
+ $('venueLayer').hidden=!venueInteraction.open;
+ if(venueInteraction.open){$('venueActions').scrollTop=venueScroll;if(venueFocused){const focusItem=Array.from($('venueActions').querySelectorAll('[data-act]')).find(b=>b.dataset.act===venueFocused);if(focusItem&&!focusItem.disabled)focusItem.focus({preventScroll:true});}else if(venueFocusedField&&$(venueFocusedField))$(venueFocusedField).focus({preventScroll:true});}
+
  $('onlineBtn').title=net?.indicator()||'Co-op';
  const visibleMessages=game.messages.filter(m=>m.actor==='system'||m.actor===p.id||m.actor==='jones');
  const storyFingerprint=JSON.stringify([p.id,game.week,...visibleMessages.slice(-6).map(m=>[m.actor,m.message,m.week])]);
- const destinationFingerprint=JSON.stringify([p.id,p.location,game.week,game.actions().filter(a=>a.enabled).map(a=>a.id)]);
  if(lastStoryFingerprint!==null&&storyFingerprint!==lastStoryFingerprint&&!panelVisible('story'))unreadStory=Math.min(9,unreadStory+1);
- if(lastDestinationFingerprint!==null&&destinationFingerprint!==lastDestinationFingerprint&&!panelVisible('actions'))unreadDestination=Math.min(9,unreadDestination+1);
- if(lastDestinationFingerprint===null&&!panelVisible('actions')&&game.actions().some(a=>a.enabled))unreadDestination=1;
- lastStoryFingerprint=storyFingerprint;lastDestinationFingerprint=destinationFingerprint;
- if(panelVisible('story'))unreadStory=0;if(panelVisible('actions'))unreadDestination=0;
+ lastStoryFingerprint=storyFingerprint;
+ if(panelVisible('story'))unreadStory=0;
  refreshBadges();
- $('endTurnBtn').disabled=!!game.winner||(!!net?.role&&!net.ownTurn())||!!net?.busy;
- $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'Wrap up this week';
- if(game.winner&&!didShowWin){didShowWin=true;showWinner();}
+ $('endTurnBtn').disabled=venueInteraction.open||!!game.winner||(!!net?.role&&!net.ownTurn())||!!net?.busy||venueInteraction.pending;
+ $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'End week';
+ if(game.winner&&!didShowWin){closeVenue({restoreFocus:false});didShowWin=true;showWinner();}
  if(game.pendingEncounter&&(!net?.role||net.ownTurn())&&$('overlay').dataset.kind!=='encounter')showEncounter();
  chatRender();
 }
@@ -196,7 +230,7 @@ function onlineDialog(){
  if(connected){
   $('checkLooprd').addEventListener('click',async()=>{const button=$('checkLooprd');button.disabled=true;try{const outcome=await net.probe();toast(outcome);}catch(e){toast('Looprd check failed: '+e.message,true);}finally{if($('overlay').classList.contains('open')&&$('overlay').querySelector('#roomDiagnostics'))onlineDialog();}});
   $('copyInvite').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(net.inviteLink());toast('Invite link copied');}catch(e){toast('Copy unavailable: '+e.message,true);}});
-  $('disconnectOnline').addEventListener('click',()=>{net.disconnect();closeOverlay();toast('Disconnected from multiplayer');});
+  $('disconnectOnline').addEventListener('click',()=>{net.disconnect();closeVenue({restoreFocus:false});closeOverlay();toast('Disconnected from multiplayer');});
  }else{
   if(ENABLE_CHARACTER_CUSTOMIZATION)$('joinCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)$('joinOnlineForm').elements.name.value=p.name;});
   $('joinOnlineForm').addEventListener('submit',async e=>{
@@ -358,16 +392,16 @@ function newGameDialog(isInitial=false){
   updatePreferences();
   if(net.role)net.disconnect();
   game=new Game({name:String(f.get('name')),character:ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===f.get('characterId'))||null:null,friendCharacter:ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===f.get('friendCharacterId'))||null:null,mode:online?'hotseat':String(f.get('mode')),friend:String(f.get('friend')||''),ruleset:String(f.get('ruleset')||'classic'),era:String(f.get('era')||'current'),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(f.get(k))])),jonesDifficulty:String(f.get('jonesDifficulty')||'fair')});
-  didShowWin=false;store();closeOverlay();render();
+  didShowWin=false;closeVenue({restoreFocus:false});store();closeOverlay();render();
   if(online){try{await net.host(String(f.get('onlineServer')));onlineDialog();toast('Room created! Share '+net.code+' with your friend.');}catch(err){toast('Server did not create a room: '+err.message,true);newGameDialog();}}
   else toast('Welcome to '+eraMeta().city+' · '+game.rules.name+'!');
  });
- if($('resumeBtn'))$('resumeBtn').addEventListener('click',()=>{try{game=Game.load(saved);didShowWin=!!game.winner;closeOverlay();render();toast('Welcome back!');}catch(e){toast('Saved game could not be loaded: '+e.message,true);}});
+ if($('resumeBtn'))$('resumeBtn').addEventListener('click',()=>{try{game=Game.load(saved);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();render();toast('Welcome back!');}catch(e){toast('Saved game could not be loaded: '+e.message,true);}});
 }
 function guide(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">THE PLAYER'S FIELD GUIDE</span><h2>Make every week count.</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div><p class="modal-lead">Like the classic 1990s life-board games, you race to reach four goals at the same time: wealth, happiness, education and career.</p><div class="guide-grid"><div class="guide-item"><b>🕰️ Rules & era</b>Selected rules: ${esc(game.rules.name)} · ${game.rules.hours} hours/week. World: ${esc(eraMeta().label)} (${esc(eraMeta().city)}). Historical and Sci-Fi change only the presentation.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>💬 Build friendships</b>Talk each week, make meaningful story choices, and earn trust. At 18 trust, each local offers a special favor every four weeks.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>📖 Follow seasonal stories</b>After meeting a resident, earn trust to unlock three-stage shared stories. Chapter choices affect two residents, and can permanently improve city prices or wages.</div><div class="guide-item"><b>▥ Track your finances</b>Open Finances to see net worth, recent transactions, monthly expenses and your milestones. Moving money between accounts is not income.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>✷ Follow the City Pulse</b>A new event every four weeks changes prices and wages. Visit its featured venue for a once-per-event opportunity.</div><div class="guide-item"><b>📍 Travel costs time</b>Click any building on the city board to visit it. Farther destinations cost more hours.</div><div class="guide-item"><b>💼 One active job</b>Get hired at Career Center, work only at your employer, and apply there again to change jobs. Switching replaces your old position; you cannot hold two regular jobs.</div><div class="guide-item"><b>🎓 Career pathways</b>Classic has 11 branching diplomas and original DOS occupations; Modern has four staged degrees and specialist certificates. Careers span retail, hospitality, technology, finance, and management.</div><div class="guide-item"><b>🥑 Food, rent, and energy</b>Eat each week, pay monthly rent, rest when tired, and keep an emergency fund. In Classic, visit the Rent Office (Open Door Realty in the current era) during week 4 and every fourth week thereafter to pay rent in cash. Black’s Market offers fresh food in 1/2/4-week bundles; refrigeration holds 6 portions, a freezer expands it to 12. The bank handles monthly loans and six markets with no savings interest.</div><div class="guide-item"><b>👔 Clothing expires</b>Start with 6 weeks of casual clothes. All clothing wears down once each week, even unused. Dress and business outfits cover lower job requirements. Cheap clothes last less time.</div><div class="guide-item"><b>🏁 Beat the competition</b>The Rival takes a turn each week. Meet all four personal goal targets before they do to win.</div></div><p class="modal-lead" style="margin:16px 0 0">Every turn represents a week of life with up to ${game.rules.hours} hours of discretionary time in ${game.isClassic?'Classic (in-progress)':'Modern Story'} rules. Any unused time expires on Sunday. Your game saves locally after each action.</p><button type="button" class="modal-primary" data-close>Got it, let's play ↗</button></section>`);}
 function showWinner(){const p=game.players.find(x=>x.id===game.winner);if(!p)return;showModal(`<section class="modal compact winner-center"><div class="winner-art">🏆</div><span class="eyebrow dark">THE FINISH LINE</span><h2>${esc(p.name)} did it!</h2><p class="modal-lead">Four life goals achieved in ${game.week} weeks.<br/>The race was about money, joy, knowledge, and finding your place. What a ride.</p><button class="modal-primary" id="playAgainBtn" type="button">A new life awaits ↗</button><button class="modal-secondary" data-close>Look back at the city</button></section>`);$('playAgainBtn').addEventListener('click',()=>newGameDialog());}
 function loadDialog(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">PICK UP WHERE YOU LEFT OFF</span><h2>Welcome back.</h2></div><button class="modal-close" data-close>×</button></div><p class="modal-lead">Restore your latest local autosave or import a saved game JSON file.</p><button class="modal-primary" id="loadLocal">Restore local autosave</button><button class="modal-secondary" id="loadFile">Import a .json file</button><p class="modal-footnote">Loading replaces the current game. Export a save first if you want to keep it.</p></section>`);
- $('loadLocal').addEventListener('click',()=>{try{const data=restore();if(!data)throw Error('No autosave found');game=Game.load(data);didShowWin=!!game.winner;closeOverlay();render();store();toast('Saved game restored.');}catch(e){toast(e.message,true);}});
+ $('loadLocal').addEventListener('click',()=>{try{const data=restore();if(!data)throw Error('No autosave found');game=Game.load(data);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();render();store();toast('Saved game restored.');}catch(e){toast(e.message,true);}});
  $('loadFile').addEventListener('click',()=>{$('filePicker').click();});}
 function showFinances(){
  const p=game.player,f=game.finances(p),series=f.history;
@@ -400,10 +434,39 @@ function showCareers(){
  showModal(`<section class="modal careers-modal" aria-label="Career progression roadmap"><div class="modal-head"><div><span class="eyebrow dark">YOUR CAREER ROADMAP</span><h2>Find your next chapter.</h2><p class="modal-lead">One job at a time. Apply at the Career Center; shifts require clothing at your workplace. ${game.isClassic?'Classic applications require the listed degrees, Experience and Dependability. Every job has its own stat caps; reliability below requirement − 5 causes dismissal when you try to work.':'Job offers depend on education, experience, reliability, and sometimes a short course.'}</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="careers-wardrobe"><b>Current wardrobe</b>${game.clothingSummary(p).map(x=>`<span class="${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)}: ${x.weeks}w</span>`).join('')}<small>Every category ages once per week, whether used or not.</small></div><h3 class="career-section-title">${game.isClassic?'Eleven Classic diplomas · university':'Specialist certificates · Brightside U'}</h3><div class="career-courses">${certs}</div><h3 class="career-section-title">Career paths</h3><div class="career-tracks">${jobs}</div><p class="modal-footnote">${game.isClassic?'Reference-based Classic progression. 37 documented DOS/floppy jobs, wages, uniforms and degrees are active. Two CD-only jobs and some location/building mechanics are not yet included.':'Base pay changes with the economy at hiring. Current wages can differ after raises. Buying clothing is separate from being eligible to apply.'}</p><button class="modal-primary" data-close type="button">Return to the city</button></section>`);
 }
 function saveExport(){const file=new Blob([JSON.stringify({format:'the-life-loop-v1',...game.snapshot()},null,2)],{type:'application/json'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download=`the-life-loop-week-${String(game.week).padStart(2,'0')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Save file exported!');}
-$('board').addEventListener('click',async e=>{const btn=e.target.closest('[data-travel]');if(!btn)return;const result=await net.execute('travel',btn.dataset.travel,()=>game.travel(btn.dataset.travel));if(result.ok&&net.role!=='guest'){store();render();}if(result.ok&&mobileBreakpoint.matches)setMobileView('actions');toast(result.message,!result.ok);});
-$('actions').addEventListener('change',e=>{if(e.target.id==='classicEmployerFilter'){classicEmployerFilter=e.target.value;render();}if(e.target.id==='careerShowAll'){showFutureJobApplications=e.target.checked;render();}});
-$('actions').addEventListener('click',async e=>{const btn=e.target.closest('[data-act]');if(!btn||btn.disabled)return;const actionId=btn.dataset.act,location=game.player.location;if(actionId.startsWith('apply:')&&confirmEmploymentSwitch(actionId))return;const result=await net.execute('act',actionId,()=>game.act(actionId));if(result.ok&&net.role!=='guest'){store();render();if(actionId==='chat'&&!game.pendingEncounter)showSmallTalk(result.message,location);}toast(result.message,!result.ok);});
-$('endTurnBtn').addEventListener('click',async()=>{const result=await net.execute('endTurn',null,()=>game.endTurn());if(result.ok&&net.role!=='guest'){store();render();}toast(result.message,!result.ok);});
+$('board').addEventListener('click',async e=>{
+ const btn=e.target.closest('[data-travel]');if(!btn||venueInteraction.open)return;
+ if(net.role&&!net.ownTurn()){toast('Your friend is taking their turn.',true);return;}
+ const target=btn.dataset.travel;
+ if(game.player.location===target){openVenue(target);return;}
+ if(net.busy)return;
+ btn.disabled=true;
+ try{const result=await net.execute('travel',target,()=>game.travel(target));
+  if(result.ok&&net.role!=='guest'){store();render();openVenue(target);}
+  else if(result.ok&&net.role==='guest'){pendingGuestVenue=target;toast('Travel requested · waiting for host confirmation.');}
+  toast(result.message,!result.ok);
+ }finally{if(btn.isConnected)btn.disabled=false;}
+});
+$('venueActions').addEventListener('change',e=>{
+ if(!venueInteraction.open)return;
+ if(e.target.id==='classicEmployerFilter'){classicEmployerFilter=e.target.value;render();}
+ if(e.target.id==='careerShowAll'){showFutureJobApplications=e.target.checked;render();}
+});
+$('venueActions').addEventListener('click',async e=>{
+ const btn=e.target.closest('[data-act]');if(!btn||btn.disabled||!venueInteraction.open||venueInteraction.pending)return;
+ if(net.role&&!net.ownTurn()){closeVenue();toast('Not your turn.',true);return;}
+ const actionId=btn.dataset.act,location=game.player.location;
+ if(actionId.startsWith('apply:')&&confirmEmploymentSwitch(actionId))return;
+ venueInteraction.pending=true;render();
+ try{const result=await net.execute('act',actionId,()=>game.act(actionId));
+  if(result.ok&&net.role!=='guest'){store();render();if(actionId==='chat'&&!game.pendingEncounter)showSmallTalk(result.message,location);}
+  refreshVenueAfterAction(result);toast(result.message,!result.ok);
+ }finally{venueInteraction.pending=false;render();}
+});
+$('venueClose').addEventListener('click',()=>closeVenue());
+$('venueDone').addEventListener('click',()=>closeVenue());
+$('venueScrim').addEventListener('click',()=>closeVenue());
+$('endTurnBtn').addEventListener('click',async()=>{if(net.busy)return;closeVenue({restoreFocus:false});const result=await net.execute('endTurn',null,()=>game.endTurn());if(result.ok&&net.role!=='guest'){store();render();}toast(result.message,!result.ok);});
 $('guideBtn').addEventListener('click',()=>{setUtilityMenu(false);guide();});
 $('charactersBtn').hidden=!ENABLE_CHARACTER_CUSTOMIZATION;
 if(ENABLE_CHARACTER_CUSTOMIZATION)$('charactersBtn').addEventListener('click',()=>{setUtilityMenu(false);showCharacterLibrary('new');});
@@ -414,7 +477,6 @@ $('utilityMenuBtn').addEventListener('click',()=>setUtilityMenu($('utilityMenu')
 $('saveBtn').addEventListener('click',()=>setUtilityMenu(false));
 $('loadBtn').addEventListener('click',()=>setUtilityMenu(false));
 $('storyDrawerBtn').addEventListener('click',()=>setDrawer('story'));
-$('destinationDrawerBtn').addEventListener('click',()=>{if(mobileBreakpoint.matches)setMobileView('actions');else if(drawerScreen.matches)setDrawer('actions');else{$('gameActions').focus();markViewed('actions');}});
 $('drawerScrim').addEventListener('click',closeDrawer);
 document.querySelectorAll('[data-close-drawer]').forEach(b=>b.addEventListener('click',closeDrawer));
 document.addEventListener('click',e=>{if(!e.target.closest('.utility-holder')){setUtilityMenu(false);setCoopMenu(false);}});
@@ -432,9 +494,18 @@ $('chatForm').addEventListener('submit',async e=>{e.preventDefault();const input
 $('saveBtn').addEventListener('click',saveExport);
 $('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
 $('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
-$('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){setUtilityMenu(false);setCoopMenu(false);closeDrawer();if($('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();}});
-net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast,chatRender});
+$('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){
+  if($('overlay').classList.contains('open')){if($('overlay').dataset.kind!=='encounter'&&$('overlay').querySelector('[data-close]'))closeOverlay();return;}
+  if(venueInteraction.open){closeVenue();return;}
+  setUtilityMenu(false);setCoopMenu(false);closeDrawer();return;
+ }
+ if(e.key==='Tab'&&venueInteraction.open&&!$('overlay').classList.contains('open'))venueFocusTrap(e);
+});
+net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();
+ if(pendingGuestVenue){const target=pendingGuestVenue;if(net.ownTurn()&&game.player.location===target){pendingGuestVenue=null;openVenue(target);}else if(!net.ownTurn())pendingGuestVenue=null;}
+ if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast,chatRender});
 render();newGameDialog(true);
 net.resume().then(reconnected=>{if(reconnected){$('overlay').dataset.kind='';closeOverlay();toast('Reconnected to room '+net.code);}else if(new URLSearchParams(location.search).has('join'))onlineDialog();});
 })();

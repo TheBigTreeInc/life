@@ -3,12 +3,13 @@ const assert=require('node:assert/strict');
 const {readFileSync}=require('node:fs');
 const html=readFileSync('index.html','utf8'),css=readFileSync('styles.css','utf8'),js=readFileSync('src/app.js','utf8');
 
-test('mobile bottom navigation has three real accessible tab buttons',()=>{
- for(const [view,label] of [['city','City'],['actions','Activities'],['life','My life']]){
+test('mobile bottom navigation has two real accessible tab buttons',()=>{
+ for(const [view,label] of [['city','City'],['life','My life']]){
   assert.match(html,new RegExp(`data-mobile-tab="${view}"[^>]*aria-controls="game`));
   assert.ok(html.includes(`<strong>${label}</strong>`));
  }
  assert.ok(html.includes('aria-label="Game panels"'));
+ assert.ok(!html.includes('data-mobile-tab="actions"')); 
  assert.match(js,/setMobileView\(tab\.dataset\.mobileTab\)/);
  assert.match(js,/tab\.setAttribute\('aria-pressed',String\(active\)\)/);
 });
@@ -17,11 +18,12 @@ test('mobile state affects presentation only, preserves engine and sync semantic
  assert.match(js,/mobileBreakpoint=window\.matchMedia\('\(max-width:1024px\)'\)/);
  assert.match(js,/\.inert=mobileBreakpoint\.matches&&view!==name/);
  assert.match(js,/mobileBreakpoint\.addEventListener\('change',updateLayout\)/);
- assert.match(js,/if\(result\.ok&&mobileBreakpoint\.matches\)setMobileView\('actions'\)/);
+ assert.match(js,/openVenue\(target\)/);
+ assert.ok(!js.includes("setMobileView('actions')"));
  assert.ok(!readFileSync('src/engine.js','utf8').includes('mobileView'));
 });
 test('status and control affordances work without changing weekly time',()=>{
- for(const id of ['mobileWeek','mobileHours','mobileCash','mobilePlayer','mobileNav','gameCity','gameActions','gameLife'])assert.ok(html.includes(`id="${id}"`),id);
+ for(const id of ['mobileWeek','mobileHours','mobileCash','mobilePlayer','mobileNav','gameCity','venueLayer','gameLife'])assert.ok(html.includes(`id="${id}"`),id);
  for(const code of ["$('mobileWeek').textContent", "$('mobileHours').textContent", "$('mobileCash').textContent", "$('mobilePlayer').textContent"])assert.ok(js.includes(code),code);
  assert.match(css,/@media\(max-width:600px\)/);
  assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
@@ -45,8 +47,9 @@ test('top-right game menu contains save, load and help, with accessible toggle',
  assert.match(js,/setUtilityMenu\(false\);guide\(\)/);
  assert.match(css,/\.utility-menu\[hidden\]/);
 });
-test('story and destination have dock toggles and notification circles',()=>{
- for(const id of ['storyDrawerBtn','destinationDrawerBtn','storyBadge','destinationBadge','mobileStoryBadge','mobileActionsBadge','drawerScrim']) assert.ok(html.includes(`id="${id}"`),id);
+test('story drawer remains and destination drawer/badges are removed',()=>{
+ for(const id of ['storyDrawerBtn','storyBadge','mobileStoryBadge','drawerScrim']) assert.ok(html.includes(`id="${id}"`),id);
+ for(const id of ['destinationDrawerBtn','destinationBadge','mobileActionsBadge'])assert.ok(!html.includes(`id="${id}"`),id);
  assert.match(css,/@media\(min-width:1025px\) and \(max-width:1599px\)/);
  assert.match(css,/@media\(min-width:1600px\)/);
  assert.match(js,/function setDrawer\(which\)/);

@@ -12,11 +12,11 @@ test('only one compact city heading and no old green or dark header',()=>{
  assert.ok(html.includes('id="cityName"'));
  assert.ok(js.includes("$('cityName').textContent=eraMeta().city.toUpperCase()"));
 });
-test('chat unread indicator beside destination and new game inside utility menu',()=>{
- const d=html.indexOf('id="destinationDrawerBtn"'),c=html.indexOf('id="chatToggle"'),o=html.indexOf('id="onlineBtn"'),m=html.indexOf('id="utilityMenuBtn"');
- assert.ok(d<c&&c<o&&o<m);
+test('chat unread indicator and new game inside utility menu without destination duplication',()=>{
+ const c=html.indexOf('id="chatToggle"'),o=html.indexOf('id="onlineBtn"'),m=html.indexOf('id="utilityMenuBtn"');
+ assert.ok(c<o&&o<m);
  assert.ok(html.indexOf('id="utilityMenu"')<html.indexOf('id="newBtn"'));
- assert.ok(html.includes('id="chatBadge"')&&html.includes('id="destinationBadge"'));
+ assert.ok(html.includes('id="chatBadge"')&&!html.includes('id="destinationBadge"'));
  assert.ok(js.includes('badge.hidden=!net?.chatUnread'));
  assert.ok(js.includes('toggle.disabled=!live'));
  assert.ok(js.includes("setCoopMenu($('coopMenu').hidden)"));

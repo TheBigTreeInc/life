@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.art-pack.v1",
   "id": "contemporary-default",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "era": "current",
   "description": "Distinct contemporary venue paintings and user-supplied residence illustrations keyed by the player housing tier.",
   "venues": {

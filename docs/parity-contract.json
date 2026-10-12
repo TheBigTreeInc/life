@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.parity-contract.v1",
   "architecture_revision": "1.5",
-  "release": "0.5.19",
+  "release": "0.5.20",
   "implementation_baseline": "0.5.1",
   "policy": "Original core mechanics are authoritative; modern presentation must not change economic outcomes; modern gameplay additions must be opt-in.",
   "mechanics": [
@@ -9,7 +9,7 @@
       "id": "TURN-001",
       "title": "Per-player weekly turns",
       "target": "One turn per player; week advances after all players finish.",
-      "current": "Turn order supports 1\u20132 humans and AI; 4-human original maximum unavailable.",
+      "current": "Turn order supports 1–2 humans and AI; 4-human original maximum unavailable.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Week",
@@ -39,7 +39,7 @@
       "id": "TIME-003",
       "title": "Action time accounting",
       "target": "Full work session 6h paid for 8h; job application 4h; study 6h; relaxing 6h.",
-      "current": "Classic retains 6h full work paid for 8h, and now allows 1\u20135 remaining-hour shifts with proportional wages, energy, rent garnishment and cumulative six-hour work-stat credit. Exact DOS partial rounding and stat awards remain to be compared.",
+      "current": "Classic retains 6h full work paid for 8h, and now allows 1–5 remaining-hour shifts with proportional wages, energy, rent garnishment and cumulative six-hour work-stat credit. Exact DOS partial rounding and stat awards remain to be compared.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hour",
@@ -59,7 +59,7 @@
       "id": "JOB-002",
       "title": "Applications and openings",
       "target": "Requirements + chance-based no openings; failed applications still consume time.",
-      "current": "Classic 37-job catalog with eligibility filter; agency now selects employer first and lists that workplace\u2019s jobs, with optional future applications, 4h failed attempts, and chance-based no openings. Exact DOS UI ordering and RNG unverified.",
+      "current": "Classic 37-job catalog with eligibility filter; agency now selects employer first and lists that workplace’s jobs, with optional future applications, 4h failed attempts, and chance-based no openings. Exact DOS UI ordering and RNG unverified.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Employment_Office",
@@ -79,7 +79,7 @@
       "id": "JOB-004",
       "title": "Dependability and firing",
       "target": "20 initial, -3 per week; low stat warnings and dismissal on work attempts.",
-      "current": "Classic starts Dependability 20 and decays 3/week; hiring below 10 resets it, low reliability warns, and work attempts below job requirement\u22125 dismiss without pay. Exact messages/DOS edges unverified.",
+      "current": "Classic starts Dependability 20 and decays 3/week; hiring below 10 resets it, low reliability warns, and work attempts below job requirement−5 dismiss without pay. Exact messages/DOS edges unverified.",
       "status": "partial",
       "priority": "P0",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Dependibility",
@@ -119,7 +119,7 @@
       "id": "EDU-002",
       "title": "Course time and benefits",
       "target": "Enroll fees and 6h lessons, usually 10 lessons; studies can benefit from durables.",
-      "current": "Classic enrollment $50, ten 6h lessons (1\u20135h partial final time permitted), computer and three-book study aids, graduation +5 happiness/reliability. Enrollment queue and item details require DOS validation.",
+      "current": "Classic enrollment $50, ten 6h lessons (1–5h partial final time permitted), computer and three-book study aids, graduation +5 happiness/reliability. Enrollment queue and item details require DOS validation.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://jonesinthefastlane.fandom.com/wiki/Hi-Tech_U",
@@ -199,7 +199,7 @@
       "id": "GOAL-001",
       "title": "Four adjustable goals",
       "target": "Wealth, happiness, education and career; win when all chosen thresholds achieved.",
-      "current": "Classic tracks individual goal points 10\u2013100 and 200-point default. Human targets and Jones targets now differ: Take It Easy +40, Play Fair 0, Go For Broke -40. A seeded semi-random allocator distributes valid AI goals and keeps Wealth within 10 points of human wealth when feasible; exact Sierra allocation unverified.",
+      "current": "Classic tracks individual goal points 10–100 and 200-point default. Human targets and Jones targets now differ: Take It Easy +40, Play Fair 0, Go For Broke -40. A seeded semi-random allocator distributes valid AI goals and keeps Wealth within 10 points of human wealth when feasible; exact Sierra allocation unverified.",
       "status": "partial",
       "priority": "P1",
       "source_url": "https://en.wikipedia.org/wiki/Jones_in_the_Fast_Lane",
@@ -226,5 +226,5 @@
       "acceptance": "Classic ruleset suppresses non-original mechanical bonuses while keeping dialog optional."
     }
   ],
-  "version": "0.5.19"
+  "version": "0.5.20"
 }

@@ -706,3 +706,57 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
  .board-grid .board-tile[data-travel="pawn"] .tile-art img{object-position:center 78%}
  .board-grid .board-tile[data-travel="pawn"] .tile-name{font-size:clamp(11px,2.5vw,15px)}
 }
+
+/* v0.5.20: Single board-centered venue interaction surface. */
+.game-layout{grid-template-columns:minmax(265px,310px) minmax(0,1fr)!important;min-height:0}
+.main-area{width:100%;max-width:none;min-width:0;height:100%;}
+.board-frame{position:relative;isolation:isolate}
+.venue-layer[hidden]{display:none!important}
+.venue-layer{position:absolute;z-index:18;inset:0;display:grid;place-items:center;overflow:hidden;padding:clamp(5px,1.5vw,22px)}
+.venue-scrim{position:absolute;inset:0;background:#102b27ad;backdrop-filter:blur(2px);border:0;cursor:default}
+.venue-window{position:relative;z-index:1;width:min(760px,96%);max-height:100%;height:min(680px,100%);min-height:0;display:flex;flex-direction:column;background:#fffefa;border:1px solid #d7e6d5;border-radius:20px;box-shadow:0 22px 65px #0d302e66;overflow:hidden;color:#223c32}
+.venue-window-header{flex:0 0 auto;display:flex;justify-content:space-between;align-items:start;gap:12px;padding:clamp(11px,1.3vw,20px) clamp(13px,1.8vw,24px) 8px;border-bottom:1px solid #e3e9dd}
+.venue-heading{min-width:0}.venue-heading h2{font-size:clamp(18px,2.1vw,28px);letter-spacing:-.8px;margin:3px 0 3px;line-height:1.1}.venue-heading p{font-size:clamp(10px,.92vw,12px);line-height:1.3;color:#587263;margin:0 0 4px}
+.venue-close{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid #d9e6d8;background:#f1f6ed;color:#365746;font-size:24px;line-height:1}
+.venue-window-body{display:grid;grid-template-columns:minmax(145px,.55fr) minmax(0,1.45fr);gap:clamp(10px,1.5vw,20px);padding:clamp(8px,1.1vw,16px);flex:1;min-height:0;overflow:hidden}
+.venue-summary{min-width:0;overflow:hidden;display:flex;flex-direction:column;gap:8px}
+.venue-summary .venue-scene{width:100%;height:min(180px,32vh);max-height:30%;min-height:70px;border-radius:13px;overflow:hidden;margin:0}
+.venue-summary .venue-scene svg{max-height:100%}
+.venue-summary .venue-level,.venue-summary .venue-blurb,.venue-summary .arc-progress,.venue-summary .story-partner,.venue-summary .friendship{display:none!important}
+.venue-summary .npc-card{display:flex;align-items:center;gap:8px;padding:8px;margin:0;min-height:0}
+.venue-summary .npc-avatar{flex:0 0 48px;width:48px;height:48px}
+.venue-summary .npc-copy{min-width:0}
+.venue-summary .npc-copy p{font-size:10px;line-height:1.4;max-height:5em;overflow:hidden}
+.venue-menu{min-width:0;min-height:0;display:flex;flex-direction:column;gap:8px}
+.venue-menu .action-panel-heading{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:850;flex:0 0 auto;margin:0}
+.venue-menu .actions-scroller{flex:1 1 auto;max-height:none!important;overflow-y:auto!important;overscroll-behavior:contain;min-height:0;padding-right:4px;scrollbar-width:thin}
+.venue-menu .action-card{min-height:52px;padding:8px 10px;margin-bottom:7px}
+.venue-menu .action-card:disabled{opacity:.65;cursor:not-allowed}
+.venue-menu .agency-hiring-panel{padding:9px;margin:0 0 10px}
+.venue-window-footer{display:flex;align-items:center;gap:10px;flex:0 0 auto;padding:10px clamp(12px,1.5vw,20px);border-top:1px solid #e0eadc;background:#f5f9f1}
+.venue-window-footer #venueFeedback{color:#47624d;font-size:11px;line-height:1.3;overflow:hidden;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.venue-done{border:0;background:#225941;color:white;border-radius:10px;font-weight:900;min-height:43px;padding:10px 19px;flex:none}
+.venue-done:hover,.venue-done:focus-visible{background:#337953}
+.ticker-end-turn{flex:none;min-height:30px;border:1px solid #bfd4c4;border-radius:8px;background:#e9f6e6;color:#28573b;font-size:10px;font-weight:900;padding:5px 9px;white-space:nowrap}
+.ticker-end-turn:disabled{opacity:.5}
+@media(min-width:1025px) and (max-width:1599px){.game-layout{display:block;min-height:0}.main-area{width:calc(100% - 65px);max-width:none;margin-left:auto;margin-right:auto}.sidebar{display:flex}.action-pane{display:none!important}}
+@media(min-width:1600px){.sidebar{display:flex}.main-area{min-width:0}}
+@media(max-width:1024px){
+ .game-layout{display:flex;flex-direction:column}
+ .main-area{width:100%;max-width:none}
+ .mobile-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .venue-layer{padding:3px}
+ .venue-window{width:100%;height:100%;max-height:100%;border-radius:12px}
+ .venue-window-body{grid-template-columns:1fr;display:flex;flex-direction:column;padding:7px 9px;gap:5px}
+ .venue-summary{flex:0 0 auto;max-height:56px;overflow:hidden}
+ .venue-summary .venue-scene,.venue-summary .npc-card{display:none!important}
+ .venue-menu{flex:1;min-height:0}
+ .venue-menu .action-card{min-height:44px;padding:7px 9px}
+ .venue-window-header{padding:8px 11px 5px}
+ .venue-heading p{font-size:10px}
+ .venue-window-footer{padding:5px 9px}
+ .venue-done{min-height:38px;padding:6px 15px}
+ .ticker-end-turn{padding:5px 6px;font-size:9px}
+}
+@media(max-width:390px){.ticker-end-turn span:first-child{font-size:0}.ticker-end-turn span:first-child:before{content:'End';font-size:9px}.venue-window-header .eyebrow{display:none}}
+@media(prefers-reduced-motion:reduce){.venue-layer,.venue-window{animation:none!important;transition:none!important}}

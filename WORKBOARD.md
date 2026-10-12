@@ -304,3 +304,16 @@ Operator acceptance: test 320px mobile and large desktop. Open My characters, se
 - [ ] LL-134 — Original weekly economy index, robbery/house security, durable item breakage and store inventory parity.
 
 See `docs/decisions/ADR-0020-printed-reference-classic-economy.md`.
+
+
+## v0.5.20 — Centered decisions like the original board game
+
+**Artifact:** `the-life-loop-0.5.20-ziprunner.zip` · **Status:** implemented and regression-tested.
+
+- [x] **LL-135** — Clicking a tile opens a board-centered location menu showing the location's real engine actions; visual-only open/close, Done, Escape, focus management.
+- [x] **LL-136** — Remove right-hand Your Destination action chooser and mobile Activities tab. Shared 13-venue city fills the space; mobile remains City / My Life.
+- [x] **LL-137** — Preserve Classic employer-first job filtering and optional future jobs, bank, rent, pawn, work, purchases, stories, and global confirmation overlays.
+- [x] **LL-138** — Move End week into the ticker; venue options scroll internally at narrow sizes with a fixed Done button. Check access on a 320×568 phone.
+- [x] **LL-139** — Guard network requests and multiplayer turns; discard stale venues on turn/location changes. Keep WSS-only chat and Looprd schema unchanged. Add regression and browser acceptance checks.
+
+**Operator acceptance:** Start Classic or Modern; click an already-current tile (0h), a different tile (normal travel cost), and choose actions from the centered menu. Confirm close via Done/Escape is free, filters remain while buying/applying, and global story/job confirmations appear above the menu. On mobile, the whole page never scrolls, but long venue menus may scroll internally. Run `node tools/verify.mjs` and Looprd tests. Real two-device Looprd deployment still requires operator validation. See [ADR-0021](docs/decisions/ADR-0021-board-centered-venue-interactions.md).

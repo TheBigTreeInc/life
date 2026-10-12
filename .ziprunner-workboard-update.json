@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.19",
-  "summary": "v0.5.19: documented Classic parity corrections from the original printed Quick Reference; durable goods now count toward Money goals and partial university lessons count toward Education. Two stranded weeks trigger an explicit approximation of the rescue from a relative. Modern Story, multiplayer protocol and cosmetic eras unchanged.",
+  "version": "0.5.20",
+  "summary": "v0.5.20: replace permanent right-side destination actions with board-centered venue decisions. Actions, employer filters and prices are rendered once inside the board; End Turn stays in status ticker; mobile uses City / My Life. Engine and Looprd protocol unchanged.",
   "implemented": [
     {
       "id": "LL-001",
@@ -130,7 +130,7 @@
       "title": "Multi-episode personal stories",
       "summary": "Add three seasonal three-stage NPC arcs, host and partner trust outcomes, time gates, player-specific chapter state, City Pulse synergy and permanent community improvements.",
       "operator_checks": [
-        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2\u20133 require more weeks and trust.",
+        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2–3 require more weeks and trust.",
         "Finish the community pantry project and verify food prices drop permanently for every player."
       ]
     },
@@ -405,7 +405,7 @@
     {
       "id": "LL-064",
       "title": "Fresh-food refrigerator/freezer storage",
-      "summary": "Black\u2019s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
+      "summary": "Black’s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
       "operator_checks": [
         "Buy 4 portions, test spoilage; acquire fridge/freezer and test capacity."
       ]
@@ -803,7 +803,7 @@
     {
       "id": "LL-117",
       "title": "Classic proportional partial work shifts",
-      "summary": "Allow 1\u20135 remaining-hour shifts, proportional wages based on six-hour/8h-paid standard, proportional energy/happiness and rent garnishment; no Modern time rule changes.",
+      "summary": "Allow 1–5 remaining-hour shifts, proportional wages based on six-hour/8h-paid standard, proportional energy/happiness and rent garnishment; no Modern time rule changes.",
       "operator_checks": [
         "Hire at Monolith Burgers and arrive with 3h left: work exactly 3h, receive half the full-shift gross pay; verify 0h remain.",
         "With one hour left, verify a small paid shift is available; at zero hours no work is permitted."
@@ -937,6 +937,48 @@
         "Run two desperate turns without money or clothing and confirm a one-time $90 rescue and finance ledger entry.",
         "Confirm possessing suitable clothing, bank funds or a pawnable item prevents the rescue."
       ]
+    },
+    {
+      "id": "LL-135",
+      "title": "Board-centered venue interaction and focus return",
+      "summary": "Open any of 13 venues with actual engine actions; supported Done, Escape, scene art, internal scrolling, and focus return.",
+      "operator_checks": [
+        "Click current building for free; choose another and confirm normal travel time.",
+        "Use Done and Escape, including a nested job confirmation; confirm the window closes safely."
+      ]
+    },
+    {
+      "id": "LL-136",
+      "title": "Remove right-side destination pane and mobile Activities tab",
+      "summary": "Remove destination sidebar and duplicate action DOM; widen board and retain only City/My Life mobile navigation.",
+      "operator_checks": [
+        "Inspect at 320x568 and 1600x900: no right panel or Activities tab; main page does not scroll."
+      ]
+    },
+    {
+      "id": "LL-137",
+      "title": "Preserve venue action execution and employment filtering",
+      "summary": "Reuse game.actions, net.execute, Classic employer and future-jobs filters, guarded requests, nested dialogs, and Live Story actions.",
+      "operator_checks": [
+        "At Career Center switch employer and future jobs; attempt an underqualified application with normal time cost.",
+        "At Bank deposit money and ensure only a single charge, leaving the venue open."
+      ]
+    },
+    {
+      "id": "LL-138",
+      "title": "Status ticker End Turn and responsive venue controls",
+      "summary": "End Turn moved from right pane into ticker; venue title, Done, disabled reasons, focus trap and mobile touch layout tested.",
+      "operator_checks": [
+        "On phone open 13 venues and scroll only within action list; End week stays reachable after Done."
+      ]
+    },
+    {
+      "id": "LL-139",
+      "title": "Network turn ownership and clean release regression",
+      "summary": "Prevent stale venue actions across multiplayer turn or room snapshot changes; preserve chat and co-op menus; full packaging regression.",
+      "operator_checks": [
+        "Host and guest: wrong player blocked; guest travel opens after confirmed room snapshot; verify clean ZIP/Pages and Looprd tests."
+      ]
     }
   ],
   "remaining": [
@@ -955,7 +997,7 @@
     {
       "id": "LL-013",
       "title": "Hotseat player privacy screen",
-      "summary": "Prevent the next human player from seeing the previous player\u2019s private view",
+      "summary": "Prevent the next human player from seeing the previous player’s private view",
       "priority": "medium"
     },
     {
@@ -1061,7 +1103,7 @@
     {
       "id": "LL-134",
       "title": "Original detailed economy, merchandise, events and security parity",
-      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black\u2019s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
+      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black’s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
       "priority": "high",
       "operator_checks": [
         "Record DOS reference walkthrough for robberies, item breakage, price changes and real estate moves."

@@ -38,7 +38,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.19-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.20-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -161,3 +161,7 @@ The Life Loop identity sits above the city in the same compact heading as Career
 - **AI survival:** preemptive clothing replenishment fixes an insolvency softlock exposed by the original starting balances; 100-seed 60-week Classic campaigns remain verified. No character creator reactivation, no UI/bar redesign, no Modern Story economic rule changes.
 
 See [ADR-0019](docs/decisions/ADR-0019-classic-goals-jones-and-employer-office.md). Run `node tools/verify.mjs` and `python -m unittest discover -s tests -p test_looprd.py -q`; test with 2 clients against a deployed Looprd server before declaring production multiplayer accepted.
+
+## v0.5.20 — Building actions over the city board
+
+Select a building to open its actual actions in a centered decision window over the board. The permanent right destination pane and mobile Activities tab are gone; City / My Life remain. The ticker has End week. Done or Escape closes the menu without extra time cost. The engine rules, Classic/Modern modes, and Looprd protocol are unchanged. See ADR-0021.
