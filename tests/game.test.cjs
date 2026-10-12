@@ -113,7 +113,7 @@ test('every building has an original scene, a local citizen and a two-choice sto
  for(const loc of D.places){
   assert.ok(D.citizens[loc.id],loc.id+' missing citizen');
   assert.equal(D.encounters[loc.id].choices.length,2,loc.id+' needs two story choices');
-  assert.match(Art.scene(loc.id),/viewBox="0 0 640 340"/);
+  assert.match(Art.scene(loc.id),/scene-photo.*\.webp/);
   assert.match(Art.person(loc.id),/viewBox="0 0 120 124"/);
  }
 });

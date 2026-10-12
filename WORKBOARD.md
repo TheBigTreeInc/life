@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.4
+# The Life Loop — workboard v0.5.9
 
-Full-source release: `the-life-loop-0.5.6-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.9-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -175,7 +175,7 @@ No changes to gameplay, saved games, or Looprd database schema.
 - [x] **LL-081** — Persistent multiplayer turn ownership, host/guest and transport status; Looprd component info probe and room version diagnostics.
 - [ ] **LL-082 (high)** — Production acceptance: deploy `looprd.yaml` on a real Looprd server, verify GET `/looprd/the-life-loop/v1/info`, WebSocket subscription, 2-browser turns/reconnects and unauthorized command rejection.
 
-Operator: run `node tools/verify.mjs`; check widths 390, 1024, 1280, 1600; open slide-out panels and menu; connect as two users, confirm distinct OWN/WAITING labels in both browsers. `the-life-loop-0.5.6-ziprunner.zip` must include the updated hidden manifest. No runtime/config/private files included.
+Operator: run `node tools/verify.mjs`; check widths 390, 1024, 1280, 1600; open slide-out panels and menu; connect as two users, confirm distinct OWN/WAITING labels in both browsers. `the-life-loop-0.5.9-ziprunner.zip` must include the updated hidden manifest. No runtime/config/private files included.
 
 ## v0.5.6 — Local reusable character creator
 
@@ -184,4 +184,37 @@ Operator: run `node tools/verify.mjs`; check widths 390, 1024, 1280, 1600; open 
 - [x] **LL-085** — Embed validated cosmetic appearance in saved-game snapshots without changing Classic/Modern mechanics, support old save files, and add automated regression coverage.
 - [ ] **LL-086 (medium)** — Optional explicit portable character-library export/import, live guest portrait propagation through separately validated Looprd protocol, and Android/iOS persistence acceptance.
 
-**Operator QA:** Create multiple characters in a browser; verify persistence after refresh and independent profile selection. Check quick-name play without profiles, local two-player character selection and online join display-name selection. Confirm save/import retains appearance, existing Classic saves still load, and private profile lists are not packaged or sent to Looprd. `the-life-loop-0.5.6-ziprunner.zip` is a full-source ZipRunner archive.
+**Operator QA:** Create multiple characters in a browser; verify persistence after refresh and independent profile selection. Check quick-name play without profiles, local two-player character selection and online join display-name selection. Confirm save/import retains appearance, existing Classic saves still load, and private profile lists are not packaged or sent to Looprd. `the-life-loop-0.5.9-ziprunner.zip` is a full-source ZipRunner archive.
+
+## v0.5.7 — Shared characters, ephemeral multiplayer chat, no page scroll
+
+- [x] **LL-087** — Guest-selected name and sanitized appearance/colors persisted into the authoritative multiplayer game snapshot at join; both players see the same guest identity. Browser-local profile libraries are not transmitted.
+- [x] **LL-088** — Authenticated encrypted chat publish over HTTP, live notification delivery over Looprd WSS, no message persistence or replay. Chat disabled without WebSocket, cleared on disconnect. Room-scoped AES-GCM key is generated at room creation and available only through authenticated room endpoints.
+- [x] **LL-089** — Fixed-viewport game, no window vertical scroll; dedicated story/action scrolling for content that cannot fit; condensed three/four-column city and removal of redundant status/time/venue summaries.
+- [x] **LL-090** — Three-step compact mobile New Game (Character, World, Goals); viewport-contained setup with persistent action buttons.
+- [x] **LL-091** — Looprd schema v2 with private `chatKey`; regression tests for room appearance and ephemeral chat. No gameplay or economy rebalance.
+- [ ] **LL-092 (high)** — Back up and migrate the live Looprd Room table from v1 to v2 (chatKey), load updated `looprd.yaml` and test full WSS chat, two browsers and reconnect. Looprd runtime migration behavior is deployment-specific and cannot be assumed automatic.
+
+Acceptance: run `node tools/verify.mjs`, Python Looprd tests, and test phone 320×568 and 390×844 plus 1280/1600 desktop. Confirm no **document** scroll; lengthy panels may scroll internally. On mobile, begin a new game without scrolling through every setup option. Confirm guest appearance in both clients and encrypted chat only on open WSS; no chat messages in Room state or saved games. No runtime or credentials in the artifact.
+
+## v0.5.8 — Distinct Contemporary building art and residence-aware asset slots
+
+- [x] **LL-093** — Import supplied unique 11 venue illustrations as optimized dual-resolution WebP art; no changes to gameplay or non-Contemporary art.
+- [x] **LL-094** — Separate `home`/Your Place from Open Door Realty. Artwork selection follows each player's residence (`studio`, `apartment`, `loft`) and updates after a housing upgrade; use tier-specific procedural fallbacks when art is unavailable.
+- [x] **LL-095** — Versioned art-pack manifest, browser art mapping, offline embedding, cacheable Pages assets, and source/manifest verification. Detached-house example retained as unassigned reference only.
+- [x] **LL-096** — Automated artwork coverage, imagery inspection, release-version checks, clean source ZIP with updated workboard.
+- [x] **LL-097** — Three tier-specific residence images installed in v0.5.9; no rental-stat changes.
+- [ ] **LL-098** — User-facing local art pack import/switching and offline content validation; future opt-in downloadable styles.
+
+Operator acceptance: verify Contemporary tiles for Career Center, Fresh & Frugal, Good Fork, Clinic, University, Tech, Northstar, Boutique, Realty, Bank and Cinema. Enter each venue and verify matching detailed painting. Check Home in each tier (images included since v0.5.9). Verify Historical and Sci-Fi remain procedural, export/import preserves housing, and repeat against GitHub Pages + portable PLAY.html.
+
+
+## v0.5.9 — Real residence artwork and Classic parity checkpoint
+
+The three user-provided homes are installed in `homeTiers`; each has a 448px card and 768px destination WebP. Housing changes update the visible residence while the Realty office remains separate. No gameplay changes.
+- [x] **LL-099** — Regression for three different home scenes, WebP image limits, offline single-file embedding, cacheable Pages assets, unchanged Historical/Sci-Fi scenes, and updated ZipRunner manifest.
+- [ ] **LL-098** — Optional downloadable user-selectable art packs remain future work.
+
+**Original Classic mechanics progress (no change in v0.5.9):** parity contract currently tracks 22 rule IDs: 2 implemented, 19 partial and 1 missing. High-priority outstanding areas: exact original action/movement hours (especially partial shifts), job dependability/vacancy/firing rules, original scoring, four-human play, the pawn shop and DOS-aligned price/random-event behavior. The self-reported contract is **not** proof of original binary equivalence; operator acceptance requires side-by-side DOS captures and measurements.
+
+**Operator smoke:** choose Contemporary Starter Studio, inspect Home and Your Destination; upgrade to Sunny Apartment / Skyline Loft and verify pictures change without a balance change. Repeat in Historical and Sci-Fi (procedural art). Save/reload and test both responsive and standalone editions. Run `node tools/verify.mjs`.

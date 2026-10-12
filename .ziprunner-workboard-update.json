@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.6",
-  "summary": "v0.5.6: browser-local reusable character creator with customizable portrait and personality, selected in solo, hotseat and multiplayer join, save-game appearance persistence; no Classic or Modern rules changes.",
+  "version": "0.5.9",
+  "summary": "v0.5.9: integrate player-provided three residence images (studio/apartment/loft), optimize card/detail assets, maintain offline + Pages fidelity, preserve original Classic gameplay and Looprd protocol.",
   "implemented": [
     {
       "id": "LL-001",
@@ -557,6 +557,106 @@
       "operator_checks": [
         "Start Classic and Modern from a saved character; export/import; check the same portrait and 60h/40h rules unchanged."
       ]
+    },
+    {
+      "id": "LL-087",
+      "title": "Guest character identity in shared multiplayer snapshot",
+      "summary": "Guest join transaction validates all appearance fields, updates the friend player name/color/portrait atomically and advances the room version; present to both host and guest; private browser profile library stays local.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+      ]
+    },
+    {
+      "id": "LL-088",
+      "title": "Encrypted ephemeral Looprd WebSocket chat",
+      "summary": "Room-scoped 256-bit AES-GCM key, authorized encrypted HTTP chat send, WSS-only client gate and Looprd event delivery; no server/chat database/history or game-save messages.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+      ]
+    },
+    {
+      "id": "LL-089",
+      "title": "Viewport-contained desktop and mobile game",
+      "summary": "Prevent document scrolling; scale the city to available viewport, give story and action panels independent overflow, and hide duplicate time/status and decorative filler widgets.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+      ]
+    },
+    {
+      "id": "LL-090",
+      "title": "Compact mobile setup wizard",
+      "summary": "New Game shows Character, World, Goals steps with visible fixed Continue/Start controls on phone viewports, retaining all original options and desktop single-form setup.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+      ]
+    },
+    {
+      "id": "LL-091",
+      "title": "v0.5.7 integration regression and schema revision",
+      "summary": "Validate guest persistence, encrypted chat/non-persistence, workboard/schema consistency and responsive layout. Bump the Looprd database schema to v2 for private room chat key.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+      ]
+    },
+    {
+      "id": "LL-093",
+      "title": "Distinct Contemporary venue artwork",
+      "summary": "Replace 11 facades with user-provided venue-specific paintings, dual WebP sizes for city tiles and destination panels.",
+      "operator_checks": [
+        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+      ]
+    },
+    {
+      "id": "LL-094",
+      "title": "Residence-tier-aware home scene",
+      "summary": "Draw distinct studio, apartment, and loft fallbacks based on active player home instead of incorrectly showing a detached house.",
+      "operator_checks": [
+        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+      ]
+    },
+    {
+      "id": "LL-095",
+      "title": "Declarative future art pack foundation",
+      "summary": "Provide versioned art manifest and browser mapping, inline standalone assets, separate Pages images, and retain SVG era fallback.",
+      "operator_checks": [
+        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+      ]
+    },
+    {
+      "id": "LL-096",
+      "title": "Artwork regression and full source handoff",
+      "summary": "Test new pack data, asset paths and residence selection, release metadata, clean extraction, offline and Pages builds.",
+      "operator_checks": [
+        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+      ]
+    },
+    {
+      "id": "LL-097",
+      "title": "Install the three provided residence paintings",
+      "summary": "Optimized separate artwork for Starter Studio, Sunny Apartment and Skyline Loft; both card and destination illustrations follow current player home tier, without changing economics or gameplay.",
+      "operator_checks": [
+        "Start in Contemporary and verify studio apartment-building art in Home city tile and destination.",
+        "Upgrade housing to Sunny Apartment then Skyline Loft: verify both scenes update and match the current resident; return to an older save to confirm tier-specific artwork.",
+        "Check standalone PLAY.html offline and GitHub Pages: all three tiers load independent artwork while Historical/Sci-Fi scenes stay procedural."
+      ]
+    },
+    {
+      "id": "LL-099",
+      "title": "Regression and release checks for housing art",
+      "summary": "Keep every housing asset in the versioned art manifest, validate card/detail files, offline data URIs, cacheable Pages copies, clean ZipRunner packaging and v0.5.9 metadata.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and Python Looprd server tests.",
+        "Verify current art packs contain three non-null residence entries and no network dependencies in PLAY.html."
+      ]
     }
   ],
   "remaining": [
@@ -637,9 +737,21 @@
     },
     {
       "id": "LL-086",
-      "title": "Cross-device character portability and live multi-device identity",
-      "summary": "Optional explicit character-library export/import, guest appearance updates transmitted through Looprd schema after validated production integration, and actual Android/iOS browser-storage checks.",
+      "title": "Portable character library export/import and device persistence QA",
+      "summary": "Provide optional browser-local profile library export/import; test Android/iOS persistence and cross-origin migration after v0.5.7 shared guest identity support.",
       "priority": "medium"
+    },
+    {
+      "id": "LL-092",
+      "title": "Live Looprd schema migration and multiplayer field test",
+      "summary": "Apply Room schema version 2 to existing Looprd server database with backup; verify real HTTPS/WSS chat deliveries, origin restrictions, two-player join, reconnection and service restart.",
+      "priority": "high"
+    },
+    {
+      "id": "LL-098",
+      "title": "Optional downloadable local style packs",
+      "summary": "Offer local art pack import, validation and per-browser selection without adding dependencies to the standalone game.",
+      "priority": "low"
     }
   ]
 }

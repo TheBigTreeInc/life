@@ -17,6 +17,7 @@
       </div>
       <div class="top-center"><span class="live-dot"></span><span id="topWeek">WEEK 01</span><span class="top-separator"></span><span id="economy">MARKET STABLE</span></div>
       <div class="head-actions">
+        <button class="text-button" id="chatToggle" type="button" aria-label="Multiplayer chat" aria-expanded="false" aria-controls="chatPanel" disabled>💬 <span>Chat</span><span class="notification-circle" id="chatBadge" hidden>1</span></button>
         <button class="text-button" id="onlineBtn" type="button" aria-label="Online multiplayer">◎ <span>Online co-op</span></button>
         <button class="text-button" id="careerBtn" type="button" aria-label="Career pathways">🎓 <span>Careers</span></button>
         <button class="text-button" id="financeBtn" type="button" aria-label="Financial history">▥ <span>Finances</span></button>
@@ -50,44 +51,44 @@
     </div>
     <div class="game-layout">
       <aside class="sidebar pane" id="gameLife">
-        <div class="pane-heading"><span class="eyebrow">YOUR STORY</span><span id="turnCounter" class="tag">YOUR TURN</span><button type="button" class="pane-close" data-close-drawer="story" aria-label="Close Your Story">×</button></div>
+        <div class="pane-heading"><span class="eyebrow">YOUR STORY</span><button type="button" class="pane-close" data-close-drawer="story" aria-label="Close Your Story">×</button></div>
         <section class="profile-card" id="profile"></section>
         <div class="status-columns" id="balances"></div>
         <section class="status-section">
-          <div class="section-heading"><span>Life goals</span><span class="muted micro">CHOOSE YOUR OWN SUCCESS</span></div>
+          <div class="section-heading"><span>Life goals</span></div>
           <div id="goals"></div>
         </section>
         <section class="status-section">
-          <div class="section-heading"><span>Wellbeing</span><span class="muted micro">A LITTLE SELF CARE</span></div>
+          <div class="section-heading"><span>Wellbeing</span></div>
           <div id="wellbeing"></div>
         </section>
         <section class="status-section smaller-gap">
-          <div class="section-heading"><span>The competition</span><span class="muted micro" id="leaderboardLabel">RACE TO THE TOP</span></div>
+          <div class="section-heading"><span>The competition</span></div>
           <div id="leaderboard"></div>
         </section>
-        <div class="sidebar-bottom"><span>✦</span> Progress isn't always a straight line.</div>
+        
       </aside>
 
       <main class="main-area" id="gameCity">
-        <div class="board-heading"><div><span class="eyebrow dark">WELCOME TO</span><h1>New Day City<span class="sun-icon">✳</span></h1></div><div class="move-hint"><span class="arrow-round">↗</span><div>GO PLACES. DO THINGS.<br><strong>MAKE IT COUNT.</strong></div></div></div>
+        <div class="board-heading"><div><h1>New Day City<span class="sun-icon">✳</span></h1></div></div>
         <div class="board-frame">
           <div class="board-grid" id="board"></div>
         </div>
-        <div class="time-strip" id="timeStrip"></div>
+        <div class="time-strip" id="timeStrip" hidden></div>
         <section class="pulse-panel" aria-label="City pulse" id="cityPulse"></section>
-        <div class="journal-header"><div><span class="eyebrow dark">THE LITTLE THINGS</span><h2>Your story so far</h2></div><span class="journal-key">● LIFE HAPPENS IN BETWEEN</span></div>
-        <div class="journal" id="journal" aria-live="polite"></div>
+        <div class="journal-header" hidden><div><span class="eyebrow dark">THE LITTLE THINGS</span><h2>Your story so far</h2></div><span class="journal-key">● LIFE HAPPENS IN BETWEEN</span></div>
+        <div class="journal" id="journal" aria-live="polite" hidden></div>
       </main>
 
       <aside class="action-pane pane" id="gameActions">
-        <div class="pane-heading"><span class="eyebrow">YOUR DESTINATION</span><span class="tiny-pulse">● EXPLORE THE CITY</span><button type="button" class="pane-close" data-close-drawer="actions" aria-label="Close Your Destination">×</button></div>
+        <div class="pane-heading"><span class="eyebrow">YOUR DESTINATION</span><button type="button" class="pane-close" data-close-drawer="actions" aria-label="Close Your Destination">×</button></div>
         <div id="venue"></div>
         <div class="action-panel-heading"><span>What will you do?</span><span id="actionsCount" class="muted micro"></span></div>
         <div class="actions-scroller" id="actions"></div>
         <div class="action-footer">
           <div class="hint-box" id="hint"></div>
           <button class="end-turn-btn" id="endTurnBtn" type="button"><span>Wrap up this week</span><span class="button-arrow">↗</span></button>
-          <div class="footer-detail">UNUSED HOURS DON'T CARRY OVER</div>
+          
         </div>
       </aside>
     </div>
@@ -96,14 +97,21 @@
       <button type="button" data-mobile-tab="actions" aria-controls="gameActions" aria-pressed="false"><span aria-hidden="true">↗</span><strong>Activities</strong><span id="mobileActionsBadge" class="notification-circle" hidden>1</span></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer"><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.6</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.9</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
+  <section id="chatPanel" class="chat-panel" role="region" aria-label="Live room chat" hidden>
+    <div class="chat-heading"><strong>💬 Room chat</strong><span>LIVE · NO HISTORY</span><button id="closeChat" type="button" aria-label="Close chat">×</button></div>
+    <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
+    <form id="chatForm" class="chat-form"><input id="chatInput" maxlength="320" placeholder="Message your friend…" required autocomplete="off" aria-label="Chat message"/><button type="submit" id="chatSend">Send ↗</button></form>
+    <div class="chat-status" id="chatStatus">Connect to Looprd WSS to chat.</div>
+  </section>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="overlay" class="overlay" aria-modal="true" role="dialog"></div>
   <input id="filePicker" type="file" accept=".json,application/json" hidden />
   <script src="src/data.js"></script>
   <script src="src/characters.js"></script>
   <script src="src/engine.js"></script>
+  <script src="src/art-assets.js"></script>
   <script src="src/art.js"></script>
   <script src="src/network.js"></script>
   <script src="src/app.js"></script>

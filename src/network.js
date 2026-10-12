@@ -11,7 +11,7 @@ class LifeOnline {
  constructor(hooks){
   this.h=hooks;this.role=null;this.code='';this.token='';this.version=0;this.endpoint='';
   this.socket=null;this.busy=false;this.polling=false;this.timer=null;this.reconnectTimer=null;
-  this.joined=false;this.guestName='';this.lastSyncAt=null;this.socketOpen=false;this.infoStatus='Not checked';this.lastResultId='';this.commandInFlight=null;this.unpublished=false;this.notice='Offline';
+  this.joined=false;this.guestName='';this.chatKey='';this.chatLines=[];this.chatUnread=0;this.chatOpen=false;this.lastSyncAt=null;this.socketOpen=false;this.infoStatus='Not checked';this.lastResultId='';this.commandInFlight=null;this.unpublished=false;this.notice='Offline';
  }
  static serverBase(input){
   const raw=String(input??'').trim();
@@ -55,9 +55,9 @@ class LifeOnline {
   try{
    const socket=new WebSocket(url);this.socket=socket;
    socket.onopen=()=>{this.socketOpen=true;socket.send(JSON.stringify({subscribe:'pulses'}));this.notice='Connected';this.h.render();};
-   socket.onmessage=event=>{try{const msg=JSON.parse(event.data);if(msg.resource==='pulses')this.sync();}catch{}};
+   socket.onmessage=event=>{try{const msg=JSON.parse(event.data);if(msg.resource==='pulses'){if(msg.data?.chat)this.receiveChat(msg.data.chat);else this.sync();}}catch{}};
    socket.onerror=()=>{this.socketOpen=false;this.notice='Reconnecting';this.h.render();};
-   socket.onclose=()=>{if(this.socket!==socket||!this.role)return;this.socketOpen=false;this.notice='Reconnecting';this.h.render();this.reconnectTimer=setTimeout(()=>this.connect(),2500);};
+   socket.onclose=()=>{if(this.socket!==socket||!this.role)return;this.socketOpen=false;this.clearChat();this.notice='Reconnecting';this.h.render();this.reconnectTimer=setTimeout(()=>this.connect(),2500);};
   }catch(e){this.notice='WebSocket unavailable';this.h.toast(e.message,true);}
   clearInterval(this.timer);
   // Looprd events are best-effort; a status fetch also recovers missed updates.
@@ -67,19 +67,19 @@ class LifeOnline {
   this.role=null;this.code='';this.token='';this.version=0;this.joined=false;this.notice='Offline';this.busy=false;this.socketOpen=false;this.lastSyncAt=null;this.infoStatus='Not checked';
   clearInterval(this.timer);clearTimeout(this.reconnectTimer);
   if(this.socket){this.socket.onclose=null;this.socket.close();this.socket=null;}
-  this.commandInFlight=null;this.unpublished=false;this.forget();this.h.render();
+  this.commandInFlight=null;this.unpublished=false;this.chatKey='';this.clearChat();this.forget();this.h.render();
  }
  async host(url){
   this.disconnect();this.endpoint=LifeOnline.validateEndpoint(url);
   const initial=this.h.getGame().snapshot();
   const data=await this.api({op:'create',state:initial});
-  Object.assign(this,{role:'host',code:data.code,token:data.token,version:data.version,joined:false,notice:'Waiting for friend'});
+  Object.assign(this,{role:'host',code:data.code,token:data.token,version:data.version,chatKey:data.chatKey||'',joined:false,notice:'Waiting for friend'});
   this.persist();this.connect();this.h.render();return data;
  }
- async join(url,code,name){
+ async join(url,code,name,appearance=null){
   this.disconnect();this.endpoint=LifeOnline.validateEndpoint(url);
-  const data=await this.api({op:'join',code:code.trim().toUpperCase().replace(/[-\s]/g,''),name});
-  Object.assign(this,{role:'guest',code:data.code,token:data.token,version:data.version,joined:true,notice:'Connected'});
+  const data=await this.api({op:'join',code:code.trim().toUpperCase().replace(/[-\s]/g,''),name,appearance});
+  Object.assign(this,{role:'guest',code:data.code,token:data.token,version:data.version,chatKey:data.chatKey||'',joined:true,notice:'Connected'});
   this.h.setGame(data.state);this.persist();this.connect();this.h.render();return data;
  }
  async resume(){
@@ -88,7 +88,7 @@ class LifeOnline {
   try{
    Object.assign(this,saved);this.endpoint=LifeOnline.validateEndpoint(saved.endpoint);
    const info=await this.api({op:'status',code:this.code,token:this.token});
-   this.version=info.version;this.joined=info.joined;this.guestName=info.guestName;this.lastSyncAt=Date.now();
+   this.version=info.version;this.joined=info.joined;this.chatKey=info.chatKey||'';this.guestName=info.guestName;this.lastSyncAt=Date.now();
    this.h.setGame(info.state);this.connect();this.h.render();if(this.role==='host'){if(this.unpublished&&!info.pending&&!this.busy){try{await this.publish();this.unpublished=false;}catch{}}await this.process(info);}
    return true;
   }catch(err){this.disconnect();this.h.toast('Could not reconnect: '+err.message,true);return false;}
@@ -172,6 +172,37 @@ class LifeOnline {
    if(this.role==='host'){if(this.unpublished&&!info.pending&&!this.busy){try{await this.publish();this.unpublished=false;}catch{}}await this.process(info);}
   }catch(e){if(this.notice!=='Connection interrupted'){this.notice='Connection interrupted';this.h.render();}}
   finally{this.polling=false;}
+ }
+ clearChat(){this.chatLines=[];this.chatUnread=0;this.chatOpen=false;this.h.render();}
+ canChat(){return !!(this.role&&this.joined&&this.socketOpen&&this.chatKey&&typeof crypto!=='undefined'&&crypto.subtle);}
+ async cryptKey(){
+  const bytes=Uint8Array.from(atob(this.chatKey.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+  return crypto.subtle.importKey('raw',bytes,{name:'AES-GCM'},false,['encrypt','decrypt']);
+ }
+ static encodeBytes(bytes){return btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+ static decodeBytes(input){return Uint8Array.from(atob(input.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-input.length%4)%4)),c=>c.charCodeAt(0));}
+ async sendChat(message){
+  if(!this.canChat())throw Error('Chat requires an active Looprd WebSocket connection.');
+  const text=String(message||'').trim().slice(0,320);
+  if(!text)throw Error('Enter a message');
+  const nonce=crypto.getRandomValues(new Uint8Array(12));
+  const name=this.role==='host'?this.h.getGame().players[0].name:this.h.getGame().players[1].name;
+  const plaintext=new TextEncoder().encode(JSON.stringify({from:this.role,name,text}));
+  const ciphertext=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:nonce},await this.cryptKey(),plaintext));
+  if(!this.canChat())throw Error('WebSocket disconnected; message not sent');
+  return this.api({op:'chat',code:this.code,token:this.token,packet:{nonce:LifeOnline.encodeBytes(nonce),ciphertext:LifeOnline.encodeBytes(ciphertext)}});
+ }
+ async receiveChat(packet){
+  if(!this.canChat()||!packet||typeof packet.nonce!=='string'||typeof packet.ciphertext!=='string')return;
+  try{
+   const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:LifeOnline.decodeBytes(packet.nonce)},await this.cryptKey(),LifeOnline.decodeBytes(packet.ciphertext));
+   const body=JSON.parse(new TextDecoder().decode(raw));
+   if(!['host','guest'].includes(body.from)||typeof body.text!=='string'||body.text.length>320)return;
+   this.chatLines.push({name:String(body.name||body.from).slice(0,24),text:body.text,own:body.from===this.role});
+   if(this.chatLines.length>40)this.chatLines.shift();
+   if(!this.chatOpen)this.chatUnread=Math.min(9,this.chatUnread+1);
+   this.h.chatRender?.();
+  }catch{/* unrelated broadcasts or failed authentication are ignored */}
  }
  async probe(){
   if(!this.endpoint)throw Error('Connect to a Looprd server first');

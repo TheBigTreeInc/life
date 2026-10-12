@@ -13,7 +13,7 @@ TTL = 48 * 3600
 Room = sa.table('Room',
     sa.column('id', sa.Integer), sa.column('codeHash', sa.String),
     sa.column('hostHash', sa.String), sa.column('guestHash', sa.String),
-    sa.column('guestName', sa.String), sa.column('state', sa.JSON),
+    sa.column('guestName', sa.String), sa.column('chatKey', sa.String), sa.column('state', sa.JSON),
     sa.column('pending', sa.JSON), sa.column('lastResult', sa.JSON),
     sa.column('version', sa.Integer), sa.column('signal', sa.Integer),
     sa.column('touched', sa.Integer))
@@ -36,6 +36,36 @@ def valid_snapshot(state):
     except (TypeError, ValueError):
         return False
 
+APPEARANCE_OPTIONS = {
+    'skin': {'peach','tan','brown','deep','pale','olive'},
+    'hair': {'short','long','curly','bun','buzz','swept'},
+    'hairColor': {'black','brown','auburn','blonde','silver','mint'},
+    'outfit': {'everyday','smart','sport','creative'},
+    'accent': {'forest','coral','violet','sky','gold','rose'},
+    'mood': {'smile','calm','focused'},
+    'personality': {'curious','kind','bold','thoughtful'},
+}
+APPEARANCE_DEFAULTS = {'skin':'peach','hair':'short','hairColor':'brown','outfit':'everyday',
+                       'accent':'forest','mood':'smile','personality':'curious'}
+ACCENT_COLORS = {'forest':'#367b5d','coral':'#dc7a6a','violet':'#8274c7',
+                 'sky':'#4683b0','gold':'#c48a35','rose':'#c26b99'}
+
+def guest_appearance(value):
+    if not isinstance(value, dict):
+        value = {}
+    return {key: value.get(key) if value.get(key) in options else APPEARANCE_DEFAULTS[key]
+            for key, options in APPEARANCE_OPTIONS.items()}
+
+def replace_guest_identity(state, name, appearance):
+    # This is an actual persisted multiplayer snapshot, not the browser's private profile library.
+    updated = json.loads(json.dumps(state))
+    guest = updated['players'][1]
+    guest['name'] = name
+    if appearance is not None:
+        guest['appearance'] = appearance
+        guest['color'] = ACCENT_COLORS[appearance['accent']]
+    return updated
+
 def execute(body, sessions):
     if not isinstance(body, dict):
         return fail('Invalid request'), None
@@ -49,12 +79,13 @@ def execute(body, sessions):
                 return fail('A valid two-human hotseat game is required'), None
             db.execute(sa.delete(Room).where(Room.c.touched < now - TTL))
             host = secrets.token_urlsafe(32)
+            chat_key = secrets.token_urlsafe(32)
             code = ''.join(secrets.choice(ALPHABET) for _ in range(10))
             # The random join code is not used as the privileged host token.
             db.execute(sa.insert(Room).values(codeHash=digest(code), hostHash=digest(host),
-                guestHash=None, guestName=None, state=state, pending=None, lastResult=None,
+                guestHash=None, guestName=None, chatKey=chat_key, state=state, pending=None, lastResult=None,
                 version=1, signal=0, touched=now))
-            return {'ok': True, 'code': code, 'token': host, 'role': 'host', 'version': 1, 'state': state, 'joined': False}, None
+            return {'ok': True, 'code': code, 'token': host, 'role': 'host', 'version': 1, 'state': state, 'joined': False, 'chatKey':chat_key}, None
         code = str(body.get('code') or '').strip().upper()
         if len(code) != 10 or any(x not in ALPHABET for x in code):
             return fail('Invalid game code'), None
@@ -67,12 +98,14 @@ def execute(body, sessions):
                 return fail('This game already has two people'), None
             guest = secrets.token_urlsafe(32)
             name = str(body.get('name') or 'Friend').strip()[:24] or 'Friend'
+            appearance = guest_appearance(body.get('appearance'))
+            state = replace_guest_identity(record['state'], name, appearance)
             db.execute(sa.update(Room).where(Room.c.id == rid).values(guestHash=digest(guest),
-                guestName=name, touched=now, signal=record['signal'] + 1))
+                guestName=name, state=state, version=record['version']+1, touched=now, signal=record['signal'] + 1))
             event = {'component':'the-life-loop', 'resource':'pulses', 'action':'updated',
                 'id':rid, 'data':{'id':rid, 'signal':record['signal']+1}}
             return {'ok':True, 'role':'guest', 'code':code, 'token':guest,
-                'state':record['state'], 'version':record['version'], 'joined':True}, event
+                'state':state, 'version':record['version']+1, 'joined':True, 'chatKey':record['chatKey']}, event
         token = str(body.get('token') or '')
         hashed = digest(token)
         host = hmac.compare_digest(hashed, record['hostHash']) if token else False
@@ -83,7 +116,24 @@ def execute(body, sessions):
             return {'ok':True, 'role':'host' if host else 'guest', 'state':record['state'],
                 'version':record['version'], 'joined':bool(record['guestHash']),
                 'guestName':record['guestName'], 'pending':record['pending'] if host else None,
-                'lastResult':record['lastResult']}, None
+                'lastResult':record['lastResult'], 'chatKey':record['chatKey']}, None
+        if op == 'chat':
+            if not record['guestHash']:
+                return fail('Wait for both players to join before chatting'), None
+            packet = body.get('packet')
+            if not isinstance(packet, dict) or set(packet) != {'nonce','ciphertext'}:
+                return fail('Invalid chat envelope'), None
+            import re
+            if (not isinstance(packet['nonce'], str) or not re.fullmatch(r'[A-Za-z0-9_-]{16}',packet['nonce'])
+                    or not isinstance(packet['ciphertext'],str)
+                    or not re.fullmatch(r'[A-Za-z0-9_-]{20,2400}',packet['ciphertext'])):
+                return fail('Invalid encrypted chat payload'), None
+            # Never store chat content in Room, Pulse, game snapshots or event history.
+            # The native Looprd WebSocket only emits events; HTTP is the authenticated send path.
+            event = {'component':'the-life-loop', 'resource':'pulses', 'action':'updated', 'id':rid,
+                     'data':{'id':rid,'chat':{'nonce':packet['nonce'],
+                                            'ciphertext':packet['ciphertext']}}}
+            return {'ok':True, 'delivered':'websocket-notification'}, event
         if op == 'send':
             if not guest:
                 return fail('Only the guest can submit remote turns'), None

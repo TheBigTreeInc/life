@@ -56,7 +56,7 @@ test('story and destination have dock toggles and notification circles',()=>{
 test('active turn banner reports ownership and connection state for both players',()=>{
  for(const id of ['turnBanner','turnHeadline','turnDetails','turnConnection','turnLamp']) assert.ok(html.includes(`id="${id}"`),id);
  assert.match(js,/net\.ownTurn\(\)/);
- assert.match(js,/You are \$\{net\.role===/);
+ assert.match(js,/net\.role==='host'\?'Host':'Guest'/);
  assert.match(js,/net\.socketOpen\?'● WS live'/);
 });
 test('multiplayer room UI exposes an explicit Looprd component API probe',()=>{

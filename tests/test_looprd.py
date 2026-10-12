@@ -81,26 +81,26 @@ class LooprdTests(unittest.TestCase):
         command={'type':'travel','arg':'bank'}
         self.assertFalse(self.call(op='send',code=code,token=j['token'],version=1,command=command)[0]['ok'])
         changed=example_state(active=1)
-        pub,event=self.call(op='publish',code=code,token=c['token'],version=1,state=changed)
+        pub,event=self.call(op='publish',code=code,token=c['token'],version=2,state=changed)
         self.assertTrue(pub['ok'])
-        self.assertEqual(pub['version'],2)
+        self.assertEqual(pub['version'],3)
         self.assertFalse(self.call(op='send',code=code,token=j['token'],version=1,command=command)[0]['ok'])
-        sent,event=self.call(op='send',code=code,token=j['token'],version=2,command=command)
+        sent,event=self.call(op='send',code=code,token=j['token'],version=3,command=command)
         self.assertTrue(sent['ok'])
         self.assertEqual(event['action'],'updated')
-        self.assertFalse(self.call(op='send',code=code,token=j['token'],version=2,command=command)[0]['ok'])
+        self.assertFalse(self.call(op='send',code=code,token=j['token'],version=3,command=command)[0]['ok'])
         status,_=self.call(op='status',code=code,token=c['token'])
         self.assertEqual(status['pending']['id'],sent['queued'])
         self.assertIsNone(self.call(op='status',code=code,token=j['token'])[0]['pending'])
-        self.assertFalse(self.call(op='publish',code=code,token=c['token'],version=2,state=changed,commandId='fake')[0]['ok'])
-        ack,event=self.call(op='publish',code=code,token=c['token'],version=2,state=changed,
+        self.assertFalse(self.call(op='publish',code=code,token=c['token'],version=3,state=changed,commandId='fake')[0]['ok'])
+        ack,event=self.call(op='publish',code=code,token=c['token'],version=3,state=changed,
             commandId=sent['queued'],actionOk=True,message='Moved to bank')
-        self.assertEqual(ack['version'],3)
+        self.assertEqual(ack['version'],4)
         status,_=self.call(op='status',code=code,token=j['token'])
         self.assertEqual(status['lastResult']['message'],'Moved to bank')
         self.assertIsNone(status['pending'])
-        self.assertFalse(self.call(op='send',code=code,token=j['token'],version=3,command={'type':'hack','arg':''})[0]['ok'])
-        self.assertFalse(self.call(op='publish',code=code,token=j['token'],version=3,state=changed)[0]['ok'])
+        self.assertFalse(self.call(op='send',code=code,token=j['token'],version=4,command={'type':'hack','arg':''})[0]['ok'])
+        self.assertFalse(self.call(op='publish',code=code,token=j['token'],version=4,state=changed)[0]['ok'])
 
     def test_published_state_is_authoritative_and_persistent(self):
         c,_=self.call(op='create',state=example_state())
@@ -108,6 +108,46 @@ class LooprdTests(unittest.TestCase):
         s['week']=24
         self.call(op='publish',code=c['code'],token=c['token'],version=1,state=s)
         self.assertEqual(self.call(op='status',code=c['code'],token=c['token'])[0]['state']['week'],24)
+
+    def test_guest_character_is_persisted_in_shared_game_snapshot_and_validated(self):
+        host,_=self.call(op='create',state=example_state())
+        appearance={'skin':'olive','hair':'curly','hairColor':'silver','outfit':'sport',
+                    'accent':'violet','mood':'focused','personality':'bold'}
+        joined,event=self.call(op='join',code=host['code'],name='Guest New',appearance=appearance)
+        self.assertTrue(joined['ok'])
+        self.assertEqual(joined['version'],2)
+        self.assertEqual(joined['state']['players'][1]['appearance'],appearance)
+        self.assertEqual(joined['state']['players'][1]['color'],'#8274c7')
+        self.assertEqual(event['resource'],'pulses')
+        state,_=self.call(op='status',code=host['code'],token=host['token'])
+        self.assertEqual(state['state']['players'][1]['name'],'Guest New')
+        self.assertEqual(state['state']['players'][1]['appearance'],appearance)
+        self.assertNotIn('appearance',str(event))
+        self.assertEqual(state['chatKey'],host['chatKey'])
+        self.assertEqual(joined['chatKey'],host['chatKey'])
+
+    def test_chat_emits_encrypted_ephemeral_websocket_event_only(self):
+        host,_=self.call(op='create',state=example_state())
+        packet={'nonce':'1234567890123456','ciphertext':'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'}
+        rejected,_=self.call(op='chat',code=host['code'],token=host['token'],packet=packet)
+        self.assertFalse(rejected['ok'])  # Only once two players join
+        guest,_=self.call(op='join',code=host['code'],name='Guest')
+        rejected,_=self.call(op='chat',code=host['code'],token='not-a-token',packet=packet)
+        self.assertFalse(rejected['ok'])
+        rejected,_=self.call(op='chat',code=host['code'],token=guest['token'],packet={'nonce':'!','ciphertext':'oops'})
+        self.assertFalse(rejected['ok'])
+        original,_=self.call(op='status',code=host['code'],token=host['token'])
+        result,event=self.call(op='chat',code=host['code'],token=guest['token'],packet=packet)
+        self.assertTrue(result['ok'])
+        self.assertEqual(event['data']['chat'],packet)
+        self.assertNotIn('token',str(event))
+        self.assertNotIn(host['chatKey'],str(event))
+        after,_=self.call(op='status',code=host['code'],token=host['token'])
+        self.assertEqual(after['version'],original['version'])
+        self.assertEqual(after['state'],original['state'])
+        self.assertEqual(after['lastResult'],original['lastResult'])
+        with self.sessions() as db:
+            self.assertNotIn(packet['ciphertext'],str(db.execute(sa.text('select * from "Room"')).fetchone()))
 
     def test_invalid_snapshot_rejected_without_exposing_code(self):
         bad,_=self.call(op='create',state={'settings':{'mode':'solo'},'players':[]})

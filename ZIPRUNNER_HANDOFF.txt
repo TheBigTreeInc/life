@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.6
-filename: the-life-loop-0.5.6-ziprunner.zip
+version: 0.5.9
+filename: the-life-loop-0.5.9-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -24,3 +24,6 @@ server_field: Enter the base FQDN only (api.server.country); component route /lo
 workboard_hotfix: Normalize LL-072 priority from P1 to high (ZipRunner v1 enum) and validate manifest priority values during node tools/verify.mjs. No game logic changes.
 release_revision: v0.5.4 correct version bump for CI/workboard sync; no gameplay changes; commit the manifest with package.json.
 END_ZIPRUNNER_HANDOFF
+art_pack: assets/art/styles/contemporary-default/manifest.json
+art_pack_offline: Embedded optimized WebP imagery in PLAY.html
+art_pack_home_tiers: studio, apartment, loft use distinct player-supplied WebP images; SVG remains a fallback

@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parent.parent
 source=(root/'server/looprd_handler.py').read_text()
 spec={
  'apiVersion':'looprd/v1', 'component':'the-life-loop', 'release':json.loads((root/'package.json').read_text())['version'], 'api':{'version':'v1'},
- 'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':1},
+ 'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':2},
  'models':{
   'Room':{'fields':{
    'id':{'type':'integer','primaryKey':True,'generated':True},
@@ -14,6 +14,7 @@ spec={
    'hostHash':{'type':'string','maxLength':64,'required':True},
    'guestHash':{'type':'string','maxLength':64},
    'guestName':{'type':'string','maxLength':24},
+   'chatKey':{'type':'string','maxLength':64},
    'state':{'type':'json','required':True},
    'pending':{'type':'json'},
    'lastResult':{'type':'json'},

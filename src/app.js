@@ -68,13 +68,13 @@ function render(){
  $('mobileCash').textContent=fmt(p.cash);
  $('mobilePlayer').textContent=p.name;
  $('economy').textContent=game.economy>=1.06?'MARKET BOOMING':game.economy<=.94?'MARKET COOLING':'MARKET STABLE';
- $('turnCounter').textContent=p.name.toUpperCase()+' TURN';
+ 
  const online=!!net?.role,ours=!online||net.ownTurn();
  const ourName=net?.role==='guest'?(game.players.find(x=>x.id==='friend')?.name||'Friend'):(game.players.find(x=>x.id==='player')?.name||'Host');
  const rivalName=net?.role==='guest'?(game.players.find(x=>x.id==='player')?.name||'Host'):(game.players.find(x=>x.id==='friend')?.name||'Friend');
  let turnTitle=online?(ours?'YOUR TURN':`${p.name.toUpperCase()}’S TURN`):`${p.name.toUpperCase()}’S TURN`;
  if(online&&!net.joined&&net.role==='host')turnTitle='WAITING FOR YOUR FRIEND TO JOIN';
- const roleLine=online?`You are ${net.role==='host'?'the host':'the guest'} (${ourName}) · ${ours?'You can act now':`Waiting for ${p.name}`} · ${net.joined?'2 connected':'1 connected'}`:`Local game · ${p.hours} hours remaining`;
+ const roleLine=online?`${net.role==='host'?'Host':'Guest'}: ${ourName} · ${net.joined?'2 players online':'Awaiting second player'} · ${p.hours}h remaining`:`${p.hours} hours remaining`;
  $('turnHeadline').textContent=turnTitle;$('turnDetails').textContent=roleLine;
  $('turnBanner').dataset.owner=ours?'self':'other';$('turnBanner').dataset.online=String(online);
  $('turnLamp').title=online?(net.socketOpen?'WebSocket connected':net.lastSyncAt?'HTTP fallback / retrying':'Waiting for Looprd'):'Local play';
@@ -91,7 +91,7 @@ function render(){
  $('goals').innerHTML=D.GOAL_KEYS.map(k=>`<div class="goal-item"><div class="goal-title"><strong>${goalLabels[k]}</strong><span class="goal-percent">${score[k]}%</span></div><div class="track" role="progressbar" aria-label="${k}" aria-valuenow="${score[k]}" aria-valuemin="0" aria-valuemax="100"><div style="width:${percent(score[k])}"></div></div></div>`).join('');
  const wellbeing=[{name:'Energy',value:p.energy,sub:p.energy+' / 100'},{name:'Happiness',value:p.happiness,sub:p.happiness+' / 100'},{name:'Reliability',value:p.dependability,sub:p.dependability+' / 100'}];
  $('wellbeing').innerHTML=wellbeing.map(v=>`<div class="wellness-row"><span>${esc(v.name)}</span><strong>${esc(v.sub)}</strong></div><div class="track small-track"><div style="width:${percent(v.value)}"></div></div>`).join('')+
- `<div class="wellness-row"><span>Experience</span><strong>${p.experience} XP</strong></div><div class="wellness-row"><span>Food for this week</span><strong>${p.fed?'FED':p.groceries>0?'PANTRY '+p.groceries:'NONE'}</strong></div><div class="wardrobe-status"><strong>👕 WARDROBE · WEEKS LEFT</strong>${game.clothingSummary(p).map(x=>`<span class="wardrobe-line ${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)} <b>${x.weeks}w</b></span>`).join('')}<small>All outfits age each week. Better outfits also cover lower-level uniforms.</small></div><div class="wellness-row"><span>${game.isClassic?'Classic diplomas':'Certificates'}</span><strong>${game.isClassic?game.degreeCount(p)+' / '+D.classicDegrees.length:p.coursesCompleted.length+' / '+D.courses.length}</strong></div>${game.isClassic?`<div class="wellness-row"><span>University enrollments</span><strong>${p.classicEnrollmentCredits} unused · ${p.classicEnrolled.length}/4 active</strong></div>`:''}`;
+ `<div class="wellness-row"><span>Experience</span><strong>${p.experience} XP</strong></div><div class="wellness-row"><span>Food for this week</span><strong>${p.fed?'FED':p.groceries>0?'PANTRY '+p.groceries:'NONE'}</strong></div><div class="wardrobe-status"><strong>👕 WARDROBE · WEEKS LEFT</strong>${game.clothingSummary(p).map(x=>`<span class="wardrobe-line ${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)} <b>${x.weeks}w</b></span>`).join('')}</div><div class="wellness-row"><span>${game.isClassic?'Classic diplomas':'Certificates'}</span><strong>${game.isClassic?game.degreeCount(p)+' / '+D.classicDegrees.length:p.coursesCompleted.length+' / '+D.courses.length}</strong></div>${game.isClassic?`<div class="wellness-row"><span>University enrollments</span><strong>${p.classicEnrollmentCredits} unused · ${p.classicEnrolled.length}/4 active</strong></div>`:''}`;
  $('leaderboard').innerHTML=[...game.players].sort((a,b)=>game.progress(b)-game.progress(a)).map(x=>{
  const role=game.getJob(x)?.name||'Getting started';return `<div class="leader-entry ${x.id===p.id?'active':''}"><span class="leader-dot" style="background:${esc(x.color)}"></span><div class="leader-data"><div class="leader-name">${esc(x.name)}</div><div class="leader-role">${esc(role)}</div></div><strong class="leader-score">${game.progress(x)}%</strong></div>`;
  }).join('');
@@ -99,8 +99,8 @@ function render(){
  const cost=game.travelCost(p.location,loc.id),hasHuman=game.players.some(x=>!x.isAI&&x.location===loc.id);
  const eventHere=!game.isClassic&&game.cityEvent.venue===loc.id;
  const rival=game.players.some(x=>x.isAI&&x.location===loc.id);
- return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''}" ${net?.role&&(!net.ownTurn()||net.busy)?'disabled':''} data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="Visit ${esc(placeLabel(loc.id))}${cost?' · '+cost+' hour'+(cost!==1?'s':''):' · current location'}" aria-label="${esc(placeLabel(loc.id))}, ${cost?'travel '+cost+' hours':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.id,true,game.settings.era)}</div><div class="tile-caption"><div class="tile-name">${esc(placeLabel(loc.id))}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
- }).join('')+`<div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div><div class="hub-sub">${p.hours>0?'Tap a building to travel. Every hour is yours to spend.':'That’s your week! Wrap it up to start a new one.'}</div></div><div class="hub-bottom"><div class="hub-week">WEEK ${String(game.week).padStart(2,'0')}<br/>THE LIFE LOOP</div><div class="hub-hours">${p.hours}<small>OF ${game.rules.hours} HOURS</small></div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+ return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''}" ${net?.role&&(!net.ownTurn()||net.busy)?'disabled':''} data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="Visit ${esc(placeLabel(loc.id))}${cost?' · '+cost+' hour'+(cost!==1?'s':''):' · current location'}" aria-label="${esc(placeLabel(loc.id))}, ${cost?'travel '+cost+' hours':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.id,true,game.settings.era,p.home)}</div><div class="tile-caption"><div class="tile-name">${esc(placeLabel(loc.id))}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
+ }).join('')+`<div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`;
  $('timeStrip').innerHTML=`<div class="time-label"><strong>⏱ &nbsp; Your weekly time</strong><br/>Every decision takes a little time</div><div class="hour-pips">${Array.from({length:game.rules.hours/2},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / ${game.rules.hours} h</div>`;
  $('cityPulse').hidden=game.isClassic;
  const event=game.cityEvent,prices=Object.entries(event.prices).map(([sector,mult])=>`${sector} ${Math.round((mult-1)*100)>0?'+':''}${Math.round((mult-1)*100)}%`),pay=event.wage!==1?`shift pay +${Math.round((event.wage-1)*100)}%`:'';
@@ -117,7 +117,7 @@ function render(){
  const relatedArcs=D.storyArcs.filter(a=>a.partner===current.id);
  const storyHelp=!game.isClassic&&localArc?`<div class="arc-progress"><b>📖 ${esc(localArc.title)}</b><span>${arcInfo.chapter>=3?'Story complete':`Chapter ${arcInfo.chapter+1}/3`}</span><small>${esc(arcInfo.chapter>=3?'A chapter of city history you helped write.':arcInfo.reason||'Next chapter is available in the activity list.')}</small></div>`:'';
  const links=(game.isClassic?[]:relatedArcs).filter(a=>(p.storyProgress?.[a.id]?.chapter||0)>0).map(a=>`<span class="story-partner">↗ ${esc(citizen.name)} is part of ${esc(a.title)}</span>`).join('');
- $('venue').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id,false,game.settings.era)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / 12</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}<div class="location-visit">↗ &nbsp; ${j?(current.id===j.place?`Your workplace · ${esc(j.employer?j.employer+' · '+j.name:j.name)} · ${fmt(p.wage)}/hour. Take a shift below.`:`Employed at ${esc(j.employer||placeLabel(j.place))} as ${esc(j.name)}. Only that workplace offers regular paid shifts.`):'Unemployed · Visit Career Center to find your first permanent job.'} ${game.isClassic?'Choose a city activity below.':'Speak to '+esc(citizen.name)+' or choose an activity below.'}</div>`;
+ $('venue').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id,false,game.settings.era,p.home)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / 12</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}`;
  const allActions=game.actions();
  const classicEmployment=game.isClassic&&p.location==='agency';
  const employers=classicEmployment?[...new Set(game.jobs.map(j=>j.employer))]:[];
@@ -142,6 +142,25 @@ function render(){
  $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'Wrap up this week';
  if(game.winner&&!didShowWin){didShowWin=true;showWinner();}
  if(game.pendingEncounter&&(!net?.role||net.ownTurn())&&$('overlay').dataset.kind!=='encounter')showEncounter();
+ chatRender();
+}
+function chatRender(){
+ const panel=$('chatPanel'),toggle=$('chatToggle');
+ const live=net?.canChat()||false;
+ toggle.disabled=!live;toggle.setAttribute('aria-expanded',String(!panel.hidden));
+ const badge=$('chatBadge');badge.hidden=!net?.chatUnread;badge.textContent=String(net?.chatUnread||'');
+ if(!live){panel.hidden=true; if(net)net.chatOpen=false;}
+ $('chatStatus').textContent=live?'Live through Looprd WSS · Messages are not saved':'Chat requires both players and a live WebSocket.';
+ if(panel.hidden)return;
+ const messages=$('chatMessages');
+ messages.innerHTML=net.chatLines.map(m=>`<div class="chat-bubble ${m.own?'mine':''}"><small>${esc(m.name)}</small><span>${esc(m.text)}</span></div>`).join('')||'<p class="chat-empty">Only new messages appear here. Chat disappears when you disconnect.</p>';
+ messages.scrollTop=messages.scrollHeight;
+}
+function setChatOpen(open){
+ $('chatPanel').hidden=!open;
+ net.chatOpen=!!open;
+ if(open){net.chatUnread=0;chatRender();$('chatInput').focus();}
+ else chatRender();
 }
 function onlineDialog(){
  const connected=!!net.role;
@@ -159,7 +178,7 @@ function onlineDialog(){
   $('joinCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)$('joinOnlineForm').elements.name.value=p.name;});
   $('joinOnlineForm').addEventListener('submit',async e=>{
    e.preventDefault();const fd=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;
-   try{await net.join(String(fd.get('url')),String(fd.get('code')),String(fd.get('name')));closeOverlay();toast('Connected to '+net.code+'!');}
+   try{await net.join(String(fd.get('url')),String(fd.get('code')),String(fd.get('name')),characters.all().find(p=>p.id===$('joinCharacterPick').value)||null);closeOverlay();toast('Connected to '+net.code+'!');}
    catch(err){toast('Cannot join: '+err.message,true);btn.disabled=false;}
   });
  }
@@ -257,6 +276,24 @@ function newGameDialog(isInitial=false){
  <div class="new-settings-block" aria-label="World era selection"><div class="section-heading"><span>WORLD ERA</span><span class="muted micro">VISUALS ONLY · SAME ECONOMY</span></div><div class="setup-options setup-eras">${Object.entries(D.worldEras).map(([key,era])=>`<label class="setup-choice era-option"><input type="radio" name="era" value="${key}" ${key==='current'?'checked':''}/><span class="setup-era-art">${Art.scene('office',true,key)}</span><span class="setup-choice-text"><b>${esc(era.label)}</b><small>${esc(era.city)}</small></span></label>`).join('')}</div><p class="setup-explain">The era changes buildings, citizens' outfits, and city names. It does not change wages, prices or career rules.</p></div>
  <div class="goal-settings"><div class="section-heading"><span>Choose your life goals</span><span class="muted micro">LOWER = SHORTER GAME</span></div>${D.GOAL_KEYS.map((key,i)=>`<label class="modal-goal"><span>${{wealth:'💰 Wealth',happiness:'☀️ Happiness',education:'🎓 Education',career:'🚀 Career'}[key]}</span><input type="range" class="range" name="${key}" min="10" max="100" step="5" value="${[40,55,50,45][i]}" aria-label="${key} goal"/><strong data-range-value="${key}">${[40,55,50,45][i]}%</strong></label>`).join('')}</div>
  <button class="modal-primary" type="submit">Let's get living &nbsp; ↗</button></form>${saved?'<button class="modal-secondary" type="button" id="resumeBtn">↺ &nbsp; Continue your saved game (week '+Number(saved.week||1)+')</button>':''}<div class="modal-footnote">Autosaves after every action · Completely offline · Original artwork and code</div></section>`);
+ // Mobile-only progressive setup. The desktop keeps every setting visible.
+ const form=$('startForm'),sections=[...form.children];
+ const groups=sections.filter(el=>el.classList.contains('character-pick-block')||el.classList.contains('new-form')||el.getAttribute('aria-label')==='Ruleset selection'||el.getAttribute('aria-label')==='World era selection'||el.classList.contains('goal-settings'));
+ const body=document.createElement('div');body.className='setup-wizard-body';
+ form.insertBefore(body,groups[0]);for(const group of groups)body.appendChild(group);
+ const progress=document.createElement('nav');progress.className='setup-wizard-progress';progress.setAttribute('aria-label','Game setup');
+ progress.innerHTML=['Character','World','Goals'].map((label,i)=>`<button type="button" class="setup-step-btn" data-setup-step="${i}">${i+1}. ${label}</button>`).join('');
+ form.insertBefore(progress,body);
+ const actions=document.createElement('div');actions.className='setup-wizard-actions';
+ const submit=form.querySelector('[type="submit"]');submit.classList.add('wizard-start');
+ actions.innerHTML='<button type="button" class="modal-secondary wizard-back">← Back</button><button type="button" class="modal-primary wizard-next">Continue →</button>';
+ actions.appendChild(submit);form.appendChild(actions);
+ let step=0;
+ const updateStep=i=>{step=Math.max(0,Math.min(2,i));form.dataset.step=step;progress.querySelectorAll('button').forEach((b,n)=>b.setAttribute('aria-current',n===step?'step':'false'));body.scrollTop=0;};
+ progress.addEventListener('click',e=>{const b=e.target.closest('[data-setup-step]');if(b)updateStep(+b.dataset.setupStep);});
+ actions.querySelector('.wizard-back').addEventListener('click',()=>updateStep(step-1));
+ actions.querySelector('.wizard-next').addEventListener('click',()=>{if(step===0&&!form.elements.name.reportValidity())return;updateStep(step+1);});
+ updateStep(0);
  $('manageCharactersBtn').addEventListener('click',()=>showCharacterLibrary('new'));
  $('characterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);$('characterPickPreview').innerHTML=profilePreview(p);if(p)$('startForm').elements.name.value=p.name;});
  $('friendCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)$('startForm').elements.friend.value=p.name;});
@@ -329,12 +366,17 @@ $('mobileNav').addEventListener('click',e=>{const tab=e.target.closest('[data-mo
 mobileBreakpoint.addEventListener('change',updateLayout);wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);
 setMobileView('city',{scroll:false});
 $('onlineBtn').addEventListener('click',onlineDialog);
+$('chatToggle').addEventListener('click',()=>setChatOpen($('chatPanel').hidden));
+$('closeChat').addEventListener('click',()=>setChatOpen(false));
+$('chatForm').addEventListener('submit',async e=>{e.preventDefault();const input=$('chatInput'),text=input.value.trim();if(!text)return;const button=$('chatSend');button.disabled=true;
+ try{await net.sendChat(text);input.value='';}catch(err){toast('Chat unavailable: '+err.message,true);}finally{button.disabled=false;chatRender();}
+});
 $('saveBtn').addEventListener('click',saveExport);
 $('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
 $('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
 $('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){setUtilityMenu(false);closeDrawer();if($('overlay').classList.contains('open')&&$('overlay').querySelector('[data-close]'))closeOverlay();}});
-net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast});
+net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast,chatRender});
 render();newGameDialog(true);
 net.resume().then(reconnected=>{if(reconnected){$('overlay').dataset.kind='';closeOverlay();toast('Reconnected to room '+net.code);}else if(new URLSearchParams(location.search).has('join'))onlineDialog();});
 })();

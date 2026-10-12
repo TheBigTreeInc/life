@@ -349,3 +349,127 @@ body[data-era="scifi"] .pulse-panel{background:#ebf5ff}
  .character-list{max-height:38vh}
 }
 @media(max-width:380px){.character-form-grid{grid-template-columns:1fr}}
+
+/* v0.5.7 — viewport-contained game. The document itself never scrolls;
+   deep detail is in the independent story/activity panes and dialogs. */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+.shell{height:100dvh;min-height:0;overflow:hidden}
+.game-layout{min-height:0;overflow:hidden}
+.main-area{min-height:0;overflow:hidden;padding:clamp(8px,1.6vh,20px) clamp(9px,1.8vw,30px);height:100%;}
+.board-heading{flex:0 0 auto;margin-bottom:clamp(5px,1vh,11px)}
+.board-heading h1{font-size:clamp(20px,2.7vw,37px);margin:0}
+.board-frame{flex:1;min-height:0;display:flex;padding:clamp(4px,.7vh,9px);overflow:hidden}
+.board-grid{flex:1;min-height:0;height:100%;aspect-ratio:auto;grid-template-rows:repeat(4,minmax(0,1fr));gap:clamp(3px,.6vh,9px)}
+.board-tile{min-height:0;padding:clamp(3px,.7vh,8px)}
+.board-tile .tile-caption{width:100%;margin:0;padding:clamp(3px,.5vh,7px)}
+.board-tile .tile-name{font-size:clamp(9px,.9vw,13px)}
+.hub{padding:clamp(8px,1.5vw,18px);min-height:0}
+.hub-title{font-size:clamp(15px,2.2vw,31px)}
+.hub-news{max-height:3.1em;overflow:hidden}
+.sidebar,.action-pane{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:clamp(10px,1.3vw,20px);gap:clamp(6px,1vh,11px)}
+.status-section{padding:0}.section-heading{margin-bottom:6px}
+.goal-item{margin-bottom:7px}.goal-title{margin-bottom:3px}
+.profile-card{padding:10px}.profile-mini{margin-top:7px;padding-top:6px}
+.status-columns{gap:5px}.stat-card{padding:8px}.stat-number{font-size:18px;margin-top:2px}.stat-note{display:none}
+.wardrobe-status small{display:none}.leader-entry{padding:6px;margin-bottom:4px}
+.action-pane{display:flex;flex-direction:column}
+.action-pane #venue{flex:0 0 auto}.action-pane .actions-scroller{flex:1 1 auto;min-height:48px;max-height:none;overflow-y:auto}
+.action-pane .action-footer{flex:0 0 auto}
+.action-pane .venue-scene{height:clamp(76px,12vh,170px)}
+.venue-blurb{display:none}.location-visit{display:none}
+.pane-heading{flex-shrink:0}
+.site-footer{display:none}
+/* Chat is live-only. It is never a part of the game snapshot or the saved chat history. */
+.chat-panel{position:fixed;z-index:42;right:clamp(8px,1.5vw,25px);bottom:12px;width:min(360px,calc(100vw - 16px));height:min(390px,65dvh);display:flex;flex-direction:column;background:#fff;border:1px solid #aecdbb;border-radius:15px;box-shadow:0 16px 45px #14352955;overflow:hidden}
+.chat-panel[hidden]{display:none!important}
+.chat-heading{background:#24463f;color:white;display:flex;align-items:center;gap:9px;padding:12px}
+.chat-heading strong{flex:1}.chat-heading span{font-size:9px;color:#b9e9c8;font-weight:800}
+.chat-heading button{background:transparent;color:#fff;border:0;font-size:26px;line-height:1}
+.chat-messages{flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding:12px;overscroll-behavior:contain}
+.chat-bubble{display:flex;flex-direction:column;align-self:flex-start;max-width:90%;gap:3px;background:#eff4ed;border-radius:12px 12px 12px 3px;padding:8px 11px;font-size:12px;overflow-wrap:anywhere}
+.chat-bubble.mine{align-self:flex-end;background:#dff4e3;border-radius:12px 12px 3px 12px}
+.chat-bubble small{color:#54816e;font-size:10px;font-weight:800}
+.chat-empty{font-size:12px;color:#668472;text-align:center;max-width:230px;margin:auto}
+.chat-form{display:flex;padding:8px;gap:6px;border-top:1px solid #d9e6d9}
+.chat-form input{flex:1;min-width:0;border:1px solid #cbdccf;border-radius:8px;padding:9px;font-size:13px}
+.chat-form button{background:#21593e;border:0;color:white;border-radius:8px;padding:8px;font-size:12px;font-weight:900}
+.chat-status{font-size:9px;color:#53735b;padding:0 10px 9px}
+/* Keep width-specific drawers, but never let them extend the document. */
+@media(min-width:1025px) and (max-width:1599px){.main-area{height:100%;max-width:1100px;padding:clamp(8px,1.5vh,20px) 12px}.sidebar,.action-pane{height:100dvh}}
+@media(max-width:1024px){
+ .shell{height:100dvh;min-height:0}
+ .game-layout{flex:1;min-height:0;overflow:hidden}
+ .main-area,.sidebar,.action-pane{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+ .main-area{overflow:hidden;padding:clamp(5px,1vh,14px) 8px;display:flex;flex-direction:column}
+ .board-heading{margin-bottom:5px}.board-heading h1{font-size:clamp(19px,4.5vw,29px)}
+ .board-frame{flex:1;min-height:0;height:0;max-width:none;width:100%;padding:4px}
+ .board-grid{width:100%;height:100%;aspect-ratio:auto;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));gap:4px}
+ .board-grid .hub{display:none!important}
+ .board-tile{min-height:0;padding:3px;border-radius:9px}
+ .board-tile .tile-art{left:0;right:0;top:0;bottom:14px;display:grid;place-items:center;max-width:100%;opacity:.95}
+ .board-tile .tile-art svg{max-width:100%;max-height:100%;transform:none}
+ .board-tile .tile-caption{margin:0;width:100%;padding:3px 2px;min-height:18px}
+ .board-tile .tile-name{font-size:clamp(8px,2.2vw,11px)}
+ .board-tile .tile-tag,.board-tile .tile-num{display:none}
+ .board-tile .you-marker{font-size:7px;padding:2px 3px}
+ .turn-banner{min-height:0;flex:0 0 auto;padding:5px 10px;flex-wrap:nowrap;gap:5px}
+ .turn-banner #turnDetails{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+ .turn-banner #turnConnection{flex:0 0 auto;width:26px;height:26px;overflow:hidden;white-space:nowrap;font-size:0;padding:0;text-align:center}
+ .turn-banner #turnConnection:before{content:'☷';font-size:15px}
+ .mobile-summary{padding:4px 8px;flex-shrink:0}
+ .mobile-summary span{font-size:8px}.mobile-summary strong{font-size:13px}
+ .mobile-nav{position:relative;bottom:auto;flex-shrink:0;padding:4px 8px calc(4px + env(safe-area-inset-bottom))}
+ .mobile-nav button{min-height:42px;flex-direction:row;gap:4px}
+ .mobile-nav button span{font-size:14px}.mobile-nav button strong{font-size:11px}
+ .head-actions{overflow:hidden;scrollbar-width:none;padding:0;gap:2px;min-width:0}
+ .head-actions .text-button{min-height:30px;padding:5px 7px;font-size:10px}
+ .topbar{min-height:0;height:auto;padding:5px 8px;gap:3px}
+ .top-center{padding:5px 7px;font-size:8px}
+ .logo-symbol{width:27px;height:27px;font-size:22px}.brand{font-size:12px}
+ .brand-sub{display:none}
+ .chat-panel{bottom:calc(53px + env(safe-area-inset-bottom));height:min(370px,60dvh)}
+ .overlay{position:fixed;inset:0;overflow:hidden}
+ .modal{max-height:calc(100dvh - 12px);overflow-y:auto;overscroll-behavior:contain}
+ .modal:has(#startForm){width:min(620px,calc(100vw - 14px));padding:10px;display:flex;flex-direction:column;overflow:hidden}
+ .modal:has(#startForm) .modal-head{margin-bottom:2px}
+ .modal:has(#startForm) .modal-head h2{font-size:clamp(17px,4vw,22px);margin:0}
+ .modal:has(#startForm) .modal-head .modal-lead{display:none}
+ #startForm{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+ .setup-wizard-progress{display:flex;gap:5px;padding:7px 0}
+ .setup-step-btn{flex:1;font-size:10px;background:#eff6eb;color:#477052;padding:8px 3px;border:1px solid #d3e4d5;border-radius:8px;font-weight:900}
+ .setup-step-btn[aria-current="step"]{background:#2d6346;color:white}
+ #startForm .setup-wizard-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 2px}
+ #startForm .setup-wizard-body>*{display:none!important}
+ #startForm[data-step="0"] .setup-wizard-body>.character-pick-block,#startForm[data-step="0"] .setup-wizard-body>.new-form{display:grid!important}
+ #startForm[data-step="1"] .setup-wizard-body>[aria-label="Ruleset selection"],#startForm[data-step="1"] .setup-wizard-body>[aria-label="World era selection"]{display:block!important}
+ #startForm[data-step="2"] .setup-wizard-body>.goal-settings{display:block!important}
+ #startForm .new-settings-block{margin:4px 0}.setup-explain{display:none}
+ #startForm .section-heading{margin-bottom:3px}
+ #startForm .setup-era-art{height:48px}
+ #startForm .setup-choice{padding:5px;gap:4px}
+ #startForm .setup-choice-text small,#startForm .setup-choice-text em{display:none}
+ #startForm .setup-choice-text b{font-size:11px}
+ #startForm .character-picker-row{gap:4px}
+ #startForm .character-manage-btn{min-height:32px}
+ #startForm .profile-preview{padding:5px}
+ #startForm .new-form{gap:6px}
+ #startForm .form-input,#startForm .form-select{min-height:35px}
+ .setup-wizard-actions{display:flex;gap:8px;padding-top:7px;border-top:1px solid #e5ede4;flex:none}
+ .setup-wizard-actions button{flex:1;min-height:42px;margin:0!important}
+ #startForm[data-step="0"] .wizard-back,#startForm[data-step="2"] .wizard-next{display:none}
+ #startForm[data-step="0"] .wizard-start,#startForm[data-step="1"] .wizard-start{display:none}
+ #startForm[data-step="1"] .wizard-back,#startForm[data-step="1"] .wizard-next,#startForm[data-step="2"] .wizard-back{display:block}
+ .modal:has(#startForm)>.modal-footnote{display:none}
+}
+@media(max-width:410px){.head-actions .text-button span:not(.notification-circle){display:none}.board-tile .tile-caption{font-size:8px}}
+/* Desktop uses the original single-page setup, mobile uses the three-step wizard. */
+@media(min-width:1025px){.setup-wizard-progress,.wizard-back,.wizard-next{display:none!important}.setup-wizard-body,.setup-wizard-actions{display:contents}}
+@media(max-width:1024px){.board-grid .board-tile{grid-area:auto!important}}
+
+@media(max-width:1024px){.modal:has(#startForm) .modal-head h2{font-size:clamp(16px,4vw,21px);letter-spacing:-.45px;line-height:1.18;min-height:24px}}
+@media(max-width:1024px){.turn-banner #turnDetails{display:none}.modal:has(#startForm) .modal-head{display:block;min-height:54px}.modal:has(#startForm) .modal-head .eyebrow{font-size:9px;letter-spacing:.5px}.modal:has(#startForm) .modal-head h2{font-size:16px;line-height:1.35;margin:3px 0 0}}
+
+/* v0.5.9 Contemporary painting pack. Source WebP files remain separately cacheable on GitHub Pages. */
+.board-tile .tile-art img.scene-photo {display:block;width:100%;height:100%;object-fit:cover;object-position:center 52%;transform:none;max-width:none;max-height:none;}
+.venue-scene > img.scene-photo {display:block;width:100%;height:100%;object-fit:cover;object-position:center 55%;position:absolute;inset:0;}
+.setup-era-art img.scene-photo {display:block;width:100%;height:100%;object-fit:cover;}

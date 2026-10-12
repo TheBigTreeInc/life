@@ -1,6 +1,7 @@
 (function(root){
 'use strict';
 // Original vector illustrations. Generated locally as inline SVG: no network or font dependencies.
+const artAssets=root.LifeArtAssets||(typeof module!=='undefined'&&module.exports?require('./art-assets.js'):{venues:{},homeTiers:{}});
 const themes={
  home:       {sky:'#cde9d6',wall:'#e9bb92',roof:'#a95c5b',trim:'#f5ebd5',door:'#56756d',form:'house',label:'HOME',extra:'plant'},
  agency:     {sky:'#b6d9df',wall:'#e8bc77',roof:'#456b80',trim:'#fff1d5',door:'#567d89',form:'office',label:'CAREERS',extra:'notice'},
@@ -69,8 +70,34 @@ function motif(type, x=324,y=171){
  cross:`<path d="M${x-12} ${y-36}h24v25h25v23h-25v25h-24v-25h-25v-23h25z" fill="#fef8e8"/>`
  };return icons[type]||icons.star;
 }
-function scene(id,compact=false,era='current'){
+function residenceScene(tier='studio',compact=false){
+ const level=['studio','apartment','loft'].includes(tier)?tier:'studio';
+ const design={
+ studio:{title:'STARTER STUDIO',wall:'#e1bdab',trim:'#f9f2dc',roof:'#98716c',floors:3,windows:4,sky:'#c8e6df',door:'#547b80'},
+ apartment:{title:'SUNNY APARTMENT',wall:'#e4d5b6',trim:'#fdf8e6',roof:'#8a9a8c',floors:4,windows:5,sky:'#d8eff5',door:'#6a9ca2'},
+ loft:{title:'SKYLINE LOFT',wall:'#a9c8d2',trim:'#e7faff',roof:'#517486',floors:5,windows:5,sky:'#c5e4fa',door:'#50859a'}
+ }[level];
+ const startY=level==='studio'?83:level==='apartment'?53:25;
+ const startX=level==='studio'?186:level==='apartment'?164:150;
+ const width=level==='studio'?270:level==='apartment'?315:343;
+ const steps=design.floors,columns=design.windows;
+ const windows=Array.from({length:steps},(_,row)=>Array.from({length:columns},(_,col)=>{
+  const x=startX+20+col*((width-40)/columns),y=startY+20+row*((258-startY)/steps);
+  if(row===steps-1&&col===Math.floor(columns/2))return '';
+  return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(width-60)/columns}" height="${(225-startY)/steps*.69}" rx="3" fill="${level==='loft'?'#8dbdce':'#b0dee0'}" stroke="${design.trim}" stroke-width="4"/>${level==='apartment'?`<path d="M${x-2} ${(y+(225-startY)/steps*.74).toFixed(1)}h${(width-55)/columns}" stroke="#789b80" stroke-width="6"/>`:''}`;
+ }).join('')).join('');
+ const balcony=level==='loft'?`<rect x="${startX+width-95}" y="${startY+49}" width="91" height="12" fill="#ccebe3"/><path d="M${startX+width-95} ${startY+32}h91v29" fill="none" stroke="#e8fcfa" stroke-width="5"/><path d="M${startX+width-87} ${startY+49}v11m25-11v11m25-11v11" stroke="#e8fcfa" stroke-width="3"/>`:'';
+ return `<svg class="scene-art residence-scene${compact?' is-mini':''}" data-home-tier="${level}" viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${design.title.toLowerCase()} residence in New Day City"><rect width="640" height="340" fill="${design.sky}"/><circle cx="547" cy="64" r="35" fill="#fff3c2"/><path d="M0 253v-111h65v111m25 0V102h52v151m364 0V137h57v116m18 0V92h59v161" fill="#a2b9b4" opacity=".35"/><path d="M0 285h640v55H0z" fill="#99baa6"/><rect x="${startX}" y="${startY}" width="${width}" height="${270-startY}" rx="4" fill="${design.wall}" stroke="${design.roof}" stroke-width="7"/><rect x="${startX-11}" y="${startY-9}" width="${width+22}" height="18" rx="3" fill="${design.roof}"/>${windows}${balcony}<rect x="296" y="${steps>4?230:234}" width="50" height="36" rx="3" fill="${design.door}" stroke="${design.trim}" stroke-width="4"/><rect x="${startX+width/2-89}" y="${startY+5}" width="178" height="21" rx="4" fill="${design.roof}"/><text x="${startX+width/2}" y="${startY+20}" text-anchor="middle" fill="white" font-size="12" font-family="system-ui,sans-serif" font-weight="800">${design.title}</text><path d="M0 288h640" stroke="#f1dfc9" stroke-width="10"/><path d="M0 311h640" stroke="#829e9b" stroke-width="4"/><g fill="#73aa78"><circle cx="112" cy="270" r="35"/><circle cx="512" cy="273" r="28"/></g><g fill="#ad886d"><rect x="100" y="280" width="23" height="14"/><rect x="500" y="285" width="25" height="12"/></g></svg>`;
+}
+function scene(id,compact=false,era='current',homeTier='studio'){
  if(era==='historical'||era==='scifi')return eraScene(id,compact,era);
+ if(era==='current'){
+  const image=id==='home'?artAssets.homeTiers?.[homeTier]:artAssets.venues?.[id];
+  const path=image&&(compact?image.card:image.detail);
+  if(path)return `<img class="scene-art scene-photo${compact?' is-mini':''}" src="${path}" alt="" loading="${compact?'lazy':'eager'}" decoding="async" draggable="false" data-scene-location="${id}"${id==='home'?` data-home-tier="${homeTier}"`:''}/>`;
+  if(id==='home')return residenceScene(homeTier,compact);
+ }
+
  const t=themes[id]||themes.home;
  const windows=(count=3)=>Array.from({length:count},(_,i)=>`<rect x="${238+i*69}" y="${123}" width="43" height="52" rx="4" fill="#cbe9df" stroke="${t.trim}" stroke-width="6"/><path d="M${260+i*69} 126v46m-20-24h40" stroke="#ffffffaa" stroke-width="4"/>`).join('');
  const baseX=t.form==='house'?214:t.form==='tower'?224:188;

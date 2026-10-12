@@ -64,10 +64,12 @@ test('save validation uses rule-specific hour ceiling',()=>{
  const classic=create('classic');classic.player.hours=58;assert.equal(Game.load(classic.snapshot()).player.hours,58);
  const modern=create();modern.player.hours=58;assert.throws(()=>Game.load(modern.snapshot()),/Invalid player state/);
 });
-test('era art uses distinct geometry and still stays offline inline SVG',()=>{
+test('era art stays distinct; Historical and Sci-Fi SVG, Contemporary uses supplied venue art',()=>{
  const svg=D.worldEras?['historical','current','scifi'].map(e=>Art.scene('office',true,e)):[];
  assert.equal(svg.length,3);assert.equal(new Set(svg).size,3);
- assert.ok(svg.every(x=>x.startsWith('<svg')&&!/href="https?:|<script|<image/.test(x)));
+ assert.ok(svg[0].startsWith('<svg')&&svg[2].startsWith('<svg'));
+ assert.match(svg[1],/scene-photo.*office-card\.webp/);
+ assert.ok(svg.every(x=>!/href="https?:|<script/.test(x)));
  assert.match(svg[0],/Historical timber/);assert.match(svg[2],/Sci-fi neon arcology/);
  assert.notEqual(Art.person('home',false,'historical'),Art.person('home',false,'scifi'));
 });

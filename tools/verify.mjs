@@ -92,7 +92,28 @@ if(!load('index.html').includes('id="mobileNav"'))errors.push('Mobile panel cont
 if(!load('index.html').includes('src/characters.js')||!load('PLAY.html').includes('the-life-loop-characters-v1')||!load('src/app.js').includes('showCharacterLibrary('))errors.push('Browser-local character creator missing');
 if(!load('docs/decisions/ADR-0009-offline-reusable-character-profiles.md').includes('**Status:** Accepted'))errors.push('Character creator architecture decision missing');
 if(!['LL-083','LL-084','LL-085'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-086'))errors.push('Character creator workboard tasks missing');
+if(!load('docs/decisions/ADR-0010-shared-multiplayer-cosmetics-ephemeral-chat-and-viewport.md').includes('**Status:** Accepted'))errors.push('Multiplayer cosmetics/chat architecture decision missing');
+if(!['LL-087','LL-088','LL-089','LL-090','LL-091'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-092'))errors.push('v0.5.7 workboard tasks missing');
+if(!load('looprd.yaml').includes('schemaVersion: 2')||!load('looprd.yaml').includes('chatKey:'))errors.push('Looprd v2 private chat key missing');
+if(!load('server/looprd_handler.py').includes("if op == 'chat':")||!load('src/network.js').includes('async sendChat(')||!load('index.html').includes('id="chatPanel"'))errors.push('Ephemeral WSS chat implementation missing');
+if(!load('src/app.js').includes('setup-wizard-progress')||!load('src/app.js').includes('characters.all().find(p=>p.id===$('))errors.push('Guest profile sharing or mobile stepper missing');
+const artManifest=JSON.parse(load('assets/art/styles/contemporary-default/manifest.json'));
+const artMap=JSON.parse(load('src/art-assets.js').match(/root\.LifeArtAssets=(\{.*\});/)?.[1]||'{}');
+if(artManifest.schema!=='the-life-loop.art-pack.v1'||artManifest.version!==pkg.version||JSON.stringify(artManifest)!==JSON.stringify(artMap))errors.push('Contemporary art pack mapping out of sync');
+if(Object.keys(artManifest.venues).length!==11||artManifest.venues.home)errors.push('Art pack must map eleven non-home venues');
+for(const tier of ['studio','apartment','loft'])if(!Object.hasOwn(artManifest.homeTiers,tier))errors.push('Missing home artwork tier '+tier);
+if(!load('docs/decisions/ADR-0011-distinct-venue-art-and-residence-tiers.md').includes('**Status:** Accepted'))errors.push('Art architecture decision missing');
+if(!['LL-093','LL-094','LL-095','LL-096'].every(id=>manifest.implemented.some(t=>t.id===id))||!manifest.implemented.some(t=>t.id==='LL-097')||!manifest.remaining.some(t=>t.id==='LL-098')||!manifest.implemented.some(t=>t.id==='LL-099'))errors.push('v0.5.8 workboard tasks missing');
+for(const tier of ['studio','apartment','loft']) {
+ const home=artManifest.homeTiers[tier];
+ if(!home || typeof home.card!=='string' || typeof home.detail!=='string')errors.push('Missing v0.5.9 housing images '+tier);
+ else for(const path of [home.card,home.detail])if(statSync(resolve(root,path)).size>400*1024)errors.push('Oversize residence asset '+path);
+}
+if(!load('src/app.js').includes('Art.scene(loc.id,true,game.settings.era,p.home)')||!load('src/app.js').includes('Art.scene(current.id,false,game.settings.era,p.home)'))errors.push('Housing tier-aware visual wiring missing');
+if(!load('tools/build-offline.mjs').includes('generate-art-assets.mjs'))errors.push('Art manifest generation not integrated');
 if(errors.length)throw Error(errors.join('\n'));
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs'],{cwd:root,stdio:'inherit'});
+// Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
+execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs'],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');
