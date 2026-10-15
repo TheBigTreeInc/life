@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parent.parent
 source=(root/'server/looprd_handler.py').read_text()
 spec={
  'apiVersion':'looprd/v1', 'component':'the-life-loop', 'release':json.loads((root/'package.json').read_text())['version'], 'api':{'version':'v1'},
- 'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':2},
+ 'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':2,'migrations':[{'version':2,'statements':['ALTER TABLE "Room" ADD COLUMN "chatKey" VARCHAR(64)']}]},
  'models':{
   'Room':{'fields':{
    'id':{'type':'integer','primaryKey':True,'generated':True},

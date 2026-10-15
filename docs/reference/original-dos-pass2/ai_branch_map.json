@@ -1,0 +1,237 @@
+{
+  "version": "1.000.060",
+  "script": "WhereShouldIGo.sc",
+  "scriptNumber": 300,
+  "semantics": "first matching branch wins; branch descriptions condensed; numeric IDs are DEBUG/decision tags (global403), not location identifiers",
+  "coverage": "Selected representative branches: not all 50+ tags are included",
+  "branches": [
+    {
+      "branchId": 1,
+      "precondition": "unemployed",
+      "consequence": "travel to employment office",
+      "sourceLine": 232
+    },
+    {
+      "branchId": 2,
+      "precondition": "rent due and missing food, adequate clothing & funds",
+      "consequence": "combine rent office and food-oriented stop",
+      "sourceLine": 240
+    },
+    {
+      "branchId": 3,
+      "precondition": "rent due, missing food, clothing low, sufficient funds",
+      "consequence": "plan rent plus food and clothing",
+      "sourceLine": 260
+    },
+    {
+      "branchId": 5,
+      "precondition": "rent cycle & clothing depleted",
+      "consequence": "buy clothing",
+      "sourceLine": 290
+    },
+    {
+      "branchId": 7,
+      "precondition": "rent affordable",
+      "consequence": "pay rent",
+      "sourceLine": 317
+    },
+    {
+      "branchId": 8,
+      "precondition": "rent shortfall; current job and workwear",
+      "consequence": "work enough to cover rent, if feasible in available time",
+      "sourceLine": 325
+    },
+    {
+      "branchId": 9,
+      "precondition": "rent shortfall; withdrawals possible",
+      "consequence": "visit bank",
+      "sourceLine": 350
+    },
+    {
+      "branchId": 10,
+      "precondition": "rent shortfall and eligibility",
+      "consequence": "ask landlord for extension",
+      "sourceLine": 367
+    },
+    {
+      "branchId": 11,
+      "precondition": "rent shortfall covered by durables",
+      "consequence": "pawn possessions",
+      "sourceLine": 382
+    },
+    {
+      "branchId": 12,
+      "precondition": "no workwear and cash short",
+      "consequence": "withdraw money for clothes",
+      "sourceLine": 396
+    },
+    {
+      "branchId": 13,
+      "precondition": "no workwear and pawnable durables",
+      "consequence": "pawn valuables for clothes",
+      "sourceLine": 414
+    },
+    {
+      "branchId": 14,
+      "precondition": "no workwear, adequate cash",
+      "consequence": "buy clothing",
+      "sourceLine": 426
+    },
+    {
+      "branchId": 17,
+      "precondition": "food and clothing affordability constraint; working viable",
+      "consequence": "work before shopping",
+      "sourceLine": 458
+    },
+    {
+      "branchId": 20,
+      "precondition": "clothing worn/missing; cash adequate",
+      "consequence": "buy clothing",
+      "sourceLine": 553
+    },
+    {
+      "branchId": 21,
+      "precondition": "food shortage; can work to fund it",
+      "consequence": "work for food",
+      "sourceLine": 604
+    },
+    {
+      "branchId": 22,
+      "precondition": "food shortage; bank funds",
+      "consequence": "withdraw for food",
+      "sourceLine": 631
+    },
+    {
+      "branchId": 23,
+      "precondition": "food shortage; pawnable assets",
+      "consequence": "sell/pawn for food",
+      "sourceLine": 644
+    },
+    {
+      "branchId": 24,
+      "precondition": "cash sufficient for food and work, wants market goods",
+      "consequence": "go to work or market, route optimized",
+      "sourceLine": 660
+    },
+    {
+      "branchId": 28,
+      "precondition": "pay raise available",
+      "consequence": "go to employment office",
+      "sourceLine": 759
+    },
+    {
+      "branchId": 29,
+      "precondition": "promotion thresholds met",
+      "consequence": "go to employment office",
+      "sourceLine": 776
+    },
+    {
+      "branchId": 30,
+      "precondition": "work experience or reliability low",
+      "consequence": "work for progression",
+      "sourceLine": 792
+    },
+    {
+      "branchId": 31,
+      "precondition": "pawned items while employed",
+      "consequence": "redeem pawned property",
+      "sourceLine": 833
+    },
+    {
+      "branchId": 32,
+      "precondition": "relaxation at 10",
+      "consequence": "go home",
+      "sourceLine": 857
+    },
+    {
+      "branchId": 33,
+      "precondition": "relaxation below 17",
+      "consequence": "work then rest",
+      "sourceLine": 865
+    },
+    {
+      "branchId": 34,
+      "precondition": "can afford education, time available, random gate",
+      "consequence": "consider work plus university",
+      "sourceLine": 877
+    },
+    {
+      "branchId": 35,
+      "precondition": "cash >1500 and happiness goal not met",
+      "consequence": "consider appliances",
+      "sourceLine": 905
+    },
+    {
+      "branchId": 36,
+      "precondition": "work remains productive",
+      "consequence": "continue working",
+      "sourceLine": 924
+    },
+    {
+      "branchId": 37,
+      "precondition": "low relaxation",
+      "consequence": "rest at home",
+      "sourceLine": 932
+    },
+    {
+      "branchId": 38,
+      "precondition": "pawned goods and funds available",
+      "consequence": "retrieve pawned assets",
+      "sourceLine": 944
+    },
+    {
+      "branchId": 39,
+      "precondition": "funds >800 and happiness goal not met",
+      "consequence": "consider discount store leisure goods",
+      "sourceLine": 958
+    },
+    {
+      "branchId": 40,
+      "precondition": "funds >800 and happiness goal not met",
+      "consequence": "consider appliances",
+      "sourceLine": 977
+    },
+    {
+      "branchId": 42,
+      "precondition": "available funds and investment conditions",
+      "consequence": "invest/adjust bank holdings",
+      "sourceLine": 1000
+    },
+    {
+      "branchId": 43,
+      "precondition": "investment index weak",
+      "consequence": "consider liquidating investments",
+      "sourceLine": 1019
+    },
+    {
+      "branchId": 44,
+      "precondition": "eligible/affordable education",
+      "consequence": "go to university",
+      "sourceLine": 1038
+    },
+    {
+      "branchId": 46,
+      "precondition": "has work and appropriate clothing",
+      "consequence": "work a standard block",
+      "sourceLine": 1060
+    },
+    {
+      "branchId": 47,
+      "precondition": "already at university and time nearly exhausted",
+      "consequence": "use remaining time for school",
+      "sourceLine": 1074
+    },
+    {
+      "branchId": 48,
+      "precondition": "already at workplace and time nearly exhausted",
+      "consequence": "use remaining work time",
+      "sourceLine": 1091
+    },
+    {
+      "branchId": 49,
+      "precondition": "nothing else viable",
+      "consequence": "go home",
+      "sourceLine": 1105
+    }
+  ]
+}

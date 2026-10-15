@@ -5,8 +5,10 @@ const Game=require('../src/engine.js');
 const Art=require('../src/art.js');
 const {readFileSync,statSync}=require('node:fs');
 const coords=x=>x.cell.join(',');
-test('Classic and Modern use the exact same 13 navigable city destinations',()=>{
+test('Classic and Modern each expose 13 connected locations but use distinct original geography',()=>{
  const keys=D.places.map(x=>x.id);
+ assert.deepEqual(new Set(D.classicPlaces.map(p=>p.id)),new Set(keys));
+ assert.notDeepEqual(D.classicPlaces.map(p=>p.cell),D.places.map(p=>p.cell));
  assert.equal(keys.length,13);
  assert.equal(new Set(keys).size,13);
  assert.equal(new Set(D.places.map(coords)).size,13);
@@ -15,8 +17,8 @@ test('Classic and Modern use the exact same 13 navigable city destinations',()=>
  for(const game of [classic,modern]){
   for(const id of keys){assert.ok(game.getPlace(id));assert.ok(Number.isFinite(game.travelCost('home',id)));}
   assert.equal(game.travelCost('home','home'),0);
-  assert.equal(game.travelCost('home','agency'),game.rules.entryHours+1);
-  assert.equal(game.travelCost('home','pawn'),game.rules.entryHours+1);
+  assert.ok(game.travelCost('home','agency')>=game.rules.entryHours+1);
+  assert.ok(game.travelCost('home','pawn')>=game.rules.entryHours+1);
   assert.equal(game.travelCost('home','market'),game.travelCost('market','home'));
  }
 });

@@ -1,0 +1,21 @@
+Finding,File,SCIScript,LineRange,SourceURL
+Employment prerequisites and chance,employment.sc,206,117-171,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/employment.sc
+Wage update and appointment,employment.sc,206,206-286,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/employment.sc
+"Working, firing, wages, time",n108.sc,108,17-173,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/n108.sc
+Price coefficient transform,n109.sc,109,10-47,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/n109.sc
+Buying goods and costs,WButton.sc,104,162-256,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/WButton.sc
+Economic market indices,economicIndex.sc,107,28-146;202-278,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/economicIndex.sc
+Time counter and tick pacing,room1.sc,1,1473-1507,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/room1.sc
+Reliability and rent endTurn,room1.sc,1,730-810,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/room1.sc
+Weekly start and random events,startTrn.sc,111,180-832,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/startTrn.sc
+Player AI priorities and routing,WhereShouldIGo.sc,300,13-1107,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/WhereShouldIGo.sc
+Lotteries,startTrn.sc,111,214-237,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/startTrn.sc
+Rental extension,rentOffice.sc,201,290-359,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/rentOffice.sc
+Four-goal weighted display,viewGoals.sc,238,22-59,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/viewGoals.sc
+Victory checks,startTrn.sc,111,57-164,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/startTrn.sc
+Market price sources,market.sc,203,265-460,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/market.sc
+Retail food,fastFood.sc,210,258-383,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/fastFood.sc
+Clothing tiers,clothing.sc,209,selected CostDItem instances,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/clothing.sc
+Durable types,appliance.sc,208,selected CostDItem instances,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/appliance.sc
+Money and happiness stat mutators,Main.sc,0,1038-1109,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/Main.sc
+Consumable weekly decay,Goods.sc,106,7-33,https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/Goods.sc

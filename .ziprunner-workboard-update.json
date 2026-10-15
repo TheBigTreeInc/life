@@ -1,1011 +1,843 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.21",
-  "summary": "v0.5.21: resolve all 37 Classic job employer identities to visible 13-location board businesses, mark actual workplace on the board, and align job offers/hire/work/switch messages and Career Center with board labels. Keep original DOS IDs and rules; Modern unchanged.",
+  "version": "0.5.52",
+  "summary": "v0.5.52 reroutes the painted Classic street to actual storefront frontage aprons, adds connected visible footpaths to all 13 doors and makes the pawn follow the same continuous route as its highlight. Historical 170-waypoint travel/clock rules, saves and Looprd Social unchanged.",
   "implemented": [
     {
-      "id": "LL-001",
-      "title": "Original city and weekly simulation",
-      "summary": "Keep 12 travel locations, 40-hour action budgeting and end-of-week progression",
+      "id": "LL-177",
+      "title": "Numeric original diploma identities",
+      "summary": "Bind all 11 DOS degree numbers and prerequisite IDs to existing save-stable degree keys; validate job degree references.",
       "operator_checks": [
-        "Start a game and travel between buildings; confirm hours are deducted."
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]
     },
     {
-      "id": "LL-002",
-      "title": "Economy, work and education",
-      "summary": "Retain existing career requirements, courses, wages, rent, banking and competitor AI",
+      "id": "LL-178",
+      "title": "DOS-qualified employment and reproducible hiring",
+      "summary": "Correct four job experience thresholds and model original integer hiring roll / guaranteed cook after qualification.",
       "operator_checks": [
-        "Take a starter job, work a shift and complete a university lesson."
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]
     },
     {
-      "id": "LL-003",
-      "title": "Illustrated building scenes",
-      "summary": "Render 12 distinct original SVG storefront scenes in both city board and destination panel",
+      "id": "LL-179",
+      "title": "Two-week Classic survival budget",
+      "summary": "Pure cash/bank accessible liquidity forecast for rent, food and replacement uniform; show in career view.",
       "operator_checks": [
-        "Visit three buildings and verify their scene art differs and displays offline."
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]
     },
     {
-      "id": "LL-004",
-      "title": "Animated character portraits",
-      "summary": "Draw 12 original vector citizens and show contextual greetings and light motion",
+      "id": "LL-180",
+      "title": "Rival career pathway and multi-payday job choices",
+      "summary": "Advance via source-linked diploma recommendations, better long-range promotion valuation and partial Classic work shifts.",
       "operator_checks": [
-        "Visit the Career Center and Fresh & Frugal; check portraits, copy and reduced-motion behavior."
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]
     },
     {
-      "id": "LL-005",
-      "title": "Branching scripted city encounters",
-      "summary": "Give each local character a once-only branching story with at least one affordable option",
+      "id": "LL-181",
+      "title": "Original career and survival regressions",
+      "summary": "New deterministic seed, qualification, 100-campaign AI and Modern-isolation tests; offline/Pages/ZipRunner build.",
       "operator_checks": [
-        "At Your Place select Talk to Mira, choose a response, verify the resulting stat change."
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]
     },
     {
-      "id": "LL-006",
-      "title": "Persistent NPC conversations",
-      "summary": "Save social progress, weekly talk cooldowns, and unresolved story decisions",
+      "id": "LL-183",
+      "title": "Original DOS dynamic goods pricing",
+      "summary": "Source-derived adjusted goods index + split integer truncation for Classic prices, seeded bounded provisional drift; fixed-price goods stay fixed.",
       "operator_checks": [
-        "Start a conversation, export and import JSON, resolve it, and confirm it does not repeat."
+        "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
       ]
     },
     {
-      "id": "LL-007",
-      "title": "Offline single-page executable",
-      "summary": "Build PLAY.html from modular source and CSS for a one-file portable game",
+      "id": "LL-184",
+      "title": "Lottery and rent extension parity",
+      "summary": "One 0..500 ticket-stack draw, original three payout tiers, weekly fixed ticket bundle, d12 extension probabilities.",
       "operator_checks": [
-        "Open PLAY.html directly in Chrome/Edge and play through a complete week with no internet."
+        "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
       ]
     },
     {
-      "id": "LL-008",
-      "title": "Source preservation and regression tests",
-      "summary": "Maintain baseline plus new 48-test automated coverage, including seasonal stories, pricing, accounts, save migration and long campaigns.",
+      "id": "LL-185",
+      "title": "Original partial wage truncation",
+      "summary": "Partial work pay rounds down per discrete shift; old fractional remainder converted to zero on next work; saved state stays compatible.",
       "operator_checks": [
-        "Run npm test and tools/verify.mjs from the installed project folder."
+        "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
       ]
     },
     {
-      "id": "LL-009",
-      "title": "ZipRunner source delivery and workboard",
-      "summary": "Provide complete project source, portable scripts, required workboard manifest and handoff",
+      "id": "LL-186",
+      "title": "Ordered priority Jones core branches",
+      "summary": "Traceable first-match source-inspired emergency rules for ACNE employment, rent, bank withdrawals, food, clothing and wages with original place IDs.",
       "operator_checks": [
-        "Import the versioned ZIP in ZipRunner and inspect updated workboard entries after successful validation."
+        "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
       ]
     },
     {
-      "id": "LL-015",
-      "title": "Remembered relationships",
-      "summary": "Track separate trust scores and player choice memories for all twelve NPCs. Provide contextual greetings.",
+      "id": "LL-187",
+      "title": "Classic economics and AI diagnostics",
+      "summary": "Bounded goods index and weekly event journal, serialized AI source decision trace, ticker and Career Roadmap inspection.",
       "operator_checks": [
-        "Talk to Mira, choose to help and talk again the next week to see a remembered response."
+        "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
       ]
     },
     {
-      "id": "LL-016",
-      "title": "Local friendship favors",
-      "summary": "Unlock one distinct useful action per resident at 18 trust, and limit it to one use every four weeks.",
+      "id": "LL-188",
+      "title": "DOS Pass-2 source reference and regression",
+      "summary": "Import complete user-supplied pass2 reference, mandatory source-backed JS tests and separate 47 Python reference tests.",
       "operator_checks": [
-        "Build 18 trust with a local resident; verify favor availability and cooldown after use."
+        "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
       ]
     },
     {
-      "id": "LL-017",
-      "title": "Responsive city-wide economy",
-      "summary": "Rotate ten authored four-week events that modify sector action prices and/or wages.",
+      "id": "LL-191",
+      "title": "Eight original economic index identities",
+      "summary": "Bounded seeded general, investments, consumer goods and five bank-market readings; original exact drift remains provisional.",
       "operator_checks": [
-        "Check discounted groceries in the first event, then advance to the next month and compare prices."
+        "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
       ]
     },
     {
-      "id": "LL-018",
-      "title": "Monthly civic opportunities and city pulse",
-      "summary": "Add a one-per-player-per-event activity, City Pulse panel and a map indicator.",
+      "id": "LL-192",
+      "title": "Unified Classic wages and market bindings",
+      "summary": "New job offers and variable bank instruments consume the coupled index graph while existing wages and portfolios persist.",
       "operator_checks": [
-        "Visit the highlighted event venue and claim the activity; confirm it becomes unavailable until a new event."
+        "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
       ]
     },
     {
-      "id": "LL-019",
-      "title": "State migration and long-run regression",
-      "summary": "Keep legacy save migration and extend scenario/long-run tests to 48 cases with new narrative and finance records.",
+      "id": "LL-193",
+      "title": "Contract-aware rival planning and pawn emergencies",
+      "summary": "Use actual contracted pay for upgrades, preserve essential buffers, and add source-tagged pawn actions for urgent survival.",
       "operator_checks": [
-        "Run node tools/verify.mjs and confirm 35 passing Node tests; export/import a relationship save."
+        "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
       ]
     },
     {
-      "id": "LL-010",
-      "title": "Financial history dashboard",
-      "summary": "Implement bounded transaction ledger with actual account deltas, per-week net worth snapshots, income/expense totals, milestone timeline, and a responsive offline SVG chart.",
+      "id": "LL-194",
+      "title": "Economic diagnostics and save migration",
+      "summary": "View all eight index readings/deltas in Finances; validate additive snapshots and derive legacy states from prior goods index.",
       "operator_checks": [
-        "Open Finances on desktop and mobile after work, groceries and savings transfers; verify transfers do not inflate earnings.",
-        "Advance to week 5 and confirm rent or rent debt appears in the ledger and graph."
+        "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
       ]
     },
     {
-      "id": "LL-020",
-      "title": "Multi-episode personal stories",
-      "summary": "Add three seasonal three-stage NPC arcs, host and partner trust outcomes, time gates, player-specific chapter state, City Pulse synergy and permanent community improvements.",
+      "id": "LL-195",
+      "title": "Economic regression and ZipRunner delivery",
+      "summary": "Add mandatory cross-sector/seed/legacy/AI/Modern tests, ADR-0031 and a quick economy test launcher.",
       "operator_checks": [
-        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2–3 require more weeks and trust.",
-        "Finish the community pantry project and verify food prices drop permanently for every player."
+        "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
       ]
     },
     {
-      "id": "LL-021",
-      "title": "Cross-resident trust and permanent civic legacies",
-      "summary": "Three cross-resident storylines change relationships, and successful final choices modify food/leisure prices or global shift pay while different final choices skip the upgrade.",
+      "id": "LL-196",
+      "title": "Source-derived DOS scandal result engine",
+      "summary": "Strength 1 wipes bank savings and dismisses employed players; strength 2 uses a binary seeded dismissal-or-20%-wage-cut result with source happiness penalties.",
       "operator_checks": [
-        "Complete a final chapter with its community outcome and verify the City Pulse Legacy badge and live sector modifier.",
-        "Choose the personal-benefit alternative and confirm the upgrade is not activated."
+        "In Classic inspect crisis journal and contract changes; compare strength 1/2 to DOS pass-2 notes."
       ]
     },
     {
-      "id": "LL-022",
-      "title": "Financial accounting and legacy save migration",
-      "summary": "Record actual money changes, rent arrears and investment fluctuations; bound history and ledger size, and migrate save files created by previous releases.",
+      "id": "LL-197",
+      "title": "Saved economic event phase and per-week processing",
+      "summary": "Track downturn/recovery/boom phases and incident cooldown on shared seeded index state, one cycle per week with bounded optional save validation.",
       "operator_checks": [
-        "Confirm cash-to-bank transfers show net change 0 and are not counted as income.",
-        "Import a v0.3 JSON save and verify default story/financial data appear without data loss."
+        "Load v0.5.30 saved game; inspect the cycle in Finances; verify no duplicate shock after loading."
       ]
     },
     {
-      "id": "LL-023",
-      "title": "Seasonal story and finance UI tests",
-      "summary": "48 automated tests, in-memory Chromium smoke of offline game at 1440/390 widths, chapter activation and responsive financial report with no page errors.",
+      "id": "LL-198",
+      "title": "Rival layoff recovery and essentials protection",
+      "summary": "Fix unemployed travel loop; apply for a qualified role before leaving ACNE; add one-food-unit conservative buffer during downturn.",
       "operator_checks": [
-        "Run node tools/verify.mjs, then open PLAY.html in Chrome/Edge and test Finance dialog and a seasonal chapter."
+        "Advance a crisis scenario and check Jones applies at Employment Office before heading back to Black\u2019s Market."
       ]
     },
     {
-      "id": "LL-024",
-      "title": "GitHub Pages static publishing",
-      "summary": "Build minimal dist/index.html from the same tested offline standalone game and publish through GitHub Actions with minimum Pages permissions.",
+      "id": "LL-199",
+      "title": "Economic crisis ledger and diagnostics",
+      "summary": "Source-tagged individual crisis outcomes, account-ledger savings loss, headline, visible cycle phase, and happiness response.",
       "operator_checks": [
-        "Run npm run build:pages; confirm dist/index.html is generated and works via localhost.",
-        "Push source to GitHub main, choose Settings > Pages > GitHub Actions, and confirm deployment URL opens the game."
+        "Inspect the finances UI during a downturn; look at event journal and cash ledger."
       ]
     },
     {
-      "id": "LL-025",
-      "title": "Pages CI test gate and safe deployment",
-      "summary": "Automatically run full ZipRunner verification and 48 regression tests before Pages artifact upload/deployment; keep all test/dev files out of public site.",
+      "id": "LL-200",
+      "title": "Expanded crisis migration QA and full ZipRunner release",
+      "summary": "Add deterministic unit/integration, seed replay, save migration, 100-seed opponent test and Modern isolation gates; browser/offline and complete ZIP.",
       "operator_checks": [
-        "Intentionally break a gameplay test in a throwaway branch and verify publishing cannot succeed.",
-        "Inspect published site and ensure no game save files, source archives, or workboard manifest are publicly served."
+        "Run TEST-CRISES.bat then TEST-LOCAL.bat; confirm standalone PLAY.html opens."
       ]
     },
     {
-      "id": "LL-026",
-      "title": "GitHub deployment documentation",
-      "summary": "Document one-time Pages setup, future ZipRunner Git pushes, local-only saves, and repository visibility requirements.",
+      "id": "LL-201",
+      "title": "Ordered source-linked Jones career decisions",
+      "summary": "Embed DOS tags 28/29/30/32/37/44/46, preserve emergency priority, rely on actual original employer places and existing actions.",
       "operator_checks": [
-        "Follow README Pages steps with a fresh public repository; confirm future commits to main redeploy."
+        "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
       ]
     },
     {
-      "id": "LL-027",
-      "title": "One-employer contracts and explicit job switching",
-      "summary": "Human UI confirms a job switch, shows current/new employer and wage, and only offers shifts at hired workplace. Lateral moves cannot farm happiness.",
+      "id": "LL-202",
+      "title": "Prevent workwear expiry feedback loop",
+      "summary": "Check all job-eligible clothing ranks at two weeks remaining; renew formal uniforms before elective schooling and preserve cash for food/rent.",
       "operator_checks": [
-        "Hire at diner; attempt shift at bank, then switch from diner to market; cancel and retry modal; confirm only the new workplace pays."
+        "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
       ]
     },
     {
-      "id": "LL-028",
-      "title": "Unemployment side-work safety net and save compatibility",
-      "summary": "Home gigs no longer constitute repeatable side work for an employed character; a single weekly casual gig remains available for unemployed players. AI respects contract and older saves migrate safely.",
+      "id": "LL-203",
+      "title": "Employment search persistence and legitimate recovery",
+      "summary": "Track unemployment weeks and rejected applications, recover toward original guaranteed hiring-roll cook after repeated unsuccessful searches, reset counters on hire.",
       "operator_checks": [
-        "While unemployed take a temporary gig once and confirm cooldown; then hire and confirm temporary home work is disabled. Import an old v0.4.1 save."
+        "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
       ]
     },
     {
-      "id": "LL-030",
-      "title": "Original gameplay parity report and automated regression",
-      "summary": "Source-linked rules comparison, nine new tests for employment flow, 57-test verification and operator checklist.",
+      "id": "LL-204",
+      "title": "Course and contract-sensitive AI",
+      "summary": "Use original diploma IDs, existing tuition/lesson requirements and spending buffers; compare new offered wages against the real contracted wage and action-time budget.",
       "operator_checks": [
-        "Read GAMEPLAY_AUDIT.md, run node tools/verify.mjs, and check all job change transitions in desktop browser."
+        "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
       ]
     },
     {
-      "id": "LL-029",
-      "title": "Deepen classic job and education parity",
-      "summary": "Weekly wardrobe depletion, career branches, qualification-based applications and four certificate courses implemented; remaining original parity work tracked separately.",
+      "id": "LL-205",
+      "title": "Career replay/QA and ZipRunner source synchronization",
+      "summary": "Include nine dedicated branch/save/Modern tests plus strict 100-seed campaign, quick TEST-AI-CAREERS, ADR-0033, generated offline/Pages and release checks.",
       "operator_checks": [
-        "Run low on casual clothing and confirm you cannot work until you buy a compatible replacement.",
-        "Use the Career roadmap to check qualifications and earn a certificate at university."
+        "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
       ]
     },
     {
-      "id": "LL-031",
-      "title": "Original-inspired consumable uniforms",
-      "summary": "Casual/dress/business clothes are tracked by weeks. All categories decay once each week and higher-quality uniforms cover lower-grade jobs.",
+      "id": "LL-206",
+      "title": "Original waypoint tick estimator",
+      "summary": "Implement source-derived steps + 2\u00d720 tick estimate per traveled leg independently of the provisional playable action-clock time conversion.",
       "operator_checks": [
-        "Wait until casual clothing is exhausted and verify a starter shift is disabled; buy a new outfit and retry.",
-        "Confirm dress and business can substitute for lower-grade uniforms."
+        "Hover venues to compare actual spending units and the independent original source-estimate ticks."
       ]
     },
     {
-      "id": "LL-032",
-      "title": "Budget and boutique outfit purchasing",
-      "summary": "Fresh & Frugal sells shorter-lasting casual/dress wear; Thread Theory sells quality casual/dress/business wear. Repurchases add weeks instead of permanent unlocks.",
+      "id": "LL-207",
+      "title": "Source-based Employment entry timing",
+      "summary": "Charge the two extra Classic time units on arrival at the Employment Office, as part of the same atomic quote/travel event; no cost for same-place click.",
       "operator_checks": [
-        "Buy casual at Fresh & Frugal for nine weeks, then again at Thread Theory for eleven; compare prices and expiry warnings."
+        "Travel home to Employment Office, confirm travel includes 2 units of office entry and a second click is free."
       ]
     },
     {
-      "id": "LL-033",
-      "title": "Expanded career tree and specialist courses",
-      "summary": "Nineteen named jobs, including new venue-specific branches; four independent certificates with course prerequisites and progress persisted in saves.",
+      "id": "LL-208",
+      "title": "Per-action DOS work progression",
+      "summary": "Full and late partial work both grant one experience and one reliability credit subject to job stat caps; income uses integer truncation for each partial shift.",
       "operator_checks": [
-        "Open Careers and inspect paths; finish Service & Supervision and apply for Retail Supervisor at Career Center."
+        "Work with only two time units, verify proportional wages and one work stat credit."
       ]
     },
     {
-      "id": "LL-034",
-      "title": "Wardrobe and career UI",
-      "summary": "Show remaining weeks in sidebar, uniform requirements for work/applications, and a full read-only career roadmap.",
+      "id": "LL-209",
+      "title": "Classic route UI and itinerary diagnostics",
+      "summary": "Show travel versus Employment Office entry in hover preview, preserve 170-waypoint motion; rival compares multi-stop plans using original source tick estimates.",
       "operator_checks": [
-        "Verify Careers modal at desktop/mobile, including incomplete prerequisites and remaining wardrobe weeks."
+        "On desktop/mobile hover ACNE and Z-Mart and compare the source waypoint estimate with player clock cost."
       ]
     },
     {
-      "id": "LL-035",
-      "title": "AI wardrobe and save compatibility",
-      "summary": "AI replenishes work uniforms without acquiring multiple jobs; v0.4.2 permanent clothing flags migrate into consumable counters.",
+      "id": "LL-210",
+      "title": "Timing tests, backward-compatible saves and full ZIP",
+      "summary": "Six new source clock tests, update existing expectations, include module in offline and Pages builds, preserve Modern mode and enforce timings in ZipRunner verifier.",
       "operator_checks": [
-        "Run long AI simulations; import older saved JSON containing owned formal/casual clothes."
+        "Run TEST-TIME.bat or TEST-LOCAL.bat; open PLAY.html and verify a complete Classic week."
       ]
     },
     {
-      "id": "LL-037",
-      "title": "Accept original-gameplay-first architecture",
-      "summary": "Authoritative ARCHITECTURE.md and ADR-0001 establish same original rules as target, with modern presentation and optional modern story mechanics. v0.4.4 changes documentation only.",
+      "id": "LL-211",
+      "title": "DOS reliability warning and work dismissal",
+      "summary": "Preflight Classic work reliability: source threshold < requirement-5 dismisses, threshold < requirement-2 warns once per week before consuming time or paying a shift; subsequent eligible work proceeds.",
       "operator_checks": [
-        "Read ARCHITECTURE.md and ADR-0001; check evidence hierarchy and classic-vs-modern distinction.",
-        "Confirm the compiled game behaves like v0.4.3, without new rules claimed."
+        "At Monolith Cook with reliability 7: first attempt warns without pay/time, second earns; at 4: dismissal instead."
       ]
     },
     {
-      "id": "LL-038",
-      "title": "Evidence-backed parity contract and validation",
-      "summary": "Add original-gameplay reference spec, 21-rule JSON registry and parity matrix; fail ZipRunner verification if docs/contract are incomplete.",
+      "id": "LL-212",
+      "title": "Paycheck preview and rent garnishment audit",
+      "summary": "Extract deterministic Classic paycheck gross, estimated rent garnishment, fee, net and remaining arrears; display net forecast and clearly flag unverified DOS temp0/temp1 garnishment ordering.",
       "operator_checks": [
-        "Inspect docs/parity-contract.json and docs/parity-matrix.md; confirm 21 traceable rules.",
-        "Run node tools/verify.mjs from extracted ZIP and verify architecture checks pass."
+        "Enter work with rent arrears: compare visible net preview with actual cash/debt delta and verify partial shift rounding."
       ]
     },
     {
-      "id": "LL-043",
-      "title": "Independent New Game rule presets",
-      "summary": "Add Classic Rules (default in UI) and Modern Story selection with saved settings. Classic implements 60-hour budget, 4-hour job applications, 6-hour relax, 2-hour entry overhead, Dependability starting 20 and decaying 3 per week. Provisional +1 capped job stats and no-opening results; full DOS parity still open.",
+      "id": "LL-213",
+      "title": "AI post-travel action reservation",
+      "summary": "Reserve at least one clock unit for work after travel; prevent the Classic source planner from planning actions beyond the 10-action provisional weekly cap, even after moves.",
       "operator_checks": [
-        "Start Classic and check 60/60h and 20 Dependability; travel to the Career Center and verify application consumes 4h.",
-        "Start Modern and check 40/40h and 3h applications; verify City Pulse and social actions are enabled.",
-        "In Classic, confirm home gigs, City Pulse modifiers and non-original story rewards are unavailable."
+        "Set Jones time exactly to commute cost: no stranded work trip; confirm full 100-seed survival suite."
       ]
     },
     {
-      "id": "LL-044",
-      "title": "World era visuals independent of mechanics",
-      "summary": "Historical/Contemporary/Sci-Fi scenarios map the same 12 locations to different names and use different vector building geometry, backgrounds and NPC accessories without changing gameplay economy.",
+      "id": "LL-214",
+      "title": "Durable migration and Classic/Modern isolation",
+      "summary": "Persist a bounded per-week work-warning marker; migrate old saves safely; reject malformed multiplayer save values; no changes to Modern wages/actions.",
       "operator_checks": [
-        "Choose Historical and confirm Willowford buildings/timber/cobblestone artwork.",
-        "Choose Sci-Fi and confirm Neon Meridian arcology/neon/orbit scenes and alternate costumes.",
-        "Switch eras between new games at same ruleset and confirm job/time/cash outcomes remain identical."
+        "Save after warning and reload; warning should not replay for that week. Verify Modern work unaffected."
       ]
     },
     {
-      "id": "LL-045",
-      "title": "ADR-0002 and ruleset scenario regression tests",
-      "summary": "Document preset configuration, original-parity caveats, deterministic-era isolation and legacy-save migration. Add scenarios tests to verification/ZipRunner.",
+      "id": "LL-215",
+      "title": "Source regression and ZipRunner delivery",
+      "summary": "Eight new tests, full source verification, new TEST-WORK.bat, ADR-0035, updated parity/workboard and offline/Pages builds.",
       "operator_checks": [
-        "Run node tools/verify.mjs and confirm full regression suite passes including rules-era.test.cjs.",
-        "Import a v0.4.4 save and verify Modern/Contemporary fallback while newly started Classic games are preserved across saves.",
-        "Verify both options are visible and selectable in New Game at mobile and desktop sizes."
+        "Run TEST-WORK.bat then TEST-LOCAL.bat, inspect offline HTML, and verify ZipRunner archive integrity."
       ]
     },
     {
-      "id": "LL-046",
-      "title": "Classic 11-degree university and enrollment",
-      "summary": "Separate Classic-only degree prerequisite graph, paid enrollments, up to four active courses, ten 6h lessons and extra-credit items; save-safe progress and roadmap.",
+      "id": "LL-216",
+      "title": "Classic auditable paycheck reconciliation",
+      "summary": "Use one pure Classic settlement object to apply pre/post cash, debt, garnishment and fee; supply explicit fullGross sensitivity comparator without claiming exact n108.sc garnishment.",
       "operator_checks": [
-        "Start Classic, buy enrollment at university, complete Junior College, verify Academic and Business Administration unlock.",
-        "Buy computer and all three books in Classic to reduce per-diploma lesson count.",
-        "Export/import a partially completed degree and confirm Modern courses still work."
+        "Compare 3-unit and 6-unit work on same wage/debt; verify previews and actual payouts agree."
       ]
     },
     {
-      "id": "LL-047",
-      "title": "Classic job-cap, dependability and dismissal rules",
-      "summary": "Start with 10 Experience, documented job-dependent stat cap formulas, +2 XP on new jobs, graduation bonuses, warning/dismissal on work attempts and raise thresholds.",
+      "id": "LL-217",
+      "title": "Bounded payroll ledger and migration",
+      "summary": "Keep sixteen recent completed Classic paychecks in an additive save field with week, employer, action units and reconciled cash/debt; migrate absent field and reject forged or oversized journal.",
       "operator_checks": [
-        "Work a low-end job repeatedly and verify stats stop at cap, then graduate to increase caps.",
-        "Let Dependability decay, attempt work at an advanced role and confirm warning/dismissal without earning a shift.",
-        "Confirm only one current job and that Modern Story still uses its original stat model."
+        "Save after work, reload, view payroll trace in Finances; try malformed entries to confirm rejection."
       ]
     },
     {
-      "id": "LL-048",
-      "title": "Parity ADR-0003 and Classic regression coverage",
-      "summary": "Update architecture/parity contract/workboard and implement independent Classic parity tests, legacy-save migration and browser smoke checks.",
+      "id": "LL-218",
+      "title": "Net-aware rival survival forecasting",
+      "summary": "Budget two sequential Classic contracted paychecks using net income after arrears/fees; do not mutate RNG or player; show net-pay outlook and funding gap in Career Roadmap.",
       "operator_checks": [
-        "Run node tools/verify.mjs and confirm all unit/parity tests pass.",
-        "Inspect docs/decisions/ADR-0003-classic-progression-education-employment.md and parity-matrix for outstanding original-catalog work.",
-        "Start Classic on desktop/mobile with every world era; test university enroll and Careers panel."
+        "Give Jones 100 arrears and compare gross vs net cash projections; verify unchanged snapshots."
       ]
     },
     {
-      "id": "LL-055",
-      "title": "Authentic DOS job table",
-      "summary": "37 documented floppy roles with employer, wages, Experience/Dependability minima, diplomas and uniforms; exclude two CD-only jobs.",
+      "id": "LL-219",
+      "title": "Essentials-first debt payoff",
+      "summary": "Prevent rival from paying old arrears in a lump sum unless cash left covers due rent, current food needs, work uniform renewal and downturn buffer.",
       "operator_checks": [
-        "Check all nine employers; compare Factory General Manager (25/h, 70/70, two degrees) with documented table."
+        "Set old debt and exactly enough cash but no food: AI must not clear debt before essentials."
       ]
     },
     {
-      "id": "LL-056",
-      "title": "Original-style Classic hiring and raises",
-      "summary": "Four-hour applications, qualification rejections, per-week opening lockouts, variable luck, one employer, listed-wage raises.",
+      "id": "LL-220",
+      "title": "Regression, parity and ZipRunner release",
+      "summary": "Ten new paycheck/settlement tests, full game suite, mandatory build verification, operator launcher, architecture decision and full v0.5.35 source ZIP.",
       "operator_checks": [
-        "Fail an underqualified application, then hire Cook; switch roles and confirm only one employer."
+        "Run TEST-PAYCHECKS.bat and TEST-LOCAL.bat; compare file:// PLAY with Pages edition."
       ]
     },
     {
-      "id": "LL-057",
-      "title": "Manual Classic cash rent and debt",
-      "summary": "Starter $325 rent, due week 4, extension roll, persistent arrears, 50% garnishment and $2 interest.",
+      "id": "LL-221",
+      "title": "Source-backed per-player Classic turn closure",
+      "summary": "Move the original three-point weekly dependability decay to each player endTurn rather than post-week reset.",
       "operator_checks": [
-        "Play through week four, pay in cash or miss; confirm subsequent earnings garnished when debt remains."
+        "In hotseat, close the first player while the second player has not yet acted; check no double decay."
       ]
     },
     {
-      "id": "LL-058",
-      "title": "Classic employer UI and backward save migration",
-      "summary": "Employer filter and mapped venues; Classic legacy-job migration; smart AI food/rent handling; Modern unchanged.",
+      "id": "LL-222",
+      "title": "Single-assessment Classic rent",
+      "summary": "Pure, deterministic fourth-week rent assessment with a saved once-per-week charge marker.",
       "operator_checks": [
-        "Compare Classic 37 listings against Modern 19; import prior Classic save and verify held wage preserved."
+        "Miss week-four rent, inspect one debt charge on week five and no duplicate charge."
       ]
     },
     {
-      "id": "LL-059",
-      "title": "Parity contract ADR and 110 tests",
-      "summary": "ADR-0004, full source job table, parity matrix, and 15 new tests including 100 seeded AI campaigns.",
+      "id": "LL-223",
+      "title": "Replayable Classic turn timeline",
+      "summary": "Persist a strict bounded event journal for player-close, economy, living, rent, loans, reset and week-ready phases.",
       "operator_checks": [
-        "Run node tools/verify.mjs and ensure all tests pass from a fresh ZIP extraction."
+        "Finances displays the chronological journal, and corrupted/future events are rejected on save import."
       ]
     },
     {
-      "id": "LL-061",
-      "title": "Classic zero-time savings transfers",
-      "summary": "$100 account transfers, Classic savings earn no interest.",
+      "id": "LL-224",
+      "title": "Legacy import and Modern isolation",
+      "summary": "Migrate old Classic saves with absent boundary fields safely, without replaying previously settled weeks.",
       "operator_checks": [
-        "Transfer $100 both directions at Bank; verify wallet, savings and hours unchanged."
+        "Load v0.5.35 snapshot; advance week once; Modern mode retains its original dependability timing."
       ]
     },
     {
-      "id": "LL-062",
-      "title": "Classic loan application and installments",
-      "summary": "2h Classic loan, recurring $45 principal plus $5 fee, missed-month defaults and credit penalty.",
+      "id": "LL-225",
+      "title": "Turn-sequence regression and ZipRunner packaging",
+      "summary": "New eight-test phase suite and mandatory verifier with source, offline/Pages build and workboard ADR.",
       "operator_checks": [
-        "Apply while employed, pay installment, miss next due month; verify debt and defaults."
+        "Run TEST-TURNS.bat and node tools/verify.mjs; open Classic Finances on desktop/mobile."
       ]
     },
     {
-      "id": "LL-063",
-      "title": "Six separate original stock categories",
-      "summary": "Broker entrance 2h and original prices/holding ledger; T-Bills redeem for 97% of face value.",
+      "id": "LL-226",
+      "title": "Stable Classic 13-location board",
+      "summary": "Use unchanged source 5x4 geographic cells on desktop and phone; do not move shops into a 3-column serpentine mobile layout.",
       "operator_checks": [
-        "Enter broker and trade T-Bills/Gold; check cash and portfolio balance."
+        "Inspect 1440px and 390px Classic; building order/entrances and 13 identities agree."
       ]
     },
     {
-      "id": "LL-064",
-      "title": "Fresh-food refrigerator/freezer storage",
-      "summary": "Black’s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
+      "id": "LL-227",
+      "title": "Readable phone Explore and Overview",
+      "summary": "Pan a 740px-wide Classic board inside a bounded viewport; allow full-board overview, building jump and pawn locate without game-state mutations.",
       "operator_checks": [
-        "Buy 4 portions, test spoilage; acquire fridge/freezer and test capacity."
+        "On 390px and 320px devices, Explore pans horizontally; Overview fits the whole map; selecting a building from finder does not cost time."
       ]
     },
     {
-      "id": "LL-065",
-      "title": "Parity docs, save migration and fresh-zip verification",
-      "summary": "ADR-0005, tests for original base prices/Modern isolation and old Classic investment recovery.",
+      "id": "LL-228",
+      "title": "Board-relative routing and centered venue continuity",
+      "summary": "Attach the route SVG to the scrollable stage; turn corner streets through gutters; preserve venue dialogue outside the pannable stage.",
       "operator_checks": [
-        "Run node tools/verify.mjs after fresh extraction; open PLAY.html and inspect bank and market."
+        "Preview and travel around the original loop on phones; visit Monolith Burger and verify centered interaction remains visible."
       ]
     },
     {
-      "id": "LL-067",
-      "title": "DAPI/Looprd component schema",
-      "summary": "Embed the Looprd v1 YAML component with private Room records, hashed participant tokens, public non-sensitive change signals, and trusted inline Python handlers.",
+      "id": "LL-229",
+      "title": "DOS weekly computer bonus state 4",
+      "summary": "Replace approximate Classic computer bank bonus with 1/7 draw and 20\u2013100 cash as supported by startTrn.sc, with sourceState=4 diagnostics; retain Modern behavior.",
       "operator_checks": [
-        "Validate looprd.yaml on the running Looprd server; confirm GET /info and POST /session."
+        "Use deterministic rolls to verify no-computer, win/loss, minimum and maximum awards; check Classic/Modern isolation."
       ]
     },
     {
-      "id": "LL-068",
-      "title": "Friend code host and join",
-      "summary": "Create 10-character invite codes, one remote guest, session-scoped tokens, join links and reconnecting sessions in the browser.",
+      "id": "LL-230",
+      "title": "Classic board/weekly regression and ZipRunner handoff",
+      "summary": "Add 5 source tests and mandatory verifier, mobile/desktop browser smoke, release ADR, updated parity/workboard, standalone Pages/PLAY and full source ZIP.",
       "operator_checks": [
-        "Start Online with friend; share code; join from a second browser."
+        "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs; check archive, 390px and 1440px."
       ]
     },
     {
-      "id": "LL-069",
-      "title": "Remote turn synchronization",
-      "summary": "Guest sends remote actions via HTTP; host validates using LifeGame and publishes snapshots; both listen for WebSocket notifications.",
+      "id": "LL-231",
+      "title": "Safe phone overview inspection",
+      "summary": "Overview storefront tap zooms to Explore without travel, then a readable Explore tap requests normal authoritative movement.",
       "operator_checks": [
-        "Move, work, switch employment, end turn from guest; confirm host and guest agree."
+        "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
       ]
     },
     {
-      "id": "LL-070",
-      "title": "Multiplayer transport regression",
-      "summary": "Exercise SQLAlchemy handler integration, JS client role gating, version checks, duplicate-command rejection, and original 120 engine regressions.",
+      "id": "LL-232",
+      "title": "Pawn-follow mobile camera",
+      "summary": "Follow pawn along source projected waypoints, manual swipe overrides camera, My Pawn recenters.",
       "operator_checks": [
-        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py."
+        "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
       ]
     },
     {
-      "id": "LL-071",
-      "title": "Multiplayer architecture and operations",
-      "summary": "Document Looprd self-contained component and source registrations, reverse proxy CORS requirements, multiplayer limitations, and server setup.",
+      "id": "LL-233",
+      "title": "DOS food storage trace",
+      "summary": "Record original startTrn state 10 losses and storage capacities; drop non-source medical charge, mark spoil probability provisional.",
       "operator_checks": [
-        "Confirm Looprd source discovery and GitHub Pages HTTPS/WSS accessibility."
+        "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
       ]
     },
     {
-      "id": "LL-073",
-      "title": "Touch-friendly City, Activities and My life panels",
-      "summary": "Responsive bottom navigation and live status strip; tapping a building opens its activities without changing engine state",
+      "id": "LL-234",
+      "title": "DOS clothing warning trace",
+      "summary": "Record startTrn state 18 countdown and expiration without changing Modern clothing logic.",
       "operator_checks": [
-        "At 390px, start Classic, tap the Career Center, confirm Activities opens, then return to City and visit My life."
+        "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
       ]
     },
     {
-      "id": "LL-074",
-      "title": "Responsive illustrated city and dialog interactions",
-      "summary": "Two-column illustrated mobile city, safe-area bottom tabs, readable actions and full-height scrolling setup/online dialogs",
+      "id": "LL-235",
+      "title": "Classic board and weekly release QA",
+      "summary": "Four additional regressions, fixed brittleness in route tests, tested 320/390/1440 browser view and ZipRunner incremental schema.",
       "operator_checks": [
-        "At 320px, verify no sideways scroll and that New Game, Looprd server field, and all 12 locations remain usable."
+        "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
       ]
     },
     {
-      "id": "LL-075",
-      "title": "Mobile UI parity and release checks",
-      "summary": "Structural mobile regression, ADR-0007, versioned ZipRunner manifest and standalone build checks",
+      "id": "LL-236",
+      "title": "Journey stage & Classic arrival cue",
+      "summary": "Board-native journey status reports departure and arrival without spending extra in-game time; entrance marker anchors to original route and clears on next journey.",
       "operator_checks": [
-        "Run node tools/verify.mjs and check Chrome/Edge at 320/390/768/1024/1280px."
+        "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
       ]
     },
     {
-      "id": "LL-076",
-      "title": "GitHub Pages release metadata reconciliation",
-      "summary": "Update repository workboard manifest, handoff and workboard to v0.5.3 so Pages CI verifies the same source release committed by ZipRunner; report exact version mismatch in verification.",
+      "id": "LL-237",
+      "title": "Touch-pan intent threshold",
+      "summary": "Only a deliberate >9px horizontal swipe overrides automatic pawn-follow, preserving mobile tap-to-inspect and single-charge travel.",
       "operator_checks": [
-        "Commit .ziprunner-workboard-update.json, ZIPRUNNER_HANDOFF.txt, WORKBOARD.md and tools/verify.mjs to main.",
-        "Run node tools/verify.mjs and confirm full JS suite passes.",
-        "Inspect GitHub Pages build and verify the published website loads."
+        "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
       ]
     },
     {
-      "id": "LL-077",
-      "title": "Release version consistency and ZipRunner packaging",
-      "summary": "Publish the previous CI/workboard correction as a new v0.5.4 source release. Align package.json, workboard JSON, parity contract, Looprd component, generated HTML footer, release handoff, and ZipRunner artifact filename. Validate cross-file consistency before packaging.",
+      "id": "LL-238",
+      "title": "DOS state 12 food shortage trace",
+      "summary": "Log source-state 12 only when existing Classic hunger logic observes absent pantry and meal, without adding extra penalties or RNG.",
       "operator_checks": [
-        "Confirm the source ZIP is named the-life-loop-0.5.4-ziprunner.zip and contains no private/runtime state.",
-        "Run node tools/verify.mjs after fresh extraction; verify version invariants and full tests succeed.",
-        "Commit the entire v0.5.4 source release (including the hidden .ziprunner-workboard-update.json) to GitHub main; inspect the CI Pages run."
+        "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
       ]
     },
     {
-      "id": "LL-078",
-      "title": "Responsive side panel docks",
-      "summary": "Intermediate desktop has collapsible panels; wide desktop keeps both; mobile tabs preserved",
+      "id": "LL-239",
+      "title": "DOS state 34 clothing assistance trace",
+      "summary": "Label existing emergency clothing rescue with original source-state 34 and preserve provisional $90/8-week cooldown as explicitly unverified.",
       "operator_checks": [
-        "Test panels at 1280 and 1600 pixels; test all three mobile tabs at 390px."
+        "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
       ]
     },
     {
-      "id": "LL-079",
-      "title": "Panel notification circles",
-      "summary": "New story and venue actions raise badges until opened",
+      "id": "LL-240",
+      "title": "Regression tests and verified ZipRunner handoff",
+      "summary": "Include journey and source-state tests, TEST-JOURNEY.bat, ADR-0040, offline/Pages builds, and workboard limit checks.",
       "operator_checks": [
-        "Switch turns/travel and confirm a badge appears then clears on opening."
+        "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
       ]
     },
     {
-      "id": "LL-080",
-      "title": "Top-right game menu",
-      "summary": "Move save/load/guide to accessible menu without changing data flows",
+      "id": "LL-241",
+      "title": "Accessible Classic pawn animation skip",
+      "summary": "Skip the ongoing local pawn animation and complete the arrival/venue entry without issuing another travel command or spending more clock time.",
       "operator_checks": [
-        "Export and import a save from the Menu; open How to Play."
+        "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
     },
     {
-      "id": "LL-081",
-      "title": "Online turn and Looprd diagnostics",
-      "summary": "Persistent active turn, role, WS/HTTP connectivity and public component info check",
+      "id": "LL-242",
+      "title": "Separate source-linked Classic relaxation",
+      "summary": "Introduce validated 10\u201330 relaxation independent from energy/happiness; recover source state 6 weekly \u22121 to floor 10 with an explicitly provisional rest adapter.",
       "operator_checks": [
-        "Connect two browsers to Looprd; check ownership banner and /info response."
+        "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
     },
     {
-      "id": "LL-083",
-      "title": "Local multi-character library",
-      "summary": "Create, edit, select and delete up to sixteen independent characters in browser localStorage, with no account or Looprd database dependency.",
+      "id": "LL-243",
+      "title": "Source state 20 loan schedule audit",
+      "summary": "Record quarterly loan due/covered/missed checks against source state 20; retain previous cash, credit and happiness mechanics.",
       "operator_checks": [
-        "Create two characters; select each; reload; delete one; verify remaining character persists."
+        "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
     },
     {
-      "id": "LL-084",
-      "title": "In-game character studio and portraits",
-      "summary": "Responsive character editor with skin tone, hairstyle and color, outfit, favorite color, expression and personality; displayed in UI and New Game.",
+      "id": "LL-244",
+      "title": "Classic journey and relaxation regression coverage",
+      "summary": "Exercise once-only skip completion, independent state-6 restoration/decay, legacy save import, loan scheduling and Modern isolation.",
       "operator_checks": [
-        "Test profile editor at 320px and 1280px; preview and sidebar portrait must match selected choices."
+        "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
     },
     {
-      "id": "LL-085",
-      "title": "Character save integration and regression",
-      "summary": "Copy cosmetic character appearance into individual game player snapshots, handle legacy saves without appearance, preserve identical game mechanics and offline standalone build.",
+      "id": "LL-245",
+      "title": "Complete ZipRunner v0.5.40 release handoff",
+      "summary": "Validate all test groups, source generation, version synchronization, capped workboard update, ZIP cleanliness and operator test entry points.",
       "operator_checks": [
-        "Start Classic and Modern from a saved character; export/import; check the same portrait and 60h/40h rules unchanged."
+        "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
     },
     {
-      "id": "LL-087",
-      "title": "Guest character identity in shared multiplayer snapshot",
-      "summary": "Guest join transaction validates all appearance fields, updates the friend player name/color/portrait atomically and advances the room version; present to both host and guest; private browser profile library stays local.",
+      "id": "LL-246",
+      "title": "Route-owned visible entrance marker",
+      "summary": "Add independent SVG door/arrival marker at the authoritative Classic route stop with no new travel charge or art dependencies.",
       "operator_checks": [
-        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
-        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
       ]
     },
     {
-      "id": "LL-088",
-      "title": "Encrypted ephemeral Looprd WebSocket chat",
-      "summary": "Room-scoped 256-bit AES-GCM key, authorized encrypted HTTP chat send, WSS-only client gate and Looprd event delivery; no server/chat database/history or game-save messages.",
+      "id": "LL-247",
+      "title": "Working-appliance household adapter",
+      "summary": "Centralize Classic appliance availability and condition for computer earnings, cold storage and rest comfort, with no new mutable save fields.",
       "operator_checks": [
-        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
-        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
       ]
     },
     {
-      "id": "LL-089",
-      "title": "Viewport-contained desktop and mobile game",
-      "summary": "Prevent document scrolling; scale the city to available viewport, give story and action panels independent overflow, and hide duplicate time/status and decorative filler widgets.",
+      "id": "LL-248",
+      "title": "Relaxation-only Classic rest",
+      "summary": "Allow Classic rest when independent relaxation is depleted; expose projected happiness, energy and relaxation and preserve Modern behavior.",
       "operator_checks": [
-        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
-        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
       ]
     },
     {
-      "id": "LL-090",
-      "title": "Compact mobile setup wizard",
-      "summary": "New Game shows Character, World, Goals steps with visible fixed Continue/Start controls on phone viewports, retaining all original options and desktop single-form setup.",
+      "id": "LL-249",
+      "title": "Production-ready 13-place designer contract",
+      "summary": "Ship exact Classic place IDs, DOS indices, files, proportions, street-facing doorway guidance and mobile crop/UX acceptance criteria.",
       "operator_checks": [
-        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
-        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
       ]
     },
     {
-      "id": "LL-091",
-      "title": "v0.5.7 integration regression and schema revision",
-      "summary": "Validate guest persistence, encrypted chat/non-persistence, workboard/schema consistency and responsive layout. Bump the Looprd database schema to v2 for private room chat key.",
+      "id": "LL-250",
+      "title": "Mandatory regression and ZipRunner release",
+      "summary": "Add pure household, SVG entrance, Modern-isolation tests, verified offline/Pages and ZipRunner-safe release metadata.",
       "operator_checks": [
-        "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
-        "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
       ]
     },
     {
-      "id": "LL-093",
-      "title": "Distinct Contemporary venue artwork",
-      "summary": "Replace 11 facades with user-provided venue-specific paintings, dual WebP sizes for city tiles and destination panels.",
+      "id": "LL-251",
+      "title": "Reconcile workboard by stable ID with explicit lifecycle evidence",
+      "summary": "Source-level Done, Blocked, In Progress and To Do statuses for all existing LL IDs; blocked reasons and unblock conditions; no duplicate or unclassified work.",
       "operator_checks": [
-        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
-        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        "Run TEST-LIFECYCLE.bat and open docs/workboard-reconciliation.md; verify blocked LL-175 has an unblock criterion."
       ]
     },
     {
-      "id": "LL-094",
-      "title": "Residence-tier-aware home scene",
-      "summary": "Draw distinct studio, apartment, and loft fallbacks based on active player home instead of incorrectly showing a detached house.",
+      "id": "LL-252",
+      "title": "Enforce source workboard lifecycle in ZipRunner release verifier",
+      "summary": "Regenerate and compare lifecycle artifacts during mandatory source verification; preserve ZipRunner v1 implemented/remaining schema and reject invalid or stale classifications.",
       "operator_checks": [
-        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
-        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        "Run node tools/verify.mjs and node tools/reconcile-workboard.mjs --check from extracted ZIP."
       ]
     },
     {
-      "id": "LL-095",
-      "title": "Declarative future art pack foundation",
-      "summary": "Provide versioned art manifest and browser mapping, inline standalone assets, separate Pages images, and retain SVG era fallback.",
+      "id": "LL-253",
+      "title": "Needs-aware Classic appliance maintenance and regression",
+      "summary": "Add pure repair affordability projection and Classic rival surplus-only maintenance; reveal maintenance details in Finances without new save fields or Modern balancing changes.",
       "operator_checks": [
-        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
-        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        "Run TEST-LIFECYCLE.bat and inspect Classic Finances with broken refrigerator; verify repair never spends reserve."
       ]
     },
     {
-      "id": "LL-096",
-      "title": "Artwork regression and full source handoff",
-      "summary": "Test new pack data, asset paths and residence selection, release metadata, clean extraction, offline and Pages builds.",
+      "id": "LL-254",
+      "title": "Install production Classic exterior and interior artwork",
+      "summary": "Integrate 13 approved exterior/interior WebP pairs in stable manifest slots; preserve per-building door coordinates.",
       "operator_checks": [
-        "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
-        "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
       ]
     },
     {
-      "id": "LL-097",
-      "title": "Install the three provided residence paintings",
-      "summary": "Optimized separate artwork for Starter Studio, Sunny Apartment and Skyline Loft; both card and destination illustrations follow current player home tier, without changing economics or gameplay.",
+      "id": "LL-255",
+      "title": "Keep original DOS geography independent of display size",
+      "summary": "Match all 13 original board cells, source place IDs, road stops, and phone Explore/Overview without alternate mobile arrangement.",
       "operator_checks": [
-        "Start in Contemporary and verify studio apartment-building art in Home city tile and destination.",
-        "Upgrade housing to Sunny Apartment then Skyline Loft: verify both scenes update and match the current resident; return to an older save to confirm tier-specific artwork.",
-        "Check standalone PLAY.html offline and GitHub Pages: all three tiers load independent artwork while Historical/Sci-Fi scenes stay procedural."
+        "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
       ]
     },
     {
-      "id": "LL-099",
-      "title": "Regression and release checks for housing art",
-      "summary": "Keep every housing asset in the versioned art manifest, validate card/detail files, offline data URIs, cacheable Pages copies, clean ZipRunner packaging and v0.5.9 metadata.",
+      "id": "LL-256",
+      "title": "Active player portrait and centered turn presentation",
+      "summary": "Show current player, turn ownership, and week in the Classic board center; preserve Modern hub and centered venue interactions.",
       "operator_checks": [
-        "Run node tools/verify.mjs and Python Looprd server tests.",
-        "Verify current art packs contain three non-null residence entries and no network dependencies in PLAY.html."
+        "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
       ]
     },
     {
-      "id": "LL-100",
-      "title": "Persistent local new-game preferences",
-      "summary": "Keep play mode, Classic/Modern rules, era and all four goals as validated browser-local defaults independent of saves and character profiles. Include reset support and safe storage failure fallback.",
+      "id": "LL-257",
+      "title": "Original-inspired Classic weekly clock",
+      "summary": "Show 60-unit circular clock that updates with authoritative actions and turn changes; no simulation changes.",
       "operator_checks": [
-        "Change era, Classic/Modern and goals in Advanced; close/reopen New Game and refresh the browser; verify choices persist without altering a saved game.",
-        "Reset defaults and verify Classic, Contemporary and default four goals."
+        "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
       ]
     },
     {
-      "id": "LL-101",
-      "title": "Quick Start game onboarding",
-      "summary": "Compact start screen presents character, name, play mode and clear start/continue actions; game rules, era and goals are collapsed into advanced options with a visible summary. Starting over asks before overwriting an autosave.",
+      "id": "LL-258",
+      "title": "Classic production board acceptance and release tests",
+      "summary": "Asset-size/identity, route geometry, turn clock, Modern isolation, and ZipRunner clean-build regression coverage.",
       "operator_checks": [
-        "Start with no saved game and click Start new game immediately.",
-        "With existing autosave, Continue resumes and Start another game asks before overwriting; cancel does not modify the save."
+        "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
       ]
     },
     {
-      "id": "LL-102",
-      "title": "Viewport-friendly start dialog and regression",
-      "summary": "New Game dialog fits mobile heights with only optional internal scrolling when Advanced opens; preserve character management, hotseat, Looprd server input and game engine parity.",
+      "id": "LL-259",
+      "title": "Modular Portrait Kit integration",
+      "summary": "Add reusable renderer/editor and compact Everyday + DOMINION component artwork to The Life Loop.",
       "operator_checks": [
-        "Check 320x568, 390x844, 768x1024 and 1440x900 for visible Start and Continue buttons without document scrolling.",
-        "Run node tools/verify.mjs and build GitHub Pages."
+        "Open Profile in browser, change hair/face/color and verify generated portrait updates."
       ]
     },
     {
-      "id": "LL-103",
-      "title": "Real illustrated portrait gallery in character creator",
-      "summary": "Select from 16 modern illustrated or 35 classic portrait assets without leaving game; fixed portraits are marked as presets.",
+      "id": "LL-260",
+      "title": "Shared cross-game appearance identity",
+      "summary": "Separate appearance-only local profile store from game saves; profile name pre-fills new-game form.",
       "operator_checks": [
-        "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
-        "Start or join a two-player game and confirm the selected portrait is visible on each client.",
-        "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+        "Save a shared portrait, start new game, check name and sidebar portrait."
       ]
     },
     {
-      "id": "LL-104",
-      "title": "Local and multiplayer portrait identity persistence",
-      "summary": "Persist validated portrait IDs in browser-local character profiles and serialized game/guest snapshots; reject injected asset paths.",
+      "id": "LL-261",
+      "title": "Optional Looprd Social integration contract",
+      "summary": "Introduce opt-in HTTPS Social profile client and lobby chat endpoints without changing existing Looprd game-room authority.",
       "operator_checks": [
-        "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
-        "Start or join a two-player game and confirm the selected portrait is visible on each client.",
-        "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+        "Use the separate looprd-social development service and verify Get/Put profile, lobby chat and no auto game login."
       ]
     },
     {
-      "id": "LL-105",
-      "title": "Offline/PWA-ready portrait assets and CI coverage",
-      "summary": "Optimize and package all 51 WebP images for standalone HTML and separately cached GitHub Pages; verify asset manifest and appearance tests.",
+      "id": "LL-262",
+      "title": "Portrait integration release gate",
+      "summary": "Add tests, offline embedded packs, source clean packaging and documented SSO trust boundary.",
       "operator_checks": [
-        "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
-        "Start or join a two-player game and confirm the selected portrait is visible on each client.",
-        "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+        "Run node tools/verify.mjs and open offline PLAY.html at mobile and desktop sizes."
       ]
     },
     {
-      "id": "LL-107",
-      "title": "Versioned pixel character parts catalog",
-      "summary": "Source JSON manifest maps three body templates, component slots, semantic palettes, pose timing, bands and hat/hair interaction variants.",
+      "id": "LL-264",
+      "title": "Expose shared Social lobby in game Chat",
+      "summary": "Social chat works without hosting a game; private co-op room remains a separate channel with no game simulation changes.",
       "operator_checks": [
-        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
-        "Run node tools/verify.mjs and check no workboard/version mismatch."
+        "Run python tests/qa_social_chat.py and test the Social/Room tabs at 390px and 1440px."
       ]
     },
     {
-      "id": "LL-108",
-      "title": "Deterministic character compiler and render adapters",
-      "summary": "Compile on appearance changes, cache bounded resolved poses, and draw the same components to 32x40 SVG thumbnails, animated Canvas preview and a PNG sprite sheet.",
+      "id": "LL-265",
+      "title": "Native Looprd Social client and unified profile session",
+      "summary": "Connect directly to Looprd Social POST /social, share connection with Profile editor, retain loopback bridge compatibility and never persist development tokens.",
       "operator_checks": [
-        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
-        "Run node tools/verify.mjs and check no workboard/version mismatch."
+        "Run node --test tests/looprd-social-chat.test.cjs and tests/shared-profile-portrait.test.cjs."
       ]
     },
     {
-      "id": "LL-109",
-      "title": "Interactive Pixel Studio in the character creator",
-      "summary": "Body, headwear, hair, palette, outfit and mood controls; four direction buttons and walk/idle preview; existing illustrated portrait gallery preserved.",
+      "id": "LL-266",
+      "title": "Chat resilience, security and viewport tests",
+      "summary": "Bound social feed and unread counter, separate co-op messages, escape untrusted content, update silent polling, add desktop/mobile browser acceptance tests.",
       "operator_checks": [
-        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
-        "Run node tools/verify.mjs and check no workboard/version mismatch."
+        "Run node tools/verify.mjs; check social server down and disconnected behavior."
       ]
     },
     {
-      "id": "LL-110",
-      "title": "Snapshot/Looprd cosmetics persistence and tests",
-      "summary": "Validate pixel portrait/body/headwear fields in browser and guest handler; keep versioned configuration small, with automated rendering and persistence tests.",
+      "id": "LL-267",
+      "title": "Carry forward Looprd game schema migration",
+      "summary": "Preserve version-1 Room records through additive schema-2 chatKey migration, matching Looprd loader contract. No changes to existing game-session API.",
       "operator_checks": [
-        "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
-        "Run node tools/verify.mjs and check no workboard/version mismatch."
+        "Run python tools/generate-looprd.py and validate looprd.yaml against Looprd spec before deploying; backup the game database."
       ]
     },
     {
-      "id": "LL-112",
-      "title": "Temporarily disable character customization and restore original avatars",
-      "summary": "Game uses its original simple fixed player icons, ignores previously saved appearance in UI, and does not attach local appearance to new games or multiplayer joins; editor and all catalog assets remain in source behind an off-by-default feature flag.",
+      "id": "LL-013",
+      "title": "Classic local hotseat privacy handover",
+      "summary": "Cover the board and Social chat between local human turns; explicit reveal button, no extra game action, no Modern or online impact.",
       "operator_checks": [
-        "New Game shows name and play mode without character selection; choose Start and see the original default icon.",
-        "Menu contains no My Characters command; check guest join dialog has no local character picker.",
-        "Load an old customized save and confirm fixed original icon shows, while the save data itself is not deleted."
+        "Run node --test tests/classic-hotseat-handover.test.cjs; test one local two-player turn handoff at 390px and 1440px."
       ]
     },
     {
-      "id": "LL-113",
-      "title": "Preserve dormant character system and test quick-start rollback",
-      "summary": "Keep old character creator, compiler, portrait catalog, and stored profiles untouched; add tests for enabled-only entry points and no appearance in new game/multiplayer payload, retain future reinstatement path.",
+      "id": "LL-268",
+      "title": "Preserve Classic scenic road and garden on mobile",
+      "summary": "The garden clock and the two tree-lined gaps are now visible on every viewport; existing five-by-five historic geography and 170-waypoint path are unchanged.",
       "operator_checks": [
-        "Run node tools/verify.mjs and Python Looprd tests; inspect complete ZipRunner archive for untouched customization source and catalogs.",
-        "Play local and co-op setup, ensuring the simple avatar does not regress gameplay, turn handling, or chat."
+        "Run python tests/qa_classic_handover.py at 320px and 390px; check Overview and Explore include the garden and scenic areas."
       ]
     },
     {
-      "id": "LL-114",
-      "title": "Replace top bars with one city heading",
-      "summary": "Move game branding in place of city heading; relocate Careers and Finances beside it and consolidate New Game, Save, Load and How to Play in right menu.",
+      "id": "LL-269",
+      "title": "Hotseat and mobile board regression release",
+      "summary": "Add pure hotseat decision tests, mobile browser checks and ZipRunner packaging guard for the new Classic handover.",
       "operator_checks": [
-        "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
-        "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
-        "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+        "Run node tools/verify.mjs and python tests/qa_classic_handover.py, then validate clean ZIP extraction."
       ]
     },
     {
-      "id": "LL-115",
-      "title": "Compact co-op and notification controls",
-      "summary": "Place destination, live-only chat unread icon, and co-op menu together at top right; show WS status and room identity in co-op dropdown.",
+      "id": "LL-270",
+      "title": "Place Classic action clock on Public Garden",
+      "summary": "Relocate the 60-unit dial out of the central turn identity card into the bottom-center clock landmark; keep live updates and accessibility.",
       "operator_checks": [
-        "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
-        "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
-        "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+        "At desktop 1440 and phone 390 verify exactly one dial, in the garden, with 60 units and correct after-travel updates."
       ]
     },
     {
-      "id": "LL-116",
-      "title": "Single weekly status ticker and responsive QA",
-      "summary": "Replace duplicate green status banners and scattered week/market readouts with one ticker under building grid. Preserve mobile, side docks, and active turn clarity.",
+      "id": "LL-271",
+      "title": "Limit Explore/Overview camera toggle to phones",
+      "summary": "Only show board camera selection at phone width <=720; desktop/tablet use full fit while preserving the last phone preference and no gameplay changes.",
       "operator_checks": [
-        "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
-        "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
-        "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+        "Check 320/390/720 show a toggle and 768/1440 do not; switch mobile Explore/Overview without travel charges."
       ]
     },
     {
-      "id": "LL-117",
-      "title": "Classic proportional partial work shifts",
-      "summary": "Allow 1–5 remaining-hour shifts, proportional wages based on six-hour/8h-paid standard, proportional energy/happiness and rent garnishment; no Modern time rule changes.",
+      "id": "LL-272",
+      "title": "Correct south-row visual route projection",
+      "summary": "Use the fifth-row top gutter for all southern Classic venues, including corner stops, to keep road and pawns out of public garden and storefronts.",
       "operator_checks": [
-        "Hire at Monolith Burgers and arrive with 3h left: work exactly 3h, receive half the full-shift gross pay; verify 0h remain.",
-        "With one hour left, verify a small paid shift is available; at zero hours no work is permitted."
+        "Check projected road at 1440 and phone Explore; run game route regression suite and no time cost modifications."
       ]
     },
     {
-      "id": "LL-118",
-      "title": "Prevent partial-work progression exploits",
-      "summary": "Accumulate worked hours per contract and give capped Classic XP/dependability +1 only for each accumulated six hours; carry credit across weeks, reset on hire/dismissal, persist in multiplayer snapshots.",
+      "id": "LL-273",
+      "title": "Door-aligned Classic storefront arrival",
+      "summary": "Align 13 Classic pawn doorstep coordinates to commissioned exterior illustrations; draw square sidewalk approach links only for active/previewed routes; preserve original 170-waypoint cost graph.",
       "operator_checks": [
-        "Work five one-hour shifts without gaining work statistics, then the sixth one-hour shift and verify exactly one progression credit.",
-        "Change employer and verify partial-hour credit resets and cannot be carried between contracts."
+        "Run node tools/verify.mjs and python tests/qa_entrances_clock.py; verify pawn stops on doors at mobile and desktop widths."
       ]
     },
     {
-      "id": "LL-119",
-      "title": "Classic pawn and resale lifecycle",
-      "summary": "Pawn, redeem through a two-week deadline, and sell unredeemed durable items to another human from a clearly marked second-hand counter at Circuit City; collateral is removed from inventory and shared state. Rates and location remain DOS-unverified.",
+      "id": "LL-274",
+      "title": "In-venue Classic action clock",
+      "summary": "Expose a compact live 60-unit clock in every Classic venue action window, synced with garden dial after travel and each action.",
       "operator_checks": [
-        "At Circuit City pawn a computer, verify it leaves inventory, cash rises, and the fixed redemption cost/deadline appear.",
-        "Redeem it by its deadline, or let its pledge expire and buy it using a second local human."
+        "Check 60/60 when entering initial venue and reduced clock units immediately after the relax action without leaving it."
       ]
     },
     {
-      "id": "LL-120",
-      "title": "Pawn persistence and parity regression gate",
-      "summary": "Validate bounded pawn state and owner/item/deadline/price consistency in save/load and multiplayer snapshots; cover full shifts, partial shifts, employer changes, collateral and Modern isolation.",
+      "id": "LL-275",
+      "title": "Entrance and venue time regression coverage",
+      "summary": "Add tests of all doorway offset metadata, visual mobile/desktop alignment, route isolation, and in-building time updates.",
       "operator_checks": [
-        "Run node tools/verify.mjs, including tests/classic-work-pawn.test.cjs, and Python Looprd tests.",
-        "Export/import a pawned game, then switch local players to verify the item cannot be double-bought."
+        "Run all source and clean-extraction tests plus Chromium 320, 390, 768 and 1440 pixel checks."
       ]
     },
     {
-      "id": "LL-121",
-      "title": "One shared 13-venue board",
-      "summary": "Use a four-column five-row board with 13 business locations for Classic and Modern, central hub and public-garden decor; preserve unique location IDs in save snapshots.",
+      "id": "LL-276",
+      "title": "Continuous Classic street centerline",
+      "summary": "Project one rounded road spine onto actual between-tile gutters; remove the old west-side scenic-area detour and corner backtracking without touching historical stop indexes or travel costs.",
       "operator_checks": [
-        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
-        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        "Use python tests/qa_smooth_streets.py at 320, 390, 768 and 1440px and inspect the roadway in the desktop screenshot."
       ]
     },
     {
-      "id": "LL-122",
-      "title": "Dedicated pawn storefront and new Contemporary artwork",
-      "summary": "Move pawn, redeem and second-hand sales out of Circuit City; add optimized illustrated pawn storefront, NPC and historical/Sci-Fi fallbacks; enable pawn actions in both rulesets.",
+      "id": "LL-277",
+      "title": "Separate road preview from storefront art",
+      "summary": "Draw a subtle, rounded hover path on public streets with an independent door target marker and short threshold; do not draw the travel highlight through storefront illustrations.",
       "operator_checks": [
-        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
-        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        "Hover Bank, Black\u2019s Market, Z-Mart, Socket City and Factory; preview points must remain outside shop bounds."
       ]
     },
     {
-      "id": "LL-123",
-      "title": "Career Center qualified-first applications",
-      "summary": "Show eligible jobs by default in both rulesets; allow explicit expansion of future roles with missing qualification details and retain direct-engine rejection behavior.",
+      "id": "LL-278",
+      "title": "Road and door arrival regression",
+      "summary": "Add independent road-geometry and 170-waypoint cost regression; animate on street until doorway arrival, preserving venue clock, saves, co-op and Social boundaries.",
       "operator_checks": [
-        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
-        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        "Run node tools/verify.mjs and python tests/qa_entrances_clock.py; inspect desktop and phone arrival and time cost."
       ]
     },
     {
-      "id": "LL-124",
-      "title": "Board movement, UX and release verification",
-      "summary": "Make movement distance use physical perimeter positions and add tests, art mapping, workboard, and offline/Pages packaging checks.",
+      "id": "LL-279",
+      "title": "Smooth Classic pawn entry and departure",
+      "summary": "Animate short doorstep movement and a fade at the edge of the illustrated facade to avoid visible jumps and long overlay strokes.",
       "operator_checks": [
-        "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
-        "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        "Travel from Low-Cost Housing to Bank and verify the pawn finishes on the bank door with no jump.",
+        "Skip travel in progress and confirm the pawn resolves to the doorway."
       ]
     },
     {
-      "id": "LL-125",
-      "title": "Original Classic starting cash and savings",
-      "summary": "Classic begins with $200 cash, $0 bank; Modern Story retains $250/$100; initial finance history is consistent.",
+      "id": "LL-280",
+      "title": "Responsive arrival and route conservation tests",
+      "summary": "Add unit and browser regression checks for complete doorway journeys, accessible reduced motion, route preview road-only rendering and unchanged clock cost.",
       "operator_checks": [
-        "Start a fresh Classic game and check $200 cash and $0 savings; compare with Modern $250/$100."
+        "Run node tools/verify.mjs and python tests/qa_pawn_doorway.py at phone/desktop sizes; confirm garden/venue clocks and co-op are unaffected."
       ]
     },
     {
-      "id": "LL-126",
-      "title": "Classic goal formulas and win condition",
-      "summary": "Classic wealth/100, raw happiness, 1+9*diplomas, and 1.25*Dependability while employed; compare independent goals to target thresholds.",
+      "id": "LL-281",
+      "title": "Street tracks visible illustrated storefronts",
+      "summary": "Render north/south streets at the lower frontage of the illustrated buildings instead of only next to central park; preserve historic routing and clock charges.",
+      "priority": "medium",
       "operator_checks": [
-        "Check Goals with player unemployed then hired; verify career is zero when unemployed and four targets must all be met to win."
+        "Check road position by storefront labels at 1440px and in phone Explore/Overview; verify 170 original waypoint identities and 5-unit Bank travel."
       ]
     },
     {
-      "id": "LL-127",
-      "title": "Jones difficulty and independent goal budget",
-      "summary": "Take It Easy +40, Play Fair equal, Go For Broke -40; allocate deterministic valid rival goal targets near player wealth, save in room snapshots.",
+      "id": "LL-282",
+      "title": "Visible doorway sidewalks and continuous pawn journey",
+      "summary": "Draw permanent paved footpaths to all 13 commissioned art entrances and highlight the full walk; animate the pawn continuously from one door via public streets to the next.",
+      "priority": "medium",
       "operator_checks": [
-        "At default 200-point human goals try the three Jones difficulties; inspect 240/200/160 AI budgets and save/reload."
+        "Hover Bank and Black\u2019s Market; verify both street and door segments appear; complete and skip a pawn journey; inspect no invisible teleport."
       ]
     },
     {
-      "id": "LL-128",
-      "title": "Employer-first hiring and low-cash AI recovery",
-      "summary": "Career Center defaults to one employer at a time, qualified jobs by default; extra jobs via opt-in. AI pre-purchases replacement clothing to avoid nonrecoverable loss of work.",
+      "id": "LL-283",
+      "title": "Storefront and garden clock browser regression",
+      "summary": "Check clock clearance and route/door synchronization at 320, 390, 768 and 1440px with full browser smoke, full JS tests and clean ZipRunner extraction.",
+      "priority": "medium",
       "operator_checks": [
-        "Visit Career Center and select a named workplace. Enable future roles, submit unqualified application; run 100 seeded 60-week Classic AI campaigns."
-      ]
-    },
-    {
-      "id": "LL-129",
-      "title": "Classical goal points regression suite and release verification",
-      "summary": "Tests of initial economy, 4 scoring formulas, rival difficulty, persistence, tamper rejection, employer filtering, Modern isolation, updated workboard/ADR and full ZipRunner source.",
-      "operator_checks": [
-        "Run node tools/verify.mjs, Looprd Python tests and browser smoke tests. Confirm workboard manifest has version 0.5.18 and no private state."
-      ]
-    },
-    {
-      "id": "LL-131",
-      "title": "Printed quick-reference sources as primary Classic mechanics evidence",
-      "summary": "Cross-check first-party Sierra Quick Reference (starting money, four goals, wealth including goods, educational study units, four-week rent) and record divergences against Wiki secondary sources.",
-      "operator_checks": [
-        "Review docs/decisions/ADR-0020-printed-reference-classic-economy.md for reference links, verified facts, and provisional conversions."
-      ]
-    },
-    {
-      "id": "LL-132",
-      "title": "Classic goal scoring accounts for owned goods and incomplete lessons",
-      "summary": "Value owned durable items in money goal and credit progress in enrolled but unfinished university classes without double-counting awarded diplomas; keep Modern scoring unchanged.",
-      "operator_checks": [
-        "In Classic acquire computer and observe the Money goal increase; pawn it and confirm the ownership value leaves the score.",
-        "Study one lesson and confirm education goal progress updates before the diploma is awarded."
-      ]
-    },
-    {
-      "id": "LL-133",
-      "title": "Classic emergency relative rescue with anti-farm guards",
-      "summary": "Model a small emergency gift after two fully stranded weeks with no money, usable outfit, pawnable items or investments, with eight-week cooldown. Trigger amount and timing are provisional, not exact DOS values.",
-      "operator_checks": [
-        "Run two desperate turns without money or clothing and confirm a one-time $90 rescue and finance ledger entry.",
-        "Confirm possessing suitable clothing, bank funds or a pawnable item prevents the rescue."
-      ]
-    },
-    {
-      "id": "LL-135",
-      "title": "Board-centered venue interaction and focus return",
-      "summary": "Open any of 13 venues with actual engine actions; supported Done, Escape, scene art, internal scrolling, and focus return.",
-      "operator_checks": [
-        "Click current building for free; choose another and confirm normal travel time.",
-        "Use Done and Escape, including a nested job confirmation; confirm the window closes safely."
-      ]
-    },
-    {
-      "id": "LL-136",
-      "title": "Remove right-side destination pane and mobile Activities tab",
-      "summary": "Remove destination sidebar and duplicate action DOM; widen board and retain only City/My Life mobile navigation.",
-      "operator_checks": [
-        "Inspect at 320x568 and 1600x900: no right panel or Activities tab; main page does not scroll."
-      ]
-    },
-    {
-      "id": "LL-137",
-      "title": "Preserve venue action execution and employment filtering",
-      "summary": "Reuse game.actions, net.execute, Classic employer and future-jobs filters, guarded requests, nested dialogs, and Live Story actions.",
-      "operator_checks": [
-        "At Career Center switch employer and future jobs; attempt an underqualified application with normal time cost.",
-        "At Bank deposit money and ensure only a single charge, leaving the venue open."
-      ]
-    },
-    {
-      "id": "LL-138",
-      "title": "Status ticker End Turn and responsive venue controls",
-      "summary": "End Turn moved from right pane into ticker; venue title, Done, disabled reasons, focus trap and mobile touch layout tested.",
-      "operator_checks": [
-        "On phone open 13 venues and scroll only within action list; End week stays reachable after Done."
-      ]
-    },
-    {
-      "id": "LL-139",
-      "title": "Network turn ownership and clean release regression",
-      "summary": "Prevent stale venue actions across multiplayer turn or room snapshot changes; preserve chat and co-op menus; full packaging regression.",
-      "operator_checks": [
-        "Host and guest: wrong player blocked; guest travel opens after confirmed room snapshot; verify clean ZIP/Pages and Looprd tests."
-      ]
-    },
-    {
-      "id": "LL-140",
-      "title": "Canonical DOS employer-to-board workplace contract",
-      "summary": "All 37 Classic jobs have a verified venue ID and contemporary board business label; preserve original DOS employer identities and qualifications.",
-      "operator_checks": [
-        "Inspect Classic job at all nine employers: each resolves to one of the 13 board tiles; no unknown workplaces.",
-        "For Z-Mart/Black’s Market, confirm distinct discount and grocery departments at Fresh & Frugal."
-      ]
-    },
-    {
-      "id": "LL-141",
-      "title": "Employer-linked hiring, work and map presentation",
-      "summary": "Show the visible workplace brand in character profile, job offers, hiring and work feedback, Career Center, and work-location map marker.",
-      "operator_checks": [
-        "Apply for Cook at Career Center; character should show The Good Fork, not Monolith Burgers; city marks The Good Fork as WORK HERE.",
-        "Travel to Fresh & Frugal: no Work option; visit The Good Fork: Work is available if dressed and energized.",
-        "Switch employers: confirmation and logs show both relevant board companies."
-      ]
-    },
-    {
-      "id": "LL-142",
-      "title": "Workplace consistency regression and release validation",
-      "summary": "Integrate deterministic mapping regression across Classic, Modern, two shared-market employers and saved job identities.",
-      "operator_checks": [
-        "Run node tools/verify.mjs and the dedicated employer-board-link tests; confirm all 37 Classic roles and 19 Modern roles validate.",
-        "Test at narrow viewport and desktop: work marker visible, board page remains unscrolled; Looprd game snapshots need no schema migration."
+        "Run python tests/qa_storefront_frontage.py and node tools/verify.mjs; verify the in-venue clock shows 55/60 after a five-unit trip."
       ]
     }
   ],
@@ -1021,12 +853,6 @@
       "title": "Long-term opponent balancing",
       "summary": "Run wider long-form economic balance simulations with adjustable difficulty",
       "priority": "high"
-    },
-    {
-      "id": "LL-013",
-      "title": "Hotseat player privacy screen",
-      "summary": "Prevent the next human player from seeing the previous player’s private view",
-      "priority": "medium"
     },
     {
       "id": "LL-014",
@@ -1131,11 +957,104 @@
     {
       "id": "LL-134",
       "title": "Original detailed economy, merchandise, events and security parity",
-      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black’s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
+      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black\u2019s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
       "priority": "high",
       "operator_checks": [
         "Record DOS reference walkthrough for robberies, item breakage, price changes and real estate moves."
       ]
+    },
+    {
+      "id": "LL-147",
+      "title": "Full original DOS store-location and retail risk parity",
+      "summary": "Revisit the 13 shared board constraint versus original separate Z-Mart/Black\u2019s Market physical buildings. Verify exact original weekly inventory, discount price, equipment breakdown rates, tickets, economy fluctuations and residence theft with captured DOS sessions. Current rotating shelves and outcomes are explicit approximations.",
+      "priority": "high",
+      "operator_checks": [
+        "Record week-by-week DOS inventory at Z-Mart and Black\u2019s Market and durability/breakage events; compare with Life Loop."
+      ]
+    },
+    {
+      "id": "LL-152",
+      "title": "DOS-original action counting and wage rounding comparison",
+      "summary": "Measure precise ten-event interpretation (navigation, free bank transfers, work dismissal), zero-hour interaction and split-shift wage rounding in DOS. Current cap/rounding are explicit provisional design decisions.",
+      "priority": "high",
+      "operator_checks": [
+        "Record the original DOS game after 10 no-time bank actions and after six one-hour shifts; compare the screenshots and sums with v0.5.23."
+      ]
+    },
+    {
+      "id": "LL-158",
+      "title": "DOS event probabilities and final Classic building artwork",
+      "summary": "Add 13 operator-supplied original-inspired building WebP pairs; compare exact original DOS item breakage, theft rates, travel time, housing moves and prices to replace current provisional formulas.",
+      "priority": "high",
+      "operator_checks": [
+        "Provide the artwork listed in docs/classic-board-art-request.md and sample DOS gameplay traces."
+      ]
+    },
+    {
+      "id": "LL-164",
+      "title": "Final illustrated board, route tuning and multiplayer live QA",
+      "summary": "Adjust road geometry/entrances to supplied board artwork, validate exact DOS movement hours, and test real host/guest WebSocket movement and rapid reconnects.",
+      "priority": "high"
+    },
+    {
+      "id": "LL-169",
+      "title": "Original map artwork, reference time formulas and deployed two-client movement QA",
+      "summary": "Supply original-inspired artwork and calibrate route entrances/widths against the finished board; verify DOS travel timing and host/guest races under real Looprd HTTP/WSS including cancel/reconnect. Current graph matches v0.5.25 costs, not verified DOS timing.",
+      "priority": "high",
+      "operator_checks": [
+        "Record original DOS board traversal times and test Looprd movement with both browsers connected."
+      ]
+    },
+    {
+      "id": "LL-175",
+      "title": "DOS travel-hour calibration",
+      "summary": "Measure original DOS hours on representative route distances and migrate provisional Classic cost formula.",
+      "priority": "high",
+      "operator_checks": [
+        "Capture DOS observation traces; compare to our source-derived reference."
+      ]
+    },
+    {
+      "id": "LL-176",
+      "title": "DOS wage, clothing and AI parity",
+      "summary": "Validate historic dynamic wage, degree/uniform mapping and exact computer AI weights before applying further balance changes.",
+      "priority": "high",
+      "operator_checks": [
+        "Capture DOS observation traces; compare to our source-derived reference."
+      ]
+    },
+    {
+      "id": "LL-182",
+      "title": "Exact original economic salary and AI comparison",
+      "summary": "Record DOS economic index salary, clock and rival priorities under matching seeded playthroughs; replace approximations only with evidence.",
+      "priority": "high",
+      "operator_checks": [
+        "Capture DOS replay traces and compare with v0.5.28 forecasts."
+      ]
+    },
+    {
+      "id": "LL-189",
+      "title": "Original multivariate EconomicIndex emulator parity",
+      "summary": "Reconstruct interdependent trend indices, salary index, market crisis and SCI overflow using emulator replay; replace provisional weekly drift only after verified tests.",
+      "priority": "high",
+      "operator_checks": [
+        "Record DOS emulator index and wage transitions across seeds and validate."
+      ]
+    },
+    {
+      "id": "LL-190",
+      "title": "Exhaustive ordered opponent SCI branches and event order",
+      "summary": "Complete WhereShouldIGo tag coverage and weekly state-machine ordering, relax state and debt garnishment with replay-based tests.",
+      "priority": "high",
+      "operator_checks": [
+        "Replay identical DOS scene states and compare branch numbers, actions and week events."
+      ]
+    },
+    {
+      "id": "LL-263",
+      "title": "Cross-game single sign-on and social deployment",
+      "summary": "Implement production OIDC browser login, trusted issuer, short-lived game-scoped tokens, game server validation and remote two-client social deployment.",
+      "priority": "high"
     }
   ]
 }

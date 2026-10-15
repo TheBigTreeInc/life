@@ -10,15 +10,17 @@ test('only one compact city heading and no old green or dark header',()=>{
  assert.ok(!html.includes('class="board-heading"'));
  assert.ok(html.indexOf('id="careerBtn"')<html.indexOf('id="financeBtn"'));
  assert.ok(html.includes('id="cityName"'));
- assert.ok(js.includes("$('cityName').textContent=eraMeta().city.toUpperCase()"));
+ assert.ok(js.includes("$('cityName').textContent=game.isClassic?'CLASSIC CITY':eraMeta().city.toUpperCase()"));
 });
 test('chat unread indicator and new game inside utility menu without destination duplication',()=>{
  const c=html.indexOf('id="chatToggle"'),o=html.indexOf('id="onlineBtn"'),m=html.indexOf('id="utilityMenuBtn"');
  assert.ok(c<o&&o<m);
  assert.ok(html.indexOf('id="utilityMenu"')<html.indexOf('id="newBtn"'));
  assert.ok(html.includes('id="chatBadge"')&&!html.includes('id="destinationBadge"'));
- assert.ok(js.includes('badge.hidden=!net?.chatUnread'));
- assert.ok(js.includes('toggle.disabled=!live'));
+ assert.ok(js.includes('const unread=social.unread+(net?.chatUnread||0)'));
+ assert.ok(js.includes('badge.hidden=!unread'));
+ assert.ok(js.includes('toggle.disabled=false'));
+ assert.ok(html.includes('id="chatSocialTab"')&&html.includes('id="chatRoomTab"'));
  assert.ok(js.includes("setCoopMenu($('coopMenu').hidden)"));
 });
 test('co-op dropdown exposes room transport and entry into diagnostics',()=>{

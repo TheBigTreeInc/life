@@ -1,19 +1,41 @@
 (function (root) {
 'use strict';
+const Pass2 = root.LifeClassicPass2 || (typeof require === 'function' ? require('./classic-pass2-rules.js') : null);
+if(!Pass2)throw Error('Classic source rules unavailable');
+const ClassicTime=root.LifeClassicTime||(typeof require==='function'?require('./classic-time.js'):null);
+if(!ClassicTime)throw Error('Classic timing rules unavailable');
+const ClassicTurn=root.LifeClassicTurnSequence||(typeof require==='function'?require('./classic-turn-sequence.js'):null);
+if(!ClassicTurn)throw Error('Classic turn sequence unavailable');
+const ClassicWeekly=root.LifeClassicWeeklyEvents||(typeof require==='function'?require('./classic-weekly-events.js'):null);
+if(!ClassicWeekly)throw Error('Classic weekly events unavailable');
+const ClassicHousehold=root.LifeClassicHousehold||(typeof require==='function'?require('./classic-household.js'):null);
+if(!ClassicHousehold)throw Error('Classic household adapter unavailable');
+const ClassicEconomy = root.LifeClassicEconomy || (typeof require === 'function' ? require('./classic-economy.js') : null);
+if(!ClassicEconomy)throw Error('Classic economic indices unavailable');
+const ClassicEvents=root.LifeClassicEconomicEvents||(typeof require==='function'?require('./classic-economic-events.js'):null);
+if(!ClassicEvents)throw Error('Classic economic events unavailable');
 const D = root.LifeData || (typeof require === 'function' ? require('./data.js') : null);
 const Characters = root.LifeCharacters || (typeof require === 'function' ? require('./characters.js') : null);
+// Classic board routes share one authoritative topology with the pawn renderer.
+const RouteGraph = root.LifeRoutes || (typeof require === 'function' ? require('./route-graph.js') : null);
+const ClassicRouteLayout = root.LifeClassicRoutes || (typeof require === 'function' ? require('../assets/boards/classic/routes.v1.json') : null);
+const classicRouteGraph = RouteGraph && ClassicRouteLayout ? RouteGraph.compile(ClassicRouteLayout,D.classicPlaces.map(p=>p.id)) : null;
+if (!classicRouteGraph) throw Error('Classic board route graph unavailable');
 const find = (arr,id)=>arr.find(x=>x.id===id);
 const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
 const money = n=>'$'+Math.floor(n).toLocaleString('en-US');
 // Provisional Classic pawn broker model; source evidence establishes the lifecycle,
 // but not the exact interest rate, loan ratio or two-week deadline.
-const PAWN_VALUES=Object.freeze({fridge:255,freezer:330,computer:590,dictionary:90,atlas:110,encyclopedia:165});
-const PAWN_NAMES=Object.freeze({fridge:'Refrigerator',freezer:'Freezer',computer:'Computer',dictionary:'Dictionary',atlas:'Atlas',encyclopedia:'Encyclopedia'});
+const PAWN_VALUES=Object.freeze({fridge:255,freezer:330,computer:590,dictionary:90,atlas:110,encyclopedia:165,vcr:285,stereo:225});
+const PAWN_NAMES=Object.freeze({fridge:'Refrigerator',freezer:'Freezer',computer:'Computer',dictionary:'Dictionary',atlas:'Atlas',encyclopedia:'Encyclopedia',vcr:'VCR',stereo:'Stereo'});
 const pawnLoan=item=>Math.floor(PAWN_VALUES[item]*.45);
 const pawnRedemption=item=>pawnLoan(item)+Math.max(5,Math.ceil(pawnLoan(item)*.1));
 // Documented Jones difficulty offsets. Sierra's exact goal distribution algorithm is
 // unverified; our allocation preserves the budget, 5-point steps and close wealth target.
 const CLASSIC_JONES_DIFFICULTY=Object.freeze({easy:40,fair:0,hard:-40});
+// The secondary gameplay reference mentions ten weekly events. We interpret those
+// as venue actions (not walking); exact DOS counting is unverified.
+const CLASSIC_WEEKLY_ACTION_LIMIT=10;
 const GOAL_MIN=10,GOAL_MAX=100;
 function rivalGoalAllocation(human, difficulty, random){
   const cap=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -52,7 +74,7 @@ class LifeGame {
       goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,clamp(Number(goal[k])|| (settings.ruleset==='classic'?50:60),10,100)]))};
     this.seed = Number.isSafeInteger(settings.seed) ? settings.seed : 314159;
     this.week=1; this.economy=1; this.active=0; this.winner=null; this.sequence=0; this.pendingEncounter=null; this.bulletin=D.headlines[0]; this.cityEventId=D.cityEvents[0].id; this.cityEventStart=1; this.cityProjects={};this.classicStockPrices=Object.fromEntries(D.classicStocks.map(x=>[x.id,x.base]));
-    this.messages=[];this.classicPawnLots=[];this.classicPawnSequence=0;
+    this.classicTurnJournal=[];this.classicEconomicIndices=ClassicEconomy.initial();this.classicEconomicPulse=ClassicEvents.initial();this.classicGoodsIndex=100;this.classicWeekEvents=[];this.classicDecisionTrace=[];this.messages=[];this.classicPawnLots=[];this.classicPawnSequence=0;
     const name=(settings.name||'You').trim().slice(0,24)||'You';
     this.players=[this.createPlayer('player',name,false,'#b3f485')];
     if(settings.character)this.players[0].appearance=Characters.normalizeAppearance(settings.character);
@@ -71,34 +93,118 @@ class LifeGame {
   createPlayer(id,name,isAI,color) {
     const initialCash=this.isClassic?200:250,initialBank=this.isClassic?0:100;
     return {id,name,isAI,color,location:'home',hours:this.rules.hours,cash:initialCash,bank:initialBank,invested:0,debt:0,rentDebt:0,
-      happiness:62,energy:84,hunger:0,education:0,credits:0,experience:this.isClassic?10:0,dependability:this.rules.dependabilityStart,job:null,wage:0,workSessions:0,classicDegrees:[],classicProgress:{},classicEnrolled:[],classicEnrollmentCredits:0,classicDismissals:0,classicRaises:0,classicRejectedOpenings:{},classicWorkHourCredit:0,classicRent:325,classicRentDueWeek:4,classicExtensions:0,classicExtensionAttemptWeek:0,classicEverDebt:false,classicPortfolio:Object.fromEntries(D.classicStocks.map(x=>[x.id,0])),classicLegacyInvestment:0,classicBrokerOpen:false,classicLoanDefaults:0,classicLoanPaidThrough:0,classicFoodPurchasedWeek:0,classicHardshipWeeks:0,classicReliefWeek:0,classicReliefCount:0,
-      home:'studio',groceries:1,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:initialCash,bank:initialBank,invested:0,debt:0,netWorth:initialCash+initialBank}],milestones:[]};
+      happiness:62,energy:84,classicRelaxation:16,hunger:0,education:0,credits:0,experience:this.isClassic?10:0,dependability:this.rules.dependabilityStart,job:null,wage:0,workSessions:0,classicDegrees:[],classicProgress:{},classicEnrolled:[],classicEnrollmentCredits:0,classicDismissals:0,classicRaises:0,classicUnemployedWeeks:0,classicJobSearchFailures:0,classicRejectedOpenings:{},classicWorkHourCredit:0,classicWageRemainder:0,classicWorkWarningWeek:0,classicChoicesThisWeek:0,classicLastClosedWeek:0,classicLastRentChargeWeek:0,classicPaycheckHistory:[],classicRent:325,classicRentDueWeek:4,classicExtensions:0,classicExtensionAttemptWeek:0,classicEverDebt:false,classicPortfolio:Object.fromEntries(D.classicStocks.map(x=>[x.id,0])),classicLegacyInvestment:0,classicBrokerOpen:false,classicLoanDefaults:0,classicLoanPaidThrough:0,classicFoodPurchasedWeek:0,classicWeekendTicket:null,classicHardshipWeeks:0,classicReliefWeek:0,classicReliefCount:0,
+      classicEquipment:{},classicBurglaryCount:0,home:'studio',groceries:1,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:initialCash,bank:initialBank,invested:0,debt:0,netWorth:initialCash+initialBank}],milestones:[]};
   }
   get rules(){return D.RULESETS[this.settings.ruleset];}
   get isClassic(){return this.settings.ruleset==='classic';}
   get player(){return this.players[this.active];}
   get jobs(){return this.isClassic?D.classicJobs:D.jobs;}
   getJob(p){return find(this.jobs,p.job);}
-  jobWorkplace(job){return D.jobWorkplace(job);}
-  offeredWage(job){return Math.max(1,Math.round(job.wage*this.economy));}
-  classicLuck(p){return clamp(30+(10+p.dependability+p.experience+8*this.degreeCount(p))/3,0,100);}
+  get places(){return this.isClassic?D.classicPlaces:D.places;}
+  jobWorkplace(job){
+    return D.jobWorkplace(job);
+  }
+  ownsWorking(p,id){return p.owned.includes(id)&&(!this.isClassic||p.classicEquipment?.[id]?.broken!==true);}
+  equipmentSource(p,id){return p.classicEquipment?.[id]?.source||'specialty';}
+  setEquipment(p,id,source='specialty'){if(this.isClassic&&Object.hasOwn(PAWN_VALUES,id))p.classicEquipment[id]={source,broken:false};}
+  classicEquipmentBreakage(p,notes){
+    // Provisional rates. Discount merchandise is less reliable than dedicated Socket City goods.
+    for(const item of ['fridge','freezer','computer','vcr','stereo']){
+      if(!p.owned.includes(item)||!this.ownsWorking(p,item))continue;
+      const source=this.equipmentSource(p,item);
+      const chance=source==='discount'?0.105:source==='pawn'?0.135:0.025;
+      if(this.rand()<chance){p.classicEquipment[item]={source,broken:true};notes.push(`${PAWN_NAMES[item]} broke down. Socket City can repair it.`);}
+    }
+  }
+  classicCrimeAfterAction(p,at){
+    if(!this.isClassic||p.cash<=0||!['bank','cinema'].includes(at))return '';
+    const chance=at==='bank'?0.012:0.035;
+    if(this.rand()>=chance)return '';
+    const stolen=p.cash;p.cash=0;
+    return `Wild Willy robbed ${at==='bank'?'the Bank':"Black's Market"}! He stole ${money(stolen)} you were carrying. Bank deposits remain safe.`;
+  }
+  classicBurglar(p,notes){
+    if(p.home!=='studio'||!p.owned.length)return;
+    // Security apartments suppress home break-ins. Risk increases with valuable goods.
+    const eligible=p.owned.filter(id=>Object.hasOwn(PAWN_VALUES,id));
+    if(!eligible.length)return;
+    const chance=Math.min(0.30,0.055+eligible.length*0.025);
+    if(this.rand()<chance){
+      const item=eligible[Math.floor(this.rand()*eligible.length)];
+      p.owned=p.owned.filter(x=>x!==item);delete p.classicEquipment[item];
+      p.classicBurglaryCount=(p.classicBurglaryCount||0)+1;
+      notes.push(`Wild Willy stole your ${PAWN_NAMES[item]} from Low-Cost Housing! Le Security Apartments prevents home burglaries.`);
+    }
+  }
+  offeredWage(job){return this.isClassic?ClassicEconomy.wageQuote(job.wage,this.classicEconomicIndices.readings.general):Math.max(1,Math.round(job.wage*this.economy));}
+  classicEconomyReport(){if(!this.isClassic)throw Error('Classic-only economic report');return ClassicEconomy.keys.map(id=>({id,reading:id==='goods'?this.classicGoodsIndex:this.classicEconomicIndices.readings[id],change:this.classicEconomicIndices.momentum[id]}));}
+  // Source-backed scandal effects, modelled trigger frequencies. Applies to
+  // humans and Jones identically, with independent seeded dismissal draws.
+  classicApplyScandal(strength){
+    if(!this.isClassic)throw Error('Classic-only crisis event');
+    for(const p of this.players){
+      const before=this.accounts(p),oldWage=p.wage,oldJob=p.job;
+      const roll=strength===2&&p.job?Math.floor(this.rand()*2):0;
+      const {next,effect,savingsLost,wageLost}=ClassicEvents.scandal(p,strength,roll);
+      p.bank=next.bank;p.job=next.job;p.wage=next.wage;p.happiness=next.happiness;
+      if(effect==='dismissed'){
+        p.classicDismissals=(p.classicDismissals||0)+1;
+        p.classicWorkHourCredit=0;p.classicWageRemainder=0;
+      }
+      if(savingsLost)this.recordChange(p,before,'Classic economic crisis · lost savings','economic-crisis');
+      this.classicEvent(p,'economic-scandal',`${effect}: ${oldJob||'unemployed'} · ${money(oldWage)} -> ${money(p.wage)}/hour`,
+        {strength,effect,savingsLost,wageLost});
+      if(effect!=='none')this.log(`${p.name}: ${effect==='dismissed'?'An economic crisis cost you your job.':effect==='wage-cut'?'A crisis cut your contractual wage.':'An economic crisis erased your bank savings.'}`,'warn',p.id);
+    }
+  }
+  classicEvent(p,kind,detail,data={}){
+    if(!this.isClassic)return;
+    this.classicWeekEvents.push({week:this.week,playerId:p?.id||'system',kind,detail:String(detail).slice(0,240),...data});
+    if(this.classicWeekEvents.length>96)this.classicWeekEvents.shift();
+  }
+  classicGoodsPrice(base){if(!this.isClassic)throw Error('Classic pricing only');return Pass2.goodsPrice(base,this.classicGoodsIndex);}
+  // Qualify threshold in JobDItem: integer roll 1..100, not a float-percent
+  // comparison. The special cook occupation (#44) is guaranteed after meeting
+  // qualification checks. This helper does not advance the saved RNG seed.
+  classicLuck(p){return clamp(30+Math.floor((10+p.dependability+p.experience+8*this.degreeCount(p))/3),0,100);}
+  classicHiringChance(p,job){
+    if(!this.isClassic)throw Error('DOS hiring chance is Classic-only');
+    if(!job||!this.jobs.includes(job))throw Error('Unknown DOS job');
+    if(this.jobReasons(p,job).length)return 0;
+    return job.entryGuaranteed?100:this.classicLuck(p);
+  }
+  classicHiringRoll(p,job){
+    const chance=this.classicHiringChance(p,job);
+    return chance===100 || (chance>0 && 1+Math.floor(this.rand()*100)<=chance);
+  }
   rentServicesOpen(p){return this.week>=p.classicRentDueWeek;}
 
   degreeCount(p){return Array.isArray(p.classicDegrees)?p.classicDegrees.length:0;}
   jobRequirement(job){return this.isClassic?{experience:job.experience,dependability:job.dependability,degrees:job.degrees}:{experience:job.experience,dependability:job.dependability,degrees:[]};}
-  classicLessons(p){return 10-(p.owned.includes('computer')?1:0)-( ['encyclopedia','dictionary','atlas'].every(id=>p.owned.includes(id))?1:0);}
+  classicLessons(p){return 10-(this.ownsWorking(p,'computer')?1:0)-( ['encyclopedia','dictionary','atlas'].every(id=>p.owned.includes(id))?1:0);}
   classicDegreeAvailable(p,d){return d.requires.every(id=>p.classicDegrees.includes(id));}
   classicWorkCaps(p,job){const r=this.jobRequirement(job),bonus=5*this.degreeCount(p);return {experience:10+r.experience+bonus,dependability:20+r.dependability+bonus};}
-  classicFoodCapacity(p){return p.owned.includes('fridge')?(p.owned.includes('freezer')?12:6):Infinity;}
+  classicFoodCapacity(p){return this.ownsWorking(p,'fridge')?(this.ownsWorking(p,'freezer')?12:6):Infinity;}
   classicStockValue(p){return D.classicStocks.reduce((n,s)=>n+(p.classicPortfolio[s.id]||0)*this.classicStockPrices[s.id],0)+(p.classicLegacyInvestment||0);}
   syncClassicInvested(p){if(this.isClassic)p.invested=this.classicStockValue(p);}
-  classicFoodPrice(units){const item=D.classicFreshFood.find(x=>x.units===units);return Math.max(1,Math.round(item.cost*this.economy));}
+  classicDiscountPrice(id){
+    const item=D.classicDiscountGoods[id];
+    if(!item)throw Error('Unknown Z-Mart merchandise');
+    return this.classicGoodsPrice(item.cost);
+  }
+  classicDiscountStock(){return D.classicDiscountStock(this.week);}
+  classicFoodPrice(units){const item=D.classicFreshFood.find(x=>x.units===units);if(!item)throw Error('Unknown food bundle');return this.classicGoodsPrice(item.cost);}
   classicShiftHours(p){return this.isClassic?Math.min(6,p.hours):6;}
-  classicShiftPay(p,hours){return Math.floor(this.shiftPay(p)*hours/6);}
-  pawnEligible(p,item){return Object.hasOwn(PAWN_VALUES,item)&&p.owned.includes(item)&&!(item==='fridge'&&p.owned.includes('freezer'));}
+  // DOS gross wages truncate on each shift, including partial end-of-turn work.
+  classicShiftPay(p,hours){return Pass2.workGross(p.wage,hours);}
+  classicWorkQuote(p,hours=this.classicShiftHours(p)){return ClassicTime.paycheck(p.wage,hours,p.rentDebt);}
+  classicWorkStanding(p){const j=this.getJob(p);return j?ClassicTime.workStanding(p.dependability,this.jobRequirement(j).dependability,p.classicWorkWarningWeek===this.week):'ready';}
+  classicShiftRemainder(p,hours){return 0;} // Pass 2 pays each partial shift with DOS integer truncation.
+  pawnEligible(p,item){return Object.hasOwn(PAWN_VALUES,item)&&this.ownsWorking(p,item)&&!(item==='fridge'&&p.owned.includes('freezer'));}
   pawnLot(id){return this.classicPawnLots.find(l=>l.id===id);}
   classicLoanLimit(p){const job=this.getJob(p);return job?Math.max(0,Math.floor(((job.wage*32+p.cash+p.bank-p.debt)*0.75)*(0.8**p.classicLoanDefaults)/100)*100):0;}
-  getPlace(id){return find(D.places,id);}
+  getPlace(id){return find(this.places,id);}
   clothingWeeks(p,tier){return Math.max(0,Math.floor(Number(p.clothing?.[tier])||0));}
   isDressedFor(p,job){
     if(!job)return false;
@@ -109,18 +215,20 @@ class LifeGame {
   canAffordClothes(p,job){
     if(this.isDressedFor(p,job))return true;
     const need=D.clothing[job.clothes]?.rank||1;
-    const cheapest=[...D.clothingOffers.market,...D.clothingOffers.boutique].filter(x=>D.clothing[x.id].rank>=need).sort((a,b)=>a.cost-b.cost)[0];
+    const stocked=this.isClassic?D.clothingOffers.market.filter(x=>this.classicDiscountStock().clothing.includes(x.id)):D.clothingOffers.market;
+    const cheapest=[...stocked,...D.clothingOffers.boutique].filter(x=>D.clothing[x.id].rank>=need).sort((a,b)=>a.cost-b.cost)[0];
     return !!cheapest&&p.cash>=this.price(cheapest.cost,'retail')+120;
   }
   cheapestClothingOffer(job){
     const rank=D.clothing[job.clothes]?.rank||1;
-    return [...D.clothingOffers.market.map(x=>({...x,venue:'market'})),...D.clothingOffers.boutique.map(x=>({...x,venue:'boutique'}))].filter(x=>D.clothing[x.id].rank>=rank).sort((a,b)=>a.cost-b.cost)[0];
+    const stocked=this.isClassic?D.clothingOffers.market.filter(x=>this.classicDiscountStock().clothing.includes(x.id)):D.clothingOffers.market;
+    return [...stocked.map(x=>({...x,venue:'market'})),...D.clothingOffers.boutique.map(x=>({...x,venue:'boutique'}))].filter(x=>D.clothing[x.id].rank>=rank).sort((a,b)=>a.cost-b.cost)[0];
   }
   rand(){this.seed=(1664525*this.seed+1013904223)>>>0;return this.seed/4294967296;}
   get cityEvent(){return this.isClassic?D.cityEvents[0]:(D.cityEvents.find(e=>e.id===this.cityEventId)||D.cityEvents[0]);}
   get cityIndex(){return Math.floor((this.week-1)/4);}
   // A neutral public sector index and event-specific pricing. Whole-dollar tickets.
-  price(base,sector){let multiplier=this.isClassic?1:(this.cityEvent.prices[sector]||1);for(const arc of (this.isClassic?[]:D.storyArcs))if(arc.sector===sector&&this.cityProjects[arc.id])multiplier*=arc.bonus;return Math.max(1,Math.round(base*multiplier));}
+  price(base,sector){if(this.isClassic)return this.classicGoodsPrice(base);let multiplier=(this.cityEvent.prices[sector]||1);for(const arc of (this.isClassic?[]:D.storyArcs))if(arc.sector===sector&&this.cityProjects[arc.id])multiplier*=arc.bonus;return Math.max(1,Math.round(base*multiplier));}
   shiftPay(p){return Math.max(1,Math.round(p.wage*8*(this.isClassic?1:this.cityEvent.wage)*(this.isClassic?1:(this.cityProjects.secondchance?1.05:1))));}
   relationship(p,placeId){return clamp(Number(p.relationships?.[placeId])||0,0,100);}
   relationshipName(p,placeId){const value=this.relationship(p,placeId);return value>=55?'Trusted friend':value>=18?'Friendly':value>=7?'Acquaintance':'Stranger';}
@@ -180,7 +288,12 @@ class LifeGame {
   wealth(p){return Math.max(0,p.cash+p.bank+p.invested-p.debt-p.rentDebt+(this.isClassic?this.classicOwnedValue(p):0));}
   // The original printed Quick Reference includes the value of owned goods in
   // the Money goal. These proxy resale values are not yet an exact DOS appraisal.
-  classicOwnedValue(p){return [...new Set(p.owned||[])].reduce((sum,item)=>sum+(PAWN_VALUES[item]||0),0);}
+  classicMaintenancePlan(p=this.player){
+    if(!this.isClassic)throw Error('Classic-only maintenance');
+    const reserve=this.classicSurvivalBudget(p).reserve;
+    return ClassicHousehold.repairCandidates(p,PAWN_VALUES,Math.ceil(Math.max(0,reserve)));
+  }
+  classicOwnedValue(p){return [...new Set(p.owned||[])].reduce((sum,item)=>sum+Math.round((PAWN_VALUES[item]||0)*(p.classicEquipment?.[item]?.broken?0.2:1)),0);}
   classicStudyProgress(p){
     // Credit study already completed towards unearned diplomas. Nine goal
     // points per diploma remains the provisional scale, not a verified formula.
@@ -202,8 +315,11 @@ class LifeGame {
     if(p.classicHardshipWeeks<2||this.week-(p.classicReliefWeek||-100)<8)return;
     const before=this.accounts(p);
     p.cash+=90;p.classicReliefWeek=this.week;p.classicReliefCount=(p.classicReliefCount||0)+1;
+    const hardshipChecks=p.classicHardshipWeeks;
     p.classicHardshipWeeks=0;
     this.recordChange(p,before,'Emergency gift from a relative','relief');
+    this.classicEvent(p,'emergency-clothing',`Emergency clothing assistance: ${money(90)}`,
+      ClassicWeekly.emergencyClothingTrace(hardshipChecks,90));
     notes.push('A relative sent you $90 to help you get back on your feet.');
   }
   goalTargets(p){return this.isClassic&&p.isAI&&p.classicGoals?p.classicGoals:this.settings.goals;}
@@ -237,27 +353,37 @@ class LifeGame {
   }
   travelCost(from,to){
     if(from===to)return 0;
-    // The 4x5 city uses fourteen perimeter positions, thirteen businesses,
-    // and one public square. Time is measured by actual board position rather
-    // than the index a business happens to occupy in the location catalog.
-    const ring=[[1,1],[2,1],[3,1],[4,1],[4,2],[4,3],[4,4],[4,5],[3,5],[2,5],[1,5],[1,4],[1,3],[1,2]];
-    const a=D.places.find(p=>p.id===from),b=D.places.find(p=>p.id===to);
+    // Modern keeps the established fourteen-space travel clock. Classic derives
+    // distance from the same versioned graph that the visible pawn actually walks.
+    const a=this.getPlace(from),b=this.getPlace(to);
     if(!a||!b)return Infinity;
+    if(this.isClassic)return ClassicTime.travelBreakdown(classicRouteGraph.plan(from,to).steps,this.rules.entryHours,to==='agency').units; // DOS agency entry; walking-unit conversion provisional
+    const ring=[[1,1],[2,1],[3,1],[4,1],[4,2],[4,3],[4,4],[4,5],[3,5],[2,5],[1,5],[1,4],[1,3],[1,2]];
     const ai=ring.findIndex(([x,y])=>a.cell[0]===x&&a.cell[1]===y),bi=ring.findIndex(([x,y])=>b.cell[0]===x&&b.cell[1]===y);
     if(ai<0||bi<0)return Infinity;
     const steps=Math.abs(ai-bi);
     return this.rules.entryHours+1+Math.floor(Math.min(steps,ring.length-steps)/3);
+  }
+  travelQuote(from,to,hours=this.player.hours){
+    const cost=this.travelCost(from,to);
+    if(!Number.isFinite(cost))return {ok:false,reason:'Unknown destination',hours:Infinity,steps:0,stops:[]};
+    const route=this.isClassic?classicRouteGraph.plan(from,to):null;
+    const timing=route?ClassicTime.travelBreakdown(route.steps,this.rules.entryHours,to==='agency'):null;
+    return {ok:cost<=hours,reason:cost<=hours?'':`Need ${cost} hours; ${hours} available`,hours:cost,
+      walkingHours:timing?.walkingUnits??cost,entryHours:timing?.serviceUnits??0,estimatedTicks:timing?.estimatedTicks??null,
+      steps:route?route.steps:0,stops:route?route.ids.slice():[],waypointIndices:route?route.waypointIndices.slice():[],direction:route?.direction||null,from,to};
   }
   travel(target) {
     if(this.winner)return {ok:false,message:'This game is finished.'};
     if(this.pendingEncounter)return {ok:false,message:'Finish your conversation before leaving.'};
     const p=this.player, dest=this.getPlace(target);
     if(!dest)return {ok:false,message:'Unknown destination.'};
-    const cost=this.travelCost(p.location,target);
-    if(cost>p.hours)return {ok:false,message:`Need ${cost} hours to travel. End the week to continue.`};
+    const quote=this.travelQuote(p.location,target,p.hours);
+    const cost=quote.hours;
+    if(!quote.ok)return {ok:false,message:`Need ${cost} hours to travel. End the week to continue.`};
     if(cost===0)return {ok:true,message:`Already at ${dest.name}.`};
     p.hours-=cost;p.location=target;p.weekActions++;if(this.isClassic)p.classicBrokerOpen=false;
-    this.log(`${p.name} visited ${dest.name} · ${cost}h travel`,'travel',p.id);
+    this.log(`${p.name} visited ${dest.name} · ${cost} clock units${quote.entryHours?` (including ${quote.entryHours} Employment entry)`:''}`,'travel',p.id);
     return {ok:true,message:`Welcome to ${dest.name}.`};
   }
   jobReasons(p,job){
@@ -279,7 +405,9 @@ class LifeGame {
   actions(p=this.player){
     const t=[];const at=p.location;
     const push=(id,title,detail,hours=0,price=0,valid=true,reason='',meta={})=>{
-      t.push({id,title,detail,hours,price,enabled:valid&&p.hours>=hours&&p.cash>=price,reason:!valid?reason:p.hours<hours?'Not enough time':p.cash<price?'Not enough cash':'',...meta});
+      const clockOpen=!this.isClassic||p.hours>0;
+      const hasEventSlot=!this.isClassic||(p.classicChoicesThisWeek||0)<CLASSIC_WEEKLY_ACTION_LIMIT;
+      t.push({id,title,detail,hours,price,enabled:clockOpen&&hasEventSlot&&valid&&p.hours>=hours&&p.cash>=price,reason:!clockOpen?'No hours left this week; end your turn.':!hasEventSlot?'Ten Classic actions used this week; end your turn.':!valid?reason:p.hours<hours?'Not enough time':p.cash<price?'Not enough cash':'',...meta});
     };
     if(!this.isClassic&&D.citizens[at])push('chat',`Talk to ${D.citizens[at].name}`,`Meet ${D.citizens[at].title.toLowerCase()}. Discover a little story.`,1,0,p.talkedWeek?.[at]!==this.week,'Already caught up this week');
     if(!this.isClassic&&!p.isAI){
@@ -295,8 +423,11 @@ class LifeGame {
       const status=this.storyStatus(p,arc);if(status.chapter>=arc.chapters.length)continue;
       push('arc:'+arc.id,`Story · ${arc.title}`,`Chapter ${status.chapter+1}/${arc.chapters.length} · ${arc.chapters[status.chapter].title}`,2,0,status.enabled,status.reason,{special:'story'});
     }
-    if(at==='home'){
-      push('relax','Take a breather','Get +16 happiness and +24 energy.',this.rules.restHours,0,p.happiness<100||p.energy<100,'Already feeling great');
+    if(at==='home'||this.isClassic&&at==='clinic'&&p.home!=='studio'){
+      if(!this.isClassic||at===(p.home==='studio'?'home':'clinic')){
+        const rest=this.isClassic?ClassicHousehold.restQuote(p):null;
+        push('relax','Take a breather',this.isClassic?`Recover +${rest.happiness} happiness, +${rest.energy} energy, +${rest.relaxation} relaxation (max 30). Home entertainment bonus +${rest.home.comfortBonus}.`:'Get +16 happiness and +24 energy.',this.rules.restHours,0,this.isClassic?rest.needed:p.happiness<100||p.energy<100,'Already feeling great');
+      }
       // Casual paid errands are a safety net for unemployment, not a second workplace.
       const gigReady=!p.job&&p.oddJobWeek!==this.week&&p.energy>=14;
       if(!this.isClassic)push('freelance',p.owned.includes('computer')?'One-off online contract':'Temporary odd job',p.owned.includes('computer')?'Unemployed fallback: earn $165 once this week.':'Unemployed fallback: earn $56 once this week.',6,0,gigReady,p.job?'You already have a primary job. Work at your employer instead.':p.oddJobWeek===this.week?'Only one odd job per week.':'Need more energy');
@@ -306,19 +437,31 @@ class LifeGame {
       for(const job of this.jobs){
         const reasons=this.jobReasons(p,job);
         const workplace=this.jobWorkplace(job);
-        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} · ${workplace.label}`:`Apply: ${job.name} · ${workplace.label}`,`${money(this.offeredWage(job))}/hour · Work at ${workplace.boardName}${workplace.department?' ('+workplace.department+')':''}${this.isClassic?' · Original employer: '+workplace.originalName:''} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic&&reasons.length?' · Unqualified: '+reasons.join(', '):''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}`,this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id,workplace:job.place});
+        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} · ${workplace.label}`:`Apply: ${job.name} · ${workplace.label}`,`${money(this.offeredWage(job))}/hour · Work at ${workplace.boardName}${workplace.department?' ('+workplace.department+')':''}${this.isClassic?' · Original employer: '+workplace.originalName+' · DOS job #'+job.originalJobNum+' (original base '+money(job.originalBasePay)+'/h)':''} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic?(reasons.length?' · Unqualified: '+reasons.join(', '):' · Hiring: '+this.classicHiringChance(p,job)+'%') :''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}`,this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id,workplace:job.place});
       }
       const raiseReq=p.job&&this.isClassic?this.jobRequirement(this.getJob(p)).dependability+5*(p.classicRaises||0):0;
       const canRaise=p.job&&(this.isClassic?p.dependability>=raiseReq:p.workSessions>=3&&p.raiseWeek<=this.week-4);
       push('raise','Negotiate a raise',this.isClassic?`4 hours · listed wage ${money(p.job?this.offeredWage(this.getJob(p)):0)}/h · requires ${raiseReq} Dependability. Only awarded if offered rate exceeds current pay.`:`Request a higher wage at your current job.`,this.isClassic?4:2,0,!!canRaise&&(this.isClassic?(p.job&&p.wage<this.offeredWage(this.getJob(p))):(p.wage<Math.round(this.getJob(p).wage*1.5))),!p.job?'Get a job first':this.isClassic?`Need ${raiseReq} reliability and an improved listed wage`:p.workSessions<3?'Work 3 shifts first':p.raiseWeek>this.week-4?'Wait a few weeks before another raise':'Already near this role’s pay ceiling');
     }
-    if(at==='market'){
-      for(const offer of D.clothingOffers.market)push(`clothes:${offer.id}:market`,`Budget ${D.clothing[offer.id].name.toLowerCase()}`,`Add ${offer.weeks} weeks of clothing. All outfits age weekly, even if unworn.`,1,this.price(offer.cost,'retail'));
+    if(at==='market'||this.isClassic&&at==='cinema'){
       if(this.isClassic){
-        for(const offer of D.classicFreshFood)push('classicFresh:'+offer.units,`Buy ${offer.units} week${offer.units>1?'s':''} of fresh food`,`Black's Market · storage ${p.owned.includes('fridge')?(p.owned.includes('freezer')?'12':'6'):'none'} portions · prevents hunger. +${offer.units} happiness on first food purchase this week.`,0,this.classicFoodPrice(offer.units),p.groceries+offer.units<=this.classicFoodCapacity(p),'Fridge or freezer capacity exceeded');
-        push('classicNewspaper','Read the weekly newspaper',this.bulletin,1,1);
-        push('classicLottery','Buy 10 lottery tickets','Original-style $10 bundle; lottery results settle next week.',0,10);
+        if(at==='market'){
+        const shelves=this.classicDiscountStock();
+        for(const offer of D.clothingOffers.market.filter(x=>shelves.clothing.includes(x.id))){
+          push(`clothes:${offer.id}:market`,`Z-Mart · ${D.clothing[offer.id].name}`,`Discount clothing · ${offer.weeks} weeks of wear. Availability changes each week.`,1,this.price(offer.cost,'retail'));
+        }
+        for(const id of shelves.goods){
+          const product=D.classicDiscountGoods[id],price=this.classicDiscountPrice(id);
+          const valid=product.kind==='ticket'?!p.classicWeekendTicket:!p.owned.includes(id);
+          const reason=product.kind==='ticket'?'You already have a ticket for next weekend.':'You already own this item.';
+          push('classicDiscount:'+id,`Z-Mart · ${product.name}`,`${product.detail} · Week ${this.week} discount stock.`,1,price,valid,reason);
+        }
+        } // End Z-Mart discount stock.
+        if(at==='cinema')for(const offer of D.classicFreshFood)push('classicFresh:'+offer.units,`Buy ${offer.units} week${offer.units>1?'s':''} of fresh food`,`Black's Market · storage ${this.ownsWorking(p,'fridge')?(this.ownsWorking(p,'freezer')?'12':'6'):'none'} portions · prevents hunger. +${offer.units} happiness on first food purchase this week.`,0,this.classicFoodPrice(offer.units),p.groceries+offer.units<=this.classicFoodCapacity(p),'Fridge or freezer capacity exceeded');
+        if(at==='cinema')push('classicNewspaper','Read the weekly newspaper',this.bulletin,1,1);
+        if(at==='cinema')push('classicLottery','Buy 10 lottery tickets','Original-style $10 bundle; lottery results settle next week.',0,10);
       }else{
+      for(const offer of D.clothingOffers.market)push(`clothes:${offer.id}:market`,`Budget ${D.clothing[offer.id].name.toLowerCase()}`,`Add ${offer.weeks} weeks of clothing. All outfits age weekly, even if unworn.`,1,this.price(offer.cost,'retail'));
       push('groceries','Buy groceries','One week of food. Prevent hunger penalties.',1,this.price(24,'food'));
       push('bulkFood','Stock the fridge','Three food portions for less.',1,this.price(59,'food'),p.owned.includes('fridge'),'Requires a refrigerator');
       push('lottery','Try a lucky ticket','A $12 gamble. Drawn at the weekend.',1,12);}
@@ -347,12 +490,14 @@ class LifeGame {
       }
       }
     }
-    if(this.jobs.some(j=>j.place===at)){
+    if(this.jobs.some(j=>this.jobWorkplace(j).place===at)){
       const j=this.getJob(p);
-      if(j&&j.place===at){
-        const shiftHours=this.classicShiftHours(p),income=this.isClassic?this.classicShiftPay(p,shiftHours):this.shiftPay(p);
+      if(j&&this.jobWorkplace(j).place===at){
+        const shiftHours=this.classicShiftHours(p),quote=this.isClassic?this.classicWorkQuote(p,shiftHours):null,income=quote?quote.gross:this.shiftPay(p);
+        const standing=this.isClassic?this.classicWorkStanding(p):'ready';
+        const workNotice=standing==='dismissal'?'CAUTION: attempting to work will cause dismissal for low reliability.':standing==='warning'?'First attempt triggers a reliability warning; no time or wages are spent.':quote?.garnished?`${money(quote.net)} net after ${money(quote.garnished)} toward rent arrears${quote.fee?` and ${money(quote.fee)} fee`:''}. Garnishment formula provisional.`:'';
         const neededEnergy=this.isClassic?Math.max(2,Math.ceil(12*shiftHours/6)):12;
-        push('work',`Work at ${this.jobWorkplace(j).label} · ${money(income)}`,`${j.name} · ${this.isClassic&&shiftHours<6?`Partial shift · ${shiftHours}h remaining · ${money(income)} proportional pay.`:'6 hours on the clock, paid as an 8-hour shift.'} Requires ${D.clothing[j.clothes].name} or better; current wardrobe is ${this.clothingSummary(p).filter(x=>x.weeks>0).map(x=>x.name+' '+x.weeks+'w').join(', ')||'empty'}.`,shiftHours,0,shiftHours>0&&p.energy>=neededEnergy&&this.isDressedFor(p,j),p.energy<neededEnergy?'Exhausted. Rest first.':`Uniform required: ${D.clothing[j.clothes].name} or better; visit Fresh & Frugal or Thread Theory. All clothing expires by week.`);
+        push('work',`Work at ${this.jobWorkplace(j).label} · ${money(income)}`,`${j.name} · ${this.isClassic&&shiftHours<6?`Partial shift · ${shiftHours}h remaining · ${money(income)} proportional pay.`:'6 hours on the clock, paid as an 8-hour shift.'} ${workNotice} Requires ${D.clothing[j.clothes].name} or better; current wardrobe is ${this.clothingSummary(p).filter(x=>x.weeks>0).map(x=>x.name+' '+x.weeks+'w').join(', ')||'empty'}.`,shiftHours,0,shiftHours>0&&p.energy>=neededEnergy&&this.isDressedFor(p,j),p.energy<neededEnergy?'Exhausted. Rest first.':`Uniform required: ${D.clothing[j.clothes].name} or better; visit Fresh & Frugal or Thread Theory. All clothing expires by week.`);
       }
     }
     if(at==='bank'){
@@ -383,10 +528,12 @@ class LifeGame {
     }
     if(at==='housing'){
       if(this.isClassic){
+        if(p.home==='studio')push('classicMove:apartment','Rent Le Security Apartments',`Protected residence · monthly rent $332 at a neutral economy. Moving costs 3h and the first month of rent.`,3,this.price(332,'housing'));
+        else push('classicMove:studio','Move back to Low-Cost Housing',`Cheaper monthly rent $325 at a neutral economy. 3 hours to arrange the move.`,3,this.price(325,'housing'));
         const open=this.rentServicesOpen(p);
         push('classicPayRent','Pay one month of rent',`$${p.classicRent} cash only · next due week ${p.classicRentDueWeek}. ${open?'Rent Office is open.':'Office opens when rent is due.'}`,1,p.classicRent,open,'Rent Office closed outside rent week / extension');
         if(p.rentDebt>0)push('classicClearArrears','Clear rent arrears',`Pay ${money(p.rentDebt)} in cash, stopping future wage garnishment.`,1,p.rentDebt,open,'Office closed');
-        push('classicRentExtension','Request a one-week extension',`Chance: ${p.classicEverDebt?'0':Math.max(25,100-p.classicExtensions*25)}%. One request per week.`,1,0,open&&!p.classicEverDebt&&p.classicExtensionAttemptWeek!==this.week,p.classicEverDebt?'Already incurred rent debt; extensions unavailable.':p.classicExtensionAttemptWeek===this.week?'Already requested this week':'Available only when rent is due');
+        push('classicRentExtension','Request a one-week extension',`Chance: ${p.classicEverDebt?'0':p.classicExtensions===0?100:p.classicExtensions===1?75:p.classicExtensions===2?50:25}%. One request per week.`,1,0,open&&!p.classicEverDebt&&p.classicExtensionAttemptWeek!==this.week,p.classicEverDebt?'Already incurred rent debt; extensions unavailable.':p.classicExtensionAttemptWeek===this.week?'Already requested this week':'Available only when rent is due');
       }else{
       push('upgrade:apartment','Move into a sunny apartment','Better lifestyle · monthly rent $380 · deposit $440.',3,440,p.home==='studio','Available from starter studio');
       push('upgrade:loft','Move into a skyline loft','Luxury living · monthly rent $620 · deposit $950.',3,950,p.home!=='loft'&&p.home!=='studio','Requires sunny apartment');
@@ -413,17 +560,21 @@ class LifeGame {
         }
     }
     if(at==='tech'){
+      if(this.isClassic)for(const id of ['fridge','freezer','computer','vcr','stereo'])if(p.owned.includes(id)&&p.classicEquipment?.[id]?.broken){
+        push('classicRepair:'+id,`Repair ${PAWN_NAMES[id]}`,`Restore appliance function; costs 20% of its reference price.`,2,Math.ceil(PAWN_VALUES[id]*.20));
+      }
       push('buy:fridge','Buy a refrigerator','Keep bulk groceries fresh across weeks.',2,this.price(255,'retail'),!p.owned.includes('fridge'),'Already owned');
       if(this.isClassic)push('buy:freezer','Buy a freezer', 'Expands fresh-food capacity from six to twelve portions. Requires a fridge.',2,this.price(330,'retail'),p.owned.includes('fridge')&&!p.owned.includes('freezer'),!p.owned.includes('fridge')?'Buy a refrigerator first':'Already owned');
       push('buy:computer','Get a home computer','Better side gigs and occasional online income.',2,this.price(590,'retail'),!p.owned.includes('computer'),'Already owned');
-      if(this.isClassic)for(const [id,label,cost] of [['dictionary','Dictionary',90],['atlas','Atlas',110],['encyclopedia','Encyclopedia',165]])
-        push('buy:'+id,'Buy '+label,'Collect all three books for one fewer lesson per Classic diploma.',2,this.price(cost,'retail'),!p.owned.includes(id),'Already owned');
     }
-    if(at==='cinema'){
+    if(at==='cinema'&&!this.isClassic){
       push('movie','See a movie','A little escapism. +18 happiness.',3,this.price(42,'leisure'));
       push('pass','Plan a fun weekend','A lovely experience waiting after the week. +13 happiness.',2,this.price(55,'leisure'),!p.weekendPass,'Already planned');
     }
-    if(at==='clinic')push('checkup','Take care of yourself','Restore +42 energy and recover from hunger.',3,this.price(65,'health'),p.energy<95||p.hunger>0,'Feeling healthy');
+    if(at==='clinic'&&!this.isClassic)push('checkup','Take care of yourself','Restore +42 energy and recover from hunger.',3,this.price(65,'health'),p.energy<95||p.hunger>0,'Feeling healthy');
+    if(this.isClassic&&(at==='market'||at==='cinema'))for(const a of t){
+      a.department=at==='market'?'Z-Mart Discount':'Black’s Market';
+    }
     return t;
   }
   act(id){
@@ -433,13 +584,22 @@ class LifeGame {
     const a=this.actions().find(x=>x.id===id);
     if(!a)return {ok:false,message:'That action is not available here.'};
     if(!a.enabled)return {ok:false,message:a.reason||'Action is unavailable.'};
+    // Count successfully selected venue interactions, including an attempted work
+    // shift that immediately ends in dismissal; never count navigation or blocked taps.
+    if(this.isClassic)p.classicChoicesThisWeek=(p.classicChoicesThisWeek||0)+1;
     if(id==='work'&&this.isClassic){
       const job=this.getJob(p),req=this.jobRequirement(job);
-      if(p.dependability<req.dependability-5){
-        p.job=null;p.wage=0;p.workSessions=0;p.classicWorkHourCredit=0;p.classicRaises=0;
+      const standing=this.classicWorkStanding(p);
+      if(standing==='dismissal'){
+        p.job=null;p.wage=0;p.workSessions=0;p.classicWorkHourCredit=0;p.classicWageRemainder=0;p.classicRaises=0;
         p.classicDismissals=(p.classicDismissals||0)+1;p.happiness=clamp(p.happiness-8,0,100);
         const message=`Dismissed from ${job.name}: reliability fell below ${Math.max(0,req.dependability-5)}. Reapply after improving your record.`;
         this.log(message,'warn',p.id);this.milestone(p,message);this.checkWin();return {ok:true,message};
+      }
+      if(standing==='warning'){
+        p.classicWorkWarningWeek=this.week;
+        const message=`${job.name} warned ${p.name}: reliability ${p.dependability} is below the employer's safe threshold (${Math.max(0,req.dependability-2)}). This warning uses no clock time and pays no wages; the next eligible work attempt may proceed.`;
+        this.log(message,'warn',p.id);return {ok:true,message};
       }
     }
     const before=this.accounts(p);p.cash-=a.price;p.hours-=a.hours;p.weekActions++;
@@ -475,7 +635,13 @@ class LifeGame {
         const event=this.cityEvent;p.cityParticipation[this.cityEventStart]=true;this.applyEffects(p,event.opportunity.effects);
         msg=`City opportunity: ${event.opportunity.title}. ${event.opportunity.detail}`;break;
       }
-      case 'relax':p.happiness=clamp(p.happiness+16,0,100);p.energy=clamp(p.energy+24,0,100);msg='You took a well-earned break. Life feels lighter.';break;
+      case 'relax':{
+        const rest=this.isClassic?ClassicHousehold.restQuote(p):null;
+        const bonus=rest?.home.comfortBonus||0;
+        p.happiness=clamp(p.happiness+16+bonus,0,100);p.energy=clamp(p.energy+24,0,100);
+        if(this.isClassic)p.classicRelaxation=clamp(p.classicRelaxation+rest.relaxation,10,30); // Gameplay adapter; DOS recovery formula not verified
+        msg=`You took a well-earned break${bonus?` with your home entertainment (+${bonus} comfort)`:''}. Life feels lighter.`;break;
+      }
       case 'freelance':{
         const income=p.owned.includes('computer')?165:56;
         p.cash+=income;p.energy=clamp(p.energy-12,0,100);p.experience+=1;p.oddJobWeek=this.week;
@@ -487,13 +653,13 @@ class LifeGame {
         if(this.isClassic){
           const missing=this.jobReasons(p,job);
           if(missing.length){p.happiness=clamp(p.happiness-1,0,100);msg='Application rejected for '+this.jobWorkplace(job).label+' '+job.name+': '+missing.join(', ')+'. Four hours spent.';break;}
-          if(!job.entryGuaranteed&&(p.classicRejectedOpenings[arg]===this.week||this.rand()*100>=this.classicLuck(p))){
-            p.classicRejectedOpenings[arg]=this.week;p.happiness=clamp(p.happiness-1,0,100);
+          if(p.classicRejectedOpenings[arg]===this.week||!this.classicHiringRoll(p,job)){
+            p.classicRejectedOpenings[arg]=this.week;p.classicJobSearchFailures=(p.classicJobSearchFailures||0)+1;p.happiness=clamp(p.happiness-1,0,100);
             msg='No openings for '+this.jobWorkplace(job).label+' '+job.name+' this week. Try another role or return next week.';break;
           }
         }
-        p.job=job.id;p.workSessions=0;p.classicWorkHourCredit=0;p.wage=this.offeredWage(job);
-        if(this.isClassic){p.experience+=2;p.dependability=Math.max(10,p.dependability);p.classicRaises=0;}
+        p.job=job.id;p.workSessions=0;p.classicWorkHourCredit=0;p.classicWageRemainder=0;p.wage=this.offeredWage(job);
+        if(this.isClassic){p.experience+=2;p.dependability=Math.max(10,p.dependability);p.classicRaises=0;p.classicUnemployedWeeks=0;p.classicJobSearchFailures=0;}
         if(this.isClassic)p.happiness=clamp(p.happiness+3,0,100);
         else if(!prior||job.tier>oldTier)p.happiness=clamp(p.happiness+4,0,100);
         msg=prior?`Job changed: left ${prior.name} at ${this.jobWorkplace(prior).label}. Now ${job.name} at ${this.jobWorkplace(job).label}, earning ${money(p.wage)}/hour. Your previous job is no longer available.`:`Hired! ${p.name} is now a ${job.name} at ${this.jobWorkplace(job).label}, earning ${money(p.wage)}/hour.`;break;
@@ -509,17 +675,33 @@ class LifeGame {
       }
       case 'classicNewspaper':msg=`Newspaper: ${this.bulletin}`;break;
       case 'classicLottery':p.lottery+=10;msg='Bought ten lottery tickets. The draw takes place next week.';break;
+      case 'classicDiscount':{
+        if(!this.isClassic||p.location!=='market')throw Error('Only the Classic Z-Mart counter sells this merchandise');
+        const item=D.classicDiscountGoods[arg];
+        if(!item||!this.classicDiscountStock().goods.includes(arg))throw Error('Z-Mart stock changed');
+        if(item.kind==='ticket'){
+          if(p.classicWeekendTicket)throw Error('A weekend ticket is already booked');
+          p.classicWeekendTicket=arg;
+          msg=`Bought a ${item.name} at Z-Mart. The outing is scheduled for this weekend.`;
+        }else{
+          if(p.owned.includes(arg))throw Error('Already own this item');
+          p.owned.push(arg);this.setEquipment(p,arg,'discount');
+          msg=`Bought ${item.name} at Z-Mart Discount. It is now among your possessions.`;
+        }
+        break;
+      }
       case 'groceries':p.groceries++;msg='Groceries bought. You can cook at home or they will be used at the weekend.';break;
       case 'bulkFood':p.groceries+=3;msg='Your fridge is ready for several weeks of meals.';break;
       case 'lottery':p.lottery++;msg='Ticket bought! The draw is on Sunday.';break;
       case 'meal':p.fed=true;p.happiness=clamp(p.happiness+7,0,100);p.energy=clamp(p.energy+8,0,100);msg='A warm meal and a moment to breathe.';break;
       case 'clothes':{
         const offer=D.clothingOffers[p.location]?.find(x=>x.id===arg);
+        if(this.isClassic&&p.location==='market'&&!this.classicDiscountStock().clothing.includes(arg))throw Error('Z-Mart outfit is out of stock');
         // Guard against corrupted/forged action metadata.
         if(!offer||id!==`clothes:${arg}:${p.location}`)throw Error('Invalid outfit purchase');
         p.clothing[arg]=Math.min(260,this.clothingWeeks(p,arg)+offer.weeks);
         if(p.location==='boutique'&&arg!=='casual')p.happiness=clamp(p.happiness+(arg==='business'?7:4),0,100);
-        msg=`Purchased ${D.clothing[arg].name.toLowerCase()}: +${offer.weeks} weeks (now ${p.clothing[arg]} weeks).`;
+        msg=`Purchased ${D.clothing[arg].name.toLowerCase()}${p.location==='market'&&this.isClassic?' at Z-Mart':''}: +${offer.weeks} weeks (now ${p.clothing[arg]} weeks).`;
         break;
       }
       case 'enroll':{
@@ -566,16 +748,24 @@ class LifeGame {
       }
       case 'work':{
         const j=this.getJob(p),shiftHours=a.hours;
-        const income=this.isClassic?this.classicShiftPay(p,shiftHours):this.shiftPay(p);
-        const garnishment=p.rentDebt>0?Math.min(p.rentDebt,Math.floor(income*(this.isClassic?.5:.25))):0;
-        const interest=this.isClassic&&garnishment>0&&garnishment<p.rentDebt?Math.min(2,income-garnishment):0;
-        p.cash+=income-garnishment-interest;p.rentDebt-=garnishment;
+        const classicQuote=this.isClassic?this.classicWorkQuote(p,shiftHours):null;
+        const income=classicQuote?classicQuote.gross:this.shiftPay(p);
+        // DOS rounds down each shift's partial gross; do not carry fractions.
+        if(this.isClassic)p.classicWageRemainder=0;
+        const garnishment=classicQuote?classicQuote.garnished:(p.rentDebt>0?Math.min(p.rentDebt,Math.floor(income*.25)):0);
+        const interest=classicQuote?classicQuote.fee:0;
+        if(classicQuote){
+          const settlement=ClassicTime.settlePaycheck(p.cash,p.rentDebt,classicQuote);
+          p.cash=settlement.cashAfter;p.rentDebt=settlement.rentDebtAfter;
+          p.classicPaycheckHistory.push({week:this.week,jobId:j.id,shiftUnits:shiftHours,
+            fullGross:classicQuote.fullGross,...settlement});
+          if(p.classicPaycheckHistory.length>16)p.classicPaycheckHistory.shift();
+        }else{p.cash+=income-garnishment-interest;p.rentDebt-=garnishment;}
         if(this.isClassic){
-          // One progression credit per six hours worked, including partial shifts.
-          // This prevents farming one XP/dependability per one-hour action.
-          const total=(p.classicWorkHourCredit||0)+shiftHours;
-          const completed=Math.floor(total/6);
-          p.classicWorkHourCredit=total%6;
+          // n108.sc grants one progression step for EACH successful work action,
+          // even when late in the turn; it does not pool six partial shifts.
+          const completed=ClassicTime.workProgress(shiftHours);
+          p.classicWorkHourCredit=0; // discard old approximation on next work
           p.workSessions+=completed;
           if(completed){
             const caps=this.classicWorkCaps(p,j);
@@ -586,8 +776,8 @@ class LifeGame {
         const energyCost=this.isClassic?Math.ceil(13*shiftHours/6):13;
         p.energy=clamp(p.energy-energyCost,0,100);p.happiness=clamp(p.happiness-(this.isClassic&&shiftHours<6?1:2),0,100);
         msg=`Worked ${shiftHours}h at ${this.jobWorkplace(j).label}: +${money(income-garnishment-interest)}${garnishment?` (${money(garnishment)} paid toward back rent${interest?`, $${interest} fee`:''})`:''}.`;
-        if(this.isClassic&&shiftHours<6)msg+=` Partial shift (${money(income)} gross); ${p.classicWorkHourCredit}/6h toward next work-stat credit.`;
-        if(this.isClassic&&p.dependability<this.jobRequirement(j).dependability)msg+=' Warning: your reliability is below this employer’s requirement.';
+        if(this.isClassic&&shiftHours<6)msg+=` Partial shift (${money(income)} gross), with one successful-work progression credit.`;
+        if(this.isClassic&&garnishment)msg+=' Garnishment and fee calculation remains provisional pending DOS paycheck traces.';
         break;
       }
       case 'classicPayRent':{
@@ -601,15 +791,27 @@ class LifeGame {
       case 'classicRentExtension':{
         if(!this.isClassic||!this.rentServicesOpen(p)||p.classicEverDebt||p.classicExtensionAttemptWeek===this.week)throw Error('Rent extension unavailable');
         p.classicExtensionAttemptWeek=this.week;
-        const chance=Math.max(25,100-p.classicExtensions*25);
-        if(this.rand()*100<chance){p.classicRentDueWeek=this.week+1;p.classicExtensions++;msg=`One-week rent extension approved. Deadline: week ${p.classicRentDueWeek}.`;}
+        const roll=p.classicExtensions===0?1:1+Math.floor(this.rand()*12);
+        const approved=Pass2.extensionApproved(p.classicExtensions,roll);
+        if(approved){p.classicRentDueWeek=this.week+1;p.classicExtensions++;msg=`One-week rent extension approved. Deadline: week ${p.classicRentDueWeek}.`;}
         else{p.happiness=clamp(p.happiness-1,0,100);msg='Rent extension refused. Pay this week or the account falls into arrears.';}
+        this.classicEvent(p,'rent-extension',msg,{roll,approved});
         break;
+      }
+      case 'classicMove':{
+        if(!this.isClassic||p.location!=='housing'||!['studio','apartment'].includes(arg))throw Error('Invalid Classic apartment');
+        p.home=arg;p.classicRent=arg==='studio'?325:332;
+        p.happiness=clamp(p.happiness+(arg==='apartment'?8:0),0,100);
+        msg=`Moved to ${arg==='studio'?'Low-Cost Housing':'Le Security Apartments'}. New rent: ${money(p.classicRent)} per month.`;break;
+      }
+      case 'classicRepair':{
+        if(!this.isClassic||p.location!=='tech'||!p.owned.includes(arg)||!p.classicEquipment?.[arg]?.broken)throw Error('Cannot repair this appliance');
+        p.classicEquipment[arg].broken=false;msg=`Repaired ${PAWN_NAMES[arg]} at Socket City.`;break;
       }
       case 'classicPawn':{
         if(!this.pawnEligible(p,arg)||this.classicPawnLots.length>=64)throw Error('Item cannot be pawned');
         const id='pawn-'+(++this.classicPawnSequence);
-        p.owned.splice(p.owned.indexOf(arg),1);
+        p.owned.splice(p.owned.indexOf(arg),1);delete p.classicEquipment[arg];
         const payout=pawnLoan(arg);
         this.classicPawnLots.push({id,ownerId:p.id,item:arg,payout,redemption:pawnRedemption(arg),dueWeek:this.week+2});
         p.cash+=payout;
@@ -619,14 +821,14 @@ class LifeGame {
       case 'classicRedeem':{
         const lot=this.pawnLot(arg);
         if(!lot||lot.ownerId!==p.id||this.week>lot.dueWeek||p.owned.includes(lot.item))throw Error('Pawn redemption unavailable');
-        p.owned.push(lot.item);
+        p.owned.push(lot.item);this.setEquipment(p,lot.item,'pawn');
         this.classicPawnLots=this.classicPawnLots.filter(x=>x.id!==lot.id);
         msg=`Redeemed your ${PAWN_NAMES[lot.item]}.`;break;
       }
       case 'classicBuyPawn':{
         const lot=this.pawnLot(arg);
         if(!lot||lot.ownerId===p.id||this.week<=lot.dueWeek||p.owned.includes(lot.item)||(lot.item==='freezer'&&!p.owned.includes('fridge')))throw Error('Unclaimed pawned item unavailable');
-        p.owned.push(lot.item);
+        p.owned.push(lot.item);this.setEquipment(p,lot.item,'pawn');
         this.classicPawnLots=this.classicPawnLots.filter(x=>x.id!==lot.id);
         msg=`Bought unclaimed ${PAWN_NAMES[lot.item]} from the pawn counter.`;break;
       }
@@ -666,12 +868,14 @@ class LifeGame {
       case 'sell':p.cash+=p.invested;msg=`Sold holdings for ${money(p.invested)}.`;p.invested=0;break;
       case 'upgrade':p.home=arg;p.happiness=clamp(p.happiness+(arg==='loft'?18:10),0,100);msg=`New home: ${D.dwellings[arg].name}! Remember the new monthly rent.`;break;
       case 'rentDebt':msg=`Cleared ${money(p.rentDebt)} of rent debt.`;p.rentDebt=0;break;
-      case 'buy':p.owned.push(arg);p.happiness=clamp(p.happiness+(arg==='formal'?7:arg==='casual'?4:5),0,100);msg=`Purchased ${arg}. A new door just opened.`;break;
+      case 'buy':p.owned.push(arg);this.setEquipment(p,arg,'specialty');p.happiness=clamp(p.happiness+(arg==='formal'?7:arg==='casual'?4:5),0,100);msg=`Purchased ${arg}. A new door just opened.`;break;
       case 'movie':p.happiness=clamp(p.happiness+18,0,100);p.energy=clamp(p.energy+4,0,100);msg='Great movie. No spoilers, just good vibes.';break;
       case 'pass':p.weekendPass=true;msg='Weekend adventure booked. Something to look forward to!';break;
       case 'checkup':p.energy=clamp(p.energy+42,0,100);p.hunger=0;p.happiness=clamp(p.happiness+5,0,100);msg='Feeling restored. You can face the week again.';break;
       default:return {ok:false,message:'Not implemented.'};
     }
+    const robbery=this.classicCrimeAfterAction(p,p.location);
+    if(robbery)msg+=' '+robbery;
     this.recordChange(p,before,msg,['work','freelance','raise'].includes(key)?'work':['deposit','withdraw','invest','sell'].includes(key)?'banking':['buy','clothes','groceries','bulkFood','meal','lottery'].includes(key)?'shopping':['upgrade','rentDebt'].includes(key)?'housing':['study','classicStudy','enroll','course'].includes(key)?'education':['favor','pulse'].includes(key)?'community':['classicPawn','classicRedeem','classicBuyPawn'].includes(key)?'pawn':'activity');
     if(key==='apply'||key==='upgrade'||((key==='study'||key==='classicStudy')&&msg.startsWith('Graduated'))||(key==='course'&&msg.startsWith('Course completed')))this.milestone(p,msg);
     this.log(msg, key==='apply'||key==='study'||key==='upgrade'?'good':'info',p.id);
@@ -722,23 +926,55 @@ class LifeGame {
   encounter(){if(!this.pendingEncounter)return null;const arc=D.storyArcs.find(a=>a.id===this.pendingEncounter.arcId);return arc?this.storyChapter(arc,this.pendingEncounter.chapter):D.encounters[this.pendingEncounter.placeId];}
   weekend(p) {
     const parts=[];
+    const foodBeforeMeal=p.groceries;
+    const hadMeal=p.fed;
     if(!p.fed){
       if(p.groceries>0){p.groceries--;if(this.isClassic)p.hunger=Math.max(0,p.hunger-1);parts.push('A pantry meal kept hunger away.');}
       else {p.hunger=clamp(p.hunger+1,0,4);p.happiness=clamp(p.happiness-8,0,100);parts.push('You went hungry. Next week will be harder.');}
     }else p.hunger=Math.max(0,p.hunger-1);
     if(this.isClassic){
+      const shortage=ClassicWeekly.foodShortageTrace(hadMeal,foodBeforeMeal,p.groceries,p.hunger);
+      if(shortage.shortage)this.classicEvent(p,'food-shortage','No meal or pantry portion; hunger increased',shortage);
+      const foodBefore=p.groceries,fridge=this.ownsWorking(p,'fridge'),freezer=this.ownsWorking(p,'freezer');
       const capacity=this.classicFoodCapacity(p);
       if(p.groceries>capacity){p.groceries=capacity;parts.push('Extra food spoiled beyond storage capacity.');}
-      if(!p.owned.includes('fridge')&&p.groceries>0){
-        p.groceries=0;const fee=Math.min(p.cash,25);p.cash-=fee;
-        parts.push(`Food spoiled without refrigeration; medical costs ${money(fee)} (approximate rule).`);
+      if(!fridge&&p.groceries>0){
+        // State 10 confirms a spoilage risk, but the original probability is not
+        // yet recovered. Keep the existing guaranteed-spoilage compatibility rule;
+        // do not charge a medical fee that does not appear in the source evidence.
+        p.groceries=0;
+        parts.push('Unrefrigerated food spoiled (provisional chance).');
       }
-    }else if(!p.owned.includes('fridge')&&p.groceries>0){p.groceries=0;parts.push('Unused fresh groceries spoiled without a fridge.');}
-    if(p.weekendPass){p.happiness=clamp(p.happiness+13,0,100);parts.push('An amazing weekend adventure lifted your spirits.');p.weekendPass=false;}
-    if(p.lottery){for(let n=0;n<p.lottery;n++){if(this.rand()<.10){const win=this.rand()<.10?450:95;p.cash+=win;parts.push(`Lottery winner! You collected ${money(win)}.`);}}
-      p.lottery=0;
+      const storage=ClassicWeekly.foodStorageTrace(foodBefore,p.groceries,fridge,freezer);
+      if(storage.lost)this.classicEvent(p,'food-storage',`Lost ${storage.lost} food portions during storage check`,storage);
+    }else if(!this.ownsWorking(p,'fridge')&&p.groceries>0){p.groceries=0;parts.push('Unused fresh groceries spoiled without a fridge.');}
+    if(p.classicWeekendTicket&&this.isClassic){
+      const outings={baseball:['You cheered at the baseball game.',5],concert:['Live music made for a memorable weekend.',7],theater:['An evening at the theater lifted your spirits.',6]};
+      const event=outings[p.classicWeekendTicket];
+      if(event){p.happiness=clamp(p.happiness+event[1],0,100);parts.push(event[0]+' Your ticket was used.');}
+      p.classicWeekendTicket=null;
     }
-    if(p.owned.includes('computer')&&this.rand()<.33){p.bank+=40;parts.push('Your tiny digital project earned $40.');}
+    if(p.weekendPass){p.happiness=clamp(p.happiness+13,0,100);parts.push('An amazing weekend adventure lifted your spirits.');p.weekendPass=false;}
+    if(p.lottery){
+      if(this.isClassic){
+        const tickets=p.lottery,roll=Math.floor(this.rand()*501),prize=Pass2.lotteryPrize(tickets,roll);
+        p.cash+=prize;p.lottery=0;
+        this.classicEvent(p,'lottery',prize?`Won ${money(prize)} with ${tickets} tickets`:`No win with ${tickets} tickets`,{sourceState:ClassicWeekly.SOURCE_STATES.lottery,tickets,roll,prize});
+        parts.push(prize?`Lottery win: ${money(prize)}! (${tickets} tickets, roll ${roll}/500).`:`Lottery: ${tickets} tickets did not win (roll ${roll}/500).`);
+      }else{
+        for(let n=0;n<p.lottery;n++)if(this.rand()<.10){const win=this.rand()<.10?450:95;p.cash+=win;parts.push(`Lottery winner! You collected ${money(win)}.`);}
+        p.lottery=0;
+      }
+    }
+    if(this.isClassic){
+      // startTrn.sc state 4: appliance 29, one-in-seven chance, $20–$100 CASH.
+      // This replaces the prototype's one-in-three fixed BANK deposit.
+      // Broken or pawned appliances cannot perform new work in the compatibility economy.
+      const bonus=ClassicWeekly.computerBonus(ClassicHousehold.inspect(p).computer,()=>this.rand());
+      if(bonus.awarded){p.cash+=bonus.awarded;parts.push(`Computer project earned ${money(bonus.awarded)}.`);
+        this.classicEvent(p,'computer-bonus',`Owned computer earned ${money(bonus.awarded)}`,
+          {sourceState:bonus.sourceState,amount:bonus.awarded});}
+    }else if(this.ownsWorking(p,'computer')&&this.rand()<.33){p.bank+=40;parts.push('Your tiny digital project earned $40.');}
     if(p.cash>25){
       const events=[{text:'A friend invited you for coffee.',cash:12,happy:4},{text:'Your favorite band played downtown.',cash:26,happy:7},
         {text:'You picked up a hobby.',cash:18,happy:5},{text:'A surprise subscription renewed.',cash:15,happy:-2},
@@ -747,60 +983,118 @@ class LifeGame {
       p.cash-=cost;p.happiness=clamp(p.happiness+event.happy,0,100);
       parts.push(`${event.text}${cost?` -${money(cost)}`:''}`);
     }
-    if(p.home==='studio'&&this.rand()<.08&&p.owned.length>0){
+    if(!this.isClassic&&p.home==='studio'&&this.rand()<.08&&p.owned.length>0){
       const eligible=p.owned.filter(x=>['fridge','computer'].includes(x));
       if(eligible.length){const item=eligible[Math.floor(this.rand()*eligible.length)];p.owned=p.owned.filter(x=>x!==item);parts.push(`A break-in took your ${item}. Better security may help.`);}
     }
     return parts;
   }
+  classicTurnEvent(phase,playerId='system',amount=0){
+    if(this.isClassic)this.classicTurnJournal=ClassicTurn.append(this.classicTurnJournal,{week:this.week,phase,playerId,amount});
+  }
+  classicCloseTurn(p){
+    if(!this.isClassic)return;
+    const close=ClassicTurn.closeTurn(this.week,p.dependability,p.classicLastClosedWeek);
+    if(!close.applied)return;
+    p.dependability=close.after;
+    p.classicLastClosedWeek=close.lastClosedWeek;
+    this.classicTurnEvent('turn-close',p.id,close.decay);
+  }
   newWeek() {
     this.week++;
-    this.bulletin=D.headlines[(this.week-1)%D.headlines.length];
     if(this.isClassic){
-      // Original markets have six per-instrument prices. Exact Sierra random formula is unverified.
-      const drift=(this.economy-1)*0.08;
+      // One seeded economy update per whole player cycle. Keep the Pass-2
+      // goods-index alias for old saves, price quotes, and scenario tooling.
+      this.classicEconomicIndices.readings.goods=this.classicGoodsIndex;
+      const before=this.classicEconomicIndices.readings;
+      const update=ClassicEconomy.advance(this.classicEconomicIndices,()=>this.rand());
+      this.classicEconomicIndices=update.state;
+      this.classicGoodsIndex=update.state.readings.goods;
+      const pulse=ClassicEvents.advance(this.classicEconomicPulse,update.state.readings.general,update.changes.general,this.week,()=>this.rand());
+      this.classicEconomicPulse=pulse.state;
+      if(pulse.phaseChanged){
+        const headline={downturn:'Economic downturn: hiring and spending look uncertain.',recovery:'Signs of economic recovery emerge.',boom:'A buoyant economy lifts market confidence.',stable:'The Classic economy steadies.'}[pulse.state.phase];
+        this.classicEvent(null,'economic-headline',headline,{phase:pulse.state.phase});
+        this.log(headline,pulse.state.phase==='downturn'?'warn':'news','system');
+        // DOS: economic headline affects happiness, exact magnitude and
+        // investment multiplier still pending emulator traces.
+        if(pulse.state.phase==='recovery'||pulse.state.phase==='boom')for(const person of this.players){
+          const invested=this.classicStockValue(person)>0;
+          person.happiness=clamp(person.happiness+(invested?3:2),0,100);
+        }
+      }
+      if(pulse.strength){
+        this.classicEvent(null,'economic-crisis',`Economic crisis strength ${pulse.strength}`,{strength:pulse.strength});
+        this.classicApplyScandal(pulse.strength);
+      }
+      this.classicEvent(null,'economic-indices',`Markets: economy ${before.general} -> ${update.state.readings.general}; goods ${before.goods} -> ${this.classicGoodsIndex}`,
+        {beforeGeneral:before.general,readingGeneral:update.state.readings.general,beforeGoods:before.goods,readingGoods:this.classicGoodsIndex});
+      // Instruments share the same index graph. Price ratios preserve the
+      // current holdings/quotes when a v0.5.29 save first migrates.
       for(const stock of D.classicStocks){
         if(stock.id==='tbills')continue;
-        const previous=this.classicStockPrices[stock.id];
-        const next=Math.round(previous*(1+drift+(this.rand()-.5)*.16));
-        this.classicStockPrices[stock.id]=clamp(next,Math.floor(stock.base*.5),Math.ceil(stock.base*2.5));
+        this.classicStockPrices[stock.id]=ClassicEconomy.marketPrice(this.classicStockPrices[stock.id],before[stock.id],update.state.readings[stock.id],stock.base);
       }
     }
+    this.classicTurnEvent('economy');
+    this.bulletin=D.headlines[(this.week-1)%D.headlines.length];
     if(this.week%4===1){
-      const old=this.economy;this.economy=clamp(Math.round((old+(this.rand()-.46)*.12)*100)/100,.84,1.24);
+      const old=this.economy;if(!this.isClassic)this.economy=clamp(Math.round((old+(this.rand()-.46)*.12)*100)/100,.84,1.24);
       const choices=D.cityEvents.filter(e=>e.id!==this.cityEventId);
       this.cityEventId=choices[Math.floor(this.rand()*choices.length)].id;
       this.cityEventStart=this.week;
       if(!this.isClassic)this.log(`CITY PULSE: ${this.cityEvent.title}. ${this.cityEvent.description}`,'news','system');
-      this.log(`New month. The local economy is ${this.economy>old?'heating up':this.economy<old?'cooling off':'holding steady'} (${Math.round(this.economy*100)}%).`,'news','system');
+      if(!this.isClassic)this.log(`New month. The local economy is ${this.economy>old?'heating up':this.economy<old?'cooling off':'holding steady'} (${Math.round(this.economy*100)}%).`,'news','system');
     }
     for(const p of this.players){
+      if(this.isClassic){
+        const relaxation=ClassicWeekly.relaxationStep(p.classicRelaxation,false);
+        p.classicRelaxation=relaxation.after;
+        // Keep state 6 independently visible without duplicating housing/theft RNG.
+        this.classicEvent(p,'relaxation',`Relaxation ${relaxation.before} -> ${relaxation.after}`,relaxation);
+      }
+      if(this.isClassic)p.classicUnemployedWeeks=p.job?0:Math.min(10000,(p.classicUnemployedWeeks||0)+1);
       // Original-inspired weekly wardrobe wear; each garment ages regardless of what was worn.
       for(const garment of Object.keys(D.clothing)){
         const old=this.clothingWeeks(p,garment);
         p.clothing[garment]=Math.max(0,old-1);
+        if(this.isClassic){
+          const wear=ClassicWeekly.clothingWarning(old,p.clothing[garment]);
+          if(wear.oneWeekRemaining||wear.expired)
+            this.classicEvent(p,'clothing-warning',`${D.clothing[garment].name}: ${wear.expired?'expired':'one week remaining'}`,
+              {sourceState:wear.sourceState,garment,weeks:p.clothing[garment],expired:wear.expired});
+        }
         if(old>1&&p.clothing[garment]===1)this.log(`${p.name}'s ${D.clothing[garment].name.toLowerCase()} have one week left.`, 'warn',p.id);
         if(old===1)this.log(`${p.name}'s ${D.clothing[garment].name.toLowerCase()} have worn out. Buy a replacement before working.`, 'warn',p.id);
       }
       const beforeWeekend=this.accounts(p);
       if(this.isClassic)this.syncClassicInvested(p);
       const notes=this.weekend(p);
+      if(this.isClassic){this.classicEquipmentBreakage(p,notes);this.classicBurglar(p,notes);}
+      this.classicTurnEvent('living',p.id);
       this.recordChange(p,beforeWeekend,'Weekend living expenses and windfalls','living');
       if(this.isClassic)this.classicEmergencyRelief(p,notes);
       if(this.isClassic){
         // Rent becomes due at the end of week 4, 8, 12...; a granted extension shifts just this deadline.
-        if(this.week>p.classicRentDueWeek){
+        const assessment=ClassicTurn.rentAssessment(this.week,p.classicRentDueWeek,p.classicRent,p.classicLastRentChargeWeek);
+        if(assessment.due){
           const beforeRent=this.accounts(p);
-          p.rentDebt+=p.classicRent;p.classicRentDueWeek+=4;p.classicEverDebt=true;
+          p.rentDebt+=assessment.charge;p.classicRentDueWeek=assessment.nextDueWeek;
+          p.classicLastRentChargeWeek=assessment.lastChargedWeek;p.classicEverDebt=true;
           p.happiness=clamp(p.happiness-7,0,100);
-          notes.push(`${money(p.classicRent)} unpaid rent became debt. Future wages may be garnished.`);
+          notes.push(`${money(assessment.charge)} unpaid rent became debt. Future wages may be garnished.`);
           this.recordChange(p,beforeRent,'Unpaid Classic rent','housing');
         }
+        this.classicTurnEvent('rent',p.id,assessment.charge);
       }
-      if(this.isClassic&&this.week%4===1&&p.debt>0){
-        const dueMonth=Math.floor((this.week-1)/4);
-        if(p.classicLoanPaidThrough<dueMonth){p.classicLoanDefaults++;p.happiness=clamp(p.happiness-3,0,100);notes.push('Bank loan payment missed: -3 happiness and worse future credit.');}
+      if(this.isClassic){
+        const loan=ClassicWeekly.loanDueTrace(this.week,p.classicLoanPaidThrough,p.debt);
+        if(loan.due){
+          if(loan.missed){p.classicLoanDefaults++;p.happiness=clamp(p.happiness-3,0,100);notes.push('Bank loan payment missed: -3 happiness and worse future credit.');}
+          this.classicEvent(p,'loan-due',loan.missed?'Loan payment missed':'Loan schedule covered',loan);
+        }
       }
+      this.classicTurnEvent('loan',p.id);
       if(this.week%4===1){
         if(!this.isClassic){
           const beforeRent=this.accounts(p);
@@ -819,24 +1113,328 @@ class LifeGame {
       p.hours=clamp(this.rules.hours-(p.hunger>0?p.hunger*3:0),14,this.rules.hours);
       p.energy=clamp(p.energy+38-p.hunger*4,0,100);
       p.happiness=clamp(p.happiness-2+D.dwellings[p.home].comfort,0,100);
-      p.dependability=clamp(p.dependability-this.rules.dependabilityDecay,0,100);p.fed=false;p.weekActions=0;
+      if(!this.isClassic)p.dependability=clamp(p.dependability-this.rules.dependabilityDecay,0,100);
+      p.fed=false;p.weekActions=0;p.classicChoicesThisWeek=0;
+      this.classicTurnEvent('reset',p.id);
       this.recordHistory(p);
       if(notes.length)this.log(`${p.name}: ${notes.join(' ')}`,p.hunger>0?'warn':'news',p.id);
     }
+    this.classicTurnEvent('week-ready');
     this.log(`It's week ${this.week}. ${this.rules.hours} possible hours, infinite ways to spend them.`,'good','system');
     this.checkWin();
   }
   endTurn(){
     if(this.pendingEncounter)return {ok:false,message:'Finish the conversation before ending your week.'};
     if(this.winner)return {ok:false,message:'The game has ended.'};
-    const who=this.player.name;
+    const endingPlayer=this.player,who=endingPlayer.name;
+    this.classicCloseTurn(endingPlayer);
     this.active++;
     if(this.active>=this.players.length){this.active=0;this.newWeek();}
     this.log(`${who} finished their week.`,'muted','system');
     // Keep the human turn visible and simulate any intervening AI turns immediately.
     let guard=0;
-    while(this.player.isAI&&!this.winner&&guard++<this.players.length){this.runAI();this.active++;if(this.active>=this.players.length){this.active=0;this.newWeek();}}
+    while(this.player.isAI&&!this.winner&&guard++<this.players.length){
+      const rival=this.player;
+      this.runAI();this.classicCloseTurn(rival);
+      this.active++;if(this.active>=this.players.length){this.active=0;this.newWeek();}
+    }
     return {ok:true,message:`A new turn begins: ${this.player.name}.`};
+  }
+  // Classic opponent routing uses the same original marble indices as the human.
+  // Evaluate a sequence of stops without mutating the world or spending random numbers.
+  classicItinerary(origin,stops,hours=this.rules.hours){
+    if(!this.isClassic)throw Error('Original itinerary is Classic-only');
+    if(!this.getPlace(origin)||stops.some(id=>!this.getPlace(id)))throw Error('Unknown original stop');
+    let from=origin,steps=0,travelHours=0,estimatedTicks=0;
+    for(const to of stops){
+      const leg=classicRouteGraph.plan(from,to);steps+=leg.steps;travelHours+=this.travelCost(from,to);
+      estimatedTicks+=ClassicTime.originalTravelTicks(leg.steps);from=to;
+    }
+    return {stops:stops.slice(),steps,travelHours,estimatedTicks,feasible:travelHours<=hours};
+  }
+  classicBestItinerary(origin,stops,hours=this.rules.hours){
+    if(stops.length>3)throw Error('Classic opponent only plans up to three stops');
+    const permutations=list=>list.length<2?[list]:list.flatMap((value,i)=>permutations(list.filter((_,j)=>j!==i)).map(other=>[value,...other]));
+    const plans=permutations([...new Set(stops)]).map(sequence=>this.classicItinerary(origin,sequence,hours));
+    return plans.filter(p=>p.feasible).sort((a,b)=>a.estimatedTicks-b.estimatedTicks||a.travelHours-b.travelHours||a.steps-b.steps||a.stops.join('|').localeCompare(b.stops.join('|')))[0]||null;
+  }
+  // Non-mutating two-week survival ledger. Time and bank accessibility are
+  // modelled separately: the Classic bank only withdraws in $100 portions.
+  // Food without a working fridge must be bought just in time; longer-horizon
+  // supplies are forecast costs, not imaginary stored groceries.
+  classicSurvivalBudget(p=this.player){
+    if(!this.isClassic)throw Error('Classic survival budget unavailable in Modern');
+    const job=this.getJob(p);
+    const remainingUntilRent=Math.max(0,p.classicRentDueWeek-this.week);
+    const foodNeeded=!p.fed&&p.groceries<=0;
+    const foodReserve=foodNeeded?this.classicFoodPrice(1):0;
+    const rentDue=this.rentServicesOpen(p);
+    const rentReserve=rentDue?p.classicRent:Math.min(p.classicRent,Math.ceil(p.classicRent*.1*Math.max(1,4-remainingUntilRent)));
+    const outfit=job&&this.clothingSummary(p).filter(x=>D.clothing[x.id].rank>=D.clothing[job.clothes].rank).every(x=>x.weeks<=2)
+      ?this.cheapestClothingOffer(job):null;
+    const uniformReserve=outfit?this.price(outfit.cost,'retail'):0;
+    const withdrawable=Math.floor(p.bank/100)*100;
+    const liquidity=p.cash+withdrawable;
+    const downturnBuffer=this.classicEconomicPulse.phase==='downturn'?this.classicFoodPrice(1):0;
+    const reserve=foodReserve+rentReserve+uniformReserve+downturnBuffer;
+    const rentBill=rentDue?p.classicRent:0;
+    const immediateBills=foodReserve+rentBill+uniformReserve;
+    // Calendar projection: food required on the next two weekends, using at
+    // most what is already in the pantry and assuming no new fridge purchase.
+    const storedFood=this.ownsWorking(p,'fridge')?p.groceries:Math.min(1,p.groceries);
+    const neededFood=Math.max(0,2-storedFood-(p.fed?1:0));
+    // Advisory projection only. Source-derived prices; trend drift remains a
+    // compatibility model. Do not substitute projected prices for shop quotes.
+    const expectedGoodsIndex=clamp(this.classicGoodsIndex+this.classicEconomicIndices.momentum.goods*2,10,190);
+    const projectedFoodUnit=Pass2.goodsPrice(55,expectedGoodsIndex);
+    const twoWeekFood=neededFood*Math.max(this.classicFoodPrice(1),projectedFoodUnit);
+    const twoWeekRent=(remainingUntilRent<=2?p.classicRent:0)+p.rentDebt;
+    const twoWeekNeeds=twoWeekFood+twoWeekRent+uniformReserve+downturnBuffer;
+    // Contracted wages, not a newly advertised market wage. For arrears,
+    // model two successive net settlements WITHOUT touching the real player.
+    let projectedShiftGross=0,projectedShiftIncome=0,projectedTwoShiftTakeHome=0;
+    if(job&&this.isDressedFor(p,job)){
+      const first=ClassicTime.paycheck(p.wage,6,p.rentDebt);
+      const second=ClassicTime.paycheck(p.wage,6,first.arrearsAfter);
+      projectedShiftGross=first.gross;projectedShiftIncome=first.net;
+      projectedTwoShiftTakeHome=first.net+second.net;
+    }
+    return {foodNeeded,foodReserve,rentDue,rentReserve,uniformReserve,downturnBuffer,reserve,immediateBills,
+      liquidity,withdrawable,cashShortfall:Math.max(0,immediateBills-p.cash),
+      twoWeekFood,twoWeekRent,twoWeekNeeds,expectedGoodsIndex,projectedFoodUnit,projectedShiftGross,projectedShiftIncome,projectedTwoShiftTakeHome,
+      projectedGap:Math.max(0,twoWeekNeeds-liquidity),projectedGapAfterWork:Math.max(0,twoWeekNeeds-liquidity-projectedTwoShiftTakeHome),remainingUntilRent};
+  }
+  // Debt clearance must not consume this week's food, due rent or earning
+  // capacity. This is a compatibility safety policy, NOT a recovered SCI rule.
+  classicCanClearArrears(p=this.player){
+    if(!this.isClassic||p.rentDebt<=0||!this.rentServicesOpen(p))return false;
+    const budget=this.classicSurvivalBudget(p);
+    const protectedCash=budget.foodReserve+(budget.rentDue?p.classicRent:0)+budget.uniformReserve+budget.downturnBuffer;
+    return p.cash>=p.rentDebt+protectedCash;
+  }
+  // All eleven DOS degrees are reachable via their original prerequisite IDs.
+  // Rank currently available studies by real jobs they can unlock (or move
+  // closer to), not by the arbitrary ordering of the university UI.
+  classicCareerPlan(p=this.player){
+    if(!this.isClassic)throw Error('Classic career plan unavailable in Modern');
+    const current=this.getJob(p),baseWage=current?p.wage:0;
+    const available=D.classicDegrees.filter(d=>!p.classicDegrees.includes(d.id)&&this.classicDegreeAvailable(p,d));
+    const courses=available.map(degree=>{
+      const candidates=this.jobs.filter(j=>j.degrees.includes(degree.id)).map(job=>{
+        const missing=job.degrees.filter(id=>id!==degree.id&&!p.classicDegrees.includes(id)).length;
+        const expGap=Math.max(0,job.experience-p.experience);
+        const reliabilityGap=Math.max(0,job.dependability-p.dependability);
+        const uplift=Math.max(0,this.offeredWage(job)-baseWage);
+        const route=classicRouteGraph.plan('university',job.place);
+        const score=uplift/(1+missing*2+expGap/20+reliabilityGap/20)-route.steps*.02;
+        return {jobId:job.id,jobNum:job.originalJobNum,otherDegrees:missing,
+          experienceGap:expGap,dependabilityGap:reliabilityGap,
+          wageUplift:uplift,score:Number(score.toFixed(3))};
+      }).sort((a,b)=>b.score-a.score||a.jobNum-b.jobNum);
+      // A course can also be a prerequisite for another course in a longer job track.
+      const later=D.classicDegrees.filter(d=>d.requires.includes(degree.id)&&!p.classicDegrees.includes(d.id)).length;
+      return {degreeId:degree.id,originalDegreeId:degree.originalDegreeId,
+        expectedScore:Number(((candidates[0]?.score||0)+later*2).toFixed(3)),
+        unlocks:candidates};
+    }).sort((a,b)=>b.expectedScore-a.expectedScore||a.originalDegreeId-b.originalDegreeId);
+    return {courses,recommendedDegree:courses[0]?D.classicDegrees.find(d=>d.id===courses[0].degreeId):null};
+  }
+  // Long-unemployment recovery uses the legitimate original Cook opening before
+  // speculative promotions. Original job 44 is exempt only from the hiring DICE,
+  // never from the qualification gates or normal application time. This 2-week
+  // fallback threshold is a Life Loop approximation, not a recovered DOS value.
+  classicRecoveryOpening(p=this.player){
+    if(!this.isClassic)throw Error('Classic-only employment recovery');
+    if(p.job)return null;
+    const candidates=this.classicAIPlan(p);
+    const lastRejected=p.classicRejectedOpenings||{};
+    const fallback=this.jobs.find(j=>j.originalOccupationIndex===44&&
+      !this.jobReasons(p,j).length&&lastRejected[j.id]!==this.week);
+    if((p.classicUnemployedWeeks||0)>=2||(p.classicJobSearchFailures||0)>=2){
+      if(fallback)return fallback;
+    }
+    if(candidates.bestJob)return candidates.bestJob;
+    return fallback||null;
+  }
+  // Candidate branches from WhereShouldIGo.sc: 28,29,30,32,37,44,46.
+  // Branch IDs/order are source-referenced; spending limits and pace gates are
+  // explicitly provisional decisions for this version's interactive economy.
+  // Pure, so browser diagnostics never advance the shared seeded simulation.
+  classicCareerDecision(p=this.player){
+    if(!this.isClassic)throw Error('Classic-only Jones career planner');
+    const job=this.getJob(p),budget=this.classicSurvivalBudget(p);
+    const remaining=p.cash-budget.reserve;
+    const essentialsShort=(budget.foodNeeded&&p.cash<this.classicFoodPrice(1))||
+      (budget.rentDue&&p.cash<p.classicRent);
+    if(essentialsShort)return null;
+    // Raising a contracted wage only makes sense above the CURRENT rate.
+    if(job&&p.workSessions>=2&&p.raiseWeek<=this.week-4&&
+       p.dependability>=this.jobRequirement(job).dependability+5*(p.classicRaises||0)&&
+       this.offeredWage(job)>p.wage&&p.hours>=4){
+      return {id:28,reason:'DOS career #28: negotiate a higher contracted wage',dest:'agency',action:'raise',hours:4};
+    }
+    // A promotion must beat the current wage AND leave enough for necessities.
+    if(job&&remaining>0&&p.hours>=this.rules.applicationHours+1){
+      const planned=this.classicAIPlan(p);
+      const upgrade=planned.bestJob;
+      if(upgrade&&this.offeredWage(upgrade)>p.wage&&!this.jobReasons(p,upgrade).length){
+        const outfit=this.isDressedFor(p,upgrade)?null:this.cheapestClothingOffer(upgrade);
+        if(!outfit){return {id:29,reason:'DOS career #29: pursue a qualified better-paying job',dest:'agency',action:`apply:${upgrade.id}`,hours:this.rules.applicationHours};}
+      }
+    }
+    // When the current occupation needs experience or dependability, take
+    // productive shifts before committing time and money to optional study.
+    if(job&&this.isDressedFor(p,job)&&p.energy>=30&&p.hours>=6&&
+      (p.workSessions<2||p.dependability<this.jobRequirement(job).dependability+8)){
+      return {id:30,reason:'DOS career #30: build employment experience and reliability',dest:this.jobWorkplace(job).place,action:'work',hours:2};
+    }
+    if((p.energy<=18||p.classicRelaxation<=10)&&p.hours>=6){
+      return {id:32,reason:'DOS needs #32: exhausted; recover at home',dest:'home',action:'relax',hours:6};
+    }
+    if(p.happiness<35&&p.energy<45&&p.hours>=6){
+      return {id:37,reason:'DOS needs #37: rest before further work',dest:'home',action:'relax',hours:6};
+    }
+    // Prefer finishing an active qualification; otherwise choose a diploma
+    // that advances an actual qualified job path. Never consume rent/food cash.
+    const course=this.classicCareerPlan(p).recommendedDegree;
+    if(course&&p.energy>=34&&p.hours>=6&&p.workSessions>=2&&
+       (this.week%2===0||p.classicEnrolled.includes(course.id))&&remaining>250){
+      const enrolled=p.classicEnrolled.includes(course.id);
+      if(enrolled||p.classicEnrollmentCredits>0||p.cash-budget.reserve>=300){
+        return {id:44,reason:`DOS education #44: ${enrolled?'continue':'begin'} ${course.name}`,dest:'university',
+          action:enrolled||p.classicEnrollmentCredits>0?`classicStudy:${course.id}`:'enroll',hours:enrolled||p.classicEnrollmentCredits>0?Math.min(6,p.hours):0};
+      }
+    }
+    if(job&&this.isDressedFor(p,job)&&p.energy>=4&&p.hours>=2&&
+       (budget.projectedGap>0||p.cash<budget.twoWeekNeeds+300)){
+      return {id:46,reason:'DOS work #46: earn toward a weekly safety reserve',dest:this.jobWorkplace(job).place,action:'work',hours:2};
+    }
+    return null;
+  }
+  // Ordered, source-tagged Classic Jones priority subset. This does not claim
+  // every DOS branch is emulated; the existing career planner handles fallback.
+  // Pure: a GUI/debugger can inspect a decision without advancing the RNG.
+  classicSourceDecision(p=this.player){
+    if(!this.isClassic)throw Error('Classic-only DOS decision planner');
+    const job=this.getJob(p),foodMissing=!p.fed&&p.groceries===0;
+    const foodCost=this.classicFoodPrice(1),rentDue=this.rentServicesOpen(p);
+    const clothes=job&&!this.isDressedFor(p,job)?this.cheapestClothingOffer(job):null;
+    const collateral=Object.keys(PAWN_VALUES).filter(id=>this.pawnEligible(p,id))
+      .sort((a,b)=>pawnLoan(b)-pawnLoan(a))[0];
+    const candidate=(id,reason,dest,action,requiredActionHours=0)=>{
+      if((p.classicChoicesThisWeek||0)>=CLASSIC_WEEKLY_ACTION_LIMIT)return null;
+      // Reserve enough post-arrival clock for the *action*, not only the trip.
+      // Free bank transfers really do cost zero; work requires at least one unit.
+      const minimumActionHours=action==='work'?1:requiredActionHours;
+      const location=this.getPlace(dest);
+      if(!location)return null;
+      const leg=classicRouteGraph.plan(p.location,dest);
+      const time=this.travelCost(p.location,dest);
+      if(time+minimumActionHours>p.hours)return null;
+      return {ruleId:id,decisionTag:id,reason,placeNum:location.placeNum,requiredActionHours:minimumActionHours,
+        destination:dest,actionCode:action,travelSteps:leg.steps,
+        predictedTimeTicks:leg.steps+(p.location===dest?0:40),
+        travelHours:time,sourceScript:'WhereShouldIGo.sc',sourceType:'representative-branch'};
+    };
+    if(!job){
+      if(p.location!=='agency')return candidate(1,'Unemployed: travel to ACNE (#6) for employment','agency','visit-employment');
+      // Finish the source's first-priority employment visit BEFORE the food
+      // branch sends an unemployed rival back out of the office. Otherwise
+      // layoffs can create an infinite agency <-> food-market trip loop.
+      const opening=this.classicRecoveryOpening(p);
+      if(opening&&p.hours>=this.rules.applicationHours)
+        return candidate(1,`Unemployed ${p.classicUnemployedWeeks||0} weeks: apply for ${opening.name} at ACNE`,'agency',`apply:${opening.id}`,this.rules.applicationHours);
+    }
+    if(rentDue&&p.cash>=p.classicRent+(foodMissing?foodCost:0))
+      return candidate(7,'Monthly rent is affordable', 'housing','classicPayRent');
+    if(rentDue&&p.cash<p.classicRent&&p.bank>=100)
+      return candidate(9,'Withdraw accessible savings for rent','bank','withdraw:100');
+    if(foodMissing&&p.cash<foodCost&&p.bank>=100)
+      return candidate(22,'Withdraw savings before going hungry','bank','withdraw:100');
+    if(clothes&&p.cash>=this.price(clothes.cost,'retail'))
+      return candidate(14,'Replace missing uniform before work',clothes.venue,`clothes:${clothes.id}:${clothes.venue}`);
+    if(foodMissing&&p.cash>=foodCost)
+      return candidate(24,'Purchase essential weekly food', 'cinema','classicFresh:1');
+    if(foodMissing&&p.cash<foodCost&&job&&this.isDressedFor(p,job)&&p.energy>=4)
+      return candidate(21,'Work to fund food before optional errands',this.jobWorkplace(job).place,'work');
+    if(rentDue&&p.cash<p.classicRent&&job&&this.isDressedFor(p,job)&&p.energy>=4)
+      return candidate(8,'Work toward overdue rent',this.jobWorkplace(job).place,'work');
+    if(collateral&&foodMissing&&p.cash<foodCost&&!p.bank&&(!job||!this.isDressedFor(p,job)||p.energy<4))
+      return candidate(23,'Pawn a durable asset to prevent hunger','pawn',`classicPawn:${collateral}`);
+    if(rentDue&&p.cash<p.classicRent&&p.classicExtensionAttemptWeek!==this.week&&!p.classicEverDebt)
+      return candidate(10,'Request one rent extension','housing','classicRentExtension');
+    if(collateral&&rentDue&&p.cash<p.classicRent&&p.bank<100)
+      return candidate(11,'Pawn a durable asset for rent shortfall','pawn',`classicPawn:${collateral}`);
+    if(job&&!this.isDressedFor(p,job)&&p.bank>=100)
+      return candidate(12,'Withdraw funds for job clothing','bank','withdraw:100');
+    // A uniform about to expire is a source-family #20 necessity, not a
+    // discretionary purchase. Preserve it before enrolling in further courses.
+    if(job&&this.isDressedFor(p,job)){
+      const rank=D.clothing[job.clothes].rank;
+      const usableWeeks=this.clothingSummary(p).filter(x=>D.clothing[x.id].rank>=rank).reduce((n,x)=>Math.max(n,x.weeks),0);
+      const renewal=this.cheapestClothingOffer(job);
+      if(usableWeeks<=2&&renewal&&this.clothingWeeks(p,renewal.id)<=2&&
+        p.cash>=this.price(renewal.cost,'retail')+foodCost+(rentDue?p.classicRent:0))
+        return candidate(20,'DOS clothing #20: renew expiring work uniform',renewal.venue,`clothes:${renewal.id}:${renewal.venue}`,1);
+    }
+    const career=this.classicCareerDecision(p);
+    return career?candidate(career.id,career.reason,career.dest,career.action,career.hours):null;
+  }
+  classicTraceDecision(p,decision,outcome){
+    if(!this.isClassic)return;
+    this.classicDecisionTrace.push({week:this.week,playerId:p.id,ruleId:decision.ruleId,
+      placeNum:decision.placeNum,actionCode:decision.actionCode,
+      predictedTimeTicks:decision.predictedTimeTicks,
+      reason:decision.reason,outcome});
+    if(this.classicDecisionTrace.length>64)this.classicDecisionTrace.shift();
+  }
+  classicAIPlan(p=this.player){
+    if(!this.isClassic)throw Error('Classic opponent plan unavailable in Modern');
+    const current=this.getJob(p),foodCost=this.classicFoodPrice(1);
+    const budget=this.classicSurvivalBudget(p);
+    const {foodNeeded,foodReserve,rentDue,rentReserve,reserve}=budget;
+    const urgent=[];
+    if(rentDue&&p.cash>=p.classicRent+foodReserve)urgent.push('housing');
+    if(foodNeeded&&p.cash>=foodCost)urgent.push('cinema');
+    // Resolve urgent errands by the original ring distance, not store grid cells.
+    const urgentOrder=this.classicBestItinerary(p.location,urgent,p.hours)?.stops||urgent;
+    const jobCandidates=[];
+    for(const job of this.jobs){
+      if(job.id===p.job||this.jobReasons(p,job).length||p.classicRejectedOpenings[job.id]===this.week)continue;
+      const workplace=this.jobWorkplace(job).place;
+      const outfit=this.isDressedFor(p,job)?null:this.cheapestClothingOffer(job);
+      const outfitPrice=outfit?this.price(outfit.cost,'retail'):0;
+      if(!this.isDressedFor(p,job)&&(!outfit||p.cash<outfitPrice+foodReserve))continue;
+      if(current&&p.cash-outfitPrice<Math.min(budget.liquidity,budget.immediateBills))continue;
+      const targets=[...(outfit?[outfit.venue]:[]),'agency',workplace];
+      const travel= this.classicItinerary(p.location,targets,p.hours);
+      const applicationAndShift=this.rules.applicationHours+6;
+      // The job may be accepted this week even if its first shift must wait.
+      const applicationHours=this.travelCost(p.location,outfit?outfit.venue:'agency')+
+        (outfit?1+this.travelCost(outfit.venue,'agency'):0)+this.rules.applicationHours;
+      if(applicationHours>p.hours)continue;
+      const chance=this.classicHiringChance(p,job)/100;
+      const relativePay=this.offeredWage(job)-(current?p.wage:0);
+      if(current&&relativePay<=0)continue;
+      const shortfall=Math.max(0,reserve-(p.cash-outfitPrice));
+      // Stronger pay and expected hiring chances matter, but travel, clothing and
+      // financial resilience limit speculative job hopping. Bonuses encourage work.
+      // Evaluate a job change over several paydays, not a single shift. A
+      // one-hour wage improvement compounds, while route and uniform costs are
+      // paid immediately. Otherwise low-tier cooks become permanently trapped.
+      const score=chance*(current?relativePay*8*7:this.offeredWage(job)*8)
+        -outfitPrice*.20-travel.steps*.28-applicationHours*.8-shortfall*.4
+        +(job.entryGuaranteed&&!current?22:0)
+        +(current&&job.tier>current.tier?9:0)
+        -(travel.travelHours+applicationAndShift>p.hours?8:0);
+      jobCandidates.push({jobId:job.id,workplace,placeNum:job.placeNum,originalJobNum:job.originalJobNum,
+        outfit:outfit?{id:outfit.id,venue:outfit.venue,price:outfitPrice}:null,
+        travelSteps:travel.steps,travelHours:travel.travelHours,applicationHours,
+        hiringChance:chance,score:Number(score.toFixed(3)),safeguardedCash:p.cash-reserve-outfitPrice});
+    }
+    jobCandidates.sort((a,b)=>b.score-a.score||a.travelSteps-b.travelSteps||a.originalJobNum-b.originalJobNum);
+    return {...budget,foodNeeded,rentDue,urgentOrder,jobCandidates,
+      bestJob:jobCandidates.length&&jobCandidates[0].score>0?find(this.jobs,jobCandidates[0].jobId):null};
   }
   runAI(){
     const p=this.player;
@@ -850,7 +1448,33 @@ class LifeGame {
     const usable=job=>job&&this.isDressedFor(p,job);
     let studyCount=0,workCount=0,restCount=0,loops=0;
     while(p.hours>=2&&!this.winner&&loops++<28){
+      if(this.isClassic&&(p.classicChoicesThisWeek||0)>=CLASSIC_WEEKLY_ACTION_LIMIT)break;
       let current=this.getJob(p);
+      if(this.isClassic){
+        const decision=this.classicSourceDecision(p);
+        if(decision&&!(decision.actionCode==='work'&&workCount>=2)&&!(decision.actionCode==='relax'&&restCount>=2)&&!(decision.actionCode.startsWith('classicStudy:')&&studyCount>=1)){
+          if(p.location!==decision.destination){
+            if(moveTo(decision.destination,decision.requiredActionHours||0)){
+              this.classicTraceDecision(p,decision,'travel');continue;
+            }
+          }else if(perform(decision.actionCode)){
+            if(decision.actionCode==='work')workCount++;
+            if(decision.actionCode==='relax')restCount++;
+            if(decision.actionCode.startsWith('classicStudy:'))studyCount++;
+            this.classicTraceDecision(p,decision,'action');continue;
+          }
+        }
+      }
+      // When rent and food are simultaneously actionable, minimize the whole
+      // itinerary across the original 170-step ring before choosing the first stop.
+      if(this.isClassic){
+        const needs=this.classicAIPlan(p);
+        if(needs.urgentOrder.length===2){
+          const next=needs.urgentOrder[0],action=next==='housing'?'classicPayRent':'classicFresh:1';
+          if(p.location!==next){if(moveTo(next,1))continue;}
+          else if(perform(action))continue;
+        }
+      }
       // Recover from cash shortages, including any existing savings being inaccessible for tuition.
       if(p.cash<65&&p.bank>=100&&p.hours>=3){
         if(p.location!=='bank'){if(moveTo('bank',1))continue;}
@@ -860,28 +1484,42 @@ class LifeGame {
         if(p.location!=='bank'){if(moveTo('bank',1))continue;}
         else if(perform('withdraw:100'))continue;
       }
+      if(this.isClassic&&this.classicCanClearArrears(p)&&p.hours>=4){
+        if(p.location!=='housing'){if(moveTo('housing',1))continue;}
+        else if(perform('classicClearArrears'))continue;
+      }
       // In Classic, a conscious trip to the Rent Office is necessary before the deadline.
-      if(this.isClassic&&this.rentServicesOpen(p)&&p.cash>=p.classicRent&&p.hours>=4){
+      if(this.isClassic&&this.rentServicesOpen(p)&&p.cash>=p.classicRent+(!p.fed&&p.groceries===0?this.classicFoodPrice(1):0)&&p.hours>=4){
         if(p.location!=='housing'){if(moveTo('housing',1))continue;}
         else if(perform('classicPayRent'))continue;
       }
       // Replacement clothing has to be funded BEFORE the last wearable week ends.
       // With authentic $200/$0 Classic start the rival must not spend itself into
       // an irreversible no-uniform/no-pay/no-food loop.
-      if(this.isClassic&&current&&p.hours>=4&&p.clothing.casual<=2&&!p.clothing.formal&&!p.clothing.business){
+      if(this.isClassic&&current&&p.hours>=4){
+        const uniformRank=D.clothing[current.clothes].rank;
+        const wearableWeeks=this.clothingSummary(p).filter(x=>D.clothing[x.id].rank>=uniformRank).reduce((n,x)=>Math.max(n,x.weeks),0);
         const offer=this.cheapestClothingOffer(current);
-        if(offer&&p.cash>=this.price(offer.cost,'retail')&&p.clothing[offer.id]<=2){
+        if(offer&&wearableWeeks<=2&&p.cash>=this.price(offer.cost,'retail')+(!p.fed&&p.groceries===0?this.classicFoodPrice(1):0)&&p.clothing[offer.id]<=2){
           if(p.location!==offer.venue){if(moveTo(offer.venue,1))continue;}
           else if(perform(`clothes:${offer.id}:${offer.venue}`))continue;
+        }
+      }
+      // Optional, non-DOS maintenance: repair only when the two-week survival
+      // reserve remains intact. Needs/employment are intentionally above this.
+      if(this.isClassic&&p.hours>=4){
+        const maintenance=this.classicMaintenancePlan(p);
+        const item=maintenance.best;
+        if(item){
+          if(p.location!=='tech'){if(moveTo('tech',2))continue;}
+          else if(perform('classicRepair:'+item.id))continue;
         }
       }
       // Never accept a promotion that leaves us unable to afford the required wardrobe.
       const qualified=this.jobs.filter(j=>!this.jobReasons(p,j).length&&this.canAffordClothes(p,j));
       qualified.sort((a,b)=>b.tier-a.tier||b.wage-a.wage);
-      const better=this.isClassic&&!current
-        ?qualified.find(j=>j.id==='classic-monolith-cook')||qualified[0]
-        :qualified[0];
-      if(better&&(!current||better.tier>current.tier||(better.tier===current.tier&&better.wage>current.wage*1.18))&&p.hours>=7){
+      const better=this.isClassic?this.classicAIPlan(p).bestJob:qualified[0];
+      if(better&&(!current||better.tier>current.tier||(better.tier===current.tier&&better.wage>current.wage*1.18))&&(!this.isClassic||!current||this.offeredWage(better)>p.wage)&&p.hours>=7){
         if(!this.isDressedFor(p,better)){
           const offer=this.cheapestClothingOffer(better);
           if(offer&&p.location!==offer.venue){if(moveTo(offer.venue,1))continue;}
@@ -902,20 +1540,22 @@ class LifeGame {
       }
       // Make food a priority, but keep enough for a paycheck or an emergency errand.
       if(!p.fed&&p.groceries===0&&p.cash>=(this.isClassic?this.classicFoodPrice(1):this.price(24,'food'))&&p.hours>=4){
-        if(p.location!=='market'){if(moveTo('market',1))continue;}
+        if(p.location!==(this.isClassic?'cinema':'market')){if(moveTo(this.isClassic?'cinema':'market',1))continue;}
         else if(perform(this.isClassic?'classicFresh:1':'groceries'))continue;
       }
       // Study at a sustainable pace: maintain a rent buffer and earn in between terms.
-      const degree=this.isClassic?D.classicDegrees.find(d=>!p.classicDegrees.includes(d.id)&&this.classicDegreeAvailable(p,d)):D.degrees[p.education];
-      if(degree&&this.week%2===0&&studyCount<1&&p.cash>(this.isClassic?650:degree.cost+320)&&p.hours>=9&&p.energy>=34&&p.workSessions>=2){
+      const budget=this.isClassic?this.classicSurvivalBudget(p):null;
+      const degree=this.isClassic?this.classicCareerPlan(p).recommendedDegree:D.degrees[p.education];
+      if(degree&&this.week%2===0&&studyCount<1&&p.cash>(this.isClassic?650:degree.cost+320)
+        &&(!budget||p.cash-budget.reserve>350)&&p.hours>=9&&p.energy>=34&&p.workSessions>=2){
         if(p.location!=='university'){if(moveTo('university',6))continue;}
         else if(this.isClassic){
           if(!p.classicEnrollmentCredits&&!p.classicEnrolled.includes(degree.id)){if(perform('enroll'))continue;}
           if(perform('classicStudy:'+degree.id)){studyCount++;continue;}
         }else if(perform('study')){studyCount++;continue;}
       }
-      if(current&&usable(current)&&workCount<(this.isClassic?5:2)&&p.energy>=18&&p.hours>=6){
-        if(p.location!==current.place){if(moveTo(current.place,6))continue;}
+      if(current&&usable(current)&&workCount<(this.isClassic?5:2)&&p.energy>=(this.isClassic?4:18)&&p.hours>=(this.isClassic?2:6)){
+        if(p.location!==this.jobWorkplace(current).place){if(moveTo(this.jobWorkplace(current).place,this.isClassic?2:6))continue;}
         else if(perform('work')){workCount++;continue;}
       }
       // An unemployed player may take one temporary odd job per week to avoid softlocking.
@@ -924,8 +1564,8 @@ class LifeGame {
         if(p.location!=='home'){if(moveTo('home',6))continue;}
         else if(perform('freelance'))continue;
       }
-      if(restCount<2&&(p.energy<32||p.happiness<72)&&p.hours>=6){
-        if(p.location!=='home'){if(moveTo('home',5))continue;}
+      if(restCount<2&&(p.energy<32||p.happiness<72||(this.isClassic&&p.classicRelaxation<=11))&&p.hours>=6){
+        if(p.location!==(this.isClassic&&p.home!=='studio'?'clinic':'home')){if(moveTo(this.isClassic&&p.home!=='studio'?'clinic':'home',5))continue;}
         else if(perform('relax')){restCount++;continue;}
       }
       if(current&&p.workSessions>=3&&p.cash>150&&p.hours>=4&&p.raiseWeek<=this.week-4){
@@ -933,7 +1573,7 @@ class LifeGame {
         else if(perform('raise'))continue;
       }
       if(p.groceries===0&&p.cash>=(this.isClassic?this.classicFoodPrice(1):24)&&p.hours>=3){
-        if(p.location!=='market'){if(moveTo('market',1))continue;}
+        if(p.location!==(this.isClassic?'cinema':'market')){if(moveTo(this.isClassic?'cinema':'market',1))continue;}
         else if(perform(this.isClassic?'classicFresh:1':'groceries'))continue;
       }
       if(p.cash>=1100&&p.hours>=3){
@@ -945,7 +1585,7 @@ class LifeGame {
     this.log(`${p.name} has finished plotting their next big move.`,'muted',p.id);
   }
 
-  snapshot(){return JSON.parse(JSON.stringify({classicPawnLots:this.classicPawnLots,classicPawnSequence:this.classicPawnSequence,settings:this.settings,seed:this.seed,week:this.week,economy:this.economy,active:this.active,winner:this.winner,sequence:this.sequence,messages:this.messages,players:this.players,pendingEncounter:this.pendingEncounter,bulletin:this.bulletin,cityEventId:this.cityEventId,cityEventStart:this.cityEventStart,cityProjects:this.cityProjects,classicStockPrices:this.classicStockPrices}));}
+  snapshot(){return JSON.parse(JSON.stringify({classicTurnJournal:this.classicTurnJournal,classicEconomicIndices:this.classicEconomicIndices,classicEconomicPulse:this.classicEconomicPulse,classicGoodsIndex:this.classicGoodsIndex,classicWeekEvents:this.classicWeekEvents,classicDecisionTrace:this.classicDecisionTrace,classicPawnLots:this.classicPawnLots,classicPawnSequence:this.classicPawnSequence,settings:this.settings,seed:this.seed,week:this.week,economy:this.economy,active:this.active,winner:this.winner,sequence:this.sequence,messages:this.messages,players:this.players,pendingEncounter:this.pendingEncounter,bulletin:this.bulletin,cityEventId:this.cityEventId,cityEventStart:this.cityEventStart,cityProjects:this.cityProjects,classicStockPrices:this.classicStockPrices}));}
   static load(obj){
     if(!obj||typeof obj!=='object'||!Array.isArray(obj.players)||!obj.players.length||!obj.settings||!Number.isInteger(obj.week)||obj.week<1||obj.week>10000)throw Error('Invalid save file.');
     const game=new LifeGame({mode:obj.settings.mode,goals:obj.settings.goals,ruleset:obj.settings.ruleset,era:obj.settings.era,jonesDifficulty:obj.settings.jonesDifficulty,seed:obj.seed});
@@ -968,10 +1608,17 @@ class LifeGame {
         pawnIds.add(lot.id);
       }
     }
+    game.classicGoodsIndex=game.isClassic&&Number.isInteger(obj.classicGoodsIndex)&&obj.classicGoodsIndex>=10&&obj.classicGoodsIndex<=190?obj.classicGoodsIndex:100;
+    game.classicEconomicIndices=game.isClassic?(obj.classicEconomicIndices===undefined?ClassicEconomy.fromLegacy(game.classicGoodsIndex,Math.round((Number(obj.economy)||1)*100)):ClassicEconomy.validate(obj.classicEconomicIndices)):ClassicEconomy.initial();
+    game.classicEconomicPulse=game.isClassic?(obj.classicEconomicPulse===undefined?ClassicEvents.initial(obj.week):ClassicEvents.validate(obj.classicEconomicPulse,obj.week)):ClassicEvents.initial();
+    game.classicWeekEvents=Array.isArray(obj.classicWeekEvents)?obj.classicWeekEvents.filter(e=>e&&Number.isInteger(e.week)&&e.week>=1&&e.week<=obj.week&&typeof e.kind==='string'&&e.kind.length<60&&typeof e.detail==='string'&&e.detail.length<=240&&['system',...game.players.map(p=>p.id)].includes(e.playerId)).slice(-96).map(e=>({...e})):[];
+    game.classicTurnJournal=game.isClassic?ClassicTurn.validate(obj.classicTurnJournal??[],obj.week,['system',...obj.players.map(p=>p.id)]):[];
+    game.classicDecisionTrace=Array.isArray(obj.classicDecisionTrace)?obj.classicDecisionTrace.filter(e=>e&&Number.isInteger(e.week)&&e.week>=1&&e.week<=obj.week&&e.playerId==='jones'&&Number.isInteger(e.ruleId)&&e.ruleId>=1&&e.ruleId<=49&&Number.isInteger(e.placeNum)&&e.placeNum>=0&&e.placeNum<=12&&typeof e.reason==='string'&&e.reason.length<=240&&typeof e.actionCode==='string'&&e.actionCode.length<=110&&Number.isInteger(e.predictedTimeTicks)&&e.predictedTimeTicks>=0&&e.predictedTimeTicks<=1000&&['travel','action'].includes(e.outcome)).slice(-64).map(e=>({...e})):[];
     game.classicPawnLots=(obj.classicPawnLots||[]).map(l=>({...l}));
     game.classicPawnSequence=Math.max(0,Number.isSafeInteger(obj.classicPawnSequence)&&obj.classicPawnSequence<=1e9?obj.classicPawnSequence:0,...game.classicPawnLots.map(l=>Number(l.id.slice(5))));
     game.classicStockPrices=Object.fromEntries(D.classicStocks.map(x=>[x.id,Number.isInteger(obj.classicStockPrices?.[x.id])&&obj.classicStockPrices[x.id]>=Math.max(1,Math.floor(x.base*.5))&&obj.classicStockPrices[x.id]<=Math.ceil(x.base*2.5)?obj.classicStockPrices[x.id]:x.base]));
-    game.players=obj.players;
+    // Never share mutable nested player records with the caller or a second loaded game.
+    game.players=obj.players.map(p=>JSON.parse(JSON.stringify(p)));
     for(const p of game.players){
       if(game.isClassic&&p.isAI){
         const goalSet=p.classicGoals;
@@ -984,10 +1631,40 @@ class LifeGame {
         Object.fromEntries(D.classicStocks.map(x=>[x.id,clamp(Math.floor(Number(p.classicPortfolio[x.id])||0),0,100000)])):Object.fromEntries(D.classicStocks.map(x=>[x.id,0]));
       p.classicLegacyInvestment=legacyPortfolio&&game.isClassic?Math.max(0,Number(p.invested)||0):clamp(Math.floor(Number(p.classicLegacyInvestment)||0),0,100000000);
       p.classicBrokerOpen=p.classicBrokerOpen===true&&p.location==='bank';
-      p.classicWorkHourCredit=Number.isInteger(p.classicWorkHourCredit)?clamp(p.classicWorkHourCredit,0,5):0;
+      p.classicEquipment=p.classicEquipment&&typeof p.classicEquipment==='object'&&!Array.isArray(p.classicEquipment)?p.classicEquipment:{};
+      for(const [item,meta] of Object.entries(p.classicEquipment)){if(!Object.hasOwn(PAWN_VALUES,item)||!p.owned.includes(item)||!meta||!['specialty','discount','pawn'].includes(meta.source)||typeof meta.broken!=='boolean')throw Error('Invalid equipment state');}
+      p.classicBurglaryCount=Number.isInteger(p.classicBurglaryCount)&&p.classicBurglaryCount>=0?p.classicBurglaryCount:0;
+      // Migrated Classic-only DOS relaxation (separate from energy and happiness).
+      if(p.classicRelaxation===undefined)p.classicRelaxation=16;
+      if(!Number.isSafeInteger(p.classicRelaxation)||p.classicRelaxation<10||p.classicRelaxation>30)throw Error('Invalid Classic relaxation');
+      p.classicWorkHourCredit=0; // v0.5.33: old pooled partial-work credit is retired
+      // New fields have safe defaults for historical saved games. Reject invalid
+      // values in untrusted multiplayer snapshots instead of allowing forged
+      // action counts to bypass the Classic weekly limit.
+      if(p.classicWorkWarningWeek!==undefined&&(!Number.isInteger(p.classicWorkWarningWeek)||p.classicWorkWarningWeek<0||p.classicWorkWarningWeek>obj.week))throw Error('Invalid Classic work warning state');
+      p.classicWorkWarningWeek=p.classicWorkWarningWeek??0;
+      for(const field of ['classicLastClosedWeek','classicLastRentChargeWeek']){
+        if(p[field]!==undefined&&(!Number.isInteger(p[field])||p[field]<0||p[field]>obj.week))throw Error('Invalid Classic turn boundary: '+field);
+        p[field]=p[field]??0;
+      }
+      if(p.classicPaycheckHistory===undefined)p.classicPaycheckHistory=[];
+      if(!Array.isArray(p.classicPaycheckHistory)||p.classicPaycheckHistory.length>16||
+         p.classicPaycheckHistory.some(e=>!e||!Number.isInteger(e.week)||e.week<1||e.week>obj.week||
+           !D.classicJobs.some(j=>j.id===e.jobId)||!Number.isInteger(e.shiftUnits)||e.shiftUnits<1||e.shiftUnits>6||
+           !['fullGross','gross','garnished','fee','net','cashBefore','cashAfter','rentDebtBefore','rentDebtAfter'].every(k=>Number.isSafeInteger(e[k])&&e[k]>=0)||
+           e.gross!==e.net+e.garnished+e.fee||e.cashAfter!==e.cashBefore+e.net||
+           e.rentDebtAfter!==e.rentDebtBefore-e.garnished||e.fullGross<e.gross))throw Error('Invalid Classic paycheck history');
+      for(const [field,max] of [['classicWageRemainder',5],['classicChoicesThisWeek',CLASSIC_WEEKLY_ACTION_LIMIT]]){
+        const value=p[field];
+        if(value!==undefined&&(!Number.isInteger(value)||value<0||value>max))throw Error('Invalid Classic clock/work state: '+field);
+        p[field]=value??0;
+      }
       p.classicLoanDefaults=clamp(Math.floor(Number(p.classicLoanDefaults)||0),0,10000);
       p.classicLoanPaidThrough=clamp(Math.floor(Number(p.classicLoanPaidThrough)||0),0,10000);
       p.classicFoodPurchasedWeek=clamp(Math.floor(Number(p.classicFoodPurchasedWeek)||0),0,obj.week);
+      if(p.classicWeekendTicket!==null&&p.classicWeekendTicket!==undefined&&
+         (!Object.hasOwn(D.classicDiscountGoods,p.classicWeekendTicket)||D.classicDiscountGoods[p.classicWeekendTicket].kind!=='ticket'))throw Error('Invalid pending Z-Mart ticket');
+      p.classicWeekendTicket=p.classicWeekendTicket||null;
       p.classicHardshipWeeks=clamp(Math.floor(Number(p.classicHardshipWeeks)||0),0,2);
       p.classicReliefWeek=clamp(Math.floor(Number(p.classicReliefWeek)||0),0,obj.week);
       p.classicReliefCount=clamp(Math.floor(Number(p.classicReliefCount)||0),0,10000);
@@ -1030,6 +1707,8 @@ class LifeGame {
       p.classicEnrollmentCredits=Number.isInteger(p.classicEnrollmentCredits)?clamp(p.classicEnrollmentCredits,0,20):0;
       p.classicDismissals=Number.isInteger(p.classicDismissals)?clamp(p.classicDismissals,0,10000):0;
       p.classicRaises=Number.isInteger(p.classicRaises)?clamp(p.classicRaises,0,100):0;
+      p.classicUnemployedWeeks=Number.isInteger(p.classicUnemployedWeeks)?clamp(p.classicUnemployedWeeks,0,10000):0;
+      p.classicJobSearchFailures=Number.isInteger(p.classicJobSearchFailures)?clamp(p.classicJobSearchFailures,0,10000):0;
       if(oldClassic&&game.isClassic){p.experience=Math.max(10,p.experience);if(p.credits>0){const d=D.classicDegrees.find(d=>!p.classicDegrees.includes(d.id)&&d.requires.every(id=>p.classicDegrees.includes(id)));if(d){p.classicProgress[d.id]=Math.min(9,p.credits);p.classicEnrolled.push(d.id);}}}
       p.courseProgress=p.courseProgress&&typeof p.courseProgress==='object'&&!Array.isArray(p.courseProgress)?Object.fromEntries(Object.entries(p.courseProgress).filter(([k,n])=>D.courses.some(c=>c.id===k)&&Number.isInteger(n)&&n>0&&n<find(D.courses,k).sessions&&!p.coursesCompleted.includes(k))):{};
       p.talkedWeek=p.talkedWeek&&typeof p.talkedWeek==='object'&&!Array.isArray(p.talkedWeek)?p.talkedWeek:{};

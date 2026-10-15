@@ -1,0 +1,115 @@
+{
+  "version": "1.000.060",
+  "files": [
+    {
+      "name": "adl.drv",
+      "bytes": 8033,
+      "sha256": "b73228a4d7133171319f42c4448be12380b3d6e559ec804cc478e100751417a5"
+    },
+    {
+      "name": "exists.com",
+      "bytes": 574,
+      "sha256": "36cd8fca11efe7c21b29f67164273462c54b836526d4c931aa49a61c22401767"
+    },
+    {
+      "name": "godir.com",
+      "bytes": 507,
+      "sha256": "bff36a0e865cc3a51e98854e9eab1e41154b3b9392dbd4c1a335b2e4de67e4fb"
+    },
+    {
+      "name": "ibmkbd.drv",
+      "bytes": 449,
+      "sha256": "4da6ec06ef31302f6bc807003c168a3f924da24e3d4f014dd029f5e5d3f3d0ba"
+    },
+    {
+      "name": "install.exe",
+      "bytes": 24064,
+      "sha256": "8f568ad808db58946b263ef9563aa5ff7b5da1d894b5740f26316237446db4e3"
+    },
+    {
+      "name": "install.hlp",
+      "bytes": 9453,
+      "sha256": "2603dd073bd5dd35ac5e0ed68b8e0152858692a8bd3f4c5ddd7a54c3e117da2a"
+    },
+    {
+      "name": "joystick.drv",
+      "bytes": 607,
+      "sha256": "cbf2c98b7bdced90dac636db969a4f963e40eb8525ff18f4d7075b4e989113dc"
+    },
+    {
+      "name": "mt32.drv",
+      "bytes": 1989,
+      "sha256": "c5acc4bd5ac7ae110d5412763cb8d662dc7fd6e2f97a52583310f0b684f0024e"
+    },
+    {
+      "name": "resource.001",
+      "bytes": 313476,
+      "sha256": "9f5191a4aac878eb87ed5a303bdad732f087ab8633a64d1bf8faf2cbbb28a599"
+    },
+    {
+      "name": "resource.002",
+      "bytes": 719747,
+      "sha256": "cf2c54ba3cbe45304ea075479f74024ada5a2f970e44ad1b0117b03078bb0d7a"
+    },
+    {
+      "name": "resource.bak",
+      "bytes": 93,
+      "sha256": "594229cff0eb6416936898a26715464f10dc0f9f9d00f0353009208209cbdb01"
+    },
+    {
+      "name": "resource.cfg",
+      "bytes": 74,
+      "sha256": "56b7bf0c8757787964acb7fa303793638692deb4766b4f135bdf5bb4a2361b9f"
+    },
+    {
+      "name": "resource.map",
+      "bytes": 1800,
+      "sha256": "f070a57f0e2c86bbf79339b1d41777a15e835d228cb52ff9cd3728a098fa053e"
+    },
+    {
+      "name": "sciv256.exe",
+      "bytes": 60373,
+      "sha256": "16e0295610d38a3c747e81e2fbb0ba3421fec3286f22501300ccaaa4d734833f"
+    },
+    {
+      "name": "sierra.bat",
+      "bytes": 182,
+      "sha256": "4bb1fa4dd92d7f65ac838c2e65f0c72c695502ff3b8495608b264b5d48e1a4fa"
+    },
+    {
+      "name": "sndblast.drv",
+      "bytes": 9489,
+      "sha256": "38b8e441e344b032ddefe4b77441cabe874e1e25dc517574075a5981e3faa4dd"
+    },
+    {
+      "name": "space.com",
+      "bytes": 500,
+      "sha256": "b8807b874be9880399c532ce813955b960ac6885fd4528640282035d1c6fc608"
+    },
+    {
+      "name": "std.drv",
+      "bytes": 1352,
+      "sha256": "79a6fd5c0f7838f8cf9c5437c0f260a124d95b9d6cbb83a24b9234f2d12b3e9b"
+    },
+    {
+      "name": "tandy3v.drv",
+      "bytes": 3854,
+      "sha256": "23768e339b7d63db57e3b968bd1fd539279dd110c0a6b3a58ebebf2aaebdde3c"
+    },
+    {
+      "name": "tandykbd.drv",
+      "bytes": 476,
+      "sha256": "15c63c468b9ebdb31fa39f6ce459ce6feaf2427738bdb1510a12059f64507c9d"
+    },
+    {
+      "name": "version",
+      "bytes": 13,
+      "sha256": "90a82e3b80f046e9b1e1be047001640e8342f04c85855e4cc6e804c05397f01d"
+    },
+    {
+      "name": "vga320.drv",
+      "bytes": 3797,
+      "sha256": "3f12e0d89b77eb94c04258b9a42c93ffe50bf08dc509fcbf0b83e766d4a3a893"
+    }
+  ]
+}

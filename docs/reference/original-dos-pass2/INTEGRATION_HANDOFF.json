@@ -1,0 +1,22 @@
+{
+  "project": "the-life-loop",
+  "artifactType": "read-only-mechanics-reference",
+  "sourceGame": "Jones in the Fast Lane DOS EN",
+  "originalVersion": "1.000.060",
+  "passesIncluded": [1, 2],
+  "targetMode": "classic-compatible",
+  "summary": "Next migration should use a shared time/economy/needs ruleset for human and Jones, with separately traced AI decision rules and original place-route IDs.",
+  "notAProjectPatch": true,
+  "sourceCodeModified": false,
+  "orderedWork": [
+    {"phase": 1, "feature": "identity_validation", "reads": ["reference/pass1/original_route.json", "reference/pass1/original_jobs.json"], "acceptance": "all employers resolve to a placeNum and all historic route anchors exist"},
+    {"phase": 2, "feature": "time_and_work", "reads": ["classic_rules.json", "classic_rules.py"], "acceptance": "60-unit turn, six-unit work time, partial wage, dependability warning and firing checks work with seeded tests"},
+    {"phase": 3, "feature": "economy_and_shops", "reads": ["original_shops.json", "classic_rules.py"], "acceptance": "prices resolve from live goods index, fixed goods don't fluctuate, food and clothing weekly quantities decrement"},
+    {"phase": 4, "feature": "weekly_events", "reads": ["weekly_events.json", "PASS2_MECHANICS.md"], "acceptance": "events journaled exactly once per turn and obligations once per four-week cycle"},
+    {"phase": 5, "feature": "classic_jones_ai", "reads": ["ai_branch_map.json", "reference/pass1/place_distances.csv"], "acceptance": "unemployed Jones routes to location 6; cash shortages trigger survival actions; every decision records branchId, reason, time estimate"},
+    {"phase": 6, "feature": "victory", "reads": ["classic_rules.py", "PASS2_MECHANICS.md"], "acceptance": "all four independent thresholds required; weighted displayed progress capped correctly"}
+  ],
+  "knownLimits": ["not validated in DOS emulator", "SCI 16-bit overflow not emulated", "decompiled matching-version code not byte-compared against uploaded archive", "select shop list is not exhaustive", "AI branch map is representative, not an exact full port"],
+  "testCommand": "python -m unittest discover -s tests -v",
+  "testCount": 47
+}

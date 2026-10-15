@@ -149,3 +149,77 @@ The Contemporary default art manifest now binds a separate user-supplied paintin
 ## Character compiler and pixel rendering (ADR-0014, v0.5.14)
 
 The new browser source `src/character-sprites.js` compiles a small, catalog-versioned configuration into resolved parts and 24 deterministic idle/walk poses. The pure compiler resolves discrete bodies, hair/hat variants, material palette bindings and stable bands **before** rendering; a 32×40 Canvas adapter animates and exports sprites while an SVG adapter draws static in-game portraits from the same pose. `assets/characters/pixel-v1/catalog.json` is the authoritative component manifest. No PixiJS/TypeScript runtime or WebGL dependency is necessary for the initial 32×40 vertical slice. Existing painted portraits continue to be selectable separately. The art-production backlog includes PNG atlas authoring, masking and richer animation.
+
+
+## ADR-0030 · DOS Pass-2 migration boundary (v0.5.29)
+
+`src/classic-pass2-rules.js` is a standalone, deterministic reference-rules module for original integer-priced goods, one-roll lottery, rent-extension d12, and partial wage truncation. The Classic game uses one seeded bounded goods index and logs discrete source-derived events; index drift remains a documented approximation. Original numeric place IDs and shared route plans also drive ordered AI emergency branches and a compact, serializable decision trace. The existing salary baseline and full rival career planner are still playable adaptations rather than exact DOS ports. The Modern ruleset is isolated by `game.isClassic` conditions and retains its previous finance calculations. See ADR-0030 and `docs/reference/original-dos-pass2/`.
+
+
+## ADR-0031 · Classic coupled eight-index engine (v0.5.30)
+
+Classic uses `src/classic-economy.js` as one seed-replayable macro model with eight original DOS index identities and `10–190` bounded readings. Consumer price arithmetic remains source-derived, whereas economic drift, stock-index binding and wage-index binding remain explicitly provisional. `classicEconomicIndices` is an additive schema-validated snapshot field, with `classicGoodsIndex` and the old scalar used for v0.5.29 migration. All agreed player salary contracts stay stable until hire/raise. Modern Story bypasses this model. See [ADR-0031](docs/decisions/ADR-0031-coupled-classic-economy-and-contract-wages.md).
+
+## ADR-0032 · Source-linked Classic economic event lifecycle (v0.5.31)
+
+Classic's general index feeds a seeded and bounded economic event phase classifier (`src/classic-economic-events.js`); downturns can trigger the source-backed scandal outcome reducer. Each outcome is applied to human and rival players in the same weekly simulation and written to the bounded Classic journal, including account ledger entries for destroyed savings. The original **effects** of crisis strength 1 and 2 are sourced from the pass-2 `startTrn.sc` investigation, while trigger probabilities, the cooldown and recovery happiness are intentionally provisional. Snapshots carry `classicEconomicPulse` (validated optional), inherited saves default to a neutral current-week phase, and saves never process an event during import. Classic board routes/job identities and Modern economic state remain independent. The AI now commits to a valid job application after travelling to ACNE, preventing an employment-food route cycle following layoffs.
+
+## ADR-0033 · Ordered Classic career and long-unemployment recovery (v0.5.32)
+
+The Classic branch planner runs pure source-tagged career priorities after emergencies and before heuristic fallback. Career paths never bypass original prerequisite IDs, action-time checks, contracted wages, workplace identities or enrollment costs. The rival renews **any sufficient job clothing tier** when its remaining durability is at most two weeks, preventing complete labor lockout. Persisted per-player unemployment weeks and rejected application counts allow deterministic selection of the original Monolith Cook occupation (#44, hiring roll forced success only when qualified). Ordered tags and destinations originate from the DOS pass-2 `ai_branch_map.json`; the local urgency, education and fallback thresholds are explicitly provisional. Save migration adds only optional bounded fields; Modern remains unchanged. See ADR-0033.
+
+## ADR-0034 · Original route tick estimate and per-action work progression (v0.5.33)
+
+Classic's source time module (`src/classic-time.js`) keeps `TURN_UNITS=60`, `ROUTE_QUANTUM=20`, and the source-derived original AI estimate `steps + 2*ROUTE_QUANTUM` for each non-zero 170-point route leg. The historical tick estimate must **not** be silently substituted for the playable clock cost: the current ring-step quantizer remains provisional. Travel quotes and travel actions use the same pure adapter; Employment Office arrival adds 2 source-backed clock units once and is atomic with its trip. This surcharge is not charged to other storefronts, whose exact visit transitions remain unverified. Jones's itinerary planner compares the route tick metric without altering feasibility calculations. Partial work pays DOS-truncated proportionally and now awards exactly one capped experience/dependability step per *successful action*, regardless of late shift length. Legacy 0–5 pooled work credits are treated as obsolete and discarded during load/work, without changing saved job identities. Classic only; Modern clock/work retained. Decisions and movement still use normal host-authoritative Looprd snapshots; no protocol migration.
+
+## ADR-0035: employer warning and payable paychecks (v0.5.34)
+
+The Classic pre-work branch now uses a pure `ClassicTime.workStanding` to order dismissal, weekly first warning, and successful work before any money/time deduction. The warning consumes one provisional venue choice, but no clock time, so retry behavior survives save/reconnect; a bounded week marker defaults to 0 on legacy save import. `ClassicTime.paycheck` centralizes integer gross, approximate back-rent withholding/fee and net in one read-only quote to avoid disagreement between action UI and settlement. Exact SCI garnishment (`n108.sc` temp0/temp1) is explicitly unresolved. Classic Jones reserves work action clock beyond travel and honors the provisional ten-choice cap. The Modern clock/action implementation and Looprd payload structure remain otherwise unchanged.
+
+## ADR-0036: auditable Classic pay and debt-recovery guard (v0.5.35)
+
+`ClassicTime.paycheck` stays the sole preview formula; immutable `settlePaycheck` checks payout/debt conservation and drives wallet and arrears mutations. Last 16 successful shifts append a fully reconciled journal (validated, additive in old saves); no extra entry for warnings/dismissals. The rival forecast uses two sequential **net contracted** shifts, without changing state or random sequence, and only pays historical rent arrears voluntarily if cash remains for due food, housing and workwear. View details in Finances/Career Roadmap. The original SCI garnishment remains unknown and is **not** conflated with the compatibility withholding formula. Modern mode and Looprd interfaces remain separate.
+
+## ADR-0037 · Classic per-player turn completion and week phases (v0.5.36)
+
+`src/classic-turn-sequence.js` distinguishes **endTurn(player)** from the shared next-week economic/event cycle. Classic's original source-backed dependability −3 is applied and journaled immediately when each human or AI finishes; start-of-week no longer repeats it. The four-week missed rent transition is assessed via a pure, once-per-week guard, not through both handlers. A bounded, strictly validated 72-entry phase journal captures close/economy/living/rent/loan/reset/week-ready without consuming additional time or random numbers. This is a deterministic migration ordering only; it is not proof of the DOS 37-state SCI startTrn callback order. Older saves default cleanly, Modern uses previous semantics, and Looprd remains on its existing snapshot protocol. See ADR-0037.
+
+## ADR-0038 summary — stable Classic board and source weekly bonus (v0.5.37)
+
+The Classic board's **geography** is authoritative in `src/data.js` and `assets/boards/classic/routes.v1.json`. `#boardStage` contains the grid and its exact-size road/pawn SVG. `#boardViewport` is the bounded mobile pan surface; `#venueLayer` remains outside it. A device-width change never reorders Classic cells, and a viewport scroll never changes `Game.travelQuote` or the simulation. Modern layout stays independent.
+
+The computer ownership bonus is now a pure `ClassicWeekly.computerBonus` calculation using two RNG calls only on a successful first draw. Source state 4 and awarded cash are appended to existing bounded `classicWeekEvents`, requiring no save migration. No inferred state-number ordering of other unrecovered SCI callbacks is claimed.
+
+
+## ADR-0039 summary — Classic mobile travel intent and weekly source-state trace (v0.5.38)
+
+UI projection/panning is independent of the state machine. Phone Overview tile taps change only presentation state, and local travel camera follows SVG projection (manual swipe overrides). The authoritative travel action, actor identity and remaining-clock deduction remain on the host, unaltered. Weekly state 10/18 are source-tagged observability events with bounded save journal, not a claim of source-complete event execution. See ADR-0039.
+
+## ADR-0040 extension — v0.5.39
+
+Board travel feedback is presentation-only and lives alongside `RouteOverlay`. A successful host-authoritative travel action still mutates time/location exactly once; the journey status and arrival marker only render that outcome. The centered venue sheet remains the only action executor. Classic phone Overview selects/zooms, phone Explore travels, manual horizontal drag overrides follow.
+
+The Classic weekly journal now identifies DOS source states 12 and 34 without changing hunger or rescue economics. Payout and cooldown are provisional and documented. No snapshot schema or Modern rules change.
+
+## ADR-0041 summary — Classic needs and skippable travel (v0.5.41)
+
+Original `startTrn.sc` state 6 decays a Classic-only relaxation scalar by one toward ten without an authentic hot tub; its 16-point initial default and +6 rest recovery are compatibility choices. State 20 records the preexisting monthly loan status without altering default charges. `RouteOverlay.finishAnimation()` finishes visual motion without game-state or network mutations; a successful authoritative travel action has already paid the single movement cost. Validated legacy save defaults and five regression tests protect Modern isolation and do not alter the route data. See ADR-0041.
+
+
+## ADR-0042: Classic household and route-owned entrance (v0.5.41)
+
+`classic-household.js` is a deterministic derived view of Classic owned goods and already-saved breakage state. No new save or wire fields; Modern remains independent. Rest accounts for independent relaxation in both action availability and quote. Original DOS state-6 recovery magnitude is not verified. The entrance glyph is rendered by the independent SVG road layer using original stop anchors, not burned into store art. Designer slots are specified in `docs/classic-designer-handoff.md`; all 13 default illustrations keep working when no optional art is installed.
+
+## ADR-0043: Verified task lifecycle and maintenance (v0.5.43)
+
+Every known work item must appear once in the version-controlled lifecycle ledger. Done requires evidence; Blocked requires a reason and unblock condition; source verifier checks generated state before releasing. The existing ZipRunner v1 workboard update is kept for importer compatibility. This **does not imply UI status transitions have occurred**; those require an explicit, tested importer change. Classic household repair quotes and AI maintenance respect the two-week cash reserve and existing time/action gates; the 20% repair ratio is provisional.
+
+
+## v0.5.48 — Classic presentation boundary
+
+The turn-owner display remains a stable board-center element, while the actual Classic clock is independently positioned over the noninteractive Public Garden. `LifeClassicBoardHud` renders display data only. Phone Explore/Overview is a camera preference; the route renderer projects the original waypoints in the top gutter of the fifth row. Neither feature owns travel costs or persistent game state. See ADR-0048.
+
+
+### Classic street visualization v0.5.50
+
+The source route graph (`routes.v1.json`) and 170 historic DOS waypoint indexes own all travel identity and cost. `src/route-overlay.js` renders that graph on a continuous 5×5 tile-gutter promenade and rounds presentation corners without changing authoritative decisions. A visual doorway marker derived from artwork is separate from the public street preview, and arrival selects the original venue ID. No additional network or saved data field is introduced.

@@ -1,23 +1,118 @@
-# The Life Loop — v0.5.19
+# The Life Loop — v0.5.49
+
+## v0.5.43 — Workboard lifecycle reconciliation and household maintenance
+
+The source workboard now explicitly reconciles historical and current stable task IDs into Done, Blocked, In Progress and To Do; see `docs/workboard-reconciliation.md` and `docs/workboard-lifecycle.json`. The **active ZipRunner import remains v1**, which does not currently offer verified Blocked/In Progress transitions. This source record is not a claim that cards changed in the ZipRunner UI. `tools/reconcile-workboard.mjs --check` is mandatory for packaging. Classic household repair quotes and the rival protect a two-week survival reserve; Modern and saves are unchanged. Run `TEST-LIFECYCLE.bat`. See ADR-0043.
+
+## v0.5.41 — Classic household and art-independent entrances
+
+The Classic board now shows a road-anchored arrival door sign, independent of replacement art. Classic household item condition controls whether a computer can earn project income and stereo/VCR rest comfort. Relaxation-only rest is available as a venue action. Existing saves and Modern rules remain intact. The full **13-location designer handoff** is in `docs/classic-designer-handoff.md` with a board schematic (`docs/classic-board-layout-reference.png`), and a print-ready DOCX is distributed separately. The 26 custom card/detail WebPs remain optional until approved. Run `TEST-HOUSEHOLD.bat` or `node tools/verify.mjs`. See ADR-0042.
+
 
 **Playable original browser game**, inspired by the rule loop of *Jones in the Fast Lane*. `Classic Rules` is an evidence-based reimplementation **in progress**, not yet a 1:1 binary match. `Modern Story` keeps its independent progression and city stories. Era choices (Historical, Contemporary, Sci-Fi) affect graphics, not mechanics.
 
-## This pass
+## v0.5.33 — Classic time, original tick estimator and work-action progression
 
-- Classic: 37 documented floppy DOS positions with original base wages, stat requirements, degrees and uniforms; two CD-only jobs are excluded. Nine employers are represented using existing 12 city tiles (Z-Mart and Black’s Market share a venue).
-- Classic: 4h job applications, failure costs, seeded qualification-sensitive openings, repeat refusal lockout and guaranteed cook job. Existing job is kept on failed applications.
-- Classic: 4h raises based on posted offered wages instead of automatic 10% boosts.
-- Classic: $325 starter rent, manually paid in cash every four weeks at the Rent Office; extensions, arrears and half-wage garnishment + interest.
-- New employer filter at the Career Center and roadmap references; the rest of the original mechanical backlog remains documented.
-- Save migration from v0.4.6 Classic jobs, plus Classic-only state fields; Modern untouched.
-- 120 gameplay tests, including Classic banking and refrigerated food, plus offline UI checks.
+- **Original DOS route estimates:** `src/classic-time.js` models the original AI's per-leg waypoint tick estimate `steps + 2×20` for a traveled leg. Logical movement continues to follow the historical **170 original waypoints**; the adapter that deducts movement time from the playable **60-unit** weekly clock is deliberately still provisional until calibrated against the DOS runtime.
+- **Employment Office entry:** A Classic trip into ACNE/Employment now spends **2 additional clock units**, included in the same **atomic movement quote** so a rejected trip spends nothing. The application itself remains a separate four-unit interaction, and visiting the current location costs nothing. All time costs are displayed before traveling.
+- **Work progression recovered:** Each **successful work action** grants one experience and one reliability step (up to its job-dependent cap), even for late partial shifts. **Pay** still truncates the `8×hourly×remaining/6` amount independently each action, exactly as established in DOS pass-2 reference math. Historic six-hour pooled progression was a prototype approximation and is now retired; old save's unused pooled work credit is ignored.
+- **Smarter source-compatible route decisions:** The Classic rival's two/three-stop itinerary comparator uses the DOS per-leg route-tick estimate, while feasibility continues to check **the same action clock** the human consumes. The roadmap and route preview distinguish estimates from real gameplay charges.
+- **QA:** `TEST-TIME.bat` and `npm run test:time` run the time/work regressions; `node tools/verify.mjs` builds the **offline single HTML** and **GitHub Pages** versions and performs the full source gate. `src/classic-time.js` is included in both builds, with Modern behavior left independent. See ADR-0034 and the updated parity matrix.
+
+**Reference limitation:** The recovered source provides the **AI route tick estimate** and fixed agency entry/work action costs. It does not yet establish a definitive mapping from animation speed/waypoints to each playable clock unit; avoid asserting complete DOS travel parity until an emulator trace confirms it.
+
+## v0.5.32 — Jones career, education and long-unemployment migration
+
+- **Ordered, source-tagged decisions:** After essential job/rent/food protection, Jones now follows recognizable `WhereShouldIGo.sc` branch families: 20 (renew uniform), 28 (seek raise), 29 (promotion), 30 / 46 (work), 32 / 37 (rest), and 44 (attend university). Only branch identifiers and general priorities are source evidenced: thresholds and cadence remain explicitly provisional.
+- **Original employment recovery:** Count unemployment weeks and failed applications for each Classic player. A long-unemployed rival prioritizes the legitimately guaranteed hiring-roll Monolith Cook occupation #44, without bypassing qualifying requirements, travel, or application time. Successful hire resets counters. Additive save fields default to zero for old files.
+- **More sustainable workwear:** Formal/business uniforms are included in the two-week renewal check, which supersedes discretionary coursework. This prevents a seeded campaign from permanently losing its income source after a formal uniform wears out.
+- **Money and time safeguards:** Raise and promotion planning reference the worker's *actual signed wage*, not a listing alone; school uses existing original prerequisite paths and tuition/enrollment, with budgeted food/rent and required clothing. Traces appear in Classic Career Roadmap.
+- **Testing:** Run `TEST-AI-CAREERS.bat` for focused cases, or `node tools/verify.mjs` for the full ZipRunner gate. See ADR-0033. Exact DOS wage negotiation odds, full AI branch ordering and route-hour conversion remain unverified. Modern is unchanged. No Git push.
+
+## v0.5.31 — Economic crisis events and recovery-aware Jones
+
+- **DOS-supported crisis outcomes:** `src/classic-economic-events.js` uses the supplied `startTrn.sc` pass-2 record for strength-1 savings loss plus dismissal, and strength-2 dismissal or truncated 80%-wage with integer binary draw. Source happiness penalties (−7 dismissed, −3 cut) are applied to Classic humans and rivals using the same reducer.
+- **Source-inspired, intentionally provisional trigger:** The shared 8-index economic model now classifies weekly downturn, recovery, and boom signals; crisis chance, cooldown, phase thresholds, and recovery happiness magnitude are **not yet DOS verified**. Infrequent seeded shocks follow negative general-economic weeks. Incidents are journaled and affect all participating Classic players. Existing contracts otherwise remain stable.
+- **Rival employment loop fix:** An unemployed Jones now **applies at the Employment Office before leaving for groceries**. Previously, a post-crisis rival could oscillate between the office and Black's Market. Job planning also compares advertised pay with real prior contracted wages. Downturn weeks add a small non-mutating food reserve to the opponent's spending plan.
+- **Transparency & portability:** Classic Finances labels the economic phase and last shock week; source-linked economic events are in the existing bounded journal. `classicEconomicPulse` is a validated additive save field; older saves pick a neutral starting cycle at their existing week. `Game.load` now also clones player records so parallel restores cannot mutate each other through shared references.
+- **Verification:** `TEST-CRISES.bat` runs focused source/recovery tests, `TEST-ECONOMY.bat` checks existing indices, and `TEST-LOCAL.bat` validates complete production source. See ADR-0032. Original DOS weekly event probabilities and scandal random order still require emulator traces; **Modern remains unaffected**. No automatic push to Git.
+
+## v0.5.30 — Coupled Classic economic indices and contract-aware AI
+
+- **Eight source-backed index identities:** A new pure, seed-replayable Classic economic model tracks the original general, investments, goods, gold, silver, pork, blue-chip and penny-stock domains. Readings start at 100, stay within 10–190, and update once per game week. **Their drift/correlation rates are designed approximations**, not yet recovered exact SCI formulas.
+- **Connected financial gameplay:** Consumer goods keep their Pass-2 integer pricing; new job offers now respond to the general economic reading, while bank instruments use their own market index. T-Bills remain fixed-price. Previously negotiated hourly pay stays unchanged until a new hire or raise; existing portfolio units and saved prices are preserved.
+- **Survival-aware rival:** Forecast food reserves account for potential near-term price increases. Job switches must improve *actual* contracted wages and cannot burn immediate food/rent reserves for a job title; the source-tagged emergency planner can use original pawn-branch identities 11/23 if essential money is otherwise unavailable.
+- **Inspectability:** Classic Finances shows all eight readings and their most recent weekly changes. Career Roadmap shows current goods/general indices and advisory food outlook; economic week events and rival decision traces are preserved.
+- **Backward compatibility:** Imports existing v0.5.29 Classic saves by deriving the new index object from prior goods reading and scalar; additive object is validated in incoming snapshots. Modern Story calculations are isolated. No Looprd endpoints or route/board IDs change.
+- **Regression:** `TEST-ECONOMY.bat` or `npm run test:classic`; full `node tools/verify.mjs` now requires the new migration tests. Exact DOS salary binding, full original market variance, stock crashes and full AI precedence remain outstanding (ADR-0031).
+
+## v0.5.29 — Original DOS Pass 2: economic prices, events and ordered Jones rules
+
+- **New source module:** `src/classic-pass2-rules.js` implements integer-truncated DOS goods prices, partial wages, lottery prize thresholds and rent-extension d12 odds. Based on supplied pass-2 model, without claiming byte-for-byte SCI parity.
+- **Economic price engine:** Classic shop goods now quote and charge against the live goods reading (initially 100; bounded 10–190). The index's *weekly drift* is seedable but provisional: source-level multi-index interdependencies and wage adjustments are not yet fully migrated. Modern pricing unchanged. Fixed-price 10-ticket bundles ($10) and newspapers ($1) do not inflate.
+- **Lottery and rent:** Classic's lottery uses one 0–500 draw per ticket stack; winnings $5,000/$500/$200 follow the original thresholds, and the whole stack clears. Rent-extension approval follows original roll-on-d12 odds, without repeat-spamming after a refusal.
+- **Work:** Pay from a 1–5 unit partial shift rounds **down per shift** instead of carrying fractional dollars between shifts. Full shift still pays 8× hourly wage. Stat-credit accumulation and overdue-rent garnishment remain explicitly provisional pending DOS runtime traces.
+- **Rival priority and inspectability:** Added pure source-tagged ordered checks for unemployment, rent, liquidity, food, wardrobe, and emergency work; the original 170-waypoint route is reused. Existing qualified career planner remains fallback for uncovered branches. Decision trace, weekly lottery/economy events and current goods index are visible in Classic Career Roadmap; goods index shown in board ticker.
+- **Save compatibility:** Older saves default to goods index 100 and empty event/AI journals; new snapshots retain these Classic-only fields for deterministic replay. Modern rules, board geometry, and existing job IDs are unchanged.
+- **Reference and traceability:** `docs/reference/original-dos-pass2/` contains the full supplied mechanics/data/tests reference. ADR-0030 and the workboard distinguish *source-derived formulas* from *approximate gameplay*. The 47 Python reference tests are independent of the JavaScript regression suite.
+- **Quick test:** `TEST-DOS-PASS2.bat` or `npm run test:classic`; full release gate `node tools/verify.mjs` regenerates offline PLAY.html and GitHub Pages. No automatic Git push.
+
+## v0.5.28 — Source-linked Classic career and survival migration
+
+- **Original numeric education:** all 11 `originalDegreeId` identifiers and prerequisites are verified against the user's original DOS educational reference. Classic job qualification uses the source requirements for every job, fixing four old experience discrepancies (Socket City Salesperson, Factory Janitor, Bank Janitor, Rent Office Groundskeeper). Durable Life Loop job/degree save IDs are unchanged.
+- **Reproducible hiring:** seeded 1–100 integer draw follows the documented DOS threshold; Monolith Cook (occupation #44) is automatically accepted when otherwise qualified. An unqualified application still consumes the established Classic application action/time as before. Qualified hiring odds are shown in Employment and in the Career Roadmap.
+- **Survival budget:** a *non-mutating* two-week reserve calculation distinguishes cash from withdrawable bank savings, considers impending rent, consumable fresh food, and expiring job uniforms. Figures are an actionable forecast, not automatic expenses. No save schema changes.
+- **Career progression:** a deterministic job-linked degree planner scores studies by reachable improvements in earnings, missing degrees/stat thresholds, and real Classic waypoint travel. The rival uses the plan only when it has substantial discretionary cash after essential reserves.
+- **Rival upgrades:** job changes now value several future paychecks rather than comparing an increased wage to a single shift's cost, preventing a long-term $5 starter-job trap. Classic can work partial shifts late in the week. Modern mode does not use this logic.
+- **UI and transparency:** the Career Roadmap shows source DOS degree numbers, historic base wages separately from the still-playable values, and a two-week essentials forecast. Original exact economic-index salary transforms and full DOS AI priority weights remain unverified; no claim of full parity.
+- **Fast Classic checks:** double-click `TEST-CAREERS.bat` (or run `npm run test:classic`) to test employment, education and rival survival, then launch the bundled HTML without rebuilding.
+- **Verification:** `node tools/verify.mjs` builds offline and Pages editions and runs source, browser/wiring, and 100-seed Classic rival regressions. `TEST-LOCAL.bat` works for Windows. No Git push.
+
+## v0.5.28 — Original DOS route, workplace identities and smarter Classic rival
+
+- **Authentic IDs:** 13 original `placeNum` keys and matching 170 indexed `marblePath` waypoints, from the user-supplied reference data for DOS v1.000.060, are now imported. Original location identities are attached to Classic board venues and preserved independently of visuals/Modern Story.
+- **Road travel:** closest clockwise or anticlockwise original waypoint route is calculated by the engine; desktop and mobile pawns interpolate those exact waypoint indices along the current 14-anchor visual road. Time costs are **provisional** (3h + floor(waypoint transitions / 25)); original DOS movement-hour equivalence is not yet established.
+- **Careers:** all 37 Classic job IDs link to distinct original employers and actual Classic board locations. Original `jobNum`, base pay, numeric degree/stat requirements, uniform and occupation are available as reference metadata; the existing playable wages are intentionally unchanged. Job applications show the DOS role ID/reference base wage and current Life Loop offered wage separately.
+- **Classic rival:** the AI plans up to three destinations with the same 170-waypoint route, scores employment choices using qualification, hiring probability, salary improvement, commute, outfit cost, food and rent reserves, and chooses cheaper two-stop rent+food itineraries. Modern AI untouched.
+- **Validation:** run `TEST-ROUTES.bat` for reference+route smoke or `TEST-LOCAL.bat` for full checks. Reference source and confidence boundaries are in `docs/reference/original-dos-pass1/` and ADR-0028. No new save fields or Looprd protocol change.
+
+## v0.5.24 — Original Classic board and financial hazards
+
+- **Classic** uses Sierra's thirteen distinct location identities arranged around the original 5-column × 4-row map, with Low-Cost Housing and Le Security Apartments separate, and Z-Mart and Black's Market as independent shops and workplaces. **Modern Story** retains the existing New Day City map and location labels.
+- Classic employment, moving, food purchasing, relaxation and travel now use the matching original-style Classic destination instead of a mismatched modern venue.
+- Appliances/electronics now track store quality and broken state. Discount-purchased equipment fails more often than Socket City purchases; repair at Socket City restores its gameplay benefits. Rates are **provisional**, pending DOS observations.
+- Wild Willy can steal carried money during Bank or Black's Market transactions, or durable goods during a Low-Cost Housing burglary. **Le Security Apartments** prevent home burglaries but not shop robberies. Probabilities are provisional.
+- Classic board artwork uses an explicit thirteen-slot optional manifest. Until the new images are supplied, it uses bundled Contemporary art as placeholders; no image is requested from a remote server.
+- Existing game logic, Modern balance and Looprd message protocol remain stable. Original rule formulas, physical board travel time and event probability exactness still need DOS verification.
+
+See `docs/decisions/ADR-0025-classic-original-board-and-economic-risks.md`, `docs/classic-board-art-request.md`, and `tests/classic-map-risk.test.cjs`.
+
+## v0.5.25 — Classic board route and quick local test
+
+The Classic map now displays a source-defined road and visible pawn markers. After a successful travel command, your pawn moves on the road before the centered venue menu opens. All travel-hour calculations and turn constraints remain in the game engine; animation is cosmetic. `?debugRoutes=1` labels each route node. Modern Story remains on its original board without this overlay. Custom artwork is optional.
+
+**Test locally on Windows, without GitHub or ZipRunner:**
+
+- **Quick launch:** double-click `PLAY.bat` to open the included fully offline game **immediately**. No dependencies, web server or rebuild necessary.
+- **Full local verification:** double-click `TEST-LOCAL.bat` (requires Node.js 22+). It runs `node tools/verify.mjs`, rebuilds `PLAY.html`, and opens the game only after the tests pass.
+- **Terminal:** run `node tools/verify.mjs` and then `start PLAY.html` from PowerShell in the extracted folder.
+
+The local test does not establish that a deployed Looprd server supports live two-device movement; that remains a separate acceptance test.
+
+## v0.5.26 — One travel graph, route preview and mobile street layout
+
+Classic now calculates movement hours and pawn animation distance from the same validated graph. **The familiar hourly costs do not change**; the graph merely prevents them from disagreeing with the road. Hover or keyboard-focus a Classic storefront to preview the highlighted shortest street, road segments and remaining-time warning **without spending hours**. All Classic cards display a small travel-cost label. On narrow viewports the Classic board arranges locations along a winding street instead of drawing long diagonal roads through neighboring buildings. The return lane runs outside the left edge; animation adapts to resizes. Modern locations and timing, saved games and the Looprd wire contract are unchanged.
+
+**Fast local route smoke:** run `TEST-ROUTES.bat` from the extracted ZIP (requires Node 22+); it runs the route and clock unit tests, then opens the packaged `PLAY.html`. `TEST-LOCAL.bat` still runs the entire verifier and rebuilds offline files. Optional real-browser QA (Python + Playwright + Chromium): `python tests/qa_routes.py`. Use `?debugRoutes=1` to inspect route nodes when supplying final board art.
+
+See [ADR-0027](docs/decisions/ADR-0027-shared-travel-graph-preview-and-responsive-streets.md), `tests/classic-route-clock.test.cjs` and `tests/qa_routes.py`.
 
 ## How to play
 
 1. Open `PLAY.html` in Chrome/Edge (offline) or run `PLAY.bat` on Windows.
 2. Start **New Game**, choose Classic or Modern, set era and goals.
-3. Classic: visit Career Center, use employer filter, apply for a role, work at its actual workplace tile.
-4. Classic: in **week 4**, go to Open Door Realty (the modern board stand-in for the Rent Office) and pay the $325 rent in **cash**. The office reopens on future due weeks.
+3. Classic: visit Employment Office, apply through the employer filter, and work at the original named workplace.
+4. Classic: in **week 4**, visit the Rent Office and pay the $325 rent in **cash**. The office reopens on future due weeks.
 5. Export JSON save backups; browsers isolate local saves by origin, so file:// saves will not automatically appear on GitHub Pages.
 
 ## Verification and architecture
@@ -30,7 +125,7 @@ Read `ARCHITECTURE.md`, `docs/parity-matrix.md`, `docs/classic-job-table.md` and
 
 ## Limitations
 
-Original DOS gameplay has **not** been run side by side here. Era visuals are new, not extracted assets. Exact historical price swings and loan approvals, exact pawn fees/deadlines/location, spoilage medical bills, market crashes, special apartment behavior, four-player hotseat and the map's original nine storefront distinctions are still incomplete. Do not redistribute the original DOS archive in this package.
+Original DOS gameplay has **not** been run side by side here. Era visuals are new, not extracted assets. Exact historical price swings and loan approvals, exact pawn rates/deadlines, spoilage medical bills, market crashes, equipment failure/robbery probabilities, four-player hotseat and original per-step travel timing remain unverified. Do not redistribute the original DOS archive in this package.
 
 ## GitHub Pages
 
@@ -38,7 +133,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.21-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.52-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -171,3 +266,146 @@ Select a building to open its actual actions in a centered decision window over 
 Classic job IDs retain the original DOS employer names for rules parity, but hiring, working, character information, and the Career Center now use the business actually shown on the 13-location board. Example: Cook at *Monolith Burgers* (Classic job ID) appears as Cook at **The Good Fork**. The Good Fork board tile is visibly marked **WORK HERE**, and `work` is only available there. No new Classic/Modern rule differences.
 
 The two historical employers Z-Mart and Black's Market are separate discount/grocery **departments** of Fresh & Frugal, the only remaining shared physical-workplace collision. Their names are maintained as original reference labels in the Career Center, while the actual work tile is highlighted. Full one-business-per-DOS-employer parity remains an architectural backlog rather than a hidden behavior. See ADR-0022.
+
+## v0.5.22 — Classic Z-Mart / Black's Market retail systems
+
+Within the existing shared thirteen-location city, Fresh & Frugal now has **two explicitly separate Classic shop departments**. Black's Market handles 1/2/4-week fresh groceries, newspapers and lottery tickets. Z-Mart Discount offers low-price clothing, reference books, home audio/video gear and optional weekend event tickets on a deterministic four-week stock rotation. The centered interaction overlay shows two merchant headings; their underlying employer IDs and work requirements remain independent.
+
+The original reference confirms that Z-Mart stock changes each week and sells exclusive books and event tickets; exact price tables, stock odds, electronic breakdown risk and weekend charges are **not verified**. Our initial deterministic rotation and bonuses are documented approximations, not claimed DOS parity. Classic Socket City no longer sells books; Modern Story keeps its previous catalog. New `classicWeekendTicket` is a small optional save field, not a schema migration. Only current week actions can set it; invalid field values are rejected on snapshot load. Original book study bonuses and shared 13-city tile count remain. Full original separate physical stores remain workboard LL-147.
+
+No change to Looprd room/server schema, Classic employment IDs, or gameplay of Modern Story. See ADR-0023.
+
+
+### v0.5.23 Classic core mechanics
+
+Classic now disables in-venue actions once the clock is exhausted, adds a visible provisional ten-decision weekly cap, and carries fractional work wages across partial shifts for consistent totals. Travel does not use a decision slot. New state is saved and checked on load. Modern and Looprd protocol are unchanged. The exact DOS rules for counting actions and rounding wages remain unverified; see [ADR-0024](docs/decisions/ADR-0024-classic-clock-event-budget-and-partial-wages.md).
+
+## v0.5.34 — Employer reliability, net-pay estimates and Jones scheduling
+
+- **Work reliability:** DOS-first ordering: first low-reliability attempt (`dependability < requirement−2`) warns **without clock/pay**, unless below `requirement−5` where dismissal takes priority. Warning is once per week and can be retried. Outfit and energy requirements still apply.
+- **Transparent paychecks:** Pure Classic gross/partial-gross, garnishment, fee, net, and debt-after quote shared between UI and payout. **Historical gross calculation** is supported by source; the exact special-case arrears deduction/fees are **provisional** and must not be mistaken for a verified DOS translation.
+- **Opponent routing:** Classic Jones only schedules a workplace trip if at least one playable clock unit remains after traveling and stops submitting errands at the week action cap.
+- **Saves:** `classicWorkWarningWeek` carries only the warning gate. Existing saves default safely; malformed future-week markers are rejected. Modern economy/work is isolated.
+- **Testing:** `TEST-WORK.bat` or `npm run test:work`; complete `node tools/verify.mjs` gate. Architecture/limitations: ADR-0035.
+
+## v0.5.35 — Classic net pay, payroll audit and debt-aware Jones
+
+- **Gross/net consistency:** Read-only estimates now match actual work settlements in a single pure pay calculator; every Classic shift reconciles wallet cash and rent debt.
+- **Paycheck history:** Finances shows the most recent completed shifts, including gross pay, arrears deduction, fees, net received and remaining rent debt. Saved journal is bounded to 16 entries and validated on import; v0.5.34 saves get an empty journal.
+- **Better Jones AI forecasts:** Two subsequent paychecks are simulated from contracted wages and take-home cash, accounting for debt already reduced by the first paycheck. The rival preserves immediate rent, food, uniform and downturn reserves before voluntarily paying off old arrears.
+- **Provenance:** DOS gross/partial-gross rules are source-derived. Actual half-gross garnishment and a maximum $2 fee, plus the AI buffer, remain **compatibility approximations**. The `fullGrossBasis` diagnostic only shows why the unresolved `temp0`/`temp1` branch might differ. **No claim of exact DOS garnishment parity.**
+- **Local validation:** Run `TEST-PAYCHECKS.bat`, `TEST-LOCAL.bat` or `node tools/verify.mjs`. Standalone `PLAY.html` is prebuilt. Modern mode and Looprd routes stay untouched.
+
+## v0.5.36 — Classic turn boundaries and weekly source order
+
+- Per-player DOS-derived **−3 dependability** is applied at turn closure, including Jones and hotseat users, not at the shared next-week reset. Existing job and clock actions remain unchanged.
+- One-time rent assessment uses the original four-week deadlines, protects against duplicate processing, and retains optional payment/extension behavior.
+- A bounded **72-event** phase journal in Classic Finances helps compare economic, living, rent, loans and reset sequencing against actual DOS traces; the phase order is a **migration approximation**.
+- Save/Looprd snapshots remain additive and validate journal/boundary fields; prior saves receive safe defaults and Modern remains untouched. Run `TEST-TURNS.bat` or `npm run test:turns` for focused regressions.
+
+See ADR-0037. Exact 37-state SCI `startTrn` ordering, garnishment and movement-time translation are still unresolved.
+
+## v0.5.37 — Classic board layout first, plus weekly DOS event
+
+- **Board architecture:** Classic always uses the original 5×4 city geography for all 13 locations, with one unoccupied southwest crossing. The 170-waypoint path and job/place identities stay authoritative. No mobile reordering or changes to game travel charges.
+- **Phone layout:** The default Explore mode keeps building tiles readable in a 740px-wide horizontally pannable map inside the existing City view. Overview fits the whole map for orientation; a building jump select and My Pawn locator move the viewport **without initiating travel**. Mode preference is browser-local, never part of the save/Looprd snapshot.
+- **Streets and movement:** The road SVG sits in the same scroll stage as the tiles, keeping waypoints/pawns aligned when panning or resizing. L-shaped gutter bends at three original corner joins avoid diagonals through buildings. Centered venue menus remain outside that pan viewport.
+- **Core event migration:** Computer/appliance #29 uses recovered `startTrn.sc` **state 4**: a seeded 1-in-7 chance to award **$20–$100 cash**. This replaces the prototype's 33%-chance fixed $40 Classic bank deposit. Lottery is source-tagged as state 2. Most of the original 37-state weekly process remains **unimplemented or approximate**. The Modern bonus is deliberately unchanged.
+- **QA:** `TEST-CLASSIC-BOARD.bat` runs the source tests. Run `node tools/verify.mjs` for all tests and both distributables. Browser checks cover 1440×900 desktop, 390×844 and 320×700 phones, scroll/finder/overview, and Monolith Burger centered interactions. Offline `PLAY.html` needs no HTTP server. No git push was performed.
+
+See ADR-0038 and `docs/classic-board-art-request.md` for replacement building art slots.
+
+
+## v0.5.38 — Readable Classic navigation and source state journals
+
+The Classic 13-location city continues to use the same 5×4 geography and 170 source waypoints on all devices. On phones, tapping a small tile in **Overview** opens Explore and pans to it without spending game time; a second tap in Explore commits normal authoritative travel and opens the centered venue. During local pawn movement the map follows the pawn unless the player manually swipes. My Pawn restores the view. Modern rules and multiplayer commands remain unchanged.
+
+Classic `startTrn.sc` state 10 food-storage losses and state 18 one-week/expired clothing warnings are recorded in the existing bounded event log, with pure event helpers and validation. The food spoilage **probability is not recovered**, and the provisional guaranteed-spoil behavior remains for now; a non-source-backed $25 medical charge has been removed. No save migration or new persistent fields were introduced. Run `TEST-CLASSIC-BOARD.bat` or `node tools/verify.mjs`.
+
+## v0.5.39 — Classic journey and emergency/food event provenance
+
+The fixed 13-place Classic board now shows a small, accessible travel-state pill during a trip, a road-aligned arrival marker, and the usual centered interaction menu after the authoritative travel action succeeds. Desktop, phone Explore and phone Overview semantics remain: Overview first tap is inspect/zoom and never charges time. Horizontal drag exceeding 9 pixels cancels the camera follow for that trip; taps do not. Arrival is presentation-only; route clock costs, saves and host control do not change.
+
+Original DOS weekly source state 12 (food shortage) is journaled when the existing hunger routine encounters no food. Source state 34 (emergency work-clothing assistance) is journaled when the existing two-check rescue executes; the current $90 payout and eight-week cooldown are **provisional**, not recovered DOS constants. No new loss or rescue mechanic is added. Run `TEST-JOURNEY.bat` or `node tools/verify.mjs`.
+
+## v0.5.41 — Classic relaxation and skippable pawn travel
+
+Classic-only relaxation is now tracked independently of happiness and energy (DOS state 6: weekly −1 to minimum 10 without a hot tub). Rest restores it through a documented compatibility adapter (+6); the original starting amount and hot-tub item are not yet reproduced. Existing quarterly loan checks now write state-20 journal entries without additional charges. Travel has a presentation-only **Skip animation** button for quick repeat trips; all costs still come from the same host-authoritative travel command. Finances displays relaxation. See ADR-0041 and `TEST-RELAXATION.bat`.
+
+
+## v0.5.43 — production Classic board, active turn center and weekly dial
+
+The 26 commissioned WebP files from `convert_webp.zip` are installed as 13 full Classic card/detail pairs under `assets/art/styles/classic-modern/`. The original 13 place IDs and 170-route positions retain their stable five-by-four perimeter on desktop and mobile. The southwest corner remains a street crossing, not a new venue. On phones, **Explore** allows horizontal panning with readable shops; **Overview** shows all locations at once.
+
+The center of the Classic board now displays the **active player**, week number and original-inspired **circular 60-unit weekly clock**. It updates from `game.player.hours`, never the system clock. The existing lower multiplayer turn ticker remains present for accessibility and diagnostics. Modern mode keeps its existing hub.
+
+The designer's normalized door coordinates are preserved as `doorAnchor` metadata. Art and board placement are purely visual: they do not change historical route distance, actions, wages or hour costs.
+
+Test via `node tools/verify.mjs`, then open `PLAY.html`. Verify local hotseat transitions and phone Explore/Overview. See `docs/classic-venue-art-acceptance.md` and ADR-0044.
+
+
+## v0.5.45 — Modular Portrait Kit and cross-game Social profile
+
+The top bar has a **Profile** button for the supplied JS renderer and its Everyday / DOMINION art packs. The game packages compact WebP previews, and can later load packs from an HTTPS art host via `window.LooprdPortraitAssetsBase` set before the scripts. Profiles store `looprd.social.profile/v1` appearance IDs and a display name separately in browser localStorage. Game stats and saves stay in Life Loop. Portraits also work in the self-contained PLAY.html with embedded packs.
+
+The optional **Connect to Looprd Social** section requests a separate Social URL and bearer token at runtime, never stores tokens, and can explicitly fetch/publish the profile and use the development lobby chat. A separate `looprd-social` ZIP demonstrates the API on 127.0.0.1; it is not production-ready. Connecting this service does **not** authenticate Life Loop multiplayer, which retains its friend-code Looprd room. See `docs/decisions/ADR-0045-shared-modular-portrait-and-social-boundary.md` and `docs/looprd-social-integration.md`.
+
+Use `python -m http.server 8080` for the local browser version or `PLAY.html` for the complete offline edition.
+
+
+## v0.5.46 — Chat with Looprd Social in the game
+
+The **Chat** button opens a Social lobby by default. Connect to your Looprd Social host with a development credential: use the HTTPS Looprd origin (for instance `https://api.example.org`), not the `/session` game endpoint. The game calls `/looprd/looprd-social/v1/social` directly, and the **Profile** panel reuses the connection. Social and private Co-op chat have independent tabs; you do not have to join a game to use Social.
+
+Only the public Social server origin is remembered across reloads; development credentials must be entered again and are never saved to local storage, exports or game state. Native Social requires the game site's browser origin in `LOOPRD_ORIGINS` and HTTPS. For development, `http://127.0.0.1:8947` continues to select the local bridge.
+
+Use `node tools/verify.mjs` and `python tests/qa_social_chat.py`. The browser test uses simulated Social responses, not your production account. No Looprd Social server source changes are needed. Production cross-game SSO is still blocked; do not forward Social development tokens as game-room tokens. The game Looprd descriptor includes the additive schema-v2 `Room.chatKey` migration.
+
+## v0.5.49 — Classic hotseat privacy and mobile scenic board
+
+- **Local Classic hotseat:** When the active human changes, the board, finances, Social chat and room controls are hidden behind a full-screen pass-the-device card. The next human confirms when ready. No additional game turn, clock deduction, network call or saved field. Modern mode and online co-op do not receive this local-device handoff.
+- **Recovery:** Resuming/importing an existing Classic hotseat save requires the same explicit reveal, so opening a shared device does not casually expose current-player finances.
+- **Original board:** The Public Garden clock and two tree-lined scenic road sections remain visible below 1024px in both Explore and Overview. Noninteractive landscaping; the original 13 venue identities/170 waypoint travel quotes remain authoritative.
+- **QA:** `node --test tests/classic-hotseat-handover.test.cjs`, `python tests/qa_classic_handover.py`, `node tools/verify.mjs`.
+- **Social:** No Looprd Social server changes, no new credentials and no game-server schema modifications.
+
+
+## v0.5.49 — Garden clock and phone-only board camera
+
+The Classic 60-unit clock is **at the Public Garden** (bottom center), not in the turn display; the middle retains current-player identity and week. The Explore/Overview camera toggle appears on phones (width <=720px). Larger displays always show the fitted city. The display-only road projection follows the top gutter of the actual fifth row. Original 170-waypoint costs, save format, rooms, Social chat and Modern game remain unchanged. Run `python tests/qa_classic_clock_garden.py` after `node tools/build-offline.mjs` to visually validate desktop and mobile. ADR-0048.
+
+
+### v0.5.49 — Classic entrance alignment and in-venue time
+
+- The Classic 13-venue road loop remains source-derived (170 DOS waypoints).
+- Storefront-specific normalized doorway markers position pawns at the actual art entrance. During travel, walking animation uses a short visual sidewalk spur that never changes the original travel cost or saved location identity.
+- Only the occupied, previewed or arriving shop shows its access spur to keep the board readable.
+- During a Classic building visit, a compact live 60-unit clock appears in the menu header. It updates after spending time without leaving the building and matches the garden dial. Modern action panels are unchanged.
+- Verify with `node tools/verify.mjs` and, when Chromium + Playwright are installed, `python tests/qa_entrances_clock.py`.
+
+
+### v0.5.50 — Continuous Classic road preview
+
+The 13 original Classic venues and source-derived 170-waypoint travel quotes are unchanged. The display-only sidewalk now runs between the 5x5 board tiles with continuous rounded corners. Hover shows only the street route and a separate doorway target; no long green preview line crosses shop windows or the tree-lined gaps. The pawn animates on this street and finishes at the appropriate illustrated doorway. Original game rules and Social server are unchanged. Run `python tests/qa_smooth_streets.py` for the visual regression at four sizes, and `node tools/verify.mjs` for the game suite.
+
+Artifact: `the-life-loop-0.5.50-ziprunner.zip`
+
+
+### v0.5.51 — Pawn doorway transitions
+
+A Classic pawn now leaves its illustrated doorway with a short threshold movement and fade, reappears on the source-authoritative public road, walks the same 170-waypoint visual route, then fades back into the doorway with a short finish. Both endpoint positions are derived from the existing 13 artwork entrance coordinates. The preview remains street-only. Skip animation, reduced-motion mode, saved games, and social/co-op permissions have no game-time side effects.
+
+**Test:** `node --test tests/classic-pawn-doorway.test.cjs`, `python tests/qa_pawn_doorway.py`, and `node tools/verify.mjs`. No server changes required.
+
+Artifact: `the-life-loop-0.5.52-ziprunner.zip`
+
+
+### v0.5.52 — Visible storefront frontage paths
+
+The Classic street now follows the illustrated frontage apron near the foot of the top/bottom businesses, rather than only the perimeter of the central green. All 13 entrances have permanently visible paved sidewalk links. Hovered destinations highlight the complete path, from the current door through the public route to the chosen door. The pawn follows the same continuous visible footpath without fading across a hidden transfer.
+
+The Public Garden clock stays visibly above the southern route. Original 170-waypoint path distances and provisional travel-to-clock conversion are **unchanged**, as are venue actions, Modern mode, game saves, Looprd Social and game-server schemas.
+
+**Local browser QA:** `python tests/qa_storefront_frontage.py` at 320, 390, 768 and 1440px; check all 13 footpaths, the two frontage lanes, mobile Explore/Overview, the actual Bank walk (5 units), destination doorway and the in-venue clock. See ADR-0052.
+
+Artifact: `the-life-loop-0.5.52-ziprunner.zip`

@@ -46,8 +46,8 @@ test('Home art follows studio, apartment and loft separately',()=>{
 });
 test('Source board and destination art both read the active player home tier',()=>{
  const src=readFileSync('src/app.js','utf8');
- assert.ok(src.includes('Art.scene(loc.id,true,game.settings.era,p.home)'));
- assert.ok(src.includes('Art.scene(current.id,false,game.settings.era,p.home)'));
+ assert.ok(src.includes('Art.scene(loc.artId||loc.id,true,game.settings.era'));
+ assert.ok(src.includes('Art.scene(current.artId||current.id,false,game.settings.era'));
  assert.match(readFileSync('tools/build-offline.mjs','utf8'),/data:image\/webp;base64/);
  assert.match(readFileSync('tools/build-pages.mjs','utf8'),/copyFileSync/);
 });

@@ -1,0 +1,377 @@
+{
+  "schema": "modular-portraits.pack/v1",
+  "revision": 1,
+  "canvas": [
+    512,
+    512
+  ],
+  "rig": {
+    "id": "front-portrait-v1",
+    "scalpTopY": 0.21,
+    "eyesY": 0.51,
+    "chinY": 0.82
+  },
+  "colors": {
+    "skin": {
+      "label": "Skin",
+      "default": "#c18c69",
+      "swatches": [
+        "#3a201b",
+        "#4a2920",
+        "#5a3023",
+        "#6a3828",
+        "#7a432f",
+        "#8a4d36",
+        "#995a40",
+        "#a86a4c",
+        "#b57958",
+        "#c38867",
+        "#d19a7b",
+        "#dda98a",
+        "#e8b99d",
+        "#f0c7ad",
+        "#f4d2bc",
+        "#f7ddca",
+        "#8b5a48",
+        "#a76b55",
+        "#c48068",
+        "#d69a83",
+        "#70503f",
+        "#936b55",
+        "#b98970",
+        "#d4aa91"
+      ]
+    },
+    "hair": {
+      "label": "Hair",
+      "default": "#67442f",
+      "swatches": [
+        "#14161a",
+        "#20242b",
+        "#302a26",
+        "#4b3328",
+        "#65402c",
+        "#7b4b31",
+        "#8c5b3b",
+        "#a66a44",
+        "#c18a62",
+        "#d8b58d",
+        "#c8c4b8",
+        "#e1ded3",
+        "#4c5664",
+        "#667789",
+        "#245d68",
+        "#2f8c90",
+        "#5b316b",
+        "#8f3b75",
+        "#8e372a",
+        "#b65334",
+        "#8d7a37",
+        "#3d6d3c",
+        "#7885a0",
+        "#a7b0c4"
+      ]
+    },
+    "hairAccent": {
+      "label": "Hair highlights",
+      "default": "#9b7658",
+      "swatches": [
+        "#131920",
+        "#2b3640",
+        "#315a68",
+        "#3e7f8c",
+        "#557d47",
+        "#6e9b55",
+        "#7b653d",
+        "#9a7c45",
+        "#76516f",
+        "#9b5b83",
+        "#a03f3f",
+        "#c45a47",
+        "#877d65",
+        "#b6aa82",
+        "#57b7c6",
+        "#7be2e8",
+        "#c14bda",
+        "#e56ef2",
+        "#e0a83a",
+        "#f4d85c",
+        "#c9d4dd",
+        "#f0f4f5",
+        "#78dfa2",
+        "#d86b6b"
+      ]
+    },
+    "outfit": {
+      "label": "Clothing",
+      "default": "#528071",
+      "swatches": [
+        "#111820",
+        "#18242c",
+        "#20313a",
+        "#293f47",
+        "#343943",
+        "#414852",
+        "#4e5661",
+        "#5d6671",
+        "#34302e",
+        "#4b3b34",
+        "#624b3d",
+        "#79604e",
+        "#2b3e36",
+        "#395547",
+        "#4b6b58",
+        "#65806c",
+        "#31304a",
+        "#474362",
+        "#5d567a",
+        "#756c94",
+        "#4b2f34",
+        "#653b42",
+        "#824b54",
+        "#9d606a"
+      ]
+    },
+    "accessory": {
+      "label": "Accessory",
+      "default": "#383c40",
+      "swatches": [
+        "#1b6770",
+        "#228895",
+        "#2ca7b5",
+        "#52c9d4",
+        "#725326",
+        "#9a7130",
+        "#c18d3d",
+        "#e0b15d",
+        "#61294f",
+        "#843567",
+        "#a94384",
+        "#d05ca7",
+        "#344d72",
+        "#46699a",
+        "#5c87c0",
+        "#78a8da",
+        "#5c6b35",
+        "#778b42",
+        "#98ad55",
+        "#b8cb6f",
+        "#783337",
+        "#9b4146",
+        "#c15459",
+        "#e17578"
+      ]
+    }
+  },
+  "layers": [
+    {
+      "slot": "outfit",
+      "color": "outfit"
+    },
+    {
+      "slot": "face",
+      "color": "skin",
+      "preserveChroma": true
+    },
+    {
+      "slot": "outfit",
+      "color": "outfit",
+      "frontOnly": true
+    },
+    {
+      "slot": "glasses",
+      "color": "accessory",
+      "preserveChroma": true,
+      "accessory": true
+    },
+    {
+      "slot": "mask",
+      "color": "accessory",
+      "preserveChroma": true,
+      "accessory": true
+    },
+    {
+      "slot": "implant",
+      "color": "accessory",
+      "preserveChroma": true,
+      "accessory": true
+    },
+    {
+      "slot": "hair",
+      "color": "hair",
+      "accent": "hairAccent"
+    }
+  ],
+  "id": "dominion-pixel",
+  "label": "DOMINION \u00b7 pixel cyberpunk",
+  "description": "Four modular faces, two hairstyles, a jacket and separate cyberpunk accessories. The existing DOMINION artwork, rendered in JavaScript.",
+  "logicalSize": 256,
+  "shadeSteps": 8,
+  "pixelated": true,
+  "background": "#111d29",
+  "slots": {
+    "face": {
+      "label": "Face",
+      "default": "face-1",
+      "options": [
+        {
+          "id": "face-1",
+          "label": "Base Face",
+          "asset": "head.webp"
+        },
+        {
+          "id": "face-2",
+          "label": "Square Jaw",
+          "asset": "head_02.webp"
+        },
+        {
+          "id": "face-3",
+          "label": "Soft Features",
+          "asset": "head_03.webp"
+        },
+        {
+          "id": "face-4",
+          "label": "Weathered",
+          "asset": "head_04.webp"
+        }
+      ]
+    },
+    "hair": {
+      "label": "Hair",
+      "default": "swept",
+      "options": [
+        {
+          "id": "bald",
+          "label": "Bald",
+          "asset": "",
+          "scale": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "swept",
+          "label": "Swept Undercut",
+          "asset": "hair_sweep.webp",
+          "scale": [
+            0.84,
+            0.75
+          ],
+          "offset": [
+            0.07875,
+            0.0127
+          ]
+        },
+        {
+          "id": "short",
+          "label": "Spiked Crop",
+          "asset": "hair_crop.webp",
+          "scale": [
+            0.84,
+            0.75
+          ],
+          "offset": [
+            0.07875,
+            0.0127
+          ]
+        }
+      ]
+    },
+    "outfit": {
+      "label": "Clothing",
+      "default": "jacket",
+      "options": [
+        {
+          "id": "jacket",
+          "label": "Tactical jacket",
+          "asset": "jacket.webp",
+          "scale": [
+            0.95,
+            0.95
+          ],
+          "offset": [
+            0.025,
+            0.09
+          ],
+          "frontFromY": 0.83
+        }
+      ]
+    },
+    "glasses": {
+      "label": "Goggles",
+      "default": "none",
+      "options": [
+        {
+          "id": "none",
+          "label": "None",
+          "asset": ""
+        },
+        {
+          "id": "glasses",
+          "label": "Open-Lens Goggles",
+          "asset": "goggles.webp",
+          "scale": [
+            0.9,
+            0.8
+          ],
+          "offset": [
+            0.05,
+            0.105
+          ]
+        }
+      ]
+    },
+    "mask": {
+      "label": "Mask",
+      "default": "none",
+      "options": [
+        {
+          "id": "none",
+          "label": "None",
+          "asset": ""
+        },
+        {
+          "id": "mask",
+          "label": "Compact Respirator",
+          "asset": "respirator.webp",
+          "scale": [
+            0.72,
+            0.7
+          ],
+          "offset": [
+            0.14,
+            0.21
+          ]
+        }
+      ]
+    },
+    "implant": {
+      "label": "Implant",
+      "default": "none",
+      "options": [
+        {
+          "id": "none",
+          "label": "None",
+          "asset": ""
+        },
+        {
+          "id": "implant",
+          "label": "Temple Implant",
+          "asset": "implant.webp",
+          "scale": [
+            0.8,
+            0.6
+          ],
+          "offset": [
+            0.14,
+            0.235
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -19,7 +19,8 @@
         </div>
       </div>
       <div class="head-actions">
-        <button class="city-icon-button" id="chatToggle" type="button" aria-label="Multiplayer chat" aria-expanded="false" aria-controls="chatPanel" title="Live room chat" disabled><span aria-hidden="true">💬</span><span class="city-icon-label">Chat</span><span class="notification-circle" id="chatBadge" hidden>1</span></button>
+        <button class="city-icon-button" id="sharedProfileBtn" type="button" aria-label="Shared profile and portrait" title="Shared Profile"><span aria-hidden="true">◉</span><span class="city-icon-label">Profile</span></button>
+        <button class="city-icon-button" id="chatToggle" type="button" aria-label="Social and co-op chat" aria-expanded="false" aria-controls="chatPanel" title="Social and co-op chat"><span aria-hidden="true">💬</span><span class="city-icon-label">Chat</span><span class="notification-circle" id="chatBadge" hidden>1</span></button>
         <div class="utility-holder coop-holder">
           <button class="city-icon-button" id="onlineBtn" type="button" aria-label="Co-op menu" aria-haspopup="true" aria-expanded="false" aria-controls="coopMenu" title="Co-op"><span aria-hidden="true">◎</span><span class="city-icon-label">Co-op</span><span class="connection-indicator" id="coopIndicator" hidden></span></button>
           <div class="utility-menu coop-menu" id="coopMenu" role="menu" hidden>
@@ -68,12 +69,44 @@
       </aside>
 
       <main class="main-area" id="gameCity">
+        <div class="classic-board-toolbar" id="classicBoardToolbar" hidden>
+          <span class="classic-board-caption">CLASSIC CITY <span aria-hidden="true">·</span> ORIGINAL 13-PLACE ROUTE</span>
+          <label class="classic-board-jump-label" for="classicBoardJump">Find building</label>
+          <select id="classicBoardJump" aria-label="Find a building on the Classic board"><option value="">Find building…</option></select>
+          <div class="classic-board-modes" role="group" aria-label="Phone board view">
+            <button id="classicBoardFit" type="button" aria-pressed="false">Overview</button>
+            <button id="classicBoardExplore" type="button" aria-pressed="false">Explore</button>
+            <button id="classicBoardLocate" type="button" aria-label="Find your pawn on the board">◎ My pawn</button>
+          </div>
+        </div>
         <div class="board-frame">
-          <div class="board-grid" id="board"></div>
+          <div class="classic-journey-status" id="classicJourneyStatus" role="status" aria-live="polite" hidden></div>
+          <div class="classic-travel-controls" id="classicTravelControls" hidden><button id="classicTravelSkip" type="button" aria-label="Finish pawn animation now without additional travel cost">Skip animation →</button></div>
+          <div class="board-viewport" id="boardViewport" aria-label="Classic board; swipe sideways to explore buildings" tabindex="0">
+            <div class="board-stage classic-board-stage" id="boardStage">
+              <div class="board-grid" id="board"></div>
+              <div class="classic-turn-center" id="classicTurnCenter" role="group" aria-label="Classic active player" hidden>
+                <div class="classic-turn-avatar" id="classicTurnAvatar" aria-hidden="true"></div>
+                <div class="classic-turn-kicker" id="classicTurnKicker">YOUR TURN</div>
+                <strong class="classic-turn-name" id="classicTurnName">Player</strong>
+                <span class="classic-turn-week" id="classicTurnWeek">WEEK 1</span>
+              </div>
+              <div class="classic-board-clock" id="classicBoardClock" role="group" aria-label="Public Garden weekly clock" hidden>
+                <div class="classic-turn-dial" id="classicTurnDial" role="progressbar" aria-label="Weekly Classic clock" aria-valuemin="0" aria-valuemax="60" aria-valuenow="60">
+                  <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="classic-dial-base" cx="50" cy="50" r="39"/><circle class="classic-dial-fill" id="classicDialFill" cx="50" cy="50" r="39" pathLength="100"/><path class="classic-dial-hand" id="classicDialHand" d="M50 50V19"/><circle cx="50" cy="50" r="4" fill="#664c3d"/></svg>
+                  <span class="classic-dial-value" id="classicDialValue">60</span>
+                </div>
+                <div class="classic-dial-caption"><b id="classicDialWeek">WEEK 1</b><span id="classicDialRemaining">60 / 60 units</span></div>
+              </div>
+              <svg class="route-overlay" id="routeOverlay" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+            </div>
+          </div>
+          <div class="route-announce sr-only" id="routeAnnounce" role="status" aria-live="polite"></div>
+          <div class="route-hint" id="routeHint" role="status" aria-live="polite" hidden></div>
           <section class="venue-layer" id="venueLayer" role="dialog" aria-modal="true" aria-labelledby="venueTitle" aria-describedby="venueDescription" hidden>
             <button class="venue-scrim" type="button" id="venueScrim" aria-label="Close venue"></button>
             <div class="venue-window" tabindex="-1">
-              <header class="venue-window-header"><div class="venue-heading"><span class="eyebrow dark">VISITING</span><h2 id="venueTitle" tabindex="-1">Location</h2><p id="venueDescription"></p></div><button type="button" id="venueClose" class="venue-close" aria-label="Close building actions">×</button></header>
+              <header class="venue-window-header"><div class="venue-heading"><span class="eyebrow dark">VISITING</span><h2 id="venueTitle" tabindex="-1">Location</h2><p id="venueDescription"></p></div><div class="venue-head-actions"><div class="venue-clock" id="venueClock" role="progressbar" aria-label="Classic weekly time remaining" aria-valuemin="0" aria-valuemax="60" aria-valuenow="60" hidden><span class="venue-clock-ring" aria-hidden="true"><strong id="venueClockValue">60</strong></span><span class="venue-clock-caption"><b id="venueClockWeek">WEEK 1</b><span id="venueClockRemaining">60 / 60 units</span></span></div><button type="button" id="venueClose" class="venue-close" aria-label="Close building actions">×</button></div></header>
               <div class="venue-window-body"><div id="venueSummary" class="venue-summary"></div><div class="venue-menu"><div class="action-panel-heading"><span>What would you like to do?</span><span id="actionsCount" class="muted micro"></span></div><div class="actions-scroller" id="venueActions"></div></div></div>
               <footer class="venue-window-footer"><span id="venueFeedback" role="status" aria-live="polite"></span><button id="venueDone" type="button" class="venue-done">Done ↗</button></footer>
             </div>
@@ -95,27 +128,53 @@
       <button type="button" data-mobile-tab="city" aria-controls="gameCity" aria-pressed="true"><span aria-hidden="true">▦</span><strong>City</strong></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.21</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.52</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
-  <section id="chatPanel" class="chat-panel" role="region" aria-label="Live room chat" hidden>
-    <div class="chat-heading"><strong>💬 Room chat</strong><span>LIVE · NO HISTORY</span><button id="closeChat" type="button" aria-label="Close chat">×</button></div>
+  <section id="classicHotseatHandover" class="classic-hotseat-handover" role="dialog" aria-modal="true" aria-labelledby="classicHandoverTitle" hidden>
+    <div class="classic-handover-card"><span class="classic-handover-kicker">CLASSIC HOTSEAT · PASS THE DEVICE</span><div class="classic-handover-symbol" aria-hidden="true">⏱</div><h2 id="classicHandoverTitle">Next player's turn</h2><p>The previous player's private information is hidden. Pass the device to the next player before continuing.</p><button type="button" id="classicHandoverContinue">I'm ready — reveal my turn</button><small>This screen does not advance a turn or spend any game time.</small></div>
+  </section>
+  <section id="chatPanel" class="chat-panel" role="region" aria-label="Social and co-op chat" hidden>
+    <div class="chat-heading"><strong>💬 Chat</strong><span id="chatHeadingStatus">Social lobby</span><button id="closeChat" type="button" aria-label="Close chat">×</button></div>
+    <div class="chat-tabs" role="group" aria-label="Chat channel"><button id="chatSocialTab" type="button" aria-pressed="true">Social lobby</button><button id="chatRoomTab" type="button" aria-pressed="false">Co-op room</button></div>
+    <form id="chatSocialConnectForm" class="chat-social-connect" autocomplete="off"><label>Social server<input id="chatSocialOrigin" type="url" placeholder="https://api.example.org" aria-label="Looprd Social server" required /></label><label>Development token<input id="chatSocialToken" type="password" placeholder="Token (kept only in memory)" aria-label="Looprd Social development token" required autocomplete="off" /></label><button type="submit">Connect</button><small>Use your Looprd Social host, not the game room URL. HTTPS is required outside localhost. Development credentials are not cross-game sign-in.</small></form>
+    <div id="chatSocialConnected" class="chat-social-connected" hidden><span id="chatSocialIdentity"></span><button id="chatSocialRefresh" type="button">Refresh</button><button id="chatSocialDisconnect" type="button">Disconnect</button></div>
     <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
-    <form id="chatForm" class="chat-form"><input id="chatInput" maxlength="320" placeholder="Message your friend…" required autocomplete="off" aria-label="Chat message"/><button type="submit" id="chatSend">Send ↗</button></form>
-    <div class="chat-status" id="chatStatus">Connect to Looprd WSS to chat.</div>
+    <form id="chatForm" class="chat-form"><input id="chatInput" maxlength="320" placeholder="Send a message…" required autocomplete="off" aria-label="Chat message"/><button type="submit" id="chatSend">Send ↗</button></form>
+    <div class="chat-status" id="chatStatus">Connect to Looprd Social to see the lobby.</div>
   </section>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="overlay" class="overlay" aria-modal="true" role="dialog"></div>
   <input id="filePicker" type="file" accept=".json,application/json" hidden />
-  <script src="src/data.js"></script>
+  <script src="src/classic-original.js"></script>
+  <script src="src/classic-pass2-rules.js"></script>
+  <script src="src/classic-time.js"></script>
+  <script src="src/classic-turn-sequence.js"></script>
+    <script src="src/classic-weekly-events.js"></script>
+<script src="src/classic-household.js"></script>
+  <script src="src/classic-economy.js"></script>
+  <script src="src/classic-economic-events.js"></script>
+    <script src="src/data.js"></script>
   <script src="src/portrait-assets.js"></script>
   <script src="src/character-catalog.js"></script>
 <script src="src/character-sprites.js"></script>
 <script src="src/characters.js"></script>
+  <script src="src/modular-portrait-kit.js"></script>
+  <script src="src/modular-portrait-editor.js"></script>
+  <script src="src/looprd-shared-profile.js"></script>
+  <script src="src/looprd-social-session.js"></script>
+  <script src="src/shared-portrait-ui.js"></script>
   <script src="src/setup-preferences.js"></script>
+  <script src="src/route-graph.js"></script>
+  <script src="src/classic-routes.js"></script>
   <script src="src/engine.js"></script>
   <script src="src/art-assets.js"></script>
+  <script src="src/classic-art-assets.js"></script>
   <script src="src/art.js"></script>
   <script src="src/network.js"></script>
+  <script src="src/route-overlay.js"></script>
+  <script src="src/classic-journey.js"></script>
+  <script src="src/classic-hotseat-handover.js"></script>
+<script src="src/classic-board-hud.js"></script>
   <script src="src/app.js"></script>
 </body>
 </html>

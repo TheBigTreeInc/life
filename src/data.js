@@ -1,5 +1,7 @@
 (function (root) {
   'use strict';
+  const original = root.LifeClassicOriginal || (typeof require==='function' ? require('../assets/boards/classic/original-mechanics.v1.json') : null);
+  if(!original || original.places.length!==13 || original.jobs.length!==37)throw Error('Original Classic identity reference unavailable');
   const places = [
     {id:'home',      name:'Your Place',        tag:'REST & RECHARGE', icon:'🏠', color:'#71cfaa', blurb:'Your tiny corner of the city. Cozy, with ambitions bigger than the living room.', cell:[1,1]},
     {id:'agency',    name:'Career Center',     tag:'FIND YOUR PATH',  icon:'💼', color:'#a8b2ff', blurb:'Every great career starts somewhere. Usually with paperwork.', cell:[2,1]},
@@ -15,6 +17,31 @@
     {id:'clinic',    name:'Wellbeing Clinic', tag:'HEALTH',          icon:'🩺', color:'#b2e59b', blurb:'You only get one character. Take care of them.', cell:[1,4]},
     {id:'pawn',      name:'Second Chance Pawn', tag:'PAWN & REDEEM', icon:'⚖️', color:'#e5be89', blurb:'Give useful things a second chance. Pawn valuables for short-term cash, then redeem them before the deadline.', cell:[1,3]}
   ];
+  // Mechanical city map for Classic, faithfully naming all 13 Jones businesses.
+  // Positions follow the original screen geography; modern Era images are placeholders.
+  // Keep the IDs stable: saves and engine actions use these IDs; artId can be swapped.
+  const classicPlaces = [
+    {id:'clinic',name:'Le Security Apartments',tag:'SECURE HOUSING',icon:'🏘️',color:'#d3dfb8',blurb:'Protected apartment complex. Your possessions are safe from residential burglary.',cell:[1,1],artId:'home'},
+    {id:'housing',name:'Rent Office',tag:'RENT & MOVING',icon:'🔑',color:'#ffd09a',blurb:'Pay rent, request an extension, or arrange a move to secure housing.',cell:[2,1],artId:'housing'},
+    {id:'home',name:'Low-Cost Housing',tag:'YOUR FIRST HOME',icon:'🏠',color:'#71cfaa',blurb:'Affordable apartments with few comforts and limited protection.',cell:[3,1],artId:'home'},
+    {id:'pawn',name:'Pawn Shop',tag:'PAWN & REDEEM',icon:'⚖️',color:'#e5be89',blurb:'Short-term cash for possessions. Redeem or buy unclaimed goods.',cell:[4,1],artId:'pawn'},
+    {id:'market',name:'Z-Mart Discount',tag:'ROTATING DISCOUNTS',icon:'🛒',color:'#f9cd79',blurb:'Discount clothing, books and household merchandise. Stock changes each week.',cell:[5,1],artId:'market'},
+    {id:'diner',name:'Monolith Burger',tag:'MEALS & WORK',icon:'🍔',color:'#ff9b89',blurb:'A hot meal and an early career opportunity.',cell:[5,2],artId:'diner'},
+    {id:'boutique',name:'QT Clothing',tag:'QUALITY WARDROBE',icon:'👔',color:'#eea9f5',blurb:'Clothes for work that last longer than discount garments.',cell:[5,3],artId:'boutique'},
+    {id:'tech',name:'Socket City',tag:'ELECTRONICS',icon:'📺',color:'#8ce4db',blurb:'Appliances and electronics with stronger reliability.',cell:[5,5],artId:'tech'},
+    {id:'university',name:'Hi-Tech University',tag:'EDUCATION',icon:'🎓',color:'#ad9dff',blurb:'Eleven degree tracks and the way to better employment.',cell:[4,5],artId:'university'},
+    {id:'agency',name:'Employment Office',tag:'JOBS & RAISES',icon:'💼',color:'#a8b2ff',blurb:'Apply by employer, verify qualifications and negotiate raises.',cell:[2,5],artId:'agency'},
+    {id:'office',name:'Factory',tag:'MANUFACTURING JOBS',icon:'🏭',color:'#9be2ed',blurb:'Many different jobs, from assembly work to management.',cell:[1,5],artId:'office'},
+    {id:'bank',name:'Bank',tag:'SAVINGS & INVESTING',icon:'🏦',color:'#8dc0ff',blurb:'Protected savings, loans, broker and six investments.',cell:[1,4],artId:'bank'},
+    {id:'cinema',name:"Black's Market",tag:'FOOD & LOTTERY',icon:'🥑',color:'#ffafe0',blurb:'Groceries, newspapers, lottery and market careers.',cell:[1,3],artId:'market'}
+  ];
+  const originalLocationIds=['home','housing','clinic','cinema','bank','office','agency','university','tech','boutique','diner','market','pawn'];
+  for(const [i,reference] of original.places.entries()){
+    const venue=classicPlaces.find(v=>v.id===originalLocationIds[i]);
+    if(!venue)throw Error('Missing original Classic place '+reference.placeNum);
+    Object.assign(venue,{placeNum:reference.placeNum,businessId:venue.id,routeIndex:reference.pathIndex,interactionHandler:venue.id,originalName:reference.name});
+  }
+  const classicLocationByEmployer = Object.freeze({'Z-Mart':'market','Monolith Burgers':'diner','QT Clothing':'boutique','Socket City':'tech','Hi-Tech U':'university','Factory':'office','Bank':'bank',"Black's Market":'cinema','Rent Office':'housing'});
   const citizens = {
     home:{name:'Mira',title:'The neighbor who knows everybody',greeting:'I keep a spare key and unsolicited advice. Both come in handy.',lines:['Even success needs somewhere you can kick off your shoes.','The elevator is broken again. Look at that: free exercise.','You have a whole week ahead of you. Use a little of it for yourself.']},
     agency:{name:'Theo',title:'Career coach / motivational realist',greeting:'Your résumé looks ambitious. Your font choice is even bolder.',lines:['Qualifications open doors. Reliability keeps them open.','Your next promotion begins with today’s tiny decisions.','Everybody wants experience; nobody wants to hire the inexperienced. Funny, that.']},
@@ -150,33 +177,39 @@
     {id:'officelead',name:'Operations Manager',place:'office',wage:90,tier:6,education:3,experience:43,dependability:42,clothes:'business',course:'leadership',track:'Business',caption:'Organize the chaos.'}
   ];
   // Classic DOS/floppy job table (37 positions). CD-only QT Janitor and Socket Clerk intentionally excluded.
-  // All roles preserve original wage/stat/degree/uniform data; shared modern building tiles represent some employers.
+  // Keep current gameplay wages until the original economy formula is validated; originals are attached below.
   const classicJobs = [{"id":"classic-zmart-clerk","name":"Clerk","employer":"Z-Mart","place":"market","wage":5,"tier":2,"clothes":"casual","track":"Z-Mart","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-zmart-assistant-manager","name":"Assistant Manager","employer":"Z-Mart","place":"market","wage":7,"tier":2,"clothes":"formal","track":"Z-Mart","experience":20,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-zmart-manager","name":"Manager","employer":"Z-Mart","place":"market","wage":8,"tier":3,"clothes":"business","track":"Z-Mart","experience":30,"dependability":30,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-monolith-cook","name":"Cook","employer":"Monolith Burgers","place":"diner","wage":5,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":0,"dependability":10,"degrees":[],"entryGuaranteed":true},{"id":"classic-monolith-clerk","name":"Clerk","employer":"Monolith Burgers","place":"diner","wage":6,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-monolith-assistant-manager","name":"Assistant Manager","employer":"Monolith Burgers","place":"diner","wage":7,"tier":2,"clothes":"casual","track":"Monolith Burgers","experience":20,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-monolith-manager","name":"Manager","employer":"Monolith Burgers","place":"diner","wage":8,"tier":3,"clothes":"formal","track":"Monolith Burgers","experience":30,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-qt-salesperson","name":"Salesperson","employer":"QT Clothing","place":"boutique","wage":8,"tier":3,"clothes":"formal","track":"QT Clothing","experience":30,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-qt-assistant-manager","name":"Assistant Manager","employer":"QT Clothing","place":"boutique","wage":9,"tier":3,"clothes":"business","track":"QT Clothing","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-qt-manager","name":"Manager","employer":"QT Clothing","place":"boutique","wage":12,"tier":4,"clothes":"business","track":"QT Clothing","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-socket-salesperson","name":"Salesperson","employer":"Socket City","place":"tech","wage":7,"tier":2,"clothes":"formal","track":"Socket City","experience":30,"dependability":30,"degrees":[],"entryGuaranteed":false},{"id":"classic-socket-electronics-repairman","name":"Electronics Repairman","employer":"Socket City","place":"tech","wage":11,"tier":3,"clothes":"casual","track":"Socket City","experience":40,"dependability":40,"degrees":["electronics"],"entryGuaranteed":false},{"id":"classic-socket-manager","name":"Manager","employer":"Socket City","place":"tech","wage":14,"tier":4,"clothes":"business","track":"Socket City","experience":40,"dependability":40,"degrees":["electronics","junior-college"],"entryGuaranteed":false},{"id":"classic-hitech-janitor","name":"Janitor","employer":"Hi-Tech U","place":"university","wage":5,"tier":2,"clothes":"casual","track":"Hi-Tech U","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-hitech-teacher","name":"Teacher","employer":"Hi-Tech U","place":"university","wage":11,"tier":3,"clothes":"formal","track":"Hi-Tech U","experience":40,"dependability":50,"degrees":["academic"],"entryGuaranteed":false},{"id":"classic-hitech-professor","name":"Professor","employer":"Hi-Tech U","place":"university","wage":20,"tier":6,"clothes":"formal","track":"Hi-Tech U","experience":50,"dependability":60,"degrees":["research"],"entryGuaranteed":false},{"id":"classic-factory-janitor","name":"Janitor","employer":"Factory","place":"office","wage":7,"tier":2,"clothes":"casual","track":"Factory","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-factory-assembly-worker","name":"Assembly Worker","employer":"Factory","place":"office","wage":8,"tier":3,"clothes":"casual","track":"Factory","experience":30,"dependability":30,"degrees":["trade-school"],"entryGuaranteed":false},{"id":"classic-factory-secretary","name":"Secretary","employer":"Factory","place":"office","wage":9,"tier":3,"clothes":"formal","track":"Factory","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-factory-machinist-s-helper","name":"Machinist's Helper","employer":"Factory","place":"office","wage":10,"tier":3,"clothes":"casual","track":"Factory","experience":40,"dependability":40,"degrees":["pre-engineering"],"entryGuaranteed":false},{"id":"classic-factory-executive-secretary","name":"Executive Secretary","employer":"Factory","place":"office","wage":18,"tier":5,"clothes":"business","track":"Factory","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-factory-machinist","name":"Machinist","employer":"Factory","place":"office","wage":19,"tier":5,"clothes":"casual","track":"Factory","experience":50,"dependability":50,"degrees":["engineering"],"entryGuaranteed":false},{"id":"classic-factory-department-manager","name":"Department Manager","employer":"Factory","place":"office","wage":22,"tier":6,"clothes":"business","track":"Factory","experience":60,"dependability":60,"degrees":["junior-college","engineering"],"entryGuaranteed":false},{"id":"classic-factory-engineer","name":"Engineer","employer":"Factory","place":"office","wage":23,"tier":6,"clothes":"business","track":"Factory","experience":60,"dependability":60,"degrees":["junior-college","engineering"],"entryGuaranteed":false},{"id":"classic-factory-general-manager","name":"General Manager","employer":"Factory","place":"office","wage":25,"tier":7,"clothes":"business","track":"Factory","experience":70,"dependability":70,"degrees":["business-admin","engineering"],"entryGuaranteed":false},{"id":"classic-bank-janitor","name":"Janitor","employer":"Bank","place":"bank","wage":6,"tier":2,"clothes":"casual","track":"Bank","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-bank-teller","name":"Teller","employer":"Bank","place":"bank","wage":10,"tier":3,"clothes":"formal","track":"Bank","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-bank-assistant-manager","name":"Assistant Manager","employer":"Bank","place":"bank","wage":14,"tier":4,"clothes":"business","track":"Bank","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-bank-manager","name":"Manager","employer":"Bank","place":"bank","wage":19,"tier":5,"clothes":"business","track":"Bank","experience":60,"dependability":60,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-bank-broker","name":"Broker","employer":"Bank","place":"bank","wage":22,"tier":6,"clothes":"business","track":"Bank","experience":70,"dependability":70,"degrees":["business-admin","academic"],"entryGuaranteed":false},{"id":"classic-blacks-janitor","name":"Janitor","employer":"Black's Market","place":"market","wage":6,"tier":2,"clothes":"casual","track":"Black's Market","experience":10,"dependability":10,"degrees":[],"entryGuaranteed":false},{"id":"classic-blacks-checker","name":"Checker","employer":"Black's Market","place":"market","wage":8,"tier":3,"clothes":"casual","track":"Black's Market","experience":20,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-blacks-butcher","name":"Butcher","employer":"Black's Market","place":"market","wage":12,"tier":4,"clothes":"casual","track":"Black's Market","experience":30,"dependability":30,"degrees":["trade-school"],"entryGuaranteed":false},{"id":"classic-blacks-assistant-manager","name":"Assistant Manager","employer":"Black's Market","place":"market","wage":15,"tier":4,"clothes":"formal","track":"Black's Market","experience":40,"dependability":40,"degrees":["junior-college"],"entryGuaranteed":false},{"id":"classic-blacks-manager","name":"Manager","employer":"Black's Market","place":"market","wage":18,"tier":5,"clothes":"business","track":"Black's Market","experience":50,"dependability":50,"degrees":["business-admin"],"entryGuaranteed":false},{"id":"classic-rent-groundskeeper","name":"Groundskeeper","employer":"Rent Office","place":"housing","wage":7,"tier":2,"clothes":"casual","track":"Rent Office","experience":10,"dependability":20,"degrees":[],"entryGuaranteed":false},{"id":"classic-rent-apartment-manager","name":"Apartment Manager","employer":"Rent Office","place":"housing","wage":9,"tier":3,"clothes":"casual","track":"Rent Office","experience":30,"dependability":30,"degrees":["junior-college"],"entryGuaranteed":false}];
-  // Classic job IDs/employer names remain DOS-accurate for engine and reference tables.
-  // Every active job nevertheless has one real workplace tile. Two original stores
-  // deliberately share the contemporary Fresh & Frugal venue until the world expands.
-  const classicEmployerVenues = Object.freeze({
-    'Z-Mart':{place:'market',department:'Discount'},
-    'Monolith Burgers':{place:'diner'},
-    'QT Clothing':{place:'boutique'},
-    'Socket City':{place:'tech'},
-    'Hi-Tech U':{place:'university'},
-    'Factory':{place:'office'},
-    'Bank':{place:'bank'},
-    "Black's Market":{place:'market',department:'Groceries'},
-    'Rent Office':{place:'housing'}
-  });
+  // Attach immutable original DOS job identities without changing legacy save IDs.
+  // Some existing Life Loop wages/uniforms differ: originalBasePay is the historical
+  // base figure, while wage stays the gameplay value until economic parity is completed.
+  if(classicJobs.length!==original.jobs.length)throw Error('Classic job table length mismatch');
+  for(const source of original.jobs){
+    const job=classicJobs[source.legacyOrdinal];
+    if(!job)throw Error('Original job #'+source.jobNum+' has no current job');
+    Object.assign(job,{originalJobNum:source.jobNum,placeNum:source.placeNum,
+      originalBasePay:source.baseHourlyPay,originalRequiredDependability:source.requiredDependability,
+      originalRequiredExperience:source.requiredExperience,
+      requiredDegreeIds:[source.requiredDegree1,source.requiredDegree2].filter(Boolean),
+      originalUniformTier:source.uniformTier,originalOccupationIndex:source.occupationIndex});
+    const location=classicPlaces.find(v=>v.placeNum===job.placeNum);
+    if(!location)throw Error('Classic job #'+source.jobNum+' has no historical location');
+    const expected=Object.entries({"Z-Mart":'market',"Monolith Burgers":'diner',"QT Clothing":'boutique',"Socket City":'tech',"Hi-Tech U":'university',"Factory":'office',"Bank":'bank',"Black's Market":'cinema',"Rent Office":'housing'}).find(([name])=>name===job.employer)?.[1];
+    if(location.id!==expected)throw Error('Job #'+source.jobNum+' mismatched its original employer location');
+    job.place=location.id; // The original placeNum is authoritative (Black's Market is not Z-Mart).
+  }
+  // Every original employer is its own on-board location. One source of truth.
+  const classicEmployerVenues=Object.freeze(Object.fromEntries(Object.entries(classicLocationByEmployer).map(([name,place])=>[name,Object.freeze({place})])));
   function jobWorkplace(job){
     if(!job)return null;
-    const original=job.employer||null;
     const classic=String(job.id||'').startsWith('classic-');
-    const mapping=classic?classicEmployerVenues[original]:null;
-    const venue=places.find(p=>p.id===job.place);
-    if(!venue)throw Error(`Missing venue ${job.place} for job ${job.id}`);
-    if(classic&&(!mapping||mapping.place!==job.place))throw Error(`Classic employer/venue mapping mismatch: ${original} / ${job.id}`);
-    return Object.freeze({place:venue.id,boardName:venue.name,department:mapping?.department||null,
-      label:mapping?.department?`${venue.name} · ${mapping.department}`:venue.name,
-      originalName:original});
+    const venue=(classic?classicPlaces:places).find(p=>p.id===job.place);
+    if(!venue)throw Error(`Missing ${classic?'Classic':'Modern'} venue ${job.place} for job ${job.id}`);
+    if(classic){
+      const id=classicLocationByEmployer[job.employer];
+      if(venue.id!==id||venue.placeNum!==job.placeNum)throw Error(`Original workplace mismatch: ${job.id}`);
+    }
+    return Object.freeze({place:venue.id,placeNum:classic?venue.placeNum:null,routeIndex:classic?venue.routeIndex:null,
+      boardName:venue.name,department:null,label:venue.name,originalName:job.employer||null});
   }
   for(const job of classicJobs)jobWorkplace(job);
 
@@ -195,7 +228,43 @@
     {id:'research',name:'Research',requires:['post-doctoral']},
     {id:'publishing',name:'Publishing',requires:['research']}
   ];
-  // Provisional bridge mapping original-style required diplomas onto our existing jobs.
+  // Crosswalk DOS course numbers to durable Life Loop save IDs. The supplied
+  // education table is authoritative for prerequisites and the jobs' numeric
+  // requirements; never infer a course merely from its translated display name.
+  const classicDegreeByOriginalId = new Map();
+  const originalDegreeNumberById = Object.freeze({
+    'trade-school':10,'electronics':11,'pre-engineering':12,'engineering':13,
+    'junior-college':14,'business-admin':15,'academic':16,'graduate-school':17,
+    'post-doctoral':18,'research':19,'publishing':20
+  });
+  for(const degree of classicDegrees){
+    const number=originalDegreeNumberById[degree.id];
+    const evidence=original.degrees.find(d=>Number(d.degreeId)===number);
+    if(!evidence || classicDegreeByOriginalId.has(number))throw Error('Invalid DOS education identity: '+degree.id);
+    degree.originalDegreeId=number;
+    degree.originalRequiredDegreeId=Number(evidence.requiredDegreeId);
+    classicDegreeByOriginalId.set(number,degree);
+  }
+  if(original.degrees.length!==classicDegrees.length)throw Error('DOS education table length mismatch');
+  for(const degree of classicDegrees){
+    const prerequisites=degree.originalRequiredDegreeId?[classicDegreeByOriginalId.get(degree.originalRequiredDegreeId)?.id]:[];
+    if(prerequisites.includes(undefined)||JSON.stringify(degree.requires)!==JSON.stringify(prerequisites))
+      throw Error('DOS prerequisite mismatch: '+degree.id);
+  }
+  for(const job of classicJobs){
+    const requirements=job.requiredDegreeIds.map(id=>classicDegreeByOriginalId.get(id)?.id);
+    if(requirements.includes(undefined))throw Error('Unknown original degree on job '+job.originalJobNum);
+    if(JSON.stringify([...job.degrees].sort())!==JSON.stringify([...requirements].sort()))
+      throw Error('DOS job qualification mismatch: '+job.originalJobNum);
+    job.degrees=requirements; // order follows the source job's two numeric slots
+    // Previous v0.5.27 preserved four inaccurate experience thresholds. Preserve
+    // save/job IDs, but use the original requirement for all employment checks.
+    job.experience=job.originalRequiredExperience;
+    job.dependability=job.originalRequiredDependability;
+    job.entryGuaranteed=job.originalOccupationIndex===44;
+  }
+  // Legacy compatibility lookup for UI and optional Modern features; Classic hiring
+  // now verifies the DOS-linked registry above.
   // Job names, wages and places are still Life Loop originals, NOT the Sierra job table.
   const classicJobRequirements = {
     server:{experience:10,dependability:10,degrees:[]},
@@ -252,6 +321,27 @@
     {id:'blue',name:'Blue Chip Stocks',base:49}, {id:'penny',name:'Penny Stocks',base:7}
   ];
   const classicFreshFood = [{units:1,cost:55},{units:2,cost:100},{units:4,cost:190}];
+  // Z-Mart shelf inventory is separate from Black's Market food and lottery stock.
+  // Rotating inventory/price numbers here are documented gameplay approximations;
+  // the original availability and inflation formula still require DOS verification.
+  const classicDiscountGoods = Object.freeze({
+    dictionary:{id:'dictionary',name:'Dictionary',cost:70,kind:'durable',detail:'A bargain reference book. Collect the trio to speed up studying.'},
+    atlas:{id:'atlas',name:'Atlas',cost:88,kind:'durable',detail:'A useful atlas; part of the Classic study reference collection.'},
+    encyclopedia:{id:'encyclopedia',name:'Encyclopedia',cost:138,kind:'durable',detail:'An educational reference, sold when the discount shelves have stock.'},
+    vcr:{id:'vcr',name:'VCR',cost:285,kind:'durable',detail:'Home entertainment. Improves how relaxing at home feels.'},
+    stereo:{id:'stereo',name:'Stereo',cost:225,kind:'durable',detail:'Music makes evenings at home a little happier.'},
+    baseball:{id:'baseball',name:'Baseball ticket',cost:45,kind:'ticket',detail:'One ticket for next weekend; an original-inspired outing.'},
+    concert:{id:'concert',name:'Concert ticket',cost:65,kind:'ticket',detail:'One live music ticket for next weekend.'},
+    theater:{id:'theater',name:'Theater ticket',cost:55,kind:'ticket',detail:'One theater ticket for next weekend.'}
+  });
+  const classicDiscountWeeks = Object.freeze([
+    Object.freeze({clothing:['casual'],goods:['dictionary','vcr','baseball']}),
+    Object.freeze({clothing:['formal'],goods:['atlas','stereo','concert']}),
+    Object.freeze({clothing:['casual'],goods:['encyclopedia','theater']}),
+    Object.freeze({clothing:['casual','formal'],goods:['dictionary','stereo','baseball']})
+  ]);
+  function classicDiscountStock(week){return classicDiscountWeeks[(Math.max(1,Math.floor(week))-1)%classicDiscountWeeks.length];}
+
   const GOAL_KEYS = ['wealth','happiness','education','career'];
 
   // Era selection changes presentation only. Venue IDs, actions, prices and qualification data are shared.
@@ -266,6 +356,6 @@
     classic:{id:'classic',name:'Classic Rules (in progress)',hours:60,applicationHours:4,restHours:6,dependabilityStart:20,dependabilityDecay:3,workExperience:1,workDependability:1,entryHours:2,optionalStories:false},
     modern:{id:'modern',name:'Modern Story',hours:40,applicationHours:3,restHours:5,dependabilityStart:10,dependabilityDecay:1,workExperience:5,workDependability:5,entryHours:0,optionalStories:true}
   };
-  root.LifeData = {worldEras,RULESETS,places,citizens,encounters,headlines,cityEvents,favors,storyArcs,jobs,classicJobs,degrees,classicDegrees,classicJobRequirements,classicEmployerVenues,jobWorkplace,courses,clothing,clothingOffers,dwellings,classicStocks,classicFreshFood,GOAL_KEYS};
+  root.LifeData = {original,worldEras,RULESETS,places,classicPlaces,classicLocationByEmployer,citizens,encounters,headlines,cityEvents,favors,storyArcs,jobs,classicJobs,degrees,classicDegrees,classicJobRequirements,classicEmployerVenues,jobWorkplace,courses,clothing,clothingOffers,dwellings,classicStocks,classicFreshFood,classicDiscountGoods,classicDiscountStock,GOAL_KEYS};
   if (typeof module !== 'undefined' && module.exports) module.exports = root.LifeData;
 })(typeof window !== 'undefined' ? window : globalThis);

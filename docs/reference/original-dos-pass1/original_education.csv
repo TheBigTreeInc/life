@@ -1,0 +1,12 @@
+degreeId,name,requiredDegreeId
+10,Trade School,0
+11,Electronics,10
+12,Pre-Engineering,10
+13,Engineering,12
+14,Junior College,0
+15,BA,14
+16,Academic,14
+17,Graduate,16
+18,Post Doctoral,17
+19,Research,18
+20,Publishing,19

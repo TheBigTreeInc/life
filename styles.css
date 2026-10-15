@@ -770,3 +770,425 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .classic-employer-original{display:block;font-size:11px;color:#678477;margin:-2px 0 9px}
 @media(max-width:720px){.work-marker{font-size:8px;padding:3px 4px}.workplace-hint{font-size:10px}}
 @media(max-width:410px){.work-marker{font-size:7px;padding:2px 3px}}
+/* v0.5.22: Jones-inspired storefront departments share a city tile but keep
+   their shelves and employers distinct; actions remain centered on the board. */
+.venue-dept-heading{grid-column:1/-1;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:12px 0 3px;padding:9px 12px;border-radius:12px;background:#e8f4df;border:1px solid #caddca;color:#235b43}
+.venue-dept-heading span{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.venue-dept-heading small{font-size:11px;color:#547461;font-weight:600}
+
+/* v0.5.24 Classic geographic board: five businesses north, three east,
+   three south, two west, and the unoccupied southwest corner. Modern stays 4x5. */
+body[data-ruleset="classic"] .board-grid{grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}
+body[data-ruleset="classic"] .board-grid .hub{grid-area:2 / 2 / 4 / 5}
+body[data-ruleset="classic"] .board-grid .city-corner{grid-area:4 / 1}
+body[data-ruleset="classic"] .board-tile{min-width:0}
+body[data-ruleset="classic"] .board-tile .tile-name{font-size:clamp(9px,.83vw,13px)}
+@media(max-width:1024px){
+ body[data-ruleset="classic"] .board-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr))}
+ body[data-ruleset="classic"] .board-grid .board-tile{grid-area:auto!important;grid-column:auto!important}
+ body[data-ruleset="classic"] .board-grid .hub,body[data-ruleset="classic"] .board-grid .city-corner{display:none!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="pawn"]{grid-column:auto!important}
+ body[data-ruleset="classic"] .board-tile .tile-name{font-size:clamp(8px,2.3vw,12px)}
+}
+
+/* v0.5.25 Classic route layer: persistent above rerendered tiles, below interaction dialog. */
+.board-frame{position:relative;isolation:isolate}
+.route-overlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:5}
+.route-overlay .route-road-back{fill:none;stroke:#fff7d9;stroke-width:12;stroke-linejoin:round;stroke-linecap:round;opacity:.85}
+.route-overlay .route-road{fill:none;stroke:#a16d43;stroke-width:3;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:7 7;opacity:.85}
+.route-overlay .route-current{fill:none;stroke:#42b576;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.route-overlay .route-pawn{stroke:#173f2e;stroke-width:2.5;filter:drop-shadow(0 2px 3px #18362699)}
+.route-overlay .route-pawn-halo{fill:#fefeff;stroke:#163d34;stroke-width:1.5}
+.route-overlay .route-debug-label{font:bold 11px system-ui,sans-serif;paint-order:stroke;stroke:white;stroke-width:3;fill:#112f25}
+.route-overlay .route-debug-node{fill:#f3a35b;stroke:#3c352d;stroke-width:1.5}
+.route-overlay .route-debug-link{fill:none;stroke:#0078b5;stroke-width:2;stroke-dasharray:4 4}
+.route-overlay .route-pawn-text{font:bold 10px system-ui,sans-serif;fill:#102a23;paint-order:stroke;stroke:#fff;stroke-width:3;stroke-linejoin:round}
+body:not([data-ruleset="classic"]) .route-overlay{display:none}
+.board-frame .venue-layer{z-index:15}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media (prefers-reduced-motion:reduce){.route-overlay .route-pawn{transition:none}}
+
+/* v0.5.26: inspect travel price and planned route without paying or entering a venue. */
+body[data-ruleset="classic"] .board-tile .travel-cost{display:inline-flex;align-items:center;padding:2px 6px;border:1px solid #d3dec7;border-radius:6px;background:#fffbe4;color:#244631;font-weight:900;font-size:clamp(9px,.78vw,12px);letter-spacing:.02em}
+body[data-ruleset="classic"] .board-tile.travel-unavailable .travel-cost{background:#ffe2db;color:#8f312a;border-color:#df9b8d}
+body[data-ruleset="classic"] .board-tile.travel-unavailable:not(.selected){filter:saturate(.8)}
+.route-hint{position:absolute;left:14px;bottom:14px;z-index:7;max-width:min(460px,calc(100% - 28px));padding:10px 14px;border:1px solid #587d61;border-radius:12px;background:#173e30f2;color:white;font-size:12px;line-height:1.4;pointer-events:none;box-shadow:0 5px 25px #07181055}
+.route-hint strong{color:#e8ffc0}.route-hint.route-hint-blocked strong{color:#ffbea9}
+.route-overlay .route-preview{fill:none;stroke:#51efb4;stroke-width:7;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:12 8;filter:drop-shadow(0 1px 2px #113724)}
+.route-overlay .route-preview-end{fill:#fff0a5;stroke:#27553f;stroke-width:3}
+@media(max-width:1024px){.route-hint{left:8px;bottom:8px;font-size:10px;padding:6px 9px;max-width:calc(100% - 16px)}body[data-ruleset="classic"] .board-tile .travel-cost{font-size:9px;padding:1px 4px}}
+@media(prefers-reduced-motion:reduce){.route-overlay .route-preview{stroke-dasharray:none}}
+
+/* The compact Classic board follows a serpentine street on 3-column displays.
+   Business IDs, tab sequence, travel cost and simulation remain identical. */
+@media(max-width:1024px){
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="clinic"]{grid-area:1/1!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="housing"]{grid-area:1/2!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="home"]{grid-area:1/3!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="pawn"]{grid-area:2/3!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="market"]{grid-area:2/2!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="diner"]{grid-area:2/1!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="boutique"]{grid-area:3/1!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="tech"]{grid-area:3/2!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="university"]{grid-area:3/3!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="agency"]{grid-area:4/3!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="office"]{grid-area:4/2!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="bank"]{grid-area:4/1!important}
+ body[data-ruleset="classic"] .board-grid .board-tile[data-travel="cinema"]{grid-area:5/1!important}
+}
+
+
+/* v0.5.37 — geography first: the CLASSIC board never changes location order.
+ * On a phone the buildings remain big enough to tap, and the whole city may be
+ * temporarily fitted as an overview. Modern retains its original responsive grid.
+ */
+.classic-board-toolbar{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:3px 6px 7px;min-width:0;color:#345b46}
+.classic-board-toolbar[hidden]{display:none!important}
+.classic-board-caption{font-weight:900;letter-spacing:.09em;font-size:10px;white-space:nowrap;margin-right:auto}
+.classic-board-jump-label{font-size:10px;font-weight:800;white-space:nowrap}
+#classicBoardJump{max-width:170px;min-width:100px;padding:5px 7px;border:1px solid #a9bba6;border-radius:8px;background:#fffdf7;color:#274d37;font-size:11px;font-weight:750}
+.classic-board-modes{display:flex;gap:3px;background:#dee9dc;border:1px solid #c3d0bf;border-radius:9px;padding:3px;white-space:nowrap}
+.classic-board-modes button{border:0;border-radius:7px;background:transparent;color:#305442;padding:5px 9px;font-size:11px;font-weight:800;cursor:pointer;min-height:29px}
+.classic-board-modes button[aria-pressed="true"]{background:#204c37;color:#fff;box-shadow:0 2px 6px #28443422}
+.classic-board-modes button:focus-visible,#classicBoardJump:focus-visible{outline:3px solid #b0df71;outline-offset:2px}
+.board-viewport{position:relative;flex:1;min-width:0;min-height:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:contain}
+.board-stage{position:relative;isolation:isolate;width:100%;height:100%;min-height:0}
+.board-stage>.board-grid{width:100%;height:100%;min-height:0}
+.board-stage>.route-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+body[data-ruleset="classic"] .board-frame{background:#dfe8d9;border-color:#718f72}
+body[data-ruleset="classic"] .board-stage{background:repeating-linear-gradient(55deg,#d0e3c444 0 4px,#edf1d855 4px 9px),#dce8ce;border-radius:12px}
+body[data-ruleset="classic"] .board-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;gap:clamp(7px,.7vw,13px);padding:clamp(4px,.4vw,8px);box-sizing:border-box}
+body[data-ruleset="classic"] .board-grid>.board-tile{grid-column:auto;min-width:0;border-radius:10px;border:2px solid #3d664a55;box-shadow:inset 0 -10px 16px #1f4a3022,0 2px 4px #20432618}
+body[data-ruleset="classic"] .board-grid>.board-tile.selected{border-color:#1e6b4f;box-shadow:0 0 0 3px #fcf7b0,0 2px 9px #1d513b77}
+body[data-ruleset="classic"] .board-grid>.board-tile:focus-visible{outline:3px solid #f6c34b;outline-offset:2px;z-index:8}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-caption{background:#fffff2e8;border:1px solid #fff9;border-radius:6px;box-shadow:0 1px 2px #283b2930}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-name{font-size:clamp(10px,.88vw,14px);color:#183829;line-height:1.1}
+body[data-ruleset="classic"] .board-grid>.hub{grid-area:2 / 2 / 4 / 5!important;border:2px solid #446a55;border-radius:12px;background:radial-gradient(ellipse at 68% 68%,#44734d 0,#234739 65%,#162e29 100%)}
+body[data-ruleset="classic"] .board-grid>.city-corner{grid-area:4 / 1!important;display:flex!important}
+body[data-ruleset="classic"] .route-overlay .route-road-back{stroke:#f4e0b9;stroke-width:13;opacity:1}
+body[data-ruleset="classic"] .route-overlay .route-road{stroke:#905d31;stroke-width:3;stroke-dasharray:7 9;opacity:.95}
+@media(max-width:1024px){
+ body[data-ruleset="classic"] .board-grid>.board-tile{grid-area:unset}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="clinic"]{grid-area:1/1!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="housing"]{grid-area:1/2!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="home"]{grid-area:1/3!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="pawn"]{grid-area:1/4!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="market"]{grid-area:1/5!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="diner"]{grid-area:2/5!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="boutique"]{grid-area:3/5!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="tech"]{grid-area:4/5!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="university"]{grid-area:4/4!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="agency"]{grid-area:4/3!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="office"]{grid-area:4/2!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="bank"]{grid-area:3/1!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="cinema"]{grid-area:2/1!important}
+ body[data-ruleset="classic"] .board-grid>.hub{display:flex!important}
+ body[data-ruleset="classic"] .board-grid>.city-corner{display:flex!important}
+ body[data-ruleset="classic"] .board-grid>.board-tile .tile-name{font-size:11px}
+ body[data-ruleset="classic"] .board-grid>.board-tile .tile-tag{display:block}
+}
+@media(max-width:720px){
+ .classic-board-toolbar{padding:3px 1px 5px;gap:5px;flex-wrap:wrap}
+ .classic-board-caption{font-size:9px;flex:1 1 100%;margin:0}
+ .classic-board-jump-label{display:none}
+ #classicBoardJump{flex:1 1 95px;min-width:0;max-width:100%;height:34px}
+ .classic-board-modes{flex:0 0 auto}
+ .classic-board-modes button{padding:4px 7px;font-size:10px;min-height:27px}
+ body[data-ruleset="classic"] .board-frame{padding:3px;min-height:0}
+ body[data-ruleset="classic"] .board-viewport{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#74906e #e4e9db;touch-action:pan-x pan-y}
+ body[data-ruleset="classic"][data-classic-board-view="explore"] .board-stage{width:740px;min-width:740px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-stage{width:100%;min-width:0}
+ body[data-ruleset="classic"] .board-grid{gap:7px;padding:3px}
+ body[data-ruleset="classic"] .board-grid>.board-tile .tile-name{font-size:11px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-tile .tile-name{font-size:7px;letter-spacing:-.35px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-tile .tile-art{opacity:.72}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-tile .tile-tag,
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-tile .tile-num,
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-tile .travel-cost{display:none}
+ body[data-ruleset="classic"] .board-grid>.hub{padding:8px}
+ body[data-ruleset="classic"] .board-grid>.hub .hub-title{font-size:clamp(13px,2vw,24px)}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.hub .hub-sub,
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.hub .hub-news{display:none}
+}
+
+/* v0.5.39 board-native travel/arrival feedback; does not cover storefronts on phones. */
+.classic-journey-status{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:12;
+ padding:7px 12px;border:1px solid #8ccfa5;border-radius:999px;background:#173e30ed;color:#f9ffe9;
+ font-size:12px;font-weight:850;max-width:calc(100% - 22px);text-align:center;white-space:normal;
+ pointer-events:none;box-shadow:0 4px 15px #0b282344}
+.classic-journey-status[hidden]{display:none!important}
+.classic-journey-status[data-phase="arrived"]{background:#295839ed;border-color:#c8e98e}
+.route-overlay .route-arrival-halo{fill:#a8f36e55;stroke:#efffa0;stroke-width:2}
+.route-overlay .route-arrival-ring{fill:none;stroke:#d9ff95;stroke-width:3;stroke-dasharray:5 5}
+@media(max-width:720px){.classic-journey-status{font-size:10px;padding:5px 9px;top:4px;max-width:calc(100% - 14px)}}
+@media(prefers-reduced-motion:no-preference){.route-overlay .route-arrival-ring{animation:classic-arrival-pulse .65s ease-out 2}}
+@keyframes classic-arrival-pulse{from{stroke-width:7;opacity:.5}to{stroke-width:2;opacity:1}}
+
+/* v0.5.40: accessible, presentation-only journey skip (no extra clock charge). */
+.classic-travel-controls{position:absolute;right:12px;top:10px;z-index:9}
+.classic-travel-controls[hidden]{display:none!important}
+.classic-travel-controls button{border:1px solid #83d9af;border-radius:999px;background:#173e30;color:#fff;padding:7px 12px;font-size:12px;font-weight:800;box-shadow:0 3px 12px #0004;cursor:pointer}
+.classic-travel-controls button:focus-visible{outline:3px solid #ffc76b;outline-offset:2px}
+@media(max-width:720px){.classic-travel-controls{top:8px;right:7px}.classic-travel-controls button{padding:5px 9px;font-size:11px}}
+/* Keep the travel label and its skip control side-by-side, not overlapping on phones. */
+.classic-journey-status[data-phase="departing"]{left:10px;transform:none;max-width:calc(100% - 160px);text-align:left}
+@media(max-width:720px){.classic-journey-status[data-phase="departing"]{left:6px;top:7px;max-width:calc(100% - 137px)}}
+
+/* Classic entrance sign: route-owned geometry, unaffected by replacement art. */
+.route-overlay .route-entry-marker{pointer-events:none}
+.route-overlay .route-entry-door{fill:#204d3b;stroke:#f6f9d7;stroke-width:2;filter:drop-shadow(0 1px 2px #12291b88)}
+.route-overlay .route-entry-knob{fill:#ffe59e}
+@media(prefers-reduced-motion:reduce){.route-overlay .route-arrival-ring{animation:none}}
+
+/* v0.5.43 — original board geometry, production venue images and DOS-style center HUD. */
+body[data-ruleset="classic"] .board-grid>.hub{visibility:hidden!important;pointer-events:none!important}
+body[data-ruleset="classic"] .board-grid>.board-tile{background:#f6f0df!important;padding:0!important;overflow:hidden}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-art{position:absolute!important;inset:0!important;display:block!important;transform:none!important;filter:none!important;pointer-events:none}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-art .classic-scene{width:100%;height:100%;object-fit:contain;object-position:center center;display:block;background:linear-gradient(#d1e9e9,#dce3cb)}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-topline{position:relative;z-index:2;padding:5px 6px;pointer-events:none;align-items:flex-start}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-caption{position:absolute;bottom:0;left:0;right:0;width:100%;margin:0;padding:6px 7px;box-sizing:border-box;border:0;border-radius:0 0 9px 9px;background:#fffdf2ef;z-index:2}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-tag{display:none}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-name{font-size:clamp(10px,.93vw,14px);line-height:1.1;text-shadow:0 1px #fff9}
+body[data-ruleset="classic"] .board-grid>.board-tile .tile-num{background:#fffff1db;padding:2px 4px;border-radius:4px}
+body[data-ruleset="classic"] .board-grid>.board-tile .travel-cost{box-shadow:0 2px 4px #18302022}
+.classic-turn-center[hidden]{display:none!important}
+.classic-turn-center{position:absolute;left:20.7%;top:25.2%;width:58.6%;height:49.6%;z-index:3;pointer-events:none;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:clamp(2px,.45vw,7px);padding:8px;box-sizing:border-box;overflow:hidden;color:#234334;text-align:center;background:radial-gradient(ellipse at center,#f9f6e9 0%,#e8eed8 72%,#d4e5c6 100%);border:2px solid #a2bda5;border-radius:13px;box-shadow:inset 0 0 0 3px #fff8,0 0 16px #3b705726}
+body:not([data-ruleset="classic"]) .classic-turn-center{display:none!important}
+.classic-turn-avatar{border-radius:50%;background:var(--turn-color,#a7dda7);border:3px solid #fffaf1;box-shadow:0 4px 13px #304b4235;display:grid;place-items:center;font-size:clamp(24px,4vw,52px);width:clamp(38px,5.4vw,70px);height:clamp(38px,5.4vw,70px);flex:0 0 auto}
+.classic-turn-kicker{font-size:clamp(9px,.78vw,13px);font-weight:900;letter-spacing:.14em;color:#627660}
+.classic-turn-name{font-size:clamp(15px,2vw,31px);font-weight:950;letter-spacing:-.04em;line-height:1.02;overflow-wrap:anywhere;max-width:100%}
+.classic-dial-row{display:flex;align-items:center;justify-content:center;gap:clamp(7px,1vw,18px);min-width:0}
+.classic-turn-dial{position:relative;width:clamp(49px,6.6vw,88px);height:clamp(49px,6.6vw,88px);flex:0 0 auto}
+.classic-turn-dial svg{width:100%;height:100%;overflow:visible}
+.classic-dial-base{fill:#faf5df;stroke:#a6b49d;stroke-width:13}
+.classic-dial-fill{fill:none;stroke:#cd5c5c;stroke-width:13;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dasharray .24s ease}
+.classic-dial-hand{stroke:#664c3d;stroke-width:3.5;stroke-linecap:round;transform-origin:50% 50%;transition:transform .24s ease}
+.classic-dial-value{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(10px,1.15vw,16px);font-weight:950;color:#43332b}
+.classic-dial-caption{display:flex;flex-direction:column;align-items:flex-start;line-height:1.27;color:#34583d;text-align:left}
+.classic-dial-caption b{font-size:clamp(10px,1vw,16px);white-space:nowrap}
+.classic-dial-caption span{font-size:clamp(8px,.82vw,12px);white-space:nowrap;font-weight:800}
+.classic-dial-caption small{font-size:clamp(8px,.7vw,11px);opacity:.7}
+@media(prefers-reduced-motion:no-preference){.classic-turn-center.turn-changed .classic-turn-name{animation:classic-turn-appear .4s ease both}}
+@keyframes classic-turn-appear{from{opacity:.4;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@media(max-width:720px){
+ .classic-turn-center{padding:3px;gap:2px;border-width:1px;border-radius:7px}
+ .classic-turn-avatar{height:clamp(21px,5vw,38px);width:clamp(21px,5vw,38px);border-width:1px;font-size:clamp(15px,3.7vw,23px)}
+ .classic-turn-name{font-size:clamp(9px,2.6vw,17px)}
+ .classic-turn-kicker{font-size:7px;letter-spacing:.04em}
+ .classic-dial-row{gap:3px}
+ .classic-turn-dial{height:clamp(26px,8vw,49px);width:clamp(26px,8vw,49px)}
+ .classic-dial-caption b{font-size:8px}
+ .classic-dial-caption span,.classic-dial-caption small{font-size:7px}
+ body[data-ruleset="classic"] .board-grid>.board-tile .tile-name{font-size:clamp(8px,2.8vw,11px)}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .classic-turn-avatar{display:none}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .classic-dial-caption small{display:none}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .classic-turn-name{font-size:10px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .classic-turn-dial{width:30px;height:30px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-tile .tile-name{font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){.classic-dial-fill,.classic-dial-hand{transition:none}}
+
+
+/* v0.5.44 — Classic board geography correction: bottom-center public garden clock,
+   employment office no longer implied as the center anchor, plus two scenic road gaps. */
+body[data-ruleset="classic"] .board-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:clamp(7px,.7vw,13px);padding:clamp(4px,.4vw,8px);box-sizing:border-box}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="clinic"]{grid-area:1/1!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="housing"]{grid-area:1/2!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="home"]{grid-area:1/3!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="pawn"]{grid-area:1/4!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="market"]{grid-area:1/5!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="diner"]{grid-area:2/5!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="boutique"]{grid-area:3/5!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="tech"]{grid-area:5/5!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="university"]{grid-area:5/4!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="agency"]{grid-area:5/2!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="office"]{grid-area:5/1!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="bank"]{grid-area:4/1!important}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-travel="cinema"]{grid-area:3/1!important}
+body[data-ruleset="classic"] .board-grid>.hub{grid-area:2 / 2 / 5 / 5!important;visibility:hidden!important;pointer-events:none!important}
+body[data-ruleset="classic"] .board-grid>.city-corner{display:none!important}
+body[data-ruleset="classic"] .board-empty-scene,body[data-ruleset="classic"] .board-clock-garden{display:flex;min-width:0;border-radius:12px;box-sizing:border-box}
+body[data-ruleset="classic"] .board-empty-scene{align-items:center;justify-content:center;flex-direction:column;border:2px dashed #8faf8e;background:linear-gradient(#d8e8c8,#cfe1bc);color:#3a5b40;padding:8px;box-shadow:inset 0 0 0 2px #ffffff55}
+body[data-ruleset="classic"] .board-empty-scene span{font-size:28px;line-height:1}
+body[data-ruleset="classic"] .board-empty-scene small{font-size:10px;font-weight:900;letter-spacing:.08em;text-align:center;opacity:.78}
+body[data-ruleset="classic"] .board-empty-scene-left{grid-area:2/1!important}
+body[data-ruleset="classic"] .board-empty-scene-right{grid-area:4/5!important}
+body[data-ruleset="classic"] .board-clock-garden{grid-area:5/3!important;align-items:center;justify-content:center;gap:10px;padding:8px 10px;border:2px solid #7f9f87;background:radial-gradient(circle at 35% 35%,#fcfaea 0,#ebf0d7 58%,#d8e5c7 100%);box-shadow:inset 0 0 0 2px #fff8,0 2px 4px #27433318;color:#244034}
+body[data-ruleset="classic"] .board-clock-garden .clock-face{width:52px;height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;border:3px solid #6d816d;background:#fffef7;box-shadow:0 2px 7px #29423220;font-size:11px;font-weight:900;line-height:1}
+body[data-ruleset="classic"] .board-clock-garden .clock-face b{font-size:22px;margin-bottom:2px}
+body[data-ruleset="classic"] .board-clock-garden .garden-label{display:flex;flex-direction:column;line-height:1.15}
+body[data-ruleset="classic"] .board-clock-garden .garden-label strong{font-size:12px;letter-spacing:.03em}
+body[data-ruleset="classic"] .board-clock-garden .garden-label small{font-size:10px;opacity:.72}
+@media(max-width:1024px){
+ body[data-ruleset="classic"] .board-empty-scene,body[data-ruleset="classic"] .board-clock-garden{display:none!important}
+}
+
+/* v0.5.45 modular shared portrait editor; all artwork is optional and lazy-loaded. */
+.portrait-controls .portrait-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.portrait-controls .portrait-field>span{display:block;font-size:11px;font-weight:700;margin-bottom:8px;color:#6a7d6e}.portrait-controls select{width:100%;border:1px solid #dce1d6;border-radius:9px;padding:11px 9px;color:#294333;background:#fbfcf8;font:inherit;font-size:13px;min-height:42px}.portrait-controls .portrait-colors{display:flex;flex-wrap:wrap;gap:14px;margin:23px 0}.portrait-controls .portrait-color{font-size:10px;display:flex;flex-direction:column;gap:7px;min-width:58px}.portrait-controls input[type=color]{width:48px;height:36px;padding:3px;border:1px solid #dce1d6;border-radius:7px;background:#fff;cursor:pointer}
+
+.shared-profile-modal{width:min(850px,100%);max-height:min(92dvh,900px);overflow-y:auto}
+.shared-profile-grid{display:grid;grid-template-columns:minmax(180px,275px) minmax(0,1fr);gap:19px;align-items:start}
+.shared-profile-preview{background:#f4f7ef;border-radius:13px;padding:13px;display:flex;flex-direction:column;gap:9px}
+.shared-profile-preview canvas{width:min(100%,250px);aspect-ratio:1;object-fit:contain;background:#e5ebdf;border-radius:12px;align-self:center}
+.shared-profile-preview label,.shared-profile-connection label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:800;color:#31533e}
+.shared-profile-preview input,.shared-profile-preview select,.shared-profile-connection input{width:100%;padding:9px;border:1px solid #bdcfbf;border-radius:8px;min-width:0;box-sizing:border-box;background:#fff}
+.shared-profile-components{min-width:0;max-height:380px;overflow:auto;padding:6px}
+.shared-profile-connection{border-top:1px solid #cbd6c8;padding:12px 1px;margin-top:12px;display:grid;gap:8px}
+.shared-profile-connection p{font-size:11px;color:#586f60}
+.shared-profile-connection[open]{display:grid;gap:10px}
+.shared-profile-buttons{display:flex;flex-wrap:wrap;gap:6px}
+.shared-profile-buttons button{padding:8px 11px;background:#e8f1e5;border:1px solid #aec7b3;border-radius:9px;cursor:pointer}
+#sharedProfileStatus{font-size:11px;color:#426c51;margin-top:12px;line-height:1.4}
+#sharedProfileStatus.is-error{color:#9b3232}
+.shared-profile-avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+@media(max-width:720px){.shared-profile-grid{grid-template-columns:1fr}.shared-profile-components{max-height:230px}.shared-profile-preview{display:grid;grid-template-columns:105px minmax(0,1fr);align-items:start}.shared-profile-preview canvas{width:105px;grid-row:span 4}.shared-profile-modal{padding:12px}.city-icon-button#sharedProfileBtn .city-icon-label{display:none}}
+
+.shared-social-chat{border:1px solid #cbdac9;background:#f6faf3;border-radius:10px;padding:12px;display:grid;gap:8px}
+.shared-social-chat[hidden]{display:none!important}
+.shared-social-chat h3{font-size:13px;margin:0}
+.shared-social-feed{max-height:130px;min-height:46px;overflow:auto;background:#fff;border-radius:7px;padding:5px 9px;font-size:12px}
+.shared-social-feed p{margin:6px 0;overflow-wrap:anywhere}
+
+.classic-turn-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+
+/* v0.5.46: independent social lobby and private game-room chat in the existing compact panel. */
+.chat-panel{height:min(510px,74dvh)}
+.chat-tabs{display:flex;gap:5px;padding:8px 10px 4px;border-bottom:1px solid #dde9dd}
+.chat-tabs button{border:1px solid #bfd5c6;border-radius:8px;background:#f6faf3;color:#325744;padding:6px 9px;font-size:11px;font-weight:850;cursor:pointer}
+.chat-tabs button[aria-pressed="true"]{color:#fff;background:#27553d;border-color:#27553d}
+.chat-social-connect{display:grid;grid-template-columns:1fr 1fr auto;gap:5px;padding:9px;border-bottom:1px solid #e2ebe0}
+.chat-social-connect[hidden],.chat-social-connected[hidden],.chat-form[hidden]{display:none!important}
+.chat-social-connect label{min-width:0;font-size:10px;color:#49715a;font-weight:800}
+.chat-social-connect input{display:block;box-sizing:border-box;width:100%;min-width:0;border:1px solid #bed4c3;border-radius:7px;padding:7px 6px;margin-top:3px;font-size:10px}
+.chat-social-connect button,.chat-social-connected button{border:1px solid #a0c5ad;border-radius:7px;background:#e3f4e6;color:#295b40;padding:7px;cursor:pointer;font-size:11px;font-weight:850;align-self:end}
+.chat-social-connect small{grid-column:1/-1;font-size:9px;line-height:1.25;color:#62816d}
+.chat-social-connected{display:flex;align-items:center;gap:4px;padding:6px 9px;border-bottom:1px solid #e2ebe0;font-size:10px;color:#335f47}
+.chat-social-connected span{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:800}
+.chat-social-connected button{font-size:10px;padding:5px 6px}
+.chat-status{line-height:1.4}
+@media(max-width:720px){.chat-panel{height:min(460px,68dvh);bottom:calc(53px + env(safe-area-inset-bottom))}.chat-social-connect{grid-template-columns:1fr 1fr}.chat-social-connect button{grid-column:1/-1}.chat-social-connect input{font-size:10px}}
+
+/* v0.5.47 — Classic hotseat privacy handoff. Overlay owns focus and blocks game/chat while passing device. */
+.classic-hotseat-handover[hidden]{display:none!important}
+.classic-hotseat-handover{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;background:#123528;color:#fff;overflow:auto;box-sizing:border-box}
+.classic-handover-card{width:min(440px,100%);display:flex;flex-direction:column;align-items:center;text-align:center;gap:13px;border:2px solid #85b58f;border-radius:22px;padding:clamp(20px,5vw,38px);background:#244b39;box-shadow:0 20px 70px #08180e55}
+.classic-handover-kicker{font-size:11px;letter-spacing:.12em;font-weight:900;color:#d0efb9}
+.classic-handover-symbol{font-size:54px;line-height:1.2}
+.classic-handover-card h2{font-size:clamp(23px,5vw,34px);line-height:1.1;margin:0;color:#fff}
+.classic-handover-card p{font-size:14px;line-height:1.55;max-width:30em;color:#e7f5df;margin:0}
+.classic-handover-card button{border:0;background:#b6eeac;color:#163b26;border-radius:11px;padding:14px 19px;min-height:48px;font:inherit;font-weight:900;cursor:pointer}
+.classic-handover-card button:focus-visible{outline:3px solid #ffdf88;outline-offset:3px}
+.classic-handover-card small{color:#c1dcc6;font-size:11px}
+/* Scenic road gaps are intentional noninteractive landscaping around the historic ring.
+   The route SVG remains authoritative and draws the pawn path outside these cells. */
+body[data-ruleset="classic"] .board-empty-scene{position:relative;overflow:hidden;background:radial-gradient(circle at 66% 28%,#d4e6c8 0,#abcba4 95%);border:1px solid #89ad91;box-shadow:inset 0 0 0 2px #ffffff55}
+body[data-ruleset="classic"] .board-empty-scene::before{content:"";position:absolute;top:-5%;bottom:-5%;width:16%;background:repeating-linear-gradient(180deg,#d8d8ba 0 15px,#e5dcc0 15px 29px);box-shadow:0 0 0 2px #ffffff6e;opacity:.9}
+body[data-ruleset="classic"] .board-empty-scene-left::before{right:0}
+body[data-ruleset="classic"] .board-empty-scene-right::before{left:0}
+body[data-ruleset="classic"] .board-empty-scene span{font-size:clamp(15px,2.5vw,30px);filter:drop-shadow(0 2px 2px #25422a3b)}
+body[data-ruleset="classic"] .board-empty-scene small{position:relative;z-index:1;font-size:clamp(7px,.75vw,10px);background:#e3ebd6d9;border-radius:4px;padding:3px;letter-spacing:.04em}
+/* Keep the historic 5x5 scenic spaces visible in phone Explore *and* Overview.
+   Earlier 3-column compatibility CSS hid them below 1024px, breaking the board. */
+@media(max-width:1024px){
+ body[data-ruleset="classic"] .board-grid>.board-empty-scene,
+ body[data-ruleset="classic"] .board-grid>.board-clock-garden{display:flex!important}
+ body[data-ruleset="classic"] .board-grid>.board-clock-garden{flex-direction:column;gap:2px;padding:4px 2px;text-align:center}
+ body[data-ruleset="classic"] .board-clock-garden .clock-face{width:38px;height:38px;flex-shrink:0;font-size:8px}
+ body[data-ruleset="classic"] .board-clock-garden .clock-face b{font-size:17px}
+ body[data-ruleset="classic"] .board-clock-garden .garden-label strong{font-size:9px}
+ body[data-ruleset="classic"] .board-clock-garden .garden-label small{display:none}
+ body[data-ruleset="classic"] .board-empty-scene small{font-size:8px}
+}
+@media(max-width:720px){
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-clock-garden .garden-label{display:none}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-clock-garden .clock-face{width:25px;height:25px;border-width:1px;font-size:6px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-clock-garden .clock-face b{font-size:13px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-empty-scene span{font-size:13px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-empty-scene small{display:none}
+}
+
+
+/* v0.5.48: Keep the board toggle on actual phone widths; desktop/tablet always overview.
+   It changes only the camera, never authority, stops or clock units. */
+@media(min-width:721px){
+ body[data-ruleset="classic"] .classic-board-modes{display:none!important}
+ body[data-ruleset="classic"] .board-stage{width:100%!important;min-width:0!important}
+}
+@media(max-width:720px){
+ body[data-ruleset="classic"] .classic-board-modes{display:flex}
+}
+/* The town-center garden contains the only Classic clock dial. The middle
+   contains turn identity only. The garden is a noninteractive board landmark. */
+.classic-turn-center{gap:clamp(5px,.7vw,13px)}
+.classic-turn-week{color:#5b775f;letter-spacing:.15em;font-size:clamp(10px,1.1vw,15px);font-weight:900}
+.classic-board-clock[hidden]{display:none!important}
+.classic-board-clock{position:absolute;left:50%;top:90%;transform:translate(-50%,-50%);width:19%;height:19%;z-index:6;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:3px;box-sizing:border-box;color:#304b37}
+body:not([data-ruleset="classic"]) .classic-board-clock{display:none!important}
+.classic-board-clock .classic-turn-dial{width:clamp(24px,4.2vw,55px);height:clamp(24px,4.2vw,55px);flex:0 1 auto}
+.classic-board-clock .classic-dial-value{font-size:clamp(9px,1.1vw,13px)}
+.classic-board-clock .classic-dial-caption{flex:0 0 auto;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+.classic-board-clock .classic-dial-caption b{font-size:clamp(8px,.8vw,11px)}
+.classic-board-clock .classic-dial-caption span{font-size:clamp(7px,.67vw,9px)}
+body[data-ruleset="classic"] .board-grid>.board-clock-garden{position:relative;justify-content:flex-end;padding-bottom:3px;overflow:hidden}
+body[data-ruleset="classic"] .board-grid>.board-clock-garden::before,body[data-ruleset="classic"] .board-grid>.board-clock-garden::after{content:"🌳";position:absolute;top:6px;font-size:clamp(11px,1.6vw,20px);opacity:.85}
+body[data-ruleset="classic"] .board-grid>.board-clock-garden::before{left:5px}
+body[data-ruleset="classic"] .board-grid>.board-clock-garden::after{right:5px}
+body[data-ruleset="classic"] .board-clock-garden .garden-label{display:none!important}
+@media(max-width:720px){
+ .classic-board-clock{gap:0;padding:0;width:19%;height:19%}
+ .classic-board-clock .classic-turn-dial{width:clamp(20px,5.3vw,36px);height:clamp(20px,5.3vw,36px)}
+ .classic-board-clock .classic-dial-value{font-size:clamp(8px,2.4vw,10px)}
+ .classic-board-clock .classic-dial-caption b{font-size:clamp(6px,1.8vw,8px)}
+ .classic-board-clock .classic-dial-caption span{font-size:clamp(5px,1.4vw,7px)}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .classic-board-clock .classic-turn-dial{width:clamp(16px,5vw,23px);height:clamp(16px,5vw,23px)}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .classic-board-clock .classic-dial-caption span{display:none}
+ body[data-ruleset="classic"] .board-grid>.board-clock-garden::before,body[data-ruleset="classic"] .board-grid>.board-clock-garden::after{font-size:11px;top:2px}
+ body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-clock-garden::before,body[data-ruleset="classic"][data-classic-board-view="fit"] .board-grid>.board-clock-garden::after{display:none}
+}
+
+
+/* v0.5.49 — side walks that land on the actual illustrated doors, with the
+ * primary road loop and the historical route geometry unchanged. */
+.route-overlay .route-door-walk{fill:none;stroke:#f5e5ba;stroke-width:5;stroke-linecap:round;opacity:.9;stroke-dasharray:3 4;filter:drop-shadow(0 1px 1px #87623c77)}
+.route-overlay .route-door-step{fill:#a1d6a3;stroke:#fff8e6;stroke-width:1.3;opacity:.95}
+.venue-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:none;max-width:58%}
+.venue-clock[hidden]{display:none!important}
+.venue-clock{display:flex;align-items:center;gap:9px;padding:5px 9px 5px 6px;border:1px solid #c8d9bd;border-radius:12px;background:#f1f8e9;color:#2b5438;box-sizing:border-box;min-width:0}
+.venue-clock-ring{position:relative;width:45px;height:45px;flex:none;display:grid;place-items:center;border-radius:50%;background:conic-gradient(#cd5c5c var(--venue-clock-progress,100%),#cad9c2 0);box-shadow:inset 0 0 0 1px #9aab94}
+.venue-clock-ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fffbea}
+.venue-clock-ring strong{position:relative;z-index:1;color:#43332b;font-size:13px;font-weight:900}
+.venue-clock-caption{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:800;line-height:1.1;white-space:nowrap}
+.venue-clock-caption b{font-size:10px;color:#628069}
+@media(max-width:720px){
+ .venue-head-actions{gap:5px;max-width:68%}
+ .venue-clock{padding:3px 5px;gap:5px;border-radius:8px}
+ .venue-clock-ring{width:33px;height:33px}
+ .venue-clock-ring::before{inset:5px}
+ .venue-clock-ring strong{font-size:10px}
+ .venue-clock-caption{font-size:9px;gap:1px}
+ .venue-clock-caption b{font-size:8px}
+ .venue-close{width:32px;height:32px;font-size:21px;border-radius:8px}
+}
+@media(max-width:360px){.venue-clock-caption{font-size:8px}}
+
+/* v0.5.50 — A quiet, continuous promenade in the tile gutters. The highlighted
+ * road is thinner than the walking area; door markers stay separate from it. */
+body[data-ruleset="classic"] .route-overlay .route-road-back{stroke:#eeddbf;stroke-width:10;stroke-opacity:.9}
+body[data-ruleset="classic"] .route-overlay .route-road{stroke:#976b44;stroke-width:2.2;stroke-dasharray:5 7;opacity:.8}
+body[data-ruleset="classic"] .route-overlay .route-preview{stroke:#36a780;stroke-width:4.5;stroke-dasharray:7 7;filter:drop-shadow(0 1px 1px #1f4e3644);opacity:.96}
+body[data-ruleset="classic"] .route-overlay .route-current{stroke:#36a780;stroke-width:4.5}
+body[data-ruleset="classic"] .route-overlay .route-door-walk{stroke:#f4edcf;stroke-width:3.2;stroke-dasharray:2 3;filter:none}
+body[data-ruleset="classic"] .route-overlay .route-preview-end{fill:#fdf5c9;stroke:#25734c;stroke-width:2.5}
+
+/* v0.5.52 — shop-front circulation: permanent paved aprons to every door.
+   The street now runs in front of the artwork instead of only the park edge. */
+body[data-ruleset="classic"] .route-overlay .route-door-walk{
+ stroke:#eed7a5;stroke-width:5;stroke-dasharray:none;stroke-linejoin:round;
+ stroke-linecap:round;opacity:.95;filter:drop-shadow(0 1px 1px #654b2966)
+}
+body[data-ruleset="classic"] .route-overlay .route-road-back{stroke:#f1d6a5;stroke-width:9;opacity:.9}
+body[data-ruleset="classic"] .route-overlay .route-road{stroke:#98633b;stroke-width:2.3;stroke-dasharray:6 7;opacity:.95}
+body[data-ruleset="classic"] .route-overlay .route-preview{stroke:#22a78a;stroke-width:4;stroke-dasharray:9 7;filter:drop-shadow(0 1px 2px #203d3444)}
+
+/* The southern frontage must not cover the Public Garden clock readout. */
+body[data-ruleset="classic"] .classic-board-clock{top:84.8%}

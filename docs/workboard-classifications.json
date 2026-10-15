@@ -1,0 +1,85 @@
+{
+  "schema": "the-life-loop.workboard-classifications.v1",
+  "release": "0.5.52",
+  "blocked": {
+    "LL-014": {
+      "reason": "Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build.",
+      "unblock_when": "Run and record Windows, macOS, Linux, Android and iOS smoke tests on their target browsers."
+    },
+    "LL-060": {
+      "reason": "Full DOS parity needs reference runtime observations and exact original calculations not contained in the available evidence.",
+      "unblock_when": "Supply validated SCI/DOSBox behavior traces for each remaining parity rule."
+    },
+    "LL-082": {
+      "reason": "Live production Looprd room behavior cannot be verified from a source-only release.",
+      "unblock_when": "Provide access to a deployed Looprd environment and results of a two-browser session."
+    },
+    "LL-092": {
+      "reason": "Live multiplayer migration requires the operator's running Looprd deployment and persistence data.",
+      "unblock_when": "Run a production-safe migration rehearsal and attach sanitized two-client results."
+    },
+    "LL-106": {
+      "reason": "Cross-device portrait sharing needs live Looprd and two independent clients.",
+      "unblock_when": "Complete a remote shared-room portrait synchronization test."
+    },
+    "LL-130": {
+      "reason": "Exact original goal distribution and liabilities require DOS execution evidence.",
+      "unblock_when": "Supply saved original-game observations or a verified source-level formula."
+    },
+    "LL-158": {
+      "reason": "The 13 Classic storefront and interior pairs are now delivered and integrated; original weekly event probabilities are still unverified.",
+      "unblock_when": "Supply documented original event draws or SCI source proofs for remaining weekly probabilities."
+    },
+    "LL-164": {
+      "reason": "Production art integration is complete, but live multi-client route synchronization has not been validated on the deployed service.",
+      "unblock_when": "Complete a two-client deployment QA pass using the integrated Classic board."
+    },
+    "LL-169": {
+      "reason": "Original travel-hour conversion and synchronized deployed-client pawn behavior require DOS and multiplayer traces.",
+      "unblock_when": "Supply DOS route timings and a sanitized two-client movement capture."
+    },
+    "LL-175": {
+      "reason": "Original waypoint-to-action-clock conversion has not been confirmed against DOS runtime timings.",
+      "unblock_when": "Record at least five original-game trips with start/end clock readings and waypoints."
+    },
+    "LL-176": {
+      "reason": "Original wage/clothing/opponent coefficients are not sufficiently evidenced for exact parity.",
+      "unblock_when": "Provide original runtime employment and clothing-cost traces."
+    },
+    "LL-182": {
+      "reason": "Dynamic salary coefficients and exact opponent priority weights remain unverified in original execution.",
+      "unblock_when": "Obtain original-game salary and ordered decision traces across contrasting economic states."
+    },
+    "LL-189": {
+      "reason": "Multi-index economic transition formulas lack original emulator/reference verification.",
+      "unblock_when": "Collect repeatable DOS economic-index sequences or source proofs."
+    },
+    "LL-190": {
+      "reason": "The complete SCI decision branch ordering is not yet recovered.",
+      "unblock_when": "Map and verify the outstanding WhereShouldIGo.sc branches from source/runtime traces."
+    },
+    "LL-263": {
+      "reason": "No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO.",
+      "unblock_when": "Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services."
+    }
+  },
+  "in_progress": [
+    "LL-012",
+    "LL-036",
+    "LL-039",
+    "LL-040",
+    "LL-041",
+    "LL-042",
+    "LL-066",
+    "LL-072",
+    "LL-111",
+    "LL-134",
+    "LL-147",
+    "LL-152"
+  ],
+  "todo": [
+    "LL-011",
+    "LL-086",
+    "LL-098"
+  ]
+}

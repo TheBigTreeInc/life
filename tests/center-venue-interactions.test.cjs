@@ -17,9 +17,9 @@ test('the board owns one venue dialog, one actionable list and no destination si
  assert.match(css,/\.game-layout\{grid-template-columns:minmax\(265px,310px\) minmax\(0,1fr\)!important/);
 });
 test('board click opens current venue free and navigates via the unchanged network command path',()=>{
- assert.ok(app.includes("game.player.location===target){openVenue(target);return;"));
+ assert.ok(app.includes("from===target){openVenue(target);return;"));
  assert.ok(app.includes("net.execute('travel',target,()=>game.travel(target))"));
- assert.ok(app.includes('if(result.ok&&net.role!==\'guest\'){store();render();openVenue(target);}'));
+ assert.ok(app.includes('const arrived=await routeOverlay.animate(actorId,from,target,{onStep:'));
  assert.ok(app.includes('if(net.role&&!net.ownTurn())'));
  assert.ok(app.includes('if(!venueInteraction.open)return;'));
 });

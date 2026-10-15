@@ -1,6 +1,6 @@
-# The Life Loop — workboard v0.5.19
+# The Life Loop — workboard v0.5.43
 
-Full-source release: `the-life-loop-0.5.19-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
+Full-source release: `the-life-loop-0.5.46-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
 
 ## Completed
 
@@ -328,3 +328,311 @@ See `docs/decisions/ADR-0020-printed-reference-classic-economy.md`.
 - [x] **LL-142** — Job-workplace unit and browser regression; Modern Story and Looprd snapshot semantics unchanged.
 
 **Remaining:** The thirteen shared map locations still combine Z-Mart and Black's Market as separate departments inside Fresh & Frugal; strict original building parity requires expanding/reorganizing the map. References to original DOS names remain visible inside Career Center where relevant.
+
+## v0.5.22 — Classic discount stock and grocery merchant separation
+
+- [x] **LL-143** — Distinct Black’s Market and Z-Mart department sections within the centered Fresh & Frugal actions, preserving the user-approved shared 13-location city for Classic and Modern.
+- [x] **LL-144** — Four-week rotating discount clothes/books/home entertainment/weekend tickets, guarded with engine-validated availability and Classic economy prices; Black’s Market grocery and lottery inventory persists.
+- [x] **LL-145** — Book availability moved from Circuit City to Z-Mart. Tickets consumed once on weekends; VCR/stereo improve relaxing at home; new possessions are pawnable and count towards Classic wealth.
+- [x] **LL-146** — Retail stock and save/snapshot tests; preserved AI clothing fallback, network action shape, Classic employer IDs, and Modern isolation. Full source and CI release metadata synchronized.
+- [ ] **LL-147 (high)** — Capture DOS original inventory weeks and probabilities and resolve the original 13 physical store mapping, plus authentic item durability, breakage, original weekend expenditures and robbery effects. Current item prices and stock rotation are provisional.
+
+**Operator acceptance:** New Classic game → Fresh & Frugal: see two merchant headings and rotating stock; week 1 dictionary/baseball and casual clothing, week 2 atlas/concert and dress clothing. Buy a ticket and end week, confirm single weekend message and no replay. Buy dictionary, verify no longer sold at Circuit City, preserve benefit for study. Revisit in Modern to confirm previous shopping action list. Keep separate Classic job/employer IDs and all thirteen visible locations. `node tools/verify.mjs`, Python Looprd tests and fresh ZipRunner extraction must pass. ADR-0023.
+
+
+## v0.5.23 — Classic clock and work precision
+
+**Artifact:** `the-life-loop-0.5.23-ziprunner.zip` · **Status:** source implemented and automated tests added.
+
+- [x] **LL-148** — Stop all Classic venue actions when 0 hours remain, including nominally free bank/food transactions. End Week remains accessible.
+- [x] **LL-149** — Track a provisional maximum of ten in-venue decisions per Classic week, excluding travel. Show used slots in the bottom ticker; reset on week change.
+- [x] **LL-150** — Carry fractional gross wage remainders across Classic partial shifts, ensuring identical pay for identical hours regardless of shift splitting; reset when changing jobs.
+- [x] **LL-151** — Add nine new tests, update existing clock assertions, protect snapshot fields and include them in mandatory verification/ZIP.
+- [ ] **LL-152 (high)** — Directly compare DOS action counting, free transaction policy, dismissal and partial-shift rounding. Current choices are documented approximations.
+
+**Operator acceptance:** Work one Cook shift of 6 hours for $40 gross, then repeat as six 1-hour shifts and compare. Check banking at zero time and after ten transactions, verify next-week reset and persistence, confirm Modern works as previously. Run `node tools/verify.mjs` and Looprd handler tests. See [ADR-0024](docs/decisions/ADR-0024-classic-clock-event-budget-and-partial-wages.md).
+
+
+## v0.5.24 — Classic original-layout board and economic risks
+
+**Artifact:** `the-life-loop-0.5.24-ziprunner.zip` · **Status:** implemented, regression-gated. The original DOS business and map names are restored for Classic; exact DOS random formulas remain unverified.
+
+- [x] **LL-153** — A ruleset-specific Classic 13-venue geographic map: Le Security, Rent Office, Low-Cost Housing, Pawn, Z-Mart, Monolith, QT, Socket, Hi-Tech U, Employment Office, Factory, Bank, Black's Market. Positions follow the DOS screen; Modern uses its prior 13 positions and modern identities.
+- [x] **LL-154** — Separate Classic retailer location IDs, grocery and discount actions, and all 37 employer-to-workplace mappings. Housing rest available only at the currently rented building; Rent Office permits low-cost/secure moves.
+- [x] **LL-155** — Classic store-quality condition for appliances and electronics, with repairs at Socket City; broken items lose active benefits and count for less in owned-asset goal valuation.
+- [x] **LL-156** — Classic financial hazard model: Wild Willy steals wallet cash during rare bank and grocery transactions; burglaries may steal durable property from Low-Cost Housing; secure Le Security blocks residential burglary.
+- [x] **LL-157** — Source-versioned Classic modern artwork slots with absent-image fallback; optional WebP pairs compiled only if supplied. Full-ZIP, standalone offline, Pages and regression checks.
+- [ ] **LL-158 (high)** — Operator-supplied 13 location images and real DOS playthrough measurement for Classic travel/stock/repair/burglary rates and housing rent economics. Current names and geometry are source-based; economic rates and precise travel costs are not confirmed.
+
+**Operator checks:** Start Classic, see five north locations and the separate Black's Market on the west, Z-Mart on the northeast. Confirm each offers its own products and jobs; moving to Le Security moves relaxation to its own building and blocks apartment burglary. Force-test appliance failure and repair through `tests/classic-map-risk.test.cjs`. Start Modern and verify unchanged 13 locations. Install art using `docs/classic-board-art-request.md`. Run `node tools/verify.mjs`, Python Looprd handler tests, and full ZIP extraction check.
+
+See [ADR-0025](docs/decisions/ADR-0025-classic-original-board-and-economic-risks.md).
+
+
+## v0.5.25 — Real Classic board routes and offline testing
+
+**Artifact:** `the-life-loop-0.5.25-ziprunner.zip` · **Status:** implemented, regression-gated; artwork alignment and live two-browser Looprd tests remain pending.
+
+- [x] **LL-159** — Pure connected 14-node graph with deterministic shortest-path planning, thirteen Classic locations and stable venue IDs.
+- [x] **LL-160** — Persistent SVG board route, visual pawn markers for local, friend and Jones, layout projection for desktop/mobile and `?debugRoutes=1` diagnostics.
+- [x] **LL-161** — Accepted authoritative Classic travel animates before the centered venue opens. Rejected travel never animates. Guest waits for host-confirmed state; animation changes no hours or action slots.
+- [x] **LL-162** — `PLAY.bat` opens the bundled offline game instantly, while `TEST-LOCAL.bat` runs the complete verification and then opens PLAY.html on Windows.
+- [x] **LL-163** — Pure route, integration and local launcher tests plus release/Pages builds. New route sources and JSON are shipped in ZipRunner.
+- [ ] **LL-164 (high)** — Supply final classic board art, tune road/entrance geometry, measure DOS movement-hour parity, and test real Looprd WSS host/guest travel/reconnect in two browsers.
+
+**Local acceptance:** Extract ZIP → double-click `PLAY.bat` to play immediately without rebuilding. Double-click `TEST-LOCAL.bat` for full verification and browser launch; it exits without launching if verification fails. Start Classic, click a different venue, watch pawn follow visible route, verify exactly one travel deduction then centered venue interaction. Test Modern: no route overlay and unchanged travel behavior. Open `PLAY.html?debugRoutes=1` to inspect nodes. No new artwork required. [ADR-0026](docs/decisions/ADR-0026-versioned-board-routes-and-authoritative-pawn-animation.md).
+
+
+## v0.5.26 — Shared route-clock and mobile road quality
+
+**Artifact:** `the-life-loop-0.5.26-ziprunner.zip` · **Status:** source implemented; browser and full-source verification gated.
+
+- [x] **LL-165** — Tie Classic hours and deterministic route geometry to the same versioned, validated graph. Preserve the previous movement time formula for all pairs; Modern travel stays independent. No save or Looprd migration.
+- [x] **LL-166** — Add keyboard/hover travel inspection (cost, road segments, shortage warning) and small 0h/HERE and travel-hour badges on Classic tiles, all non-mutating.
+- [x] **LL-167** — On mobile, reorder the 13 Classic tile positions to a three-column serpentine road, keeping the final-to-first segment along a perimeter gutter. Support resize mid-animation; avoid long diagonal roads through building imagery.
+- [x] **LL-168** — Pure cost/route parity tests for every venue pair, limited-hours negative test, Modern isolation, browser viewport QA and `TEST-ROUTES.bat` for rapid local smoke.
+- [ ] **LL-169 (high)** — Ground final art projections, exact Sierra DOS travel formula, and deployed Looprd multi-browser reconnect/cancellation verification. Existing LL-164 remains relevant until real artwork/live QA.
+
+**Operator checks:** Unzip and run `TEST-ROUTES.bat` (quick) or `TEST-LOCAL.bat` (full); start Classic and hover Z-Mart from Low-Cost Housing, see 3h / two road segments without time spent; click to walk and open centered Z-Mart, hours now 57; click same store for free. Resize mobile 390px and desktop 1440px; confirm street/pawn continuity. In Modern, no road/cost badges appear and actions stay intact. Run `python tests/qa_routes.py` if local Playwright/Chromium is installed. No manual rebuild is needed to play bundled `PLAY.html`. All original DOS references and current mathematical approximations remain explicitly unverified, not silently classified as parity.
+
+## v0.5.28 — Original DOS route and linked career/AI model
+
+- [x] **LL-170** Imported exact 170 DOS waypoint indices and 13 source place numbers, with immutable board/location identities and 14 visual road anchors.
+- [x] **LL-171** Replaced equal-weight Classic shortest roads with deterministic historic ring index routing, including wrap and step-by-step pawn path on desktop/mobile. Time model remains explicitly provisional.
+- [x] **LL-172** Linked 37 DOS jobNum identifiers and 9 original employers to their correct Classic board workplaces; Black's Market no longer internally maps to Z-Mart. Preserved existing salary economics, original salary/degree/uniform metadata attached for next pass.
+- [x] **LL-173** Added pure Classic rival route/needs/job-choice evaluator and 2–3 stop sequence planner for salary, rent, clothing, food, available cash, work qualifications and route steps. Modern opponent untouched.
+- [x] **LL-174** Reference consistency, gameplay regression, source/provenance note and ZipRunner integration; desktop/phone final art and real Looprd two-client trial remain external operator checks.
+- [ ] **LL-175 (P0)** Derive and verify exact DOS passage-of-time conversion from waypoint movement, speed and entry/action time traces, replacing present 3+floor(steps/25) approximation.
+- [ ] **LL-176 (P1)** Validate historical `CostDItem` dynamic wages, degree 10–20/course progression, uniform tiers and exact hiring/AI priority weights against DOS or reconstructed traces; migrate gameplay economics only after regression baselines.
+
+**Operator acceptance:** open `PLAY.html`, Classic 13 venues; in `?debugRoutes` view index / original place identities, home→Rent Office must show 7 reverse indices, Monolith→Z-Mart 11, source hospital / Black's Market remain separate. At Employment Office view DOS role ID and original base wage distinct from current wage. Allow the rival to run multiple weeks; verify it does not walk to an unrepresented company. Real-player movement with Looprd still requires deployed browser test; never auto push Git.
+
+
+## v0.5.28 — Source-linked Classic employment, survival and career AI
+
+- [x] **LL-177** Validate original DOS degree numbers 10–20 and prerequisites; crosswalk numeric job degree IDs to save-stable Classic degrees.
+- [x] **LL-178** Migrate all 37 Classic jobs to authoritative DOS experience/reliability qualifications (four prior discrepancies corrected), and integer 1–100 seeded hiring odds, including occupation #44 guarantee.
+- [x] **LL-179** Implement a read-only two-week survival forecast covering accessible bank savings, rent, food, wardrobe replacement, and job shift income; expose essential cost horizon in the Classic Career Roadmap.
+- [x] **LL-180** Career-aware rival now scores available degree options by jobs unlocked and routes, and evaluates job upgrades over multiple paychecks; preserves Modern AI and save format.
+- [x] **LL-181** Regression suite for source degree/job identities, seed roll boundaries, career & budget purity, save snapshots, AI progression, 100-seed survival and separate Modern behavior.
+- [ ] **LL-182 (high)** Capture DOS video/logic traces for economic index wages, exact travel-clock conversion and original AI/raise decisions; keep modelled choices labelled as provisional until verified.
+
+**Operator check:** Classic Employment Office lists current offered pay, distinct original DOS hourly base, and qualification-adjusted odds. Career Roadmap lists original education IDs and two-week survival figures. Run 20+ weeks and check the rival can progress beyond starter wages without losing food/rent survival. Open existing v0.5.27 save and verify durable job/degree IDs persist. Modern and Looprd protocol remain unchanged.
+
+## v0.5.29 — DOS mechanics recovery, Pass 2
+
+**Completed:** DOS-style goods price formula (LL-183); one-draw Classic lottery and d12 rent-extension odds (LL-184); fractional partial-shift truncation without carry (LL-185); source-tagged emergency AI priorities and saved decision trace (LL-186); optional backward-compatible goods-index and weekly event journal (LL-187); integration/regression and DOS reference pack (LL-188).
+
+**Known incompleteness:** Price *calculation* is source-derived but weekly index *evolution* remains provisional. The AI has only an ordered subset of the 38 recorded tags, not a complete first-match SCI port. Work stat accrual, full wage adjustments, multi-index investments, 16-bit SCI overflow, event source ordering, rent garnishment, education and travel-hour equivalence still need emulator traces. No silent claim of parity.
+
+**Checks:** `node tools/verify.mjs`, `npm run test:classic`, `TEST-DOS-PASS2.bat`, and (separately) `python -m unittest discover -s docs/reference/original-dos-pass2/tests -v`.
+
+## v0.5.30 — EconomicIndex domain migration and Classic salary contract safety
+
+- [x] **LL-191** Implement deterministic eight-domain `ClassicEconomy` with original domain identities and bounded readings; label drift/correlation as **provisional**.
+- [x] **LL-192** Bind Classic consumer goods, new wage offers, and all five variable bank markets to one shared seed-driven model; existing employee contracts and market positions persist. T-Bills fixed; Modern unaffected.
+- [x] **LL-193** Rival career changes now compare real contracted earnings, defend essentials, and support source-tagged last-resort pawning for food/rent. Add nonmutating short-horizon trend-aware food planning.
+- [x] **LL-194** Show all eight readings and last deltas in Finances plus current price/forecast context in Career Roadmap; preserve bounds-checked save/load and legacy index migration.
+- [x] **LL-195** Extend mandatory verification with 8+ economic tests covering replay, 1,000 steps of bounded index drift, contracting, market pricing, legacy imports, malformed snapshots, pawn AI, Modern isolation and existing 60-week endurance campaigns. Ship ADR-0031, TEST-ECONOMY and release metadata.
+
+**Unverified:** Exact SCI economic trend dependency/market risk and original wage formula; event sequencing, garnishment and full opponent branch coverage are still in LL-189/190. The reference proves domain identities and bounds but not this implementation's correlation coefficients. Operator check: view Classic indices in Finances; change weeks, confirm consumer prices and new job offers respond, existing signed wages do not; run 60-week Classic AI and Modern mode without regression. No Git push required or attempted.
+
+## v0.5.31 — Event shock/recovery and unemployed AI source branch
+
+- [x] **LL-196** DOS `startTrn.sc` original crisis effects on employment, wages, savings and happiness with separate pure reducer; probability remains a clearly documented compatibility approximation.
+- [x] **LL-197** Replay-safe, save-validated `classicEconomicPulse` with weekly phase + 8-week incident cooldown; old Classic saves upgrade without repeated weeks or financial impact on load.
+- [x] **LL-198** Corrected the unemployed ACNE ↔ Black's Market travel loop by applying for employment when physically at ACNE; recession planning reserves extra food liquidity.
+- [x] **LL-199** Journaled event/career effects and financial losses on per-player account ledgers; add Classic cycle/shock diagnostics to Finances.
+- [x] **LL-200** Crisis reducer/replay, save, AI recovery, Modern isolation and long endurance tests included in mandatory verifier and packed with `TEST-CRISES.bat` / ADR-0032.
+
+**Limits:** shock frequency, 8-week cooldown, downturn index thresholds and recovery happiness are designed, not recovered from Sierra logic. Existing 60-week rival simulations now explicitly allow last-week dismissals and transient hardship rather than incorrectly asserting permanent immunity. Verify real Windows `PLAY.html` and two Looprd clients separately.
+
+## v0.5.32 — Source-linked Classic Jones career decision migration
+
+- [x] **LL-201** Source-tagged ordered AI branches 28, 29, 30, 32, 37, 44, 46 after essential food/rent/employment actions, reusing actual 170-waypoint movement and live engine actions.
+- [x] **LL-202** Branch 20 and early rank-aware formal/casual/business uniform replacement: protected earnings, food and rent priority. Fixed the clothing-related rent spiral exposed by original endurance seed 96.
+- [x] **LL-203** Unemployment counters and failed applications are serialized per Classic player; sustained unemployment uses guaranteed-roll original Cook occupation #44 without bypassing qualifications or application time.
+- [x] **LL-204** Contract-aware promotion/raise planning, original diploma dependencies and course enrollment flow, no automatic degree or salary shortcuts.
+- [x] **LL-205** Nine dedicated source/recovery tests, 100-seed endurance, offline and Pages builds, release verifier/quick Windows launcher, ADR-0033, full ZipRunner package.
+
+**Source limitations:** No claim that the original DOS AI used our two-week unemployment fallback, two-week uniform replacement window, 4-week negotiation cadence, or our cash/tuition thresholds; these are documented compatibility approximations. Remaining LL-190 calls for complete SCI branch coverage and emulator replay. Verify file:// PLAY.html on Windows and multiplayer separately.
+
+## v0.5.33 — Source tick planner, Employment entry and partial work parity
+
+- [x] **LL-206** Original estimated movement ticks per leg (`min ring steps + 2×20`) integrated into Classic travel quotes and itinerary comparison; separate from the still-provisional playable clock conversion.
+- [x] **LL-207** Source `room1.sc` Employment Office entry +2 clock units once on arrival, atomic with movement and indicated in route UI; no duplicate fee for opening the same location.
+- [x] **LL-208** DOS `n108.sc` grants one work progression credit for each successful full or partial work action, with original truncated income and stat caps; no fractional-sixth credit pooling.
+- [x] **LL-209** Route preview shows waypoint count, original estimated ticks, actionable time charge and Employment surcharge; pawn animation remains bound to 170 indexed path points.
+- [x] **LL-210** Added six source-timing tests, extended original route/clock assertions, Modern isolation checks, offline/Pages compilation and `TEST-TIME.bat` launcher. Save and multiplayer payload fields unchanged.
+
+**Open LL-175 and LL-169:** original image/board and exact movement-time-to-clock conversion still require DOS capture; replay a sequence of source waypoint trips in DOSBox at known speed/quantum and compare every transition before changing the provisional player clock formula. Original ten-action weekly gate remains a prototype limit (LL-152). Operator: run `TEST-TIME.bat`, open `PLAY.html` on Windows, hover Home→Employment and check separate +2 unit office entry; finish a late two-unit partial shift and check XP/reliability. Do not push Git without operator approval.
+
+## v0.5.34 — Employer warning and paycheck migration
+
+- [x] **LL-211:** Source-ordered low-reliability warning before first shift of the week and dismissal precedence, without paying/scheduling a false work action.
+- [x] **LL-212:** Read-only net-pay estimate including partial gross, arrears and fee; live work uses exactly the same calculation, with unverified DOS surcharge semantics labelled provisional.
+- [x] **LL-213:** Jones cannot commute to a workplace without at least one remaining action unit and ceases errands when its venue-action allowance is exhausted.
+- [x] **LL-214:** Safe weekly warning state import and normalization; older snapshots remain compatible, Modern unaffected.
+- [x] **LL-215:** Regression suite and test launcher, source archive, ADR-0035, updated artifact metadata and workboard for ZipRunner.
+
+**Unresolved P0 parity:** Original DOS full-vs-partial rent garnishment may rewrite take-home pay with full gross (n108.sc temp0/temp1). Capture at least three DOS paychecks with equal wage/debt but 1h, 3h and 6h remaining before replacing the provisional deduction. Source-trace exact waypoint-to-clock conversion remains open.
+
+## v0.5.35 — Classic paycheck audit and financial resilience
+
+- [x] **LL-216:** Immutable quote plus settlement reconciliation; source-derived full/partial gross retained, provisional fee/withholding isolated with explicit full-gross sensitivity diagnostic.
+- [x] **LL-217:** Bounded 16-shift Classic financial/payroll journal with strict save validation, old-save migration and Finances transparency.
+- [x] **LL-218:** Rival two-week budget uses net contracted shifts with declining debt and exposes net/two-shift funding gaps in Career Roadmap.
+- [x] **LL-219:** Rival voluntary arrears clearance preserves upcoming food, rent, clothing and downturn cash; no source parity claim for this cash buffer.
+- [x] **LL-220:** Ten new targeted tests, full release verifier, v0.5.35 offline/Pages source, ADR-0036 and TEST-PAYCHECKS.bat packaged for ZipRunner.
+
+**Open DOS blocker:** Exact original rent deduction branch and fee/partial gross override remains unverified. Capture 1/3/6-unit work at equal salary/arrears in the original game before updating withholding. Exact waypoint clock and complete Jones SCI action order are similarly unresolved. No Git commit/push made.
+
+## v0.5.36 — Source-aligned per-player turn lifecycle
+
+- [x] **LL-221:** Move sourced −3 dependability to end of each Classic human/AI turn, preventing the shared weekly reset from lowering it twice.
+- [x] **LL-222:** Four-week Classic rent obligations use pure one-time assessment and preserve paid/extended leases.
+- [x] **LL-223:** Save and display an ordered 72-event Classic phase journal for future DOS runtime comparisons.
+- [x] **LL-224:** Additive safe save import and rejected forged future/negative event state; Modern isolation retained.
+- [x] **LL-225:** Eight new tests, mandatory verifier, ZipRunner handoff, ADR-0037 and offline/Pages source.
+
+**Open:** original `startTrn.sc` 37-state exact execution order, payroll temp register behavior and waypoint-to-clock scaling need emulator traces. No Git push requested.
+
+## v0.5.37 — Original geography, mobile map and source weekly bonus
+
+- [x] LL-226 — Classic keeps 5×4 original 13-place board and source route identities at all widths.
+- [x] LL-227 — Phone Explore pans readable 740px map; Overview fits; building and pawn locator do not consume time.
+- [x] LL-228 — Road SVG and animated pawn live inside the same pan stage; corner road elbows and centered menu preserved.
+- [x] LL-229 — DOS `startTrn.sc` state 4: one-in-seven owned-computer $20–$100 **cash** award; Modern unchanged.
+- [x] LL-230 — Five focused regressions, mandatory verifier, browser checks, workboard, ADR and complete offline/Pages packaging.
+
+Still pending: supplied 13-storefront production art, measured DOS route-hour conversion, the remaining `startTrn` source states, exact Jones priority weights and deployed two-client race testing.
+
+
+## v0.5.38 — Classic mobile intent, travel camera, and DOS state journaling
+
+- [x] **LL-231** Phone Overview building taps change to readable Explore, without consuming time; subsequent Explore tap follows the authoritative travel command.
+- [x] **LL-232** Pawn travel follows the mobile camera; a manual pan overrides camera movement, and My Pawn recenters independently.
+- [x] **LL-233** `startTrn.sc` state 10 food-loss journal with original storage limits and explicitly unverified spoilage chance; remove unsupported medical deduction.
+- [x] **LL-234** `startTrn.sc` state 18 wardrobe countdown/expiry journal, independently tagged, without modifying Modern rules.
+- [x] **LL-235** Four additional source/UX tests, full regression and desktop/phone browser checks, ADR-0039, offline and Pages builds, ZipRunner-safe incremental workboard update.
+
+**Known original parity gaps:** food spoilage probability, weekly event callbacks and exact waypoint-clock transformation await original DOS runtime observation. Do not interpret the compatibility guarantee of unrefrigerated spoilage as an authentic probability. No Git push was performed.
+
+## v0.5.39 — Journey/entry presentation and original weekly source-state continuation
+
+- [x] LL-236: Board-native departure/arrival/await-host status; road-anchored arrival highlight with no additional travel transaction.
+- [x] LL-237: Horizontal pan threshold on touch prevents accidental interruption of pawn-follow; Classic mobile Overview remains inspect-first.
+- [x] LL-238: Food-shortage state 12 journal entries only when the existing hunger mechanic triggers; no invented food penalty.
+- [x] LL-239: State 34 emergency clothing-assistance journal for existing two-check rescue; payout/cooldown still provisional.
+- [x] LL-240: New regression launcher, mandatory verifier, standalone/Pages build, workboard-limited ZipRunner release.
+
+**Pending:** fully recovered 37-state weekly SCI event sequencing, exact route-to-clock mapping, state-34 assistance payout/cooldown, broader multiplayer sync traces, replacement Classic building paintings.
+
+## v0.5.41 Classic board and source-event core migration
+
+- [x] LL-241 — Skippable presentation-only pawn movement for faster repeat travel, no second action or clock charge.
+- [x] LL-242 — Separate Classic relaxation with DOS state-6 weekly decay, save validation, recovery via existing rest action.
+- [x] LL-243 — Source-tagged state-20 quarterly loan checks, without double default charges.
+- [x] LL-244 — Focused source/save/skip/Modern isolation regression tests.
+- [x] LL-245 — Release gate and ZipRunner workboard schema verification.
+
+**Open DOS fidelity:** original relaxation starting value and recovery, hot-tub item-28 effect, state-6 rare theft probability, precise state-20 penalty.
+
+## v0.5.41 — Entrance presentation, household & designer handoff
+
+- [x] LL-246 — Road-owned door/arrival indicator remains aligned to original travel anchor with no additional movement cost.
+- [x] LL-247 — Pure household availability projection; broken computers stop earning Classic project bonuses.
+- [x] LL-248 — Rest whenever relaxation is low even when happiness and energy are full; no Modern changes.
+- [x] LL-249 — 13-venue artwork contract including original identity, sprite and export slots, street-side entrances and mobile review.
+- [x] LL-250 — Regression tests, source verifier, standalone game, ZipRunner-safe workboard, ADR-0042.
+
+**Still open:** exact DOS hot-tub item #28, its actual relaxation/recovery formula and probabilities, route-to-clock scaling, remaining weekly event state coverage and final production paintings. Designer DOCX delivered separately; Markdown contract and board schematic are version controlled.
+
+## v0.5.43 — Explicit source lifecycle reconciliation and Classic maintenance
+
+- [x] **LL-251** Stable-ID lifecycle source ledger reconciles all known items into Done, Blocked, In Progress or To Do; each blocked item carries reason and unblock condition. This is not a claim of ZipRunner UI transition.
+- [x] **LL-252** Mandatory verifier regenerates and compares the lifecycle JSON and Markdown; rejects duplicate IDs, stale states, and v1 schema violations.
+- [x] **LL-253** Classic repair quote and surplus-only Jones maintenance branch. No new saved state, no Modern change.
+
+**Authoritative source status:** `docs/workboard-lifecycle.json`, human review in `docs/workboard-reconciliation.md`. **Importer limitation:** `ziprunner.workboard-update.v1` cannot express Blocked/In Progress transitions; see the proposed platform spec `docs/ziprunner-workboard-lifecycle-contract.md`. A ZipRunner code change and importer receipt are still required to update those UI statuses.
+
+## v0.5.43 — Classic production board, player turns and week clock
+
+- [x] **LL-254** — Integrate 13 approved exterior/interior WebP pairs in stable manifest slots; preserve per-building door coordinates..
+- [x] **LL-255** — Match all 13 original board cells, source place IDs, road stops, and phone Explore/Overview without alternate mobile arrangement..
+- [x] **LL-256** — Show current player, turn ownership, and week in the Classic board center; preserve Modern hub and centered venue interactions..
+- [x] **LL-257** — Show 60-unit circular clock that updates with authoritative actions and turn changes; no simulation changes..
+- [x] **LL-258** — Asset-size/identity, route geometry, turn clock, Modern isolation, and ZipRunner clean-build regression coverage..
+
+The 13 approved pairs replace placeholders in Classic only. Board entrance metadata is stored per venue, with roads still source-controlled and clock costs unchanged. Modern unaffected. The old workboard backlog remains reconciled through stable IDs.
+
+## v0.5.45 — Shared portraits and Social integration
+
+- **Done LL-259:** Integrate Modular Portrait Kit JS, browser editor and compact offline demonstration art packs.
+- **Done LL-260:** Standalone, presentation-only profile store and Life Loop display-name/portrait adapter, without changing existing save or room identity.
+- **Done LL-261:** Optional authenticated Social HTTP profile and lobby API client; standalone loopback-only development service supplied in separate repository ZIP.
+- **Done LL-262:** Tests, online/offline static assets, clean ZipRunner release validation.
+- **Blocked LL-263:** Production OIDC SSO and game-room authorization require trusted issuer, game gateway and deployed QA. The local dev token must not be treated as production login.
+
+
+## v0.5.46 — Native Looprd Social chat in the Life Loop game
+
+- [x] LL-264: Shared cross-game Social lobby accessible through Chat, even without an active co-op room.
+- [x] LL-265: Single page-scoped Social session shared with the Profile editor; direct Looprd POST `/social` transport, and local bridge fallback.
+- [x] LL-266: Social/Room channel isolation, read/unread counters, bounded messages, no profile/game snapshot coupling, regression and mobile smoke coverage.
+- [x] LL-267: Native Life Loop schema v2 `Room.chatKey` additive migration carried forward; avoid reintroducing `load: ValidationError`.
+
+**Not complete:** Production cross-game authentication (LL-263 remains blocked). Live access to your deployed Social host and device-specific multi-client operation are operator acceptance checks. Private room and Social credentials remain distinct.
+
+Release artifact: `the-life-loop-0.5.46-ziprunner.zip`
+
+## v0.5.49 — Classic hotseat and scenic road continuity
+
+- [x] **LL-013** — Local Classic hotseat privacy handover: keep the next player's private board and Social chat hidden until a deliberate reveal; stable backlog ID moved from To Do to Done.
+- [x] **LL-268** — Keep the Public Garden clock and both noninteractive scenic road gaps visible in phone Explore and Overview, preserving all historic route IDs.
+- [x] **LL-269** — Add hotseat and responsive board regressions and mandatory release verification.
+
+Open: live deployed Social and game-room authorization remain separate. Original DOS movement-time conversion still requires runtime traces (LL-175). No production Looprd service changes in this pass.
+
+**v0.5.49 ZipRunner handoff:** `the-life-loop-0.5.49-ziprunner.zip` — source-only, incremental workboard, no local runtime/private config.
+
+
+## v0.5.49 — Public Garden clock and phone camera
+
+- [x] **LL-270** — Relocated the single 60-unit Classic action-clock dial to bottom-center Public Garden; center remains active player and week.
+- [x] **LL-271** — Explore / Overview camera toggle visible only on phones; tablets and desktops stay fitted.
+- [x] **LL-272** — Fixed fifth-row route gutter so paths no longer bisect the Public Garden clock.
+
+**v0.5.49 ZipRunner handoff:** `the-life-loop-0.5.49-ziprunner.zip` — Classic presentation only; Social and game server unchanged.
+
+
+### v0.5.49 — Classic illustrated doorway stops and live venue clock
+
+- **LL-273 (Done):** Each of the 13 storefronts has an illustrated doorway approach; pawn visual positions now terminate at the door rather than the generic road midpoint. Preserved 170 DOS waypoints and clock charges.
+- **LL-274 (Done):** The Classic venue window now shows the 60-unit clock continuously, including after spending time inside.
+- **LL-275 (Done):** Regression tests cover sprite entrance metadata, clock consistency and 320/390/768/1440px browser layouts.
+- **Deployment:** No remote Git commit or server migration required for these changes.
+
+
+### v0.5.50 — Original-style continuous Classic streets
+
+- **LL-276 (Done):** Gutter-aligned rounded street loop with no top-corner backtrack across empty garden strips.
+- **LL-277 (Done):** Restrained street-only route highlight; destination doorway shown separately without painting across shop fronts.
+- **LL-278 (Done):** Geometry/cost and browser collision checks, including pawn travel and the persistent venue clock.
+- **Artifact:** `the-life-loop-0.5.50-ziprunner.zip`; no server migration or Social deployment necessary.
+
+
+### v0.5.51 — Classic pawn doorway animation
+
+- **LL-279 (Done):** Short departure and arrival animation phases, opacity crossover at street edge; fully stops on painted door; skip and reduced-motion support.
+- **LL-280 (Done):** Time/route invariance tests and desktop/mobile browser QA.
+- **Artifact:** `the-life-loop-0.5.51-ziprunner.zip`; no game-server, Looprd Social or save-format changes.
+
+
+### v0.5.52 — Route passes the shops, not the center park
+
+- **LL-281 (Done):** Project horizontal board street lines onto the bottom storefront artwork aprons; retain scenic lanes and 170 historical waypoint identities.
+- **LL-282 (Done):** Display connected pedestrian approaches to the thirteen actual doors, including left/right frontage shop paths; make the pawn traverse the same visible route as its hover preview, no hidden fade/teleport.
+- **LL-283 (Done):** Keep Public Garden clock text clear of the southern path and verify phone/tablet/desktop, 5-unit Bank travel, arrival geometry and venue clock.
+- **Artifact:** `the-life-loop-0.5.52-ziprunner.zip` (game source only; no Social server/database changes).
+- **Operator review:** Inspect real Windows browser at desktop and narrow phone; compare the illustrated door targets to final author assets, since doorway metadata is hand-calibrated. No automatic Git push.

@@ -8,22 +8,22 @@ const action=(g,id)=>g.actions().find(a=>a.id===id);
 
 test('Classic partial work consumes exactly remaining hours and pays proportional 8-hour earnings',()=>{
  const g=classic(),p=cook(g);p.hours=3;const prior={cash:p.cash,exp:p.experience,rel:p.dependability};
- assert.equal(action(g,'work').hours,3);assert.equal(action(g,'work').title,'Work at The Good Fork · $20');
+ assert.equal(action(g,'work').hours,3);assert.equal(action(g,'work').title,'Work at Monolith Burger · $20');
  assert.equal(g.act('work').ok,true);assert.equal(p.hours,0);assert.equal(p.cash,prior.cash+20);
- assert.equal(p.classicWorkHourCredit,3);assert.equal(p.workSessions,0);
- assert.equal(p.experience,prior.exp);assert.equal(p.dependability,prior.rel);
+ assert.equal(p.classicWorkHourCredit,0);assert.equal(p.workSessions,1);
+ assert.equal(p.experience,prior.exp);assert.equal(p.dependability,prior.rel+1);
  assert.equal(action(g,'work').enabled,false,'zero time cannot work');
 });
-test('Classic 1h work is productive, but does not repeatedly mint +1 stat credit',()=>{
- const g=classic(),p=cook(g);p.job='classic-blacks-checker';p.wage=8;p.location='market';const before=p.experience;
+test('Classic 1h work is productive and grants the source-backed per-action stat credit',()=>{
+ const g=classic(),p=cook(g);p.job='classic-blacks-checker';p.wage=8;p.location='cinema';const before=p.experience;
  p.hours=1;assert.equal(action(g,'work').hours,1);assert.equal(g.act('work').ok,true);
- assert.equal(p.cash,210);assert.equal(p.classicWorkHourCredit,1);assert.equal(p.experience,before);
- // Cumulative partial shifts need six hours total before one work-session gain.
- for(let i=0;i<5;i++){p.hours=1;g.act('work');}
- assert.equal(p.workSessions,1);assert.equal(p.classicWorkHourCredit,0);assert.equal(p.experience,before+1);
+ assert.equal(p.cash,210);assert.equal(p.classicWorkHourCredit,0);assert.equal(p.experience,before+1);
+ // Each successful shift increments XP once, while still truncating gross pay.
+ for(let i=0;i<5;i++){p.hours=1;p.energy=100;g.act('work');}
+ assert.equal(p.workSessions,6);assert.equal(p.classicWorkHourCredit,0);assert.equal(p.experience,before+6);
 });
 test('Full Classic work remains 6h paid for 8h and Modern keeps existing 6h requirement',()=>{
- const classicGame=classic(),p=cook(classicGame),xp=p.experience;p.job='classic-blacks-checker';p.wage=8;p.location='market';
+ const classicGame=classic(),p=cook(classicGame),xp=p.experience;p.job='classic-blacks-checker';p.wage=8;p.location='cinema';
  assert.equal(action(classicGame,'work').hours,6);assert.equal(classicGame.act('work').ok,true);
  assert.equal(p.cash,264);assert.equal(p.hours,54);assert.equal(p.experience,xp+1);assert.equal(p.workSessions,1);
  const modern=new Game({ruleset:'modern'}),m=modern.player;

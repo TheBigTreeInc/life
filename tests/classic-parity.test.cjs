@@ -54,7 +54,8 @@ test('Classic study consumes remaining partial time while zero-hour lessons are 
  const game=g(),p=game.player;go(game,'university');p.cash=1000;p.classicEnrollmentCredits=1;p.hours=3;
  doIt(game,'classicStudy:junior-college');assert.equal(p.hours,0);assert.equal(p.classicProgress['junior-college'],1);
  assert.equal(game.act('classicStudy:junior-college').ok,false);
- doIt(game,'enroll');assert.equal(p.classicEnrollmentCredits,1);
+ assert.equal(game.actions().find(a=>a.id==='enroll').enabled,false,'Even a free enrollment needs clock time remaining');
+ assert.equal(game.act('enroll').ok,false);assert.equal(p.classicEnrollmentCredits,0);
 });
 test('Classic requirements include named diplomas and can demand two simultaneously',()=>{
  const game=g(),p=game.player;
@@ -87,7 +88,7 @@ test('Classic warnings precede dismissal and firing occurs before any wage/time 
 test('Classic raise requirement increases by five reliability per raise',()=>{
  const game=g(),p=game.player;p.job='classic-monolith-clerk';p.wage=3;p.location='agency';p.dependability=50;game.economy=1;
  assert.equal(game.actions().find(a=>a.id==='raise').enabled,true);
- doIt(game,'raise');assert.equal(p.classicRaises,1);assert.equal(game.actions().find(a=>a.id==='raise').enabled,false);game.economy=1.4;assert.equal(game.actions().find(a=>a.id==='raise').enabled,true);
+ doIt(game,'raise');assert.equal(p.classicRaises,1);assert.equal(game.actions().find(a=>a.id==='raise').enabled,false);game.classicEconomicIndices.readings.general=140;assert.equal(game.actions().find(a=>a.id==='raise').enabled,true);
  p.dependability=10;assert.equal(game.actions().find(a=>a.id==='raise').enabled,false);
 });
 test('Classic score derives career from Dependability, education from diploma count; modern remains tier-based',()=>{

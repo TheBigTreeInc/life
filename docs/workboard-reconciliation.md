@@ -1,0 +1,157 @@
+# Workboard lifecycle reconciliation — v0.5.52
+
+**Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
+
+**Counts:** 247 done (historical claims included); 15 blocked; 12 in progress; 3 to do.
+
+## Blocked — reason and unblock condition
+
+- **LL-014 — Cross-platform desktop and mobile QA:** Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build. **Unblock:** Run and record Windows, macOS, Linux, Android and iOS smoke tests on their target browsers.
+- **LL-060 — Complete one-to-one DOS parity:** Full DOS parity needs reference runtime observations and exact original calculations not contained in the available evidence. **Unblock:** Supply validated SCI/DOSBox behavior traces for each remaining parity rule.
+- **LL-082 — Production Looprd two-browser acceptance:** Live production Looprd room behavior cannot be verified from a source-only release. **Unblock:** Provide access to a deployed Looprd environment and results of a two-browser session.
+- **LL-092 — Live Looprd schema migration and multiplayer field test:** Live multiplayer migration requires the operator's running Looprd deployment and persistence data. **Unblock:** Run a production-safe migration rehearsal and attach sanitized two-client results.
+- **LL-106 — Verify portrait sharing on production Looprd:** Cross-device portrait sharing needs live Looprd and two independent clients. **Unblock:** Complete a remote shared-room portrait synchronization test.
+- **LL-130 — Verify original wealth liabilities and Jones random goal distribution:** Exact original goal distribution and liabilities require DOS execution evidence. **Unblock:** Supply saved original-game observations or a verified source-level formula.
+- **LL-158 — DOS event probabilities and final Classic building artwork:** The 13 Classic storefront and interior pairs are now delivered and integrated; original weekly event probabilities are still unverified. **Unblock:** Supply documented original event draws or SCI source proofs for remaining weekly probabilities.
+- **LL-164 — Final illustrated board, route tuning and multiplayer live QA:** Production art integration is complete, but live multi-client route synchronization has not been validated on the deployed service. **Unblock:** Complete a two-client deployment QA pass using the integrated Classic board.
+- **LL-169 — Original map artwork, reference time formulas and deployed two-client movement QA:** Original travel-hour conversion and synchronized deployed-client pawn behavior require DOS and multiplayer traces. **Unblock:** Supply DOS route timings and a sanitized two-client movement capture.
+- **LL-175 — DOS travel-hour calibration:** Original waypoint-to-action-clock conversion has not been confirmed against DOS runtime timings. **Unblock:** Record at least five original-game trips with start/end clock readings and waypoints.
+- **LL-176 — DOS wage, clothing and AI parity:** Original wage/clothing/opponent coefficients are not sufficiently evidenced for exact parity. **Unblock:** Provide original runtime employment and clothing-cost traces.
+- **LL-182 — Exact original economic salary and AI comparison:** Dynamic salary coefficients and exact opponent priority weights remain unverified in original execution. **Unblock:** Obtain original-game salary and ordered decision traces across contrasting economic states.
+- **LL-189 — Original multivariate EconomicIndex emulator parity:** Multi-index economic transition formulas lack original emulator/reference verification. **Unblock:** Collect repeatable DOS economic-index sequences or source proofs.
+- **LL-190 — Exhaustive ordered opponent SCI branches and event order:** The complete SCI decision branch ordering is not yet recovered. **Unblock:** Map and verify the outstanding WhereShouldIGo.sc branches from source/runtime traces.
+- **LL-263 — Cross-game single sign-on and social deployment:** No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO. **Unblock:** Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services.
+
+## In progress
+
+- **LL-012:** Long-term opponent balancing
+- **LL-036:** Further original parity and economy depth
+- **LL-039:** Original 60h time economy and actions
+- **LL-040:** Original employment/stat progression and mode isolation
+- **LL-041:** Original degrees, goals, rent and financial decisions
+- **LL-042:** Consumer economy, risk and four-person multiplayer
+- **LL-066:** Complete remaining original bank, pawn and storefront parity
+- **LL-072:** Native server-authoritative simulation and multi-device resilience
+- **LL-111:** Production sprite atlas and richer animation set
+- **LL-134:** Original detailed economy, merchandise, events and security parity
+- **LL-147:** Full original DOS store-location and retail risk parity
+- **LL-152:** DOS-original action counting and wage rounding comparison
+
+## To do
+
+- **LL-011:** Audio and weather ambience
+- **LL-086:** Portable character library export/import and device persistence QA
+- **LL-098:** Optional downloadable local style packs
+
+## Done (current ZipRunner update)
+
+- **LL-177:** Numeric original diploma identities
+- **LL-178:** DOS-qualified employment and reproducible hiring
+- **LL-179:** Two-week Classic survival budget
+- **LL-180:** Rival career pathway and multi-payday job choices
+- **LL-181:** Original career and survival regressions
+- **LL-183:** Original DOS dynamic goods pricing
+- **LL-184:** Lottery and rent extension parity
+- **LL-185:** Original partial wage truncation
+- **LL-186:** Ordered priority Jones core branches
+- **LL-187:** Classic economics and AI diagnostics
+- **LL-188:** DOS Pass-2 source reference and regression
+- **LL-191:** Eight original economic index identities
+- **LL-192:** Unified Classic wages and market bindings
+- **LL-193:** Contract-aware rival planning and pawn emergencies
+- **LL-194:** Economic diagnostics and save migration
+- **LL-195:** Economic regression and ZipRunner delivery
+- **LL-196:** Source-derived DOS scandal result engine
+- **LL-197:** Saved economic event phase and per-week processing
+- **LL-198:** Rival layoff recovery and essentials protection
+- **LL-199:** Economic crisis ledger and diagnostics
+- **LL-200:** Expanded crisis migration QA and full ZipRunner release
+- **LL-201:** Ordered source-linked Jones career decisions
+- **LL-202:** Prevent workwear expiry feedback loop
+- **LL-203:** Employment search persistence and legitimate recovery
+- **LL-204:** Course and contract-sensitive AI
+- **LL-205:** Career replay/QA and ZipRunner source synchronization
+- **LL-206:** Original waypoint tick estimator
+- **LL-207:** Source-based Employment entry timing
+- **LL-208:** Per-action DOS work progression
+- **LL-209:** Classic route UI and itinerary diagnostics
+- **LL-210:** Timing tests, backward-compatible saves and full ZIP
+- **LL-211:** DOS reliability warning and work dismissal
+- **LL-212:** Paycheck preview and rent garnishment audit
+- **LL-213:** AI post-travel action reservation
+- **LL-214:** Durable migration and Classic/Modern isolation
+- **LL-215:** Source regression and ZipRunner delivery
+- **LL-216:** Classic auditable paycheck reconciliation
+- **LL-217:** Bounded payroll ledger and migration
+- **LL-218:** Net-aware rival survival forecasting
+- **LL-219:** Essentials-first debt payoff
+- **LL-220:** Regression, parity and ZipRunner release
+- **LL-221:** Source-backed per-player Classic turn closure
+- **LL-222:** Single-assessment Classic rent
+- **LL-223:** Replayable Classic turn timeline
+- **LL-224:** Legacy import and Modern isolation
+- **LL-225:** Turn-sequence regression and ZipRunner packaging
+- **LL-226:** Stable Classic 13-location board
+- **LL-227:** Readable phone Explore and Overview
+- **LL-228:** Board-relative routing and centered venue continuity
+- **LL-229:** DOS weekly computer bonus state 4
+- **LL-230:** Classic board/weekly regression and ZipRunner handoff
+- **LL-231:** Safe phone overview inspection
+- **LL-232:** Pawn-follow mobile camera
+- **LL-233:** DOS food storage trace
+- **LL-234:** DOS clothing warning trace
+- **LL-235:** Classic board and weekly release QA
+- **LL-236:** Journey stage & Classic arrival cue
+- **LL-237:** Touch-pan intent threshold
+- **LL-238:** DOS state 12 food shortage trace
+- **LL-239:** DOS state 34 clothing assistance trace
+- **LL-240:** Regression tests and verified ZipRunner handoff
+- **LL-241:** Accessible Classic pawn animation skip
+- **LL-242:** Separate source-linked Classic relaxation
+- **LL-243:** Source state 20 loan schedule audit
+- **LL-244:** Classic journey and relaxation regression coverage
+- **LL-245:** Complete ZipRunner v0.5.40 release handoff
+- **LL-246:** Route-owned visible entrance marker
+- **LL-247:** Working-appliance household adapter
+- **LL-248:** Relaxation-only Classic rest
+- **LL-249:** Production-ready 13-place designer contract
+- **LL-250:** Mandatory regression and ZipRunner release
+- **LL-251:** Reconcile workboard by stable ID with explicit lifecycle evidence
+- **LL-252:** Enforce source workboard lifecycle in ZipRunner release verifier
+- **LL-253:** Needs-aware Classic appliance maintenance and regression
+- **LL-254:** Install production Classic exterior and interior artwork
+- **LL-255:** Keep original DOS geography independent of display size
+- **LL-256:** Active player portrait and centered turn presentation
+- **LL-257:** Original-inspired Classic weekly clock
+- **LL-258:** Classic production board acceptance and release tests
+- **LL-259:** Modular Portrait Kit integration
+- **LL-260:** Shared cross-game appearance identity
+- **LL-261:** Optional Looprd Social integration contract
+- **LL-262:** Portrait integration release gate
+- **LL-264:** Expose shared Social lobby in game Chat
+- **LL-265:** Native Looprd Social client and unified profile session
+- **LL-266:** Chat resilience, security and viewport tests
+- **LL-267:** Carry forward Looprd game schema migration
+- **LL-013:** Classic local hotseat privacy handover
+- **LL-268:** Preserve Classic scenic road and garden on mobile
+- **LL-269:** Hotseat and mobile board regression release
+- **LL-270:** Place Classic action clock on Public Garden
+- **LL-271:** Limit Explore/Overview camera toggle to phones
+- **LL-272:** Correct south-row visual route projection
+- **LL-273:** Door-aligned Classic storefront arrival
+- **LL-274:** In-venue Classic action clock
+- **LL-275:** Entrance and venue time regression coverage
+- **LL-276:** Continuous Classic street centerline
+- **LL-277:** Separate road preview from storefront art
+- **LL-278:** Road and door arrival regression
+- **LL-279:** Smooth Classic pawn entry and departure
+- **LL-280:** Responsive arrival and route conservation tests
+- **LL-281:** Street tracks visible illustrated storefronts
+- **LL-282:** Visible doorway sidewalks and continuous pawn journey
+- **LL-283:** Storefront and garden clock browser regression
+
+## Importer handoff
+
+- v1 `implemented` carries completed items; v1 `remaining` carries outstanding items. The importer might not alter pre-existing card statuses by stable ID; that is not verified here.
+- `docs/workboard-lifecycle.json` is the full-source lifecycle record. It does not masquerade as an accepted ZipRunner v2 schema.
+- An importer that supports statuses must reconcile by existing `id`, not by item title, and report applied transitions. See `docs/ziprunner-workboard-lifecycle-contract.md`.

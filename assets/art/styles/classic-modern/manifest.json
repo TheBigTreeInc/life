@@ -1,0 +1,165 @@
+{
+  "schema": "the-life-loop.classic-board-art.v1",
+  "release": "0.5.52",
+  "style": "classic-modern",
+  "description": "Production Classic board: 13 matched exteriors/interiors and per-venue illustrated doorway offsets; route distance/time and game authority remain unchanged.",
+  "layout": {
+    "columns": 5,
+    "rows": 5,
+    "hub": [
+      2,
+      2,
+      3,
+      3
+    ],
+    "unusedCell": [
+      5,
+      4
+    ]
+  },
+  "venues": {
+    "clinic": {
+      "name": "Le Security Apartments",
+      "slug": "security-apartments",
+      "fallback": "home",
+      "card": "assets/art/styles/classic-modern/security-apartments-card.webp",
+      "detail": "assets/art/styles/classic-modern/security-apartments-detail.webp",
+      "doorAnchor": [
+        0.54,
+        0.84
+      ]
+    },
+    "housing": {
+      "name": "Rent Office",
+      "slug": "rent-office",
+      "fallback": "housing",
+      "card": "assets/art/styles/classic-modern/rent-office-card.webp",
+      "detail": "assets/art/styles/classic-modern/rent-office-detail.webp",
+      "doorAnchor": [
+        0.45,
+        0.84
+      ]
+    },
+    "home": {
+      "name": "Low-Cost Housing",
+      "slug": "low-cost-housing",
+      "fallback": "home",
+      "card": "assets/art/styles/classic-modern/low-cost-housing-card.webp",
+      "detail": "assets/art/styles/classic-modern/low-cost-housing-detail.webp",
+      "doorAnchor": [
+        0.4,
+        0.83
+      ]
+    },
+    "pawn": {
+      "name": "Pawn Shop",
+      "slug": "pawn-shop",
+      "fallback": "pawn",
+      "card": "assets/art/styles/classic-modern/pawn-shop-card.webp",
+      "detail": "assets/art/styles/classic-modern/pawn-shop-detail.webp",
+      "doorAnchor": [
+        0.47,
+        0.83
+      ]
+    },
+    "market": {
+      "name": "Z-Mart Discount",
+      "slug": "z-mart",
+      "fallback": "market",
+      "card": "assets/art/styles/classic-modern/z-mart-card.webp",
+      "detail": "assets/art/styles/classic-modern/z-mart-detail.webp",
+      "doorAnchor": [
+        0.42,
+        0.84
+      ]
+    },
+    "diner": {
+      "name": "Monolith Burger",
+      "slug": "monolith-burger",
+      "fallback": "diner",
+      "card": "assets/art/styles/classic-modern/monolith-burger-card.webp",
+      "detail": "assets/art/styles/classic-modern/monolith-burger-detail.webp",
+      "doorAnchor": [
+        0.75,
+        0.84
+      ]
+    },
+    "boutique": {
+      "name": "QT Clothing",
+      "slug": "qt-clothing",
+      "fallback": "boutique",
+      "card": "assets/art/styles/classic-modern/qt-clothing-card.webp",
+      "detail": "assets/art/styles/classic-modern/qt-clothing-detail.webp",
+      "doorAnchor": [
+        0.47,
+        0.82
+      ]
+    },
+    "tech": {
+      "name": "Socket City",
+      "slug": "socket-city",
+      "fallback": "tech",
+      "card": "assets/art/styles/classic-modern/socket-city-card.webp",
+      "detail": "assets/art/styles/classic-modern/socket-city-detail.webp",
+      "doorAnchor": [
+        0.59,
+        0.83
+      ]
+    },
+    "university": {
+      "name": "Hi-Tech University",
+      "slug": "hi-tech-university",
+      "fallback": "university",
+      "card": "assets/art/styles/classic-modern/hi-tech-university-card.webp",
+      "detail": "assets/art/styles/classic-modern/hi-tech-university-detail.webp",
+      "doorAnchor": [
+        0.41,
+        0.83
+      ]
+    },
+    "agency": {
+      "name": "Employment Office",
+      "slug": "employment-office",
+      "fallback": "agency",
+      "card": "assets/art/styles/classic-modern/employment-office-card.webp",
+      "detail": "assets/art/styles/classic-modern/employment-office-detail.webp",
+      "doorAnchor": [
+        0.44,
+        0.83
+      ]
+    },
+    "office": {
+      "name": "Factory",
+      "slug": "factory",
+      "fallback": "office",
+      "card": "assets/art/styles/classic-modern/factory-card.webp",
+      "detail": "assets/art/styles/classic-modern/factory-detail.webp",
+      "doorAnchor": [
+        0.51,
+        0.83
+      ]
+    },
+    "bank": {
+      "name": "Bank",
+      "slug": "bank",
+      "fallback": "bank",
+      "card": "assets/art/styles/classic-modern/bank-card.webp",
+      "detail": "assets/art/styles/classic-modern/bank-detail.webp",
+      "doorAnchor": [
+        0.49,
+        0.83
+      ]
+    },
+    "cinema": {
+      "name": "Black's Market",
+      "slug": "blacks-market",
+      "fallback": "market",
+      "card": "assets/art/styles/classic-modern/blacks-market-card.webp",
+      "detail": "assets/art/styles/classic-modern/blacks-market-detail.webp",
+      "doorAnchor": [
+        0.4,
+        0.83
+      ]
+    }
+  }
+}

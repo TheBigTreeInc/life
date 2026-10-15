@@ -1,6 +1,6 @@
 {
   "name": "the-life-loop",
-  "version": "0.5.21",
+  "version": "0.5.52",
   "private": true,
   "description": "Online two-human friend-code co-op via Looprd HTTP actions and WebSocket room notifications; Classic and Modern preserved",
   "scripts": {
@@ -8,7 +8,15 @@
     "build": "node tools/build-offline.mjs",
     "build:pages": "node tools/build-pages.mjs",
     "test": "node --test tests/*.test.cjs",
-    "verify": "node tools/verify.mjs"
+    "verify": "node tools/verify.mjs",
+    "test:classic": "node --test tests/classic-economic-migration.test.cjs tests/classic-pass2-source.test.cjs tests/classic-migration-career-survival.test.cjs tests/classic-jobs-rent.test.cjs tests/original-dos-route-jobs-ai.test.cjs tests/classic-economic-events.test.cjs tests/classic-ai-career-recovery.test.cjs",
+    "test:time": "node --test tests/classic-original-timing.test.cjs tests/classic-route-clock.test.cjs tests/classic-clock-employment.test.cjs tests/classic-work-pawn.test.cjs",
+    "test:work": "node --test tests/classic-work-warning-garnishment.test.cjs tests/classic-original-timing.test.cjs tests/classic-work-pawn.test.cjs",
+    "test:paychecks": "node --test tests/classic-paycheck-audit.test.cjs tests/classic-work-warning-garnishment.test.cjs",
+    "test:turns": "node --test tests/classic-turn-sequence.test.cjs tests/classic-jobs-rent.test.cjs tests/classic-clock-employment.test.cjs",
+    "test:classic-board": "node --test tests/classic-board-weekly.test.cjs",
+    "test:journey": "node --test tests/classic-journey-entry.test.cjs tests/classic-board-weekly.test.cjs tests/route-graph.test.cjs",
+    "test:classic-journey": "node --test tests/classic-journey-entry.test.cjs tests/classic-relaxation-journey-skip.test.cjs"
   },
   "license": "UNLICENSED"
 }

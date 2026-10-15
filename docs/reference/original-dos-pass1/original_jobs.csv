@@ -1,0 +1,38 @@
+jobNum,placeNum,role,baseHourlyPay,requiredDependability,requiredExperience,requiredDegree1,requiredDegree2,uniformTier,occupationIndex,business
+1,11,clerk,4,10,10,0,0,36,42,Z-Mart Discount
+2,11,assistManager,6,20,20,0,0,35,45,Z-Mart Discount
+3,11,manager,7,30,30,14,0,34,46,Z-Mart Discount
+4,10,cook,4,10,0,0,0,36,44,Monolith Burgers
+5,10,clerk,5,20,10,0,0,36,42,Monolith Burgers
+6,10,assistManager,6,30,20,0,0,36,45,Monolith Burgers
+7,10,manager,7,40,30,14,0,35,46,Monolith Burgers
+8,9,salesPerson,7,30,30,0,0,35,47,QT Clothing
+9,9,assistManager,9,40,40,14,0,34,45,QT Clothing
+10,9,manager,12,50,50,15,0,34,46,QT Clothing
+11,8,salesperson,5,30,20,0,0,35,47,Socket City Appliance
+12,8,electronicsRepair,11,40,40,11,0,36,64,Socket City Appliance
+13,8,manager,14,40,40,14,11,34,46,Socket City Appliance
+14,7,janitor,4,10,10,0,0,36,43,Hi-Tech University
+15,7,teacher,11,50,40,16,0,35,48,Hi-Tech University
+16,7,professor,20,60,50,19,0,35,49,Hi-Tech University
+17,5,assemblyWorker,8,30,30,10,0,36,50,Factory
+18,5,janitor,7,30,30,0,0,36,43,Factory
+19,5,secretary,9,40,40,14,0,35,51,Factory
+20,5,machinistsHelper,10,40,40,12,0,36,52,Factory
+21,5,executiveSecretary,18,50,50,15,0,34,53,Factory
+22,5,machinist,19,50,50,13,0,36,54,Factory
+23,5,departmentManager,22,60,60,14,13,34,56,Factory
+24,5,engineer,23,60,60,13,14,34,55,Factory
+25,5,generalManager,25,70,70,15,13,34,57,Factory
+26,4,janitor,6,20,20,0,0,36,43,Bank
+27,4,teller,10,40,40,14,0,35,58,Bank
+28,4,assistManager,14,50,50,15,0,34,45,Bank
+29,4,manager,19,60,60,15,0,34,46,Bank
+30,4,broker,22,70,70,15,16,34,59,Bank
+31,3,janitor,5,10,10,0,0,36,43,Black’s Market
+32,3,checker,8,20,20,0,0,36,60,Black’s Market
+33,3,butcher,12,30,30,10,0,36,61,Black’s Market
+34,3,assistManager,15,40,40,14,0,35,45,Black’s Market
+35,3,manager,18,50,50,15,0,34,46,Black’s Market
+36,1,groundsKeeper,6,20,20,0,0,36,62,Rent Office
+37,1,apartmentManager,8,30,30,14,0,36,63,Rent Office

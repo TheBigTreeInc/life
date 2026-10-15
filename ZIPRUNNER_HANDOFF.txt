@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.21
-filename: the-life-loop-0.5.21-ziprunner.zip
+version: 0.5.52
+filename: the-life-loop-0.5.52-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -35,3 +35,80 @@ notes_classic_0518: Classic begins with $200 cash / $0 savings, authentic goal-p
 notes_centered_0520: Board-scoped venue dialog replaces Your Destination. Single engine-driven action list, Classic employer filters, mobile City / My Life, End week in ticker, unchanged game saves/Looprd protocol. ADR-0021 and LL-135–LL-139.
 
 notes_workplaces_0521: Canonical employer venue map; Classic Monolith Burgers role is shown as work at The Good Fork, Z-Mart and Black’s Market map to Fresh & Frugal discount and grocery departments. Same save identifiers, gameplay and Looprd protocol. ADR-0022, LL-140–LL-142.
+
+notes_classic_retail_0522: Classic Fresh & Frugal has independent Z-Mart Discount and Black’s Market counter action groups; week-rotating discount stock, book availability, weekend tickets and home leisure items. Board remains 13 shared locations; strict DOS physical store separation and exact inventory formulas remain backlog LL-147. No Looprd schema change or Modern Story balance changes. ADR-0023, LL-143–LL-147.
+
+notes_classic_0523: Classic 0h venue lockout, provisional 10 venue actions per week (travel excluded), sixth-dollar carry across partial work shifts; unchanged Modern and Looprd schema. Tests/ADR-0024/LL-148–LL-152 added.
+
+notes_classic_board_0524: Original DOS 13-location names/geometry for Classic only, real separate Z-Mart and Black’s Market locations/employers, low-cost/security residences, provisional appliance breakdown/Socket City repairs, and cash/property robberies. 13 artwork slots with fallback mapped in classic-modern manifest. Modern map and Looprd DB schema unaffected. Tests/ADR-0025/LL-153–LL-158.
+
+notes_routes_0526: Shared graph now drives Classic travel cost AND planned pawn path; preserved previous time outcomes, Modern isolated. Hover/focus cost and path preview; mobile 3-column serpentine street, resize-safe animation, no new save/Looprd fields. Quick TEST-ROUTES.bat and full TEST-LOCAL.bat. Source code/tests/docs/zip metadata synchronized; no automatic git push.
+
+notes_original_0527: Imports version-matched structural DOS reference: 170 ordered original waypoints, 13 placeNum->businessId->routeIndex bindings, 37 original job identities/actual Classic venue links, 11 original degree numeric IDs. 14 visual road anchors now project historic waypoint progression around current board (desktop/mobile). Classic time conversion remains a documented approximation; original wage/stat/uniform records retained as metadata, not silently applied to existing balance. Rival uses source-derived circular route distances for itinerary and affordability-aware employment; no new save/Looprd fields. Offline browser PLAY regenerated; no Git push.
+
+notes_original_0528: Migrates Classic DOS degrees 10–20 and original job prerequisites to authoritative checks; four job experience corrections; 1–100 deterministic hiring roll, cook #44 guarantee; read-only two-week survival forecast and multi-payday rival job upgrade evaluation; career roadmap transparency. No save/Looprd API changes, no silently imported historical wages. Run node tools/verify.mjs; no git push.
+
+notes_dos_pass2_0529: Source-derived Classic goods-price rounding; seedable provisional goods-index drift; original lottery single-roll tier threshold and fixed tickets, d12 rent-extension table and truncated partial wages. Source-tagged subset of ordered Jones decision branches with saved bounded trace + weekly event journal. Modern mode isolated. Older saves migrate fields safely; Looprd snapshots carry optional fields with no endpoint changes. Replay deterministic by seed. DOS emulator comparison not yet performed.
+architecture_decision_30: docs/decisions/ADR-0030-source-derived-classic-economy-and-ordered-ai.md
+quick_dos_test: TEST-DOS-PASS2.bat
+
+notes_classic_0530: Seeded, eight-domain Classic economic readings with goods, bank market and new-wage-quote bindings; existing player wage contracts preserved. Index drift and wage/market coefficients remain PROVISIONAL and not DOS-emulator-verified. Source-tagged emergency pawning and career salary safety added. Saves accept optional validated classicEconomicIndices; old Classic saves migrate from goods index and scalar. Modern isolated. ADR-0031; TEST-ECONOMY.bat. No new Looprd endpoint, no git push.
+architecture_decision_31: docs/decisions/ADR-0031-coupled-classic-economy-and-contract-wages.md
+quick_economy_test: TEST-ECONOMY.bat
+
+notes_classic_0531: Verified DOS scandal result reducer for strength 1/2, source-tagged ledger for all Classic players, and deterministic weekly phase/cooldown with PROVISIONAL trigger probabilities and recovery joy. Last employment branch loops fixed; downturn expenses budgeted. Additive validated classicEconomicPulse saves migrate old v0.5.30. Modern untouched. ADR-0032.
+architecture_decision_32: docs/decisions/ADR-0032-economic-crises-recovery-and-laid-off-rival.md
+quick_crisis_test: TEST-CRISES.bat
+
+notes_classic_0532: Ordered, source-tagged Classic Jones career branches 20/28/29/30/32/37/44/46, original place-aware actions and wage contract protection; two-week rank-aware outfit renewal; additive unemployment weeks/rejected applications save fields; after sustained joblessness, qualified original cook #44 has guaranteed hiring roll. Timing and education thresholds are provisional. Modern and Looprd endpoints unchanged. ADR-0033; TEST-AI-CAREERS.bat.
+architecture_decision_33: docs/decisions/ADR-0033-ordered-jones-career-education-and-reemployment.md
+quick_career_ai_test: TEST-AI-CAREERS.bat
+
+notes_classic_0533: Classic source-derived per-leg tick planner, +2 unit Employment Office entry, per successful work action XP/dependability including partial shifts. Current time-spend quantizer stays provisional until DOSBox trace. Save schema/Looprd protocol unchanged; Modern isolated.
+architecture_decision_34: docs/decisions/ADR-0034-classic-source-time-ticks-and-work.md
+quick_time_test: TEST-TIME.bat
+
+notes_classic_0534: Authentic one-time weekly first-work reliability warning before pay or time; dismissal first if < required -5; transparent Classic gross / provisional rent garnish/fees; AI reserves clock for actions at destinations and honors weekly action gate. v0.5.33 saves migrate without identity changes; Modern unaffected.
+architecture_decision_35: docs/decisions/ADR-0035-classic-work-warning-paycheck-and-ai-budget.md
+quick_work_test: TEST-WORK.bat
+
+notes_classic_0535: Paycheck preview and payout share pure settlement audit, with 16-entry bounded/sanitized Classic wage journal and wage sensitivity comparator (not a recovered DOS garnish formula). Classic two-week AI budget uses net contracted shift income, and direct arrears clearance protects food/rent/uniform cash. Fully additive save field, Modern unchanged, Looprd endpoint unaffected.
+architecture_decision_36: docs/decisions/ADR-0036-classic-paycheck-reconciliation-and-debt-recovery.md
+quick_paychecks_test: TEST-PAYCHECKS.bat
+
+notes_classic_0536: DOS-inspired turn closure deducts reliability per person; four-week rent assessment once per week; bounded Classic phase journal and Finances diagnostics; TEST-TURNS.bat; ADR-0037. Modern untouched. Source startTrn sequence and travel time still provisional.
+
+notes_classic_0537: Classic board preserves original 13-place 5x4 geometry and street ring on all devices; mobile Explore is 740px pannable, Overview fits all, Find building scrolls without travel, My Pawn recenters. Roads render in same scroll stage and corners run in gutters. Centered venue menus stay outside board viewport. Source startTrn.sc state 4 now yields 1/7 computer bonus of $20–$100 cash; Modern retains former bank bonus. Exact event ordering, DOS trace timing and full artwork await validation. TEST-CLASSIC-BOARD.bat, ADR-0038. No save/Looprd schema migration; no Git push.
+
+ZipRunner workboard fix (v0.5.37 repack): the handoff lists 51 implemented changes since v0.5.27, below ZipRunner v1 150-entry limit; earlier completed items are archived in docs/workboard-history.json and WORKBOARD.md. The build verifier now enforces the same per-field caps. No gameplay, assets, settings, saves or private files changed.
+
+notes_classic_0538: Classic mobile Overview tile is inspection/zoom only; Explore tile commits travel once and opens centered venue. Pawn movement follows camera unless manual swipe; no movement authority changes. Source-tagged startTrn state 10 food loss and state 18 clothing warnings, unsupported medical fee removed. Deterministic journal, no save schema/Looprd changes; probability still provisional. ADR-0039, tests/classic-board-weekly.test.cjs. Incremental workboard contains fewer than 150 entries.
+
+notes_classic_0539: Classic presentation-only journey status and arrival marker; mobile swipe threshold; original weekly startTrn state 12 food-shortage and 34 emergency clothing assistance journal metadata. Existing payouts, timing, saves and Modern rules are unchanged. ADR-0040 and TEST-JOURNEY.bat.
+
+notes_classic_0540: Classic original state-6 relaxation independent from joy/energy, exact weekly -1/floor10 under no original hot-tub equipment; starting 16 and +6 rest provisional. Source state 20 logs existing loan check without duplicated default penalties. Accessible Skip animation is presentation-only and follows existing travel commit; no new Looprd endpoint, no private state. TEST-RELAXATION.bat and ADR-0041; workboard update under 150 entries.
+architecture_decision_41: docs/decisions/ADR-0041-classic-relaxation-loan-audit-and-travel-skip.md
+quick_relaxation_test: TEST-RELAXATION.bat
+
+notes_classic_0541: Route-anchored arrival door marker (presentation only); Classic household pure projection for active computer, fridge/freezer and entertainment equipment; relaxation-only rest and explicit action preview; 13-venue designer artwork specification and route diagram. No extra save/Looprd fields. Modern isolated. ADR-0042. TEST-HOUSEHOLD.bat.
+
+notes_classic_0542: Explicit source workboard lifecycle ledger/reconciliation by stable LL ID; 14 items Blocked with reasons and unblock conditions, 12 In Progress, 4 To Do; all source-recorded Done items retain evidence and operator checks. Active ZipRunner importer remains workboard-update.v1; no unverified v2 payload or guarantee of UI status transition. See docs/workboard-reconciliation.md and docs/ziprunner-workboard-lifecycle-contract.md. Classic AI repair only with two-week reserve protected; no save/Looprd migration, Modern unchanged. Run TEST-LIFECYCLE.bat.
+architecture_decision_43: docs/decisions/ADR-0043-workboard-lifecycle-and-classic-maintenance.md
+
+profile_integration: src/shared-portrait-ui.js + src/looprd-shared-profile.js
+social_service: separately packaged looprd-social-0.1.0, development only
+identity_limit: game-room auth remains unchanged; no implicit SSO
+
+notes_social_0546: Social lobby in in-game Chat, native Looprd Social POST handler and shared Profile connection. Existing encrypted co-op room chat isolated. Social development token only in browser memory; no implicit game-room SSO. Game Looprd generator includes additive schema v2 Room.chatKey migration. See ADR-0046.
+
+notes_0547: Classic hotseat handover privacy UI and mobile scenic clock/gap visibility; game/session/Looprd Social schemas unchanged. Stable LL-013 moved from To Do to Done.
+
+notes_classic_0548: Single 60-unit dial relocated to bottom center Public Garden. Active player stays center. Explore/Overview switch shown on phones only. Visual fifth-row road gutter corrected. Original costs, room and Social APIs unchanged; ADR-0048.
+
+notes_v0549: Door-aligned Classic visual pawn stops and persistent in-venue clock; no Looprd Social server change; browser QA via tests/qa_entrances_clock.py.
+
+notes_v0550: Smooth gutter-only Classic street route and separate doorway target; visual-only. Test browser collision coverage at 320/390/768/1440px; no Social/server changes.
+
+notes_0551: Animate short entrance/exit footsteps with an opacity transition to the street; no social or game-server changes.
+
+notes_0552: Main street passes the visible storefront frontage instead of the central park. All 13 sidewalks remain linked and hover/path/pawn are continuous to the hand-placed doors. In-game garden dial clearance preserved; visual-only, no Social/Looprd changes. Browser acceptance: tests/qa_storefront_frontage.py. ADR-0052.

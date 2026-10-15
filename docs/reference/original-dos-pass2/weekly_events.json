@@ -1,0 +1,98 @@
+{
+  "version": "1.000.060",
+  "scriptNumber": 111,
+  "script": "startTrn.sc",
+  "events": [
+    {
+      "startTrnState": 2,
+      "name": "lottery_draw",
+      "details": "Roll 0..500; ticket_quantity>roll qualifies; prize 5000, 500 or 200 based on the roll/ticket ratio; ticket count reset",
+      "sourceLines": "214-237",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 4,
+      "name": "computer_owned_lottery_like_bonus",
+      "details": "If owned durable item 29 and 1/7 roll, adds 20..100 cash",
+      "sourceLines": "247-260",
+      "confidence": "verified in decompilation; semantic interpretation of item is computer (appliance.sc)"
+    },
+    {
+      "startTrnState": 6,
+      "name": "relaxation_and_unsecured_property",
+      "details": "If no hot tub item 28, relax drops 1 toward floor 10; if in low-cost housing, chance of losing some items",
+      "sourceLines": "265-323",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 10,
+      "name": "food_storage",
+      "details": "Food item 1 may be lost without refrigerator 21, may be capped at 6 without freezer 22, or at 12 with it",
+      "sourceLines": "347-379",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 12,
+      "name": "consumables_cleanup_and_hunger",
+      "details": "Clears food IDs 3..5 and triggers food shortage event if no available food",
+      "sourceLines": "384-400",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 14,
+      "name": "cash_stress",
+      "details": "If no viable food and cash available, conditional money loss (capped by current funds, income bands) and happiness decrease",
+      "sourceLines": "405-433",
+      "confidence": "verified logic, event narrative pending original game validation"
+    },
+    {
+      "startTrnState": 16,
+      "name": "weekly_consumption_and_housing",
+      "details": "Consumables reduce quantities; every fourth week checks rent consumable for current apartment type",
+      "sourceLines": "437-455",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 18,
+      "name": "work_clothes_check",
+      "details": "Recompute clothing and avatar appearance, issue warning at only one week clothing remaining",
+      "sourceLines": "460-486",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 20,
+      "name": "loan_due",
+      "details": "Every four weeks, loan schedules are checked for delinquency",
+      "sourceLines": "490-504",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 22,
+      "name": "durable_event_risk",
+      "details": "Affluent player with flagged durables can incur rare loss of between ~5% and 25% of pricePaid, chance 1/36 or 1/51 depending on attribute",
+      "sourceLines": "509-592",
+      "confidence": "verified code, precise flag meaning unverified"
+    },
+    {
+      "startTrnState": 24,
+      "name": "economic_headline",
+      "details": "Market crisis or boom applies happiness effects and investment-aware amplification",
+      "sourceLines": "596-644",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 26,
+      "name": "scandal_all_players",
+      "details": "Economic crisis can remove employment or reduce wage; applies to each non-finished player",
+      "sourceLines": "648-775",
+      "confidence": "verified in decompilation"
+    },
+    {
+      "startTrnState": 34,
+      "name": "emergency_clothing_assistance",
+      "details": "If cash <=0, no clothing, and nonpawned goods worth <200 for two checks, grant funds toward work clothes",
+      "sourceLines": "782-832",
+      "confidence": "verified in decompilation"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 (function(root){
 'use strict';
 // Original vector illustrations. Generated locally as inline SVG: no network or font dependencies.
+const classicArtAssets=root.LifeClassicArtAssets||{};
 const artAssets=root.LifeArtAssets||(typeof module!=='undefined'&&module.exports?require('./art-assets.js'):{venues:{},homeTiers:{}});
 const themes={
  home:       {sky:'#cde9d6',wall:'#e9bb92',roof:'#a95c5b',trim:'#f5ebd5',door:'#56756d',form:'house',label:'HOME',extra:'plant'},
@@ -91,7 +92,11 @@ function residenceScene(tier='studio',compact=false){
  const balcony=level==='loft'?`<rect x="${startX+width-95}" y="${startY+49}" width="91" height="12" fill="#ccebe3"/><path d="M${startX+width-95} ${startY+32}h91v29" fill="none" stroke="#e8fcfa" stroke-width="5"/><path d="M${startX+width-87} ${startY+49}v11m25-11v11m25-11v11" stroke="#e8fcfa" stroke-width="3"/>`:'';
  return `<svg class="scene-art residence-scene${compact?' is-mini':''}" data-home-tier="${level}" viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${design.title.toLowerCase()} residence in New Day City"><rect width="640" height="340" fill="${design.sky}"/><circle cx="547" cy="64" r="35" fill="#fff3c2"/><path d="M0 253v-111h65v111m25 0V102h52v151m364 0V137h57v116m18 0V92h59v161" fill="#a2b9b4" opacity=".35"/><path d="M0 285h640v55H0z" fill="#99baa6"/><rect x="${startX}" y="${startY}" width="${width}" height="${270-startY}" rx="4" fill="${design.wall}" stroke="${design.roof}" stroke-width="7"/><rect x="${startX-11}" y="${startY-9}" width="${width+22}" height="18" rx="3" fill="${design.roof}"/>${windows}${balcony}<rect x="296" y="${steps>4?230:234}" width="50" height="36" rx="3" fill="${design.door}" stroke="${design.trim}" stroke-width="4"/><rect x="${startX+width/2-89}" y="${startY+5}" width="178" height="21" rx="4" fill="${design.roof}"/><text x="${startX+width/2}" y="${startY+20}" text-anchor="middle" fill="white" font-size="12" font-family="system-ui,sans-serif" font-weight="800">${design.title}</text><path d="M0 288h640" stroke="#f1dfc9" stroke-width="10"/><path d="M0 311h640" stroke="#829e9b" stroke-width="4"/><g fill="#73aa78"><circle cx="112" cy="270" r="35"/><circle cx="512" cy="273" r="28"/></g><g fill="#ad886d"><rect x="100" y="280" width="23" height="14"/><rect x="500" y="285" width="25" height="12"/></g></svg>`;
 }
-function scene(id,compact=false,era='current',homeTier='studio'){
+function scene(id,compact=false,era='current',homeTier='studio',classicId=null){
+ if(classicId&&era==='current'){
+  const images=classicArtAssets.venues?.[classicId],file=images&&(compact?images.card:images.detail);
+  if(file)return `<img class="scene-art scene-photo classic-scene" src="${file}" alt="" loading="${compact?'lazy':'eager'}" decoding="async" draggable="false" data-classic-location="${classicId}"/>`;
+ }
  if(era==='historical'||era==='scifi')return eraScene(id,compact,era);
  if(era==='current'){
   const image=id==='home'?artAssets.homeTiers?.[homeTier]:artAssets.venues?.[id];

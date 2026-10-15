@@ -15,7 +15,7 @@ test('Classic bank $100 transfers cost zero hours and have no interest',()=>{
  assert.equal(offer(g,'deposit:100').hours,0);assert.equal(offer(g,'withdraw:100').hours,0);
  act(g,'deposit:100');assert.equal(p.cash,400);assert.equal(p.bank,100);
  act(g,'withdraw:100');assert.equal(p.cash,500);assert.equal(p.bank,0);assert.equal(p.hours,h);
- p.hours=0;assert.equal(offer(g,'deposit:100').enabled,true);act(g,'deposit:100');assert.equal(p.cash,400);
+ p.hours=0;assert.equal(offer(g,'deposit:100').enabled,false);assert.match(g.act('deposit:100').message,/No hours left/i);assert.equal(p.cash,500);
  p.bank=1000;g.endTurn();for(let i=0;i<4;i++)g.endTurn();assert.equal(p.bank,1000);
  assert.equal(g.actions().find(x=>x.id==='invest'),undefined);assert.equal(g.actions().find(x=>x.id==='deposit:500'),undefined);
 });
@@ -58,7 +58,7 @@ test('Loan payment costs $45 principal plus $5, defaults reduce happiness/credit
  function limitFromLoan(x){return x+1000;}
 });
 test('Food bundles use original $55/$100/$190 base and do not modify Modern actions',()=>{
- const g=classic();travel(g,'market');
+ const g=classic();travel(g,'cinema');
  assert.deepEqual(D.classicFreshFood.map(x=>[x.units,x.cost]),[[1,55],[2,100],[4,190]]);
  assert.equal(offer(g,'classicFresh:1').price,55);assert.equal(offer(g,'classicFresh:2').price,100);
  assert.equal(offer(g,'classicFresh:4').price,190);assert.equal(g.actions().find(x=>x.id==='groceries'),undefined);
@@ -66,20 +66,20 @@ test('Food bundles use original $55/$100/$190 base and do not modify Modern acti
  assert.equal(m.actions().find(x=>x.id==='classicFresh:1'),undefined);assert.ok(offer(m,'groceries'));
 });
 test('Bulk food without fridge spoils at weekend; fridge keeps six portions',()=>{
- const g=classic(),p=g.player;travel(g,'market');p.cash=500;p.groceries=0;
+ const g=classic(),p=g.player;travel(g,'cinema');p.cash=500;p.groceries=0;
  act(g,'classicFresh:4');assert.equal(p.groceries,4);
  g.endTurn();assert.equal(p.groceries,0);assert.ok(p.cash<310,'Spoiled food incurs a medical bill');
  const g2=classic(),b=g2.player;g2.rand=()=>.5;b.owned.push('fridge');b.cash=500;b.groceries=0;
- travel(g2,'market');act(g2,'classicFresh:4');g2.endTurn();assert.equal(b.groceries,3);
+ travel(g2,'cinema');act(g2,'classicFresh:4');g2.endTurn();assert.equal(b.groceries,3);
  assert.equal(g2.classicFoodCapacity(b),6);
 });
 test('Freezer increases pantry to 12; limits enforced before payment; happiness bonus once weekly',()=>{
- const g=classic(),p=g.player;travel(g,'market');p.cash=4000;p.groceries=0;p.owned.push('fridge');
+ const g=classic(),p=g.player;travel(g,'cinema');p.cash=4000;p.groceries=0;p.owned.push('fridge');
  const happiness=p.happiness;act(g,'classicFresh:4');assert.equal(p.happiness,happiness+4);
  assert.equal(offer(g,'classicFresh:4').enabled,false);
  act(g,'classicFresh:2');assert.equal(p.happiness,happiness+4);
  travel(g,'tech');assert.equal(offer(g,'buy:freezer').enabled,true);act(g,'buy:freezer');
- assert.equal(g.classicFoodCapacity(p),12);travel(g,'market');
+ assert.equal(g.classicFoodCapacity(p),12);travel(g,'cinema');
  act(g,'classicFresh:4');assert.equal(p.groceries,10);assert.equal(offer(g,'classicFresh:4').enabled,false);
 });
 test('Legacy Classic investment migrates without silently destroying value',()=>{

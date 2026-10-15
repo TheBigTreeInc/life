@@ -1,0 +1,3399 @@
+{
+  "schema": "the-life-loop.workboard-lifecycle.v1",
+  "project": "the-life-loop",
+  "release": "0.5.52",
+  "importer_contract": "ziprunner.workboard-update.v1",
+  "importer_limitation": "ZipRunner v1 implemented/remaining fields do not transport explicit blocked or in_progress transitions. This local ledger is authoritative for source planning, not proof that the ZipRunner UI applied statuses.",
+  "counts": {
+    "done": 247,
+    "blocked": 15,
+    "in_progress": 12,
+    "todo": 3
+  },
+  "items": [
+    {
+      "id": "LL-001",
+      "title": "Original city and weekly simulation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start a game and travel between buildings; confirm hours are deducted."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-002",
+      "title": "Economy, work and education",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Take a starter job, work a shift and complete a university lesson."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-003",
+      "title": "Illustrated building scenes",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Visit three buildings and verify their scene art differs and displays offline."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-004",
+      "title": "Animated character portraits",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Visit the Career Center and Fresh & Frugal; check portraits, copy and reduced-motion behavior."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-005",
+      "title": "Branching scripted city encounters",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At Your Place select Talk to Mira, choose a response, verify the resulting stat change."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-006",
+      "title": "Persistent NPC conversations",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start a conversation, export and import JSON, resolve it, and confirm it does not repeat."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-007",
+      "title": "Offline single-page executable",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open PLAY.html directly in Chrome/Edge and play through a complete week with no internet."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-008",
+      "title": "Source preservation and regression tests",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run npm test and tools/verify.mjs from the installed project folder."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-009",
+      "title": "ZipRunner source delivery and workboard",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Import the versioned ZIP in ZipRunner and inspect updated workboard entries after successful validation."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-015",
+      "title": "Remembered relationships",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Talk to Mira, choose to help and talk again the next week to see a remembered response."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-016",
+      "title": "Local friendship favors",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Build 18 trust with a local resident; verify favor availability and cooldown after use."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-017",
+      "title": "Responsive city-wide economy",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check discounted groceries in the first event, then advance to the next month and compare prices."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-018",
+      "title": "Monthly civic opportunities and city pulse",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Visit the highlighted event venue and claim the activity; confirm it becomes unavailable until a new event."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-019",
+      "title": "State migration and long-run regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and confirm 35 passing Node tests; export/import a relationship save."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-010",
+      "title": "Financial history dashboard",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Finances on desktop and mobile after work, groceries and savings transfers; verify transfers do not inflate earnings.",
+          "Advance to week 5 and confirm rent or rent debt appears in the ledger and graph."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-020",
+      "title": "Multi-episode personal stories",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2–3 require more weeks and trust.",
+          "Finish the community pantry project and verify food prices drop permanently for every player."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-021",
+      "title": "Cross-resident trust and permanent civic legacies",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Complete a final chapter with its community outcome and verify the City Pulse Legacy badge and live sector modifier.",
+          "Choose the personal-benefit alternative and confirm the upgrade is not activated."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-022",
+      "title": "Financial accounting and legacy save migration",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Confirm cash-to-bank transfers show net change 0 and are not counted as income.",
+          "Import a v0.3 JSON save and verify default story/financial data appear without data loss."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-023",
+      "title": "Seasonal story and finance UI tests",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs, then open PLAY.html in Chrome/Edge and test Finance dialog and a seasonal chapter."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-024",
+      "title": "GitHub Pages static publishing",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run npm run build:pages; confirm dist/index.html is generated and works via localhost.",
+          "Push source to GitHub main, choose Settings > Pages > GitHub Actions, and confirm deployment URL opens the game."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-025",
+      "title": "Pages CI test gate and safe deployment",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Intentionally break a gameplay test in a throwaway branch and verify publishing cannot succeed.",
+          "Inspect published site and ensure no game save files, source archives, or workboard manifest are publicly served."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-026",
+      "title": "GitHub deployment documentation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Follow README Pages steps with a fresh public repository; confirm future commits to main redeploy."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-027",
+      "title": "One-employer contracts and explicit job switching",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Hire at diner; attempt shift at bank, then switch from diner to market; cancel and retry modal; confirm only the new workplace pays."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-028",
+      "title": "Unemployment side-work safety net and save compatibility",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "While unemployed take a temporary gig once and confirm cooldown; then hire and confirm temporary home work is disabled. Import an old v0.4.1 save."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-030",
+      "title": "Original gameplay parity report and automated regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Read GAMEPLAY_AUDIT.md, run node tools/verify.mjs, and check all job change transitions in desktop browser."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-029",
+      "title": "Deepen classic job and education parity",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run low on casual clothing and confirm you cannot work until you buy a compatible replacement.",
+          "Use the Career roadmap to check qualifications and earn a certificate at university."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-031",
+      "title": "Original-inspired consumable uniforms",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Wait until casual clothing is exhausted and verify a starter shift is disabled; buy a new outfit and retry.",
+          "Confirm dress and business can substitute for lower-grade uniforms."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-032",
+      "title": "Budget and boutique outfit purchasing",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Buy casual at Fresh & Frugal for nine weeks, then again at Thread Theory for eleven; compare prices and expiry warnings."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-033",
+      "title": "Expanded career tree and specialist courses",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Careers and inspect paths; finish Service & Supervision and apply for Retail Supervisor at Career Center."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-034",
+      "title": "Wardrobe and career UI",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Verify Careers modal at desktop/mobile, including incomplete prerequisites and remaining wardrobe weeks."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-035",
+      "title": "AI wardrobe and save compatibility",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run long AI simulations; import older saved JSON containing owned formal/casual clothes."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-037",
+      "title": "Accept original-gameplay-first architecture",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Read ARCHITECTURE.md and ADR-0001; check evidence hierarchy and classic-vs-modern distinction.",
+          "Confirm the compiled game behaves like v0.4.3, without new rules claimed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-038",
+      "title": "Evidence-backed parity contract and validation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Inspect docs/parity-contract.json and docs/parity-matrix.md; confirm 21 traceable rules.",
+          "Run node tools/verify.mjs from extracted ZIP and verify architecture checks pass."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-043",
+      "title": "Independent New Game rule presets",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start Classic and check 60/60h and 20 Dependability; travel to the Career Center and verify application consumes 4h.",
+          "Start Modern and check 40/40h and 3h applications; verify City Pulse and social actions are enabled.",
+          "In Classic, confirm home gigs, City Pulse modifiers and non-original story rewards are unavailable."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-044",
+      "title": "World era visuals independent of mechanics",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Choose Historical and confirm Willowford buildings/timber/cobblestone artwork.",
+          "Choose Sci-Fi and confirm Neon Meridian arcology/neon/orbit scenes and alternate costumes.",
+          "Switch eras between new games at same ruleset and confirm job/time/cash outcomes remain identical."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-045",
+      "title": "ADR-0002 and ruleset scenario regression tests",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and confirm full regression suite passes including rules-era.test.cjs.",
+          "Import a v0.4.4 save and verify Modern/Contemporary fallback while newly started Classic games are preserved across saves.",
+          "Verify both options are visible and selectable in New Game at mobile and desktop sizes."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-046",
+      "title": "Classic 11-degree university and enrollment",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start Classic, buy enrollment at university, complete Junior College, verify Academic and Business Administration unlock.",
+          "Buy computer and all three books in Classic to reduce per-diploma lesson count.",
+          "Export/import a partially completed degree and confirm Modern courses still work."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-047",
+      "title": "Classic job-cap, dependability and dismissal rules",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Work a low-end job repeatedly and verify stats stop at cap, then graduate to increase caps.",
+          "Let Dependability decay, attempt work at an advanced role and confirm warning/dismissal without earning a shift.",
+          "Confirm only one current job and that Modern Story still uses its original stat model."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-048",
+      "title": "Parity ADR-0003 and Classic regression coverage",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and confirm all unit/parity tests pass.",
+          "Inspect docs/decisions/ADR-0003-classic-progression-education-employment.md and parity-matrix for outstanding original-catalog work.",
+          "Start Classic on desktop/mobile with every world era; test university enroll and Careers panel."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-055",
+      "title": "Authentic DOS job table",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check all nine employers; compare Factory General Manager (25/h, 70/70, two degrees) with documented table."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-056",
+      "title": "Original-style Classic hiring and raises",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Fail an underqualified application, then hire Cook; switch roles and confirm only one employer."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-057",
+      "title": "Manual Classic cash rent and debt",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Play through week four, pay in cash or miss; confirm subsequent earnings garnished when debt remains."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-058",
+      "title": "Classic employer UI and backward save migration",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Compare Classic 37 listings against Modern 19; import prior Classic save and verify held wage preserved."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-059",
+      "title": "Parity contract ADR and 110 tests",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and ensure all tests pass from a fresh ZIP extraction."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-061",
+      "title": "Classic zero-time savings transfers",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Transfer $100 both directions at Bank; verify wallet, savings and hours unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-062",
+      "title": "Classic loan application and installments",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Apply while employed, pay installment, miss next due month; verify debt and defaults."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-063",
+      "title": "Six separate original stock categories",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Enter broker and trade T-Bills/Gold; check cash and portfolio balance."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-064",
+      "title": "Fresh-food refrigerator/freezer storage",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Buy 4 portions, test spoilage; acquire fridge/freezer and test capacity."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-065",
+      "title": "Parity docs, save migration and fresh-zip verification",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs after fresh extraction; open PLAY.html and inspect bank and market."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-067",
+      "title": "DAPI/Looprd component schema",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Validate looprd.yaml on the running Looprd server; confirm GET /info and POST /session."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-068",
+      "title": "Friend code host and join",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start Online with friend; share code; join from a second browser."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-069",
+      "title": "Remote turn synchronization",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Move, work, switch employment, end turn from guest; confirm host and guest agree."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-070",
+      "title": "Multiplayer transport regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-071",
+      "title": "Multiplayer architecture and operations",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Confirm Looprd source discovery and GitHub Pages HTTPS/WSS accessibility."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-073",
+      "title": "Touch-friendly City, Activities and My life panels",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At 390px, start Classic, tap the Career Center, confirm Activities opens, then return to City and visit My life."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-074",
+      "title": "Responsive illustrated city and dialog interactions",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At 320px, verify no sideways scroll and that New Game, Looprd server field, and all 12 locations remain usable."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-075",
+      "title": "Mobile UI parity and release checks",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and check Chrome/Edge at 320/390/768/1024/1280px."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-076",
+      "title": "GitHub Pages release metadata reconciliation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Commit .ziprunner-workboard-update.json, ZIPRUNNER_HANDOFF.txt, WORKBOARD.md and tools/verify.mjs to main.",
+          "Run node tools/verify.mjs and confirm full JS suite passes.",
+          "Inspect GitHub Pages build and verify the published website loads."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-077",
+      "title": "Release version consistency and ZipRunner packaging",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Confirm the source ZIP is named the-life-loop-0.5.4-ziprunner.zip and contains no private/runtime state.",
+          "Run node tools/verify.mjs after fresh extraction; verify version invariants and full tests succeed.",
+          "Commit the entire v0.5.4 source release (including the hidden .ziprunner-workboard-update.json) to GitHub main; inspect the CI Pages run."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-078",
+      "title": "Responsive side panel docks",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Test panels at 1280 and 1600 pixels; test all three mobile tabs at 390px."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-079",
+      "title": "Panel notification circles",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Switch turns/travel and confirm a badge appears then clears on opening."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-080",
+      "title": "Top-right game menu",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Export and import a save from the Menu; open How to Play."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-081",
+      "title": "Online turn and Looprd diagnostics",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Connect two browsers to Looprd; check ownership banner and /info response."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-083",
+      "title": "Local multi-character library",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Create two characters; select each; reload; delete one; verify remaining character persists."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-084",
+      "title": "In-game character studio and portraits",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Test profile editor at 320px and 1280px; preview and sidebar portrait must match selected choices."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-085",
+      "title": "Character save integration and regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start Classic and Modern from a saved character; export/import; check the same portrait and 60h/40h rules unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-087",
+      "title": "Guest character identity in shared multiplayer snapshot",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+          "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-088",
+      "title": "Encrypted ephemeral Looprd WebSocket chat",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+          "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-089",
+      "title": "Viewport-contained desktop and mobile game",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+          "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-090",
+      "title": "Compact mobile setup wizard",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+          "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-091",
+      "title": "v0.5.7 integration regression and schema revision",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python -m unittest discover -s tests -p test_looprd.py -q.",
+          "Open two browsers against an updated Looprd instance and confirm a guest appearance on both players and that live chat messages disappear on disconnect."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-093",
+      "title": "Distinct Contemporary venue artwork",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+          "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-094",
+      "title": "Residence-tier-aware home scene",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+          "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-095",
+      "title": "Declarative future art pack foundation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+          "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-096",
+      "title": "Artwork regression and full source handoff",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open the Contemporary board and selected destination to confirm the location-specific image matches the building.",
+          "Run node tools/verify.mjs and inspect the generated standalone HTML and GitHub Pages assets."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-097",
+      "title": "Install the three provided residence paintings",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start in Contemporary and verify studio apartment-building art in Home city tile and destination.",
+          "Upgrade housing to Sunny Apartment then Skyline Loft: verify both scenes update and match the current resident; return to an older save to confirm tier-specific artwork.",
+          "Check standalone PLAY.html offline and GitHub Pages: all three tiers load independent artwork while Historical/Sci-Fi scenes stay procedural."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-099",
+      "title": "Regression and release checks for housing art",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and Python Looprd server tests.",
+          "Verify current art packs contain three non-null residence entries and no network dependencies in PLAY.html."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-100",
+      "title": "Persistent local new-game preferences",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Change era, Classic/Modern and goals in Advanced; close/reopen New Game and refresh the browser; verify choices persist without altering a saved game.",
+          "Reset defaults and verify Classic, Contemporary and default four goals."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-101",
+      "title": "Quick Start game onboarding",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start with no saved game and click Start new game immediately.",
+          "With existing autosave, Continue resumes and Start another game asks before overwriting; cancel does not modify the save."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-102",
+      "title": "Viewport-friendly start dialog and regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check 320x568, 390x844, 768x1024 and 1440x900 for visible Start and Continue buttons without document scrolling.",
+          "Run node tools/verify.mjs and build GitHub Pages."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-103",
+      "title": "Real illustrated portrait gallery in character creator",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
+          "Start or join a two-player game and confirm the selected portrait is visible on each client.",
+          "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-104",
+      "title": "Local and multiplayer portrait identity persistence",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
+          "Start or join a two-player game and confirm the selected portrait is visible on each client.",
+          "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-105",
+      "title": "Offline/PWA-ready portrait assets and CI coverage",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Edit a character, switch between Illustrated, Classic, and Custom drawn, and confirm preview and profile cards update.",
+          "Start or join a two-player game and confirm the selected portrait is visible on each client.",
+          "Verify PLAY.html opens offline and GitHub Pages loads all selected images."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-107",
+      "title": "Versioned pixel character parts catalog",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+          "Run node tools/verify.mjs and check no workboard/version mismatch."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-108",
+      "title": "Deterministic character compiler and render adapters",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+          "Run node tools/verify.mjs and check no workboard/version mismatch."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-109",
+      "title": "Interactive Pixel Studio in the character creator",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+          "Run node tools/verify.mjs and check no workboard/version mismatch."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-110",
+      "title": "Snapshot/Looprd cosmetics persistence and tests",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Pixel Studio and verify changes in the animated preview and saved character thumbnail.",
+          "Run node tools/verify.mjs and check no workboard/version mismatch."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-112",
+      "title": "Temporarily disable character customization and restore original avatars",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "New Game shows name and play mode without character selection; choose Start and see the original default icon.",
+          "Menu contains no My Characters command; check guest join dialog has no local character picker.",
+          "Load an old customized save and confirm fixed original icon shows, while the save data itself is not deleted."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-113",
+      "title": "Preserve dormant character system and test quick-start rollback",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and Python Looprd tests; inspect complete ZipRunner archive for untouched customization source and catalogs.",
+          "Play local and co-op setup, ensuring the simple avatar does not regress gameplay, turn handling, or chat."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-114",
+      "title": "Replace top bars with one city heading",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
+          "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
+          "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-115",
+      "title": "Compact co-op and notification controls",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
+          "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
+          "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-116",
+      "title": "Single weekly status ticker and responsive QA",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At desktop and 390px mobile width, confirm no dark or pale-green top status bars and find the Life Loop logo above city buildings.",
+          "Open Menu and Co-op controls; verify New Game, Save/Load, Looprd room status and unread chat dot work.",
+          "Check ticker shows correct turn, week, market and remaining hours after taking actions."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-117",
+      "title": "Classic proportional partial work shifts",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Hire at Monolith Burgers and arrive with 3h left: work exactly 3h, receive half the full-shift gross pay; verify 0h remain.",
+          "With one hour left, verify a small paid shift is available; at zero hours no work is permitted."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-118",
+      "title": "Prevent partial-work progression exploits",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Work five one-hour shifts without gaining work statistics, then the sixth one-hour shift and verify exactly one progression credit.",
+          "Change employer and verify partial-hour credit resets and cannot be carried between contracts."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-119",
+      "title": "Classic pawn and resale lifecycle",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At Circuit City pawn a computer, verify it leaves inventory, cash rises, and the fixed redemption cost/deadline appear.",
+          "Redeem it by its deadline, or let its pledge expire and buy it using a second local human."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-120",
+      "title": "Pawn persistence and parity regression gate",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs, including tests/classic-work-pawn.test.cjs, and Python Looprd tests.",
+          "Export/import a pawned game, then switch local players to verify the item cannot be double-bought."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-121",
+      "title": "One shared 13-venue board",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+          "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-122",
+      "title": "Dedicated pawn storefront and new Contemporary artwork",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+          "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-123",
+      "title": "Career Center qualified-first applications",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+          "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-124",
+      "title": "Board movement, UX and release verification",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and verify Classic/Modern use the same 13-tile board.",
+          "Visit the new pawn shop and test action accessibility, then inspect eligible roles in Career Center."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-125",
+      "title": "Original Classic starting cash and savings",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Start a fresh Classic game and check $200 cash and $0 savings; compare with Modern $250/$100."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-126",
+      "title": "Classic goal formulas and win condition",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check Goals with player unemployed then hired; verify career is zero when unemployed and four targets must all be met to win."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-127",
+      "title": "Jones difficulty and independent goal budget",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At default 200-point human goals try the three Jones difficulties; inspect 240/200/160 AI budgets and save/reload."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-128",
+      "title": "Employer-first hiring and low-cash AI recovery",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Visit Career Center and select a named workplace. Enable future roles, submit unqualified application; run 100 seeded 60-week Classic AI campaigns."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-129",
+      "title": "Classical goal points regression suite and release verification",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs, Looprd Python tests and browser smoke tests. Confirm workboard manifest has version 0.5.18 and no private state."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-131",
+      "title": "Printed quick-reference sources as primary Classic mechanics evidence",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Review docs/decisions/ADR-0020-printed-reference-classic-economy.md for reference links, verified facts, and provisional conversions."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-132",
+      "title": "Classic goal scoring accounts for owned goods and incomplete lessons",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "In Classic acquire computer and observe the Money goal increase; pawn it and confirm the ownership value leaves the score.",
+          "Study one lesson and confirm education goal progress updates before the diploma is awarded."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-133",
+      "title": "Classic emergency relative rescue with anti-farm guards",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run two desperate turns without money or clothing and confirm a one-time $90 rescue and finance ledger entry.",
+          "Confirm possessing suitable clothing, bank funds or a pawnable item prevents the rescue."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-135",
+      "title": "Board-centered venue interaction and focus return",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Click current building for free; choose another and confirm normal travel time.",
+          "Use Done and Escape, including a nested job confirmation; confirm the window closes safely."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-136",
+      "title": "Remove right-side destination pane and mobile Activities tab",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Inspect at 320x568 and 1600x900: no right panel or Activities tab; main page does not scroll."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-137",
+      "title": "Preserve venue action execution and employment filtering",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "At Career Center switch employer and future jobs; attempt an underqualified application with normal time cost.",
+          "At Bank deposit money and ensure only a single charge, leaving the venue open."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-138",
+      "title": "Status ticker End Turn and responsive venue controls",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "On phone open 13 venues and scroll only within action list; End week stays reachable after Done."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-139",
+      "title": "Network turn ownership and clean release regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Host and guest: wrong player blocked; guest travel opens after confirmed room snapshot; verify clean ZIP/Pages and Looprd tests."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-140",
+      "title": "Canonical DOS employer-to-board workplace contract",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Inspect Classic job at all nine employers: each resolves to one of the 13 board tiles; no unknown workplaces.",
+          "For Z-Mart/Black’s Market, confirm distinct discount and grocery departments at Fresh & Frugal."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-141",
+      "title": "Employer-linked hiring, work and map presentation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Apply for Cook at Career Center; character should show The Good Fork, not Monolith Burgers; city marks The Good Fork as WORK HERE.",
+          "Travel to Fresh & Frugal: no Work option; visit The Good Fork: Work is available if dressed and energized.",
+          "Switch employers: confirmation and logs show both relevant board companies."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-142",
+      "title": "Workplace consistency regression and release validation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and the dedicated employer-board-link tests; confirm all 37 Classic roles and 19 Modern roles validate.",
+          "Test at narrow viewport and desktop: work marker visible, board page remains unscrolled; Looprd game snapshots need no schema migration."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-143",
+      "title": "Split Classic shared market into distinct shopping departments",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Visit Fresh & Frugal in Classic: confirm separate shop headings and employer references; in Modern confirm ordinary groceries/discount clothing remain."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-144",
+      "title": "Introduce weekly rotating Z-Mart discount offers",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Observe stock week 1 versus week 2; rejected out-of-stock items cannot be bought via the engine; shop prices respond to Classic economy."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-145",
+      "title": "Weekend-ticket and durable-goods effects",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Buy a baseball ticket, advance week, verify it is consumed once; buy stereo, rest at home; pawn a VCR if owned."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-146",
+      "title": "Retail parity regression and secure snapshot fields",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and Python Looprd tests; verify build:pages and offline PLAY.html; inspect package for non-source/private files."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-148",
+      "title": "Classic zero-hour action gate",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Exhaust Classic hours and verify no bank transfers, food purchases or study enrollment can still be selected."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-149",
+      "title": "Classic ten-decision weekly allowance",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Deposit 10 times at the bank; confirm number 11 is blocked. End the week and confirm the limit resets."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-150",
+      "title": "Partial-shift wage remainder and employment reset",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Work six 1-hour Cook shifts and verify $40 total gross, matching one 6-hour shift. Verify save/load after a 2-hour shift."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-151",
+      "title": "Classic clock and employment regression gate",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs, Python handler tests and archive extraction; confirm 13-venue layout remains and Modern rules stay intact."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-153",
+      "title": "Original thirteen-venue Classic board",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and tests/classic-map-risk.test.cjs from this source release.",
+          "Review Classic board location names and behavior; confirm Modern Story map stays unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-154",
+      "title": "Separate employers, retail and apartments",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and tests/classic-map-risk.test.cjs from this source release.",
+          "Review Classic board location names and behavior; confirm Modern Story map stays unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-155",
+      "title": "Classic appliance wear and repair",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and tests/classic-map-risk.test.cjs from this source release.",
+          "Review Classic board location names and behavior; confirm Modern Story map stays unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-156",
+      "title": "Wild Willy theft and home protection",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and tests/classic-map-risk.test.cjs from this source release.",
+          "Review Classic board location names and behavior; confirm Modern Story map stays unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-157",
+      "title": "Classic art slot pipeline and regression",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and tests/classic-map-risk.test.cjs from this source release.",
+          "Review Classic board location names and behavior; confirm Modern Story map stays unchanged."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-159",
+      "title": "Versioned Classic routing graph",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node --test tests/route-graph.test.cjs."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-160",
+      "title": "Board-aligned SVG road and pawn overlay",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Open Classic board and verify visible road and pawn markers."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-161",
+      "title": "Authoritative travel animation",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Travel once to Bank; verify one hour deduction and action window opens after pawn arrives."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-162",
+      "title": "Fast standalone local browser testing",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "On Windows, double-click TEST-LOCAL.bat and check offline game opens only after tests succeed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-163",
+      "title": "Routing tests and archive gates",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and package ZIP; verify clean extraction."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-165",
+      "title": "Canonical Classic travel quotes",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run tests/classic-route-clock.test.cjs; verify 13x13 routes and no double charges."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-166",
+      "title": "Preview routes and time affordability",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Hover or focus Z-Mart from Low-Cost Housing: 3h, 2 segments, 60h still remaining until travel."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-167",
+      "title": "Responsive Classic street geometry",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Test 390px portrait and 1440px desktop; verify animation follows highlighted road without overflow."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-168",
+      "title": "Route-focused regression and quick launch",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Run TEST-ROUTES.bat to test and open offline game; run full TEST-LOCAL.bat for release verification."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-170",
+      "title": "Original indexed board identities",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-171",
+      "title": "170-step Classic route planner and projected pawn",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-172",
+      "title": "DOS employment company binding",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-173",
+      "title": "Needs-aware Classic rival route planner",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-174",
+      "title": "Original route and employment regressions",
+      "status": "done",
+      "verified_in": "historical-source-record",
+      "evidence": {
+        "source": "docs/workboard-history.json",
+        "operator_checks": [
+          "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
+        ]
+      },
+      "caveat": "Historical claim; not re-executed individually in this release."
+    },
+    {
+      "id": "LL-177",
+      "title": "Numeric original diploma identities",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+        ]
+      }
+    },
+    {
+      "id": "LL-178",
+      "title": "DOS-qualified employment and reproducible hiring",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+        ]
+      }
+    },
+    {
+      "id": "LL-179",
+      "title": "Two-week Classic survival budget",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+        ]
+      }
+    },
+    {
+      "id": "LL-180",
+      "title": "Rival career pathway and multi-payday job choices",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+        ]
+      }
+    },
+    {
+      "id": "LL-181",
+      "title": "Original career and survival regressions",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+        ]
+      }
+    },
+    {
+      "id": "LL-183",
+      "title": "Original DOS dynamic goods pricing",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-184",
+      "title": "Lottery and rent extension parity",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-185",
+      "title": "Original partial wage truncation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-186",
+      "title": "Ordered priority Jones core branches",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-187",
+      "title": "Classic economics and AI diagnostics",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-188",
+      "title": "DOS Pass-2 source reference and regression",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; compare seed-replay, Classic UI and Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-191",
+      "title": "Eight original economic index identities",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
+        ]
+      }
+    },
+    {
+      "id": "LL-192",
+      "title": "Unified Classic wages and market bindings",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
+        ]
+      }
+    },
+    {
+      "id": "LL-193",
+      "title": "Contract-aware rival planning and pawn emergencies",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
+        ]
+      }
+    },
+    {
+      "id": "LL-194",
+      "title": "Economic diagnostics and save migration",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
+        ]
+      }
+    },
+    {
+      "id": "LL-195",
+      "title": "Economic regression and ZipRunner delivery",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-ECONOMY.bat and TEST-LOCAL.bat; view Classic Finances and Career Roadmap."
+        ]
+      }
+    },
+    {
+      "id": "LL-196",
+      "title": "Source-derived DOS scandal result engine",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "In Classic inspect crisis journal and contract changes; compare strength 1/2 to DOS pass-2 notes."
+        ]
+      }
+    },
+    {
+      "id": "LL-197",
+      "title": "Saved economic event phase and per-week processing",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Load v0.5.30 saved game; inspect the cycle in Finances; verify no duplicate shock after loading."
+        ]
+      }
+    },
+    {
+      "id": "LL-198",
+      "title": "Rival layoff recovery and essentials protection",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Advance a crisis scenario and check Jones applies at Employment Office before heading back to Black’s Market."
+        ]
+      }
+    },
+    {
+      "id": "LL-199",
+      "title": "Economic crisis ledger and diagnostics",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Inspect the finances UI during a downturn; look at event journal and cash ledger."
+        ]
+      }
+    },
+    {
+      "id": "LL-200",
+      "title": "Expanded crisis migration QA and full ZipRunner release",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CRISES.bat then TEST-LOCAL.bat; confirm standalone PLAY.html opens."
+        ]
+      }
+    },
+    {
+      "id": "LL-201",
+      "title": "Ordered source-linked Jones career decisions",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
+        ]
+      }
+    },
+    {
+      "id": "LL-202",
+      "title": "Prevent workwear expiry feedback loop",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
+        ]
+      }
+    },
+    {
+      "id": "LL-203",
+      "title": "Employment search persistence and legitimate recovery",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
+        ]
+      }
+    },
+    {
+      "id": "LL-204",
+      "title": "Course and contract-sensitive AI",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
+        ]
+      }
+    },
+    {
+      "id": "LL-205",
+      "title": "Career replay/QA and ZipRunner source synchronization",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-AI-CAREERS.bat and then node tools/verify.mjs; open Classic Career Roadmap and compare source-tagged Jones traces."
+        ]
+      }
+    },
+    {
+      "id": "LL-206",
+      "title": "Original waypoint tick estimator",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Hover venues to compare actual spending units and the independent original source-estimate ticks."
+        ]
+      }
+    },
+    {
+      "id": "LL-207",
+      "title": "Source-based Employment entry timing",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Travel home to Employment Office, confirm travel includes 2 units of office entry and a second click is free."
+        ]
+      }
+    },
+    {
+      "id": "LL-208",
+      "title": "Per-action DOS work progression",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Work with only two time units, verify proportional wages and one work stat credit."
+        ]
+      }
+    },
+    {
+      "id": "LL-209",
+      "title": "Classic route UI and itinerary diagnostics",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "On desktop/mobile hover ACNE and Z-Mart and compare the source waypoint estimate with player clock cost."
+        ]
+      }
+    },
+    {
+      "id": "LL-210",
+      "title": "Timing tests, backward-compatible saves and full ZIP",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-TIME.bat or TEST-LOCAL.bat; open PLAY.html and verify a complete Classic week."
+        ]
+      }
+    },
+    {
+      "id": "LL-211",
+      "title": "DOS reliability warning and work dismissal",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "At Monolith Cook with reliability 7: first attempt warns without pay/time, second earns; at 4: dismissal instead."
+        ]
+      }
+    },
+    {
+      "id": "LL-212",
+      "title": "Paycheck preview and rent garnishment audit",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Enter work with rent arrears: compare visible net preview with actual cash/debt delta and verify partial shift rounding."
+        ]
+      }
+    },
+    {
+      "id": "LL-213",
+      "title": "AI post-travel action reservation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Set Jones time exactly to commute cost: no stranded work trip; confirm full 100-seed survival suite."
+        ]
+      }
+    },
+    {
+      "id": "LL-214",
+      "title": "Durable migration and Classic/Modern isolation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Save after warning and reload; warning should not replay for that week. Verify Modern work unaffected."
+        ]
+      }
+    },
+    {
+      "id": "LL-215",
+      "title": "Source regression and ZipRunner delivery",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-WORK.bat then TEST-LOCAL.bat, inspect offline HTML, and verify ZipRunner archive integrity."
+        ]
+      }
+    },
+    {
+      "id": "LL-216",
+      "title": "Classic auditable paycheck reconciliation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Compare 3-unit and 6-unit work on same wage/debt; verify previews and actual payouts agree."
+        ]
+      }
+    },
+    {
+      "id": "LL-217",
+      "title": "Bounded payroll ledger and migration",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Save after work, reload, view payroll trace in Finances; try malformed entries to confirm rejection."
+        ]
+      }
+    },
+    {
+      "id": "LL-218",
+      "title": "Net-aware rival survival forecasting",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Give Jones 100 arrears and compare gross vs net cash projections; verify unchanged snapshots."
+        ]
+      }
+    },
+    {
+      "id": "LL-219",
+      "title": "Essentials-first debt payoff",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Set old debt and exactly enough cash but no food: AI must not clear debt before essentials."
+        ]
+      }
+    },
+    {
+      "id": "LL-220",
+      "title": "Regression, parity and ZipRunner release",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-PAYCHECKS.bat and TEST-LOCAL.bat; compare file:// PLAY with Pages edition."
+        ]
+      }
+    },
+    {
+      "id": "LL-221",
+      "title": "Source-backed per-player Classic turn closure",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "In hotseat, close the first player while the second player has not yet acted; check no double decay."
+        ]
+      }
+    },
+    {
+      "id": "LL-222",
+      "title": "Single-assessment Classic rent",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Miss week-four rent, inspect one debt charge on week five and no duplicate charge."
+        ]
+      }
+    },
+    {
+      "id": "LL-223",
+      "title": "Replayable Classic turn timeline",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Finances displays the chronological journal, and corrupted/future events are rejected on save import."
+        ]
+      }
+    },
+    {
+      "id": "LL-224",
+      "title": "Legacy import and Modern isolation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Load v0.5.35 snapshot; advance week once; Modern mode retains its original dependability timing."
+        ]
+      }
+    },
+    {
+      "id": "LL-225",
+      "title": "Turn-sequence regression and ZipRunner packaging",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-TURNS.bat and node tools/verify.mjs; open Classic Finances on desktop/mobile."
+        ]
+      }
+    },
+    {
+      "id": "LL-226",
+      "title": "Stable Classic 13-location board",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Inspect 1440px and 390px Classic; building order/entrances and 13 identities agree."
+        ]
+      }
+    },
+    {
+      "id": "LL-227",
+      "title": "Readable phone Explore and Overview",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "On 390px and 320px devices, Explore pans horizontally; Overview fits the whole map; selecting a building from finder does not cost time."
+        ]
+      }
+    },
+    {
+      "id": "LL-228",
+      "title": "Board-relative routing and centered venue continuity",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Preview and travel around the original loop on phones; visit Monolith Burger and verify centered interaction remains visible."
+        ]
+      }
+    },
+    {
+      "id": "LL-229",
+      "title": "DOS weekly computer bonus state 4",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Use deterministic rolls to verify no-computer, win/loss, minimum and maximum awards; check Classic/Modern isolation."
+        ]
+      }
+    },
+    {
+      "id": "LL-230",
+      "title": "Classic board/weekly regression and ZipRunner handoff",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs; check archive, 390px and 1440px."
+        ]
+      }
+    },
+    {
+      "id": "LL-231",
+      "title": "Safe phone overview inspection",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
+        ]
+      }
+    },
+    {
+      "id": "LL-232",
+      "title": "Pawn-follow mobile camera",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
+        ]
+      }
+    },
+    {
+      "id": "LL-233",
+      "title": "DOS food storage trace",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
+        ]
+      }
+    },
+    {
+      "id": "LL-234",
+      "title": "DOS clothing warning trace",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
+        ]
+      }
+    },
+    {
+      "id": "LL-235",
+      "title": "Classic board and weekly release QA",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-CLASSIC-BOARD.bat and node tools/verify.mjs, inspect phone Overview then Explore, check Classic weekly-event history."
+        ]
+      }
+    },
+    {
+      "id": "LL-236",
+      "title": "Journey stage & Classic arrival cue",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
+        ]
+      }
+    },
+    {
+      "id": "LL-237",
+      "title": "Touch-pan intent threshold",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
+        ]
+      }
+    },
+    {
+      "id": "LL-238",
+      "title": "DOS state 12 food shortage trace",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
+        ]
+      }
+    },
+    {
+      "id": "LL-239",
+      "title": "DOS state 34 clothing assistance trace",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
+        ]
+      }
+    },
+    {
+      "id": "LL-240",
+      "title": "Regression tests and verified ZipRunner handoff",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-JOURNEY.bat and node tools/verify.mjs; open PLAY.html in Classic at desktop and mobile widths."
+        ]
+      }
+    },
+    {
+      "id": "LL-241",
+      "title": "Accessible Classic pawn animation skip",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
+        ]
+      }
+    },
+    {
+      "id": "LL-242",
+      "title": "Separate source-linked Classic relaxation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
+        ]
+      }
+    },
+    {
+      "id": "LL-243",
+      "title": "Source state 20 loan schedule audit",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
+        ]
+      }
+    },
+    {
+      "id": "LL-244",
+      "title": "Classic journey and relaxation regression coverage",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
+        ]
+      }
+    },
+    {
+      "id": "LL-245",
+      "title": "Complete ZipRunner v0.5.40 release handoff",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
+        ]
+      }
+    },
+    {
+      "id": "LL-246",
+      "title": "Route-owned visible entrance marker",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
+        ]
+      }
+    },
+    {
+      "id": "LL-247",
+      "title": "Working-appliance household adapter",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
+        ]
+      }
+    },
+    {
+      "id": "LL-248",
+      "title": "Relaxation-only Classic rest",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
+        ]
+      }
+    },
+    {
+      "id": "LL-249",
+      "title": "Production-ready 13-place designer contract",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
+        ]
+      }
+    },
+    {
+      "id": "LL-250",
+      "title": "Mandatory regression and ZipRunner release",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-HOUSEHOLD.bat and TEST-LOCAL.bat; check board entrance marker and artwork fallback on desktop/mobile."
+        ]
+      }
+    },
+    {
+      "id": "LL-251",
+      "title": "Reconcile workboard by stable ID with explicit lifecycle evidence",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-LIFECYCLE.bat and open docs/workboard-reconciliation.md; verify blocked LL-175 has an unblock criterion."
+        ]
+      }
+    },
+    {
+      "id": "LL-252",
+      "title": "Enforce source workboard lifecycle in ZipRunner release verifier",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and node tools/reconcile-workboard.mjs --check from extracted ZIP."
+        ]
+      }
+    },
+    {
+      "id": "LL-253",
+      "title": "Needs-aware Classic appliance maintenance and regression",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run TEST-LIFECYCLE.bat and inspect Classic Finances with broken refrigerator; verify repair never spends reserve."
+        ]
+      }
+    },
+    {
+      "id": "LL-254",
+      "title": "Install production Classic exterior and interior artwork",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
+        ]
+      }
+    },
+    {
+      "id": "LL-255",
+      "title": "Keep original DOS geography independent of display size",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
+        ]
+      }
+    },
+    {
+      "id": "LL-256",
+      "title": "Active player portrait and centered turn presentation",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
+        ]
+      }
+    },
+    {
+      "id": "LL-257",
+      "title": "Original-inspired Classic weekly clock",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
+        ]
+      }
+    },
+    {
+      "id": "LL-258",
+      "title": "Classic production board acceptance and release tests",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and inspect the fixed Classic board at 1440px, 390px and 320px."
+        ]
+      }
+    },
+    {
+      "id": "LL-259",
+      "title": "Modular Portrait Kit integration",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Open Profile in browser, change hair/face/color and verify generated portrait updates."
+        ]
+      }
+    },
+    {
+      "id": "LL-260",
+      "title": "Shared cross-game appearance identity",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Save a shared portrait, start new game, check name and sidebar portrait."
+        ]
+      }
+    },
+    {
+      "id": "LL-261",
+      "title": "Optional Looprd Social integration contract",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Use the separate looprd-social development service and verify Get/Put profile, lobby chat and no auto game login."
+        ]
+      }
+    },
+    {
+      "id": "LL-262",
+      "title": "Portrait integration release gate",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and open offline PLAY.html at mobile and desktop sizes."
+        ]
+      }
+    },
+    {
+      "id": "LL-264",
+      "title": "Expose shared Social lobby in game Chat",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run python tests/qa_social_chat.py and test the Social/Room tabs at 390px and 1440px."
+        ]
+      }
+    },
+    {
+      "id": "LL-265",
+      "title": "Native Looprd Social client and unified profile session",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node --test tests/looprd-social-chat.test.cjs and tests/shared-profile-portrait.test.cjs."
+        ]
+      }
+    },
+    {
+      "id": "LL-266",
+      "title": "Chat resilience, security and viewport tests",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs; check social server down and disconnected behavior."
+        ]
+      }
+    },
+    {
+      "id": "LL-267",
+      "title": "Carry forward Looprd game schema migration",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run python tools/generate-looprd.py and validate looprd.yaml against Looprd spec before deploying; backup the game database."
+        ]
+      }
+    },
+    {
+      "id": "LL-013",
+      "title": "Classic local hotseat privacy handover",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node --test tests/classic-hotseat-handover.test.cjs; test one local two-player turn handoff at 390px and 1440px."
+        ]
+      }
+    },
+    {
+      "id": "LL-268",
+      "title": "Preserve Classic scenic road and garden on mobile",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run python tests/qa_classic_handover.py at 320px and 390px; check Overview and Explore include the garden and scenic areas."
+        ]
+      }
+    },
+    {
+      "id": "LL-269",
+      "title": "Hotseat and mobile board regression release",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python tests/qa_classic_handover.py, then validate clean ZIP extraction."
+        ]
+      }
+    },
+    {
+      "id": "LL-270",
+      "title": "Place Classic action clock on Public Garden",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "At desktop 1440 and phone 390 verify exactly one dial, in the garden, with 60 units and correct after-travel updates."
+        ]
+      }
+    },
+    {
+      "id": "LL-271",
+      "title": "Limit Explore/Overview camera toggle to phones",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Check 320/390/720 show a toggle and 768/1440 do not; switch mobile Explore/Overview without travel charges."
+        ]
+      }
+    },
+    {
+      "id": "LL-272",
+      "title": "Correct south-row visual route projection",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Check projected road at 1440 and phone Explore; run game route regression suite and no time cost modifications."
+        ]
+      }
+    },
+    {
+      "id": "LL-273",
+      "title": "Door-aligned Classic storefront arrival",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python tests/qa_entrances_clock.py; verify pawn stops on doors at mobile and desktop widths."
+        ]
+      }
+    },
+    {
+      "id": "LL-274",
+      "title": "In-venue Classic action clock",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Check 60/60 when entering initial venue and reduced clock units immediately after the relax action without leaving it."
+        ]
+      }
+    },
+    {
+      "id": "LL-275",
+      "title": "Entrance and venue time regression coverage",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run all source and clean-extraction tests plus Chromium 320, 390, 768 and 1440 pixel checks."
+        ]
+      }
+    },
+    {
+      "id": "LL-276",
+      "title": "Continuous Classic street centerline",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Use python tests/qa_smooth_streets.py at 320, 390, 768 and 1440px and inspect the roadway in the desktop screenshot."
+        ]
+      }
+    },
+    {
+      "id": "LL-277",
+      "title": "Separate road preview from storefront art",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Hover Bank, Black’s Market, Z-Mart, Socket City and Factory; preview points must remain outside shop bounds."
+        ]
+      }
+    },
+    {
+      "id": "LL-278",
+      "title": "Road and door arrival regression",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python tests/qa_entrances_clock.py; inspect desktop and phone arrival and time cost."
+        ]
+      }
+    },
+    {
+      "id": "LL-279",
+      "title": "Smooth Classic pawn entry and departure",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Travel from Low-Cost Housing to Bank and verify the pawn finishes on the bank door with no jump.",
+          "Skip travel in progress and confirm the pawn resolves to the doorway."
+        ]
+      }
+    },
+    {
+      "id": "LL-280",
+      "title": "Responsive arrival and route conservation tests",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run node tools/verify.mjs and python tests/qa_pawn_doorway.py at phone/desktop sizes; confirm garden/venue clocks and co-op are unaffected."
+        ]
+      }
+    },
+    {
+      "id": "LL-281",
+      "title": "Street tracks visible illustrated storefronts",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Check road position by storefront labels at 1440px and in phone Explore/Overview; verify 170 original waypoint identities and 5-unit Bank travel."
+        ]
+      }
+    },
+    {
+      "id": "LL-282",
+      "title": "Visible doorway sidewalks and continuous pawn journey",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Hover Bank and Black’s Market; verify both street and door segments appear; complete and skip a pawn journey; inspect no invisible teleport."
+        ]
+      }
+    },
+    {
+      "id": "LL-283",
+      "title": "Storefront and garden clock browser regression",
+      "status": "done",
+      "verified_in": "0.5.52",
+      "evidence": {
+        "source": ".ziprunner-workboard-update.json",
+        "operator_checks": [
+          "Run python tests/qa_storefront_frontage.py and node tools/verify.mjs; verify the in-venue clock shows 55/60 after a five-unit trip."
+        ]
+      }
+    },
+    {
+      "id": "LL-011",
+      "title": "Audio and weather ambience",
+      "status": "todo",
+      "acceptance_next": "Add original music and controllable effects without requiring network assets"
+    },
+    {
+      "id": "LL-012",
+      "title": "Long-term opponent balancing",
+      "status": "in_progress",
+      "acceptance_next": "Run wider long-form economic balance simulations with adjustable difficulty"
+    },
+    {
+      "id": "LL-014",
+      "title": "Cross-platform desktop and mobile QA",
+      "status": "blocked",
+      "reason": "Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build.",
+      "unblock_when": "Run and record Windows, macOS, Linux, Android and iOS smoke tests on their target browsers."
+    },
+    {
+      "id": "LL-036",
+      "title": "Further original parity and economy depth",
+      "status": "in_progress",
+      "acceptance_next": "Original job/location catalog, menu/function fidelity and economy rules not yet ported. v0.4.6 original-style job requirements currently map to modern roles."
+    },
+    {
+      "id": "LL-039",
+      "title": "Original 60h time economy and actions",
+      "status": "in_progress",
+      "acceptance_next": "Complete original movement graph/edge behavior and partial shifts. Classic 60h and 2h entry overhead implemented provisionally; confirm DOS behavior and expand parity tests."
+    },
+    {
+      "id": "LL-040",
+      "title": "Original employment/stat progression and mode isolation",
+      "status": "in_progress",
+      "acceptance_next": "Map full original Sierra job/wage chart; replace provisional flat 20% vacancy rejection; verify original dismissal edge cases/raise behavior in DOS. Classic 0.4.6 has documented stat caps and work-triggered dismissal."
+    },
+    {
+      "id": "LL-041",
+      "title": "Original degrees, goals, rent and financial decisions",
+      "status": "in_progress",
+      "acceptance_next": "Classic original 11-diploma graph and education/career scoring added in v0.4.6; remaining goal formulas, rent collection and loan mechanics need work."
+    },
+    {
+      "id": "LL-042",
+      "title": "Consumer economy, risk and four-person multiplayer",
+      "status": "in_progress",
+      "acceptance_next": "Add inventory durability, food spoilage/storage, pawn shop, original investments and edition-specific random risks, up to four human players."
+    },
+    {
+      "id": "LL-060",
+      "title": "Complete one-to-one DOS parity",
+      "status": "blocked",
+      "reason": "Full DOS parity needs reference runtime observations and exact original calculations not contained in the available evidence.",
+      "unblock_when": "Supply validated SCI/DOSBox behavior traces for each remaining parity rule."
+    },
+    {
+      "id": "LL-066",
+      "title": "Complete remaining original bank, pawn and storefront parity",
+      "status": "in_progress",
+      "acceptance_next": "Original random market volatility and loan approval, loan default edge rules, shop spoilage penalties, Pawn Shop, robbery and original DOS map/service flow."
+    },
+    {
+      "id": "LL-072",
+      "title": "Native server-authoritative simulation and multi-device resilience",
+      "status": "in_progress",
+      "acceptance_next": "Migrate simulation validation into a trusted server-side engine for hostile-client resistance and add multi-room expiration/observability, host migration, spectator support, and real deployment acceptance."
+    },
+    {
+      "id": "LL-082",
+      "title": "Production Looprd two-browser acceptance",
+      "status": "blocked",
+      "reason": "Live production Looprd room behavior cannot be verified from a source-only release.",
+      "unblock_when": "Provide access to a deployed Looprd environment and results of a two-browser session."
+    },
+    {
+      "id": "LL-086",
+      "title": "Portable character library export/import and device persistence QA",
+      "status": "todo",
+      "acceptance_next": "Provide optional browser-local profile library export/import; test Android/iOS persistence and cross-origin migration after v0.5.7 shared guest identity support."
+    },
+    {
+      "id": "LL-092",
+      "title": "Live Looprd schema migration and multiplayer field test",
+      "status": "blocked",
+      "reason": "Live multiplayer migration requires the operator's running Looprd deployment and persistence data.",
+      "unblock_when": "Run a production-safe migration rehearsal and attach sanitized two-client results."
+    },
+    {
+      "id": "LL-098",
+      "title": "Optional downloadable local style packs",
+      "status": "todo",
+      "acceptance_next": "Offer local art pack import, validation and per-browser selection without adding dependencies to the standalone game."
+    },
+    {
+      "id": "LL-106",
+      "title": "Verify portrait sharing on production Looprd",
+      "status": "blocked",
+      "reason": "Cross-device portrait sharing needs live Looprd and two independent clients.",
+      "unblock_when": "Complete a remote shared-room portrait synchronization test."
+    },
+    {
+      "id": "LL-111",
+      "title": "Production sprite atlas and richer animation set",
+      "status": "in_progress",
+      "acceptance_next": "Author explicit PNG atlases with trim offsets, body-specific clothing and hat occlusion masks, expand animation clips; current procedural 32x40 art is an initial complete pipeline only."
+    },
+    {
+      "id": "LL-130",
+      "title": "Verify original wealth liabilities and Jones random goal distribution",
+      "status": "blocked",
+      "reason": "Exact original goal distribution and liabilities require DOS execution evidence.",
+      "unblock_when": "Supply saved original-game observations or a verified source-level formula."
+    },
+    {
+      "id": "LL-134",
+      "title": "Original detailed economy, merchandise, events and security parity",
+      "status": "in_progress",
+      "acceptance_next": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black’s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations."
+    },
+    {
+      "id": "LL-147",
+      "title": "Full original DOS store-location and retail risk parity",
+      "status": "in_progress",
+      "acceptance_next": "Revisit the 13 shared board constraint versus original separate Z-Mart/Black’s Market physical buildings. Verify exact original weekly inventory, discount price, equipment breakdown rates, tickets, economy fluctuations and residence theft with captured DOS sessions. Current rotating shelves and outcomes are explicit approximations."
+    },
+    {
+      "id": "LL-152",
+      "title": "DOS-original action counting and wage rounding comparison",
+      "status": "in_progress",
+      "acceptance_next": "Measure precise ten-event interpretation (navigation, free bank transfers, work dismissal), zero-hour interaction and split-shift wage rounding in DOS. Current cap/rounding are explicit provisional design decisions."
+    },
+    {
+      "id": "LL-158",
+      "title": "DOS event probabilities and final Classic building artwork",
+      "status": "blocked",
+      "reason": "The 13 Classic storefront and interior pairs are now delivered and integrated; original weekly event probabilities are still unverified.",
+      "unblock_when": "Supply documented original event draws or SCI source proofs for remaining weekly probabilities."
+    },
+    {
+      "id": "LL-164",
+      "title": "Final illustrated board, route tuning and multiplayer live QA",
+      "status": "blocked",
+      "reason": "Production art integration is complete, but live multi-client route synchronization has not been validated on the deployed service.",
+      "unblock_when": "Complete a two-client deployment QA pass using the integrated Classic board."
+    },
+    {
+      "id": "LL-169",
+      "title": "Original map artwork, reference time formulas and deployed two-client movement QA",
+      "status": "blocked",
+      "reason": "Original travel-hour conversion and synchronized deployed-client pawn behavior require DOS and multiplayer traces.",
+      "unblock_when": "Supply DOS route timings and a sanitized two-client movement capture."
+    },
+    {
+      "id": "LL-175",
+      "title": "DOS travel-hour calibration",
+      "status": "blocked",
+      "reason": "Original waypoint-to-action-clock conversion has not been confirmed against DOS runtime timings.",
+      "unblock_when": "Record at least five original-game trips with start/end clock readings and waypoints."
+    },
+    {
+      "id": "LL-176",
+      "title": "DOS wage, clothing and AI parity",
+      "status": "blocked",
+      "reason": "Original wage/clothing/opponent coefficients are not sufficiently evidenced for exact parity.",
+      "unblock_when": "Provide original runtime employment and clothing-cost traces."
+    },
+    {
+      "id": "LL-182",
+      "title": "Exact original economic salary and AI comparison",
+      "status": "blocked",
+      "reason": "Dynamic salary coefficients and exact opponent priority weights remain unverified in original execution.",
+      "unblock_when": "Obtain original-game salary and ordered decision traces across contrasting economic states."
+    },
+    {
+      "id": "LL-189",
+      "title": "Original multivariate EconomicIndex emulator parity",
+      "status": "blocked",
+      "reason": "Multi-index economic transition formulas lack original emulator/reference verification.",
+      "unblock_when": "Collect repeatable DOS economic-index sequences or source proofs."
+    },
+    {
+      "id": "LL-190",
+      "title": "Exhaustive ordered opponent SCI branches and event order",
+      "status": "blocked",
+      "reason": "The complete SCI decision branch ordering is not yet recovered.",
+      "unblock_when": "Map and verify the outstanding WhereShouldIGo.sc branches from source/runtime traces."
+    },
+    {
+      "id": "LL-263",
+      "title": "Cross-game single sign-on and social deployment",
+      "status": "blocked",
+      "reason": "No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO.",
+      "unblock_when": "Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services."
+    }
+  ]
+}

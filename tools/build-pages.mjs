@@ -13,6 +13,10 @@ for(const path of [...new Set([...Object.values(artPackForPages.venues).flatMap(
  game=game.replaceAll(embedded,path);
 }
 
+// Serve supplied Classic board artwork as cacheable assets in Pages, embedded in offline edition.
+const classicArt=JSON.parse(readFileSync(resolve(root,'src/classic-art-assets.js'),'utf8').match(/root\.LifeClassicArtAssets=(\{.*\});/)?.[1]||'{}');
+const classicFiles=Object.values(classicArt.venues||{}).flatMap(x=>[x.card,x.detail]);
+for(const file of classicFiles){const embedded='data:image/webp;base64,'+readFileSync(resolve(root,file)).toString('base64');game=game.replaceAll(embedded,file);}
 // Externalize portrait illustrations so the offline edition stays portable while Pages caches assets.
 const portraitPack=JSON.parse(readFileSync(resolve(root,'assets/portraits/default/manifest.json'),'utf8'));
 const portraitFiles=Object.values(portraitPack.portraits).map(p=>p.image);
@@ -28,6 +32,7 @@ const artPack=JSON.parse(readFileSync(resolve(root,'assets/art/styles/contempora
 const images=[...Object.values(artPack.venues).flatMap(v=>[v.card,v.detail]),...Object.values(artPack.homeTiers).filter(Boolean).flatMap(v=>[v.card,v.detail])];
 for(const file of new Set(images)){const dst=resolve(out,file);mkdirSync(resolve(dst,'..'),{recursive:true});copyFileSync(resolve(root,file),dst);}
 
+for(const file of classicFiles){const dst=resolve(out,file);mkdirSync(resolve(dst,'..'),{recursive:true});copyFileSync(resolve(root,file),dst);}
 for(const file of portraitFiles){const dst=resolve(out,file);mkdirSync(resolve(dst,'..'),{recursive:true});copyFileSync(resolve(root,file),dst);}
 
 console.log(`GitHub Pages site ready: dist/index.html (${Buffer.byteLength(game)} bytes)`);

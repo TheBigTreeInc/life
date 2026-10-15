@@ -117,3 +117,105 @@ Regression: `tests/classic-goals-competition.test.cjs`, existing Classic banking
 ## v0.5.19 reference reconciliation (Sierra Quick Reference)
 
 Sierra's printed Quick Reference states that Money goal includes **owned goods**, and Education depends on **units of study**. Classic v0.5.19 now values owned durable goods using a provisional table and credits incomplete coursework proportionally. Original DOS rounding is unverified. A fallback emergency gift protects hopelessly stranded characters, but its $90 amount and eight-week cooldown are not claimed as original. Weekly economy shocks, clothing/electronics quality differences, robbery, security apartments and actual 13-location functional equivalence remain partial. Modern Story not changed.
+
+
+## v0.5.22 — Classic merchandise placement and rotating stock (partial parity)
+
+- Black’s Market food / newspaper / lottery is now separate from the Z-Mart counter within the shared Fresh & Frugal city tile. Independent Classic employer identities remain, but their physical travel and entrance cost is still shared and therefore **not** original DOS parity.
+- Z-Mart sells clothes and a seeded, rotating four-week stock of dictionary, atlas, encyclopedia, VCR, stereo, baseball, concert and theater tickets. Books are no longer sold at Socket City (Classic). Stock is validated when executing the purchase and a player cannot buy duplicates of unique durable goods.
+- A purchased ticket is limited to one at a time, persists in a snapshot, and is consumed at the next weekend for a small happiness effect. Home stereo and VCR add comfort when relaxing in Classic. Modern settings and store actions are unchanged.
+- Current discount costs, stock schedule, weekend effects and lack of electronics breakage are **provisional approximations**. Original DOS store availability, separate business locations, equipment quality, bank/market robberies and exact happiness effects remain unverified, tracked under LL-147.
+- Regression: `tests/classic-discount-market.test.cjs` and `tests/qa_discount_market.py`; no public server schema migration, workboard and ADR-0023.
+
+
+## v0.5.23 Classic action-time and wage precision (partial parity)
+
+- **Implemented:** All Classic in-venue decisions require positive hours remaining; zero-hour actions no longer permit cash/food operations after the clock expires.
+- **Provisional:** Ten in-venue decisions per week; movement is excluded, while a selected failed/dismissal action counts. The player-provided original reference mentions ten events but does not establish precise counting criteria.
+- **Implemented consistently:** Fractional wage remainder carries across split work actions; current gross pay preview equals settlement, so six 1h shifts pay the same as a full 6h shift at a fixed wage.
+- **Not claimed:** DOS-exact partial-pay rounding, event classifications, dismissal timing, and original travel distance.
+
+
+### v0.5.24 Classic location and risk audit
+
+- Classic uses distinct original-named and geographically original-positioned thirteen destinations, with Black's Market groceries and Z-Mart discount supply at separate tiles. Modern retains the independent modern locations.
+- Classic original employment IDs retain their qualifications and hourly pay; the gameplay and city marker now resolve the original named Classic business, not the modern alias.
+- Moving into Le Security Apartments protects from residence burglaries, while Low-Cost Housing does not. Relaxation follows the actual residence. The moving charge and exact original rent adjustment remain provisional.
+- Refrigerators, freezers, computers and VCRs/stereos have source-dependent malfunction checks, repairing restores benefits, and a broken item's value is discounted. All probabilities and resale fractions are provisional.
+- Wild Willy can rob the Bank or Black's Market of carried cash, and may steal owned property during low-cost-housing weekends. Banked savings remain protected from transaction robbery.
+- Classic artwork is a 13-slot optional collection with default modern art placeholders; no DOS graphics shipped. User-provided artwork remains an outstanding follow-up.
+- Automated tests confirm consistency, not binary DOS rule equivalence. Original weekly movement arithmetic, device failure rates and robber outcomes are still unverified.
+
+
+### v0.5.29 Pass-2 audit delta
+
+Classic pricing and lottery actions are now directly source-calculated with deterministic 100→bounded 10–190 goods-index model; the evolution process is **not** Sierra's complete interdependent index machine. Rent-extension chances use original d12 cutoffs; partial gross wages no longer carry fractions. Prior Classic AI preferences now have source-tagged priority branches for emergency needs, followed by existing heuristics for career advancement. Weekly events and branch traces survive save/load. The opponent may still experience genuine hunger and arrears during volatile 60-week campaigns, so full original AI/financial parity remains **partial**.
+
+
+### v0.5.30 economic integration audit
+
+Eight index domains share a seeded update mechanism while retaining distinct readings; shop prices, offered (not contracted) wages and bank quotes consume these readings. Exact Sierra volatility/risk, wage-index binding and 16-bit rules remain unverified. A new guard prevents Classic Jones from abandoning a higher contracted wage for a title whose *market* offer has fallen. Conditional rent/food pawning uses original representative branch tags; full first-match AI remains incomplete. Stochastic long-run survival tests are unchanged in strictness, rather than relaxed to hide regressions. No Modern prices, original identities or route rules are changed.
+
+## v0.5.31 Classic crisis mechanics audit (2026-10-13)
+
+The supplied DOS pass-2 record of `startTrn.sc:596–775` supports a strength-1 event wiping bank savings and dismissing the employed, and strength-2 selecting dismissal versus truncated 80% wage with a binary draw. The game uses these exact **outcome branches** and the accompanying −7/−3 happiness penalties, but not the source's complete branch-trigger RNG or event scheduling; the live weekly phase model is provisional. All Classic participants receive outcomes in a deterministic, recorded order; cases of unemployment/recent job loss are tested. Legacy saves use a neutral pulse as of their saved week, do not replay earlier weeks, and preserve Modern state. Note: downturn-related hardship means no absolute 100-seed employment guarantee; see explicit quantitative endurance threshold in the regression suite.
+
+## v0.5.32 Classic career and resilience audit (2026-10-13)
+
+The current source-tagged rival has branches 20, 28, 29, 30, 32, 37, 44, 46, plus prior emergency/office priorities. Branch labels and broad venue choices match pass-2 research; precise DOS selection gates, wage negotiation mechanics and time conversion are **not** verified. A strict 100-seed, 60-week endurance test originally found seed 96 vulnerable to an expiring *formal* uniform despite available cash. Fix: renew any qualifying clothing rank at two weeks remaining and treat it as essential before schooling. No rescue money is injected; apply normal wardrobe prices and route costs. Persistent unemployment fields are additive and validated on load; modern mechanics are isolated. Focus tests assert source tags, career, move/act feasibility, save/replay and seed reproduction.
+
+## v0.5.33 original clock and source tick audit (2026-10-13)
+
+The Pass-2 DOS source shows the `WhereShouldIGo.localproc_1` ring route estimate as each leg's circular `min(abs(a-b),170-abs(a-b)) + 2*global475`, with initial `global475=20`; it is **an AI estimate in ticks, not evidence for dividing by 20 into user-facing hours**. `room1.sc` adds +2 for entering Employment, `employment.sc` charges +4 for applications, `n108.sc` charges a 6-unit shift with late partial gross and +1 capped work stat progression per successfully worked action. v0.5.33 models those as separate concerns, with independent tests for route ticks, new Employment surcharge, quote/commit atomicity, partial progression/pay, and Modern isolation. The older six-hour accumulated partial-shift progression and symmetric agency return travel were previous approximate mechanics. Save migration ignores any unused legacy pooled work credit, preserving employment and money. Exact DOS motion-speed-to-turn-unit conversion, work garnishment quirks, other storefront entry charges, and original weekly action limit remain unverified and should not be claimed complete.
+
+## v0.5.34 work warning/garnishment and AI source ordering
+
+DOS Pass-2 `n108.sc` describes `dep < req-5` dismissal; `dep < req-2` and one-time warning gate; successful shifts grant capped experience and dependability and compute partial gross with floor rounding. Prior Life Loop only warned after payment, which is not the recovered source ordering. Warning now occurs before clock/pay and is persistent for a week. Work previews disclose the net wage under the existing *provisional* 50% rent deduction and maximum $2 fee. The original garnishment special-case **cannot** be proven byte-exact from the available extracted text and has not been replaced with speculative logic; a same-wage/different-time DOS runtime trace is required. Classic opponent action planning now includes work-action feasibility after travel and respects 10 choices; this ten-choice cap itself is provisional. Modern untouched.
+
+## v0.5.35 — payroll reconciliation and Classic rival finances
+
+Fixed a practical forecast bug: the survival planner previously used `shiftPay` (gross) during garnishment. This now calls the same Classic net quote that actually pays shifts, projecting arrears clearance sequentially for two paydays. Work receipts expose gross/garnishment/fee/net and reconcile with wallet and rent debt on every completed shift. The finite 16-entry journal is validated during save and multiplayer snapshot import; older saves default to []. Rival no longer spends essential food/current rent/workwear buffer to pay old arrears voluntarily. The optional fullGrossBasis figure is a *sensitivity comparison only*; the recovered source explicitly warns of an alternative overwrite path but has insufficient code/evidence to infer exact outputs. Historic DOS payroll parity is not yet established.
+
+## v0.5.36 Classic turn-sequence audit
+
+The original DOS research places `Player.endTurn` dependability −3 before next-turn start, while our earlier game applied it at the common `newWeek` reset. v0.5.36 corrects the hotseat/AI timing, adds a pure rent assessment with a once-a-week guard, and journals the sequential Classic phases. The event log is validated across save/imports, bounded to 72 entries, and shown under Finances. The action clock, employer warnings, work pay, AI actions and Modern mechanics retain their existing behavior. **Not historically proven:** exact 37-step startTrn callback execution order, annual/periodic bonus effects, per-action count cap, and original garnishment. Revalidate against emulator traces.
+
+## v0.5.37 migration check
+
+Classic mobile no longer remaps 13 original venues into a serpentine. The same 5×4 geometry and 170-waypoint graph appear on desktop/phone and pan together with their SVG layer. Building finder and overview controls only change browser scroll/CSS. Venue actions still use existing `net.execute` / authoritative `Game.travel` and remain centered on the board. The Classic computer event uses verified state 4 1/7 $20–$100 cash outcome; other `startTrn` phases remain provisional.
+
+
+## v0.5.38 migration audit
+
+- Classic city 13/13 fixed place identities. 390px and 320px view tested, Overview inspect is free, Explore travel opens centered venue.
+- `startTrn.sc` state 10: food storage loss journal; original limit 6 without freezer / 12 with freezer and existing provisional no-fridge spoil behavior, without the unsupported $25 medical charge. Actual event probability remains open.
+- `startTrn.sc` state 18: one-week/expired clothing notices recorded in bounded Classic weekly event history. Same clothing aging rules and source-informed work-uniform checks; Modern unaffected.
+- Save schema/Looprd HTTP and WebSocket protocol unchanged; no credentials or runtime files in ZIP.
+
+## v0.5.39 Classic journey and provenance audit
+
+- Departure → route animation → entry/arrival marker → centered venue; no animation side-effect spending.
+- Mobile Overview remains zero-cost inspect-first. Camera follow stops only after a deliberate horizontal gesture (>9 px) during movement.
+- DOS `startTrn` state 12 logged for existing missing-food outcome, without altering hunger or adding a penalty.
+- DOS `startTrn` state 34 logged for two-check clothing assistance. The original award formula and cooldown have not been recovered, so the existing `$90 / 8-week` compatibility behavior is unchanged.
+- Replay/save compatibility: presentation transient; only pre-existing bounded event journal gains source identifiers. Modern isolated.
+
+## v0.5.40 Classic relaxation and animation audit
+
+DOS source state 6 explicitly tracks relaxation independently of the victory statistics and lowers it by one per week toward ten without item-28 hot tub. The Life Loop's initial 16/rest +6/maximum 30 are provisional. Traces record every Classic check. State 20 is a source-linked four-week loan schedule check: existing penalties are not claimed DOS exact. Animation skip is a UI-only one-shot completion; no additional travel cost, RNG draw or venue action. Test save upgrades with missing `classicRelaxation`, forged out-of-range values and Modern-mode behavior.
+
+### v0.5.43 maintenance and workboard safeguards
+
+- Classic AI's optional repair choice uses a pure, stable appliance order and pays only from cash remaining after the two-week survival reserve. It uses the existing `classicRepair` action and normal travel clock. Modern rules remain untouched.
+- The source release workboard is reconciled by stable ID and validated; ZipRunner v1 cannot yet update Blocked/In Progress statuses, so operator-side importer verification is still required.
+- The original DOS machine-failure and repair probabilities/prices have **not** been recovered.
+
+
+## v0.5.48 — Clock/camera display-only change
+
+Classic HUD derives its only 60-unit clock from the authoritative active player's action budget; moved that dial to the non-playable Public Garden. Camera modes are phone-only; their switch never spends a unit. The south-row projected route visual follows the actual 5x5 garden board gutter. No movement/timing formula, Modern rules, multiplayer authority, save or Social schema changed. See ADR-0048 and `tests/qa_classic_clock_garden.py`.
+
+
+### Street-rendering regression boundary v0.5.50
+
+Classic route rendering does not modify waypoint counts, route quotes, clock consumption, employment actions, save snapshots, room authority or Social data. Browser QA checks that highlighted segments avoid all building tile interiors at four viewport widths. This is not evidence that the provisional original DOS waypoint-to-clock conversion is accurate; original runtime calibration remains in backlog.

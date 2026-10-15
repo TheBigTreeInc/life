@@ -8,14 +8,14 @@ See [`parity-contract.json`](parity-contract.json), the [documented DOS jobs](cl
 |---|---|---|---|---|---|
 | TURN-001 | Per-player weekly turns | One turn per player; week advances after all players finish. | Turn order supports 1–2 humans and AI; 4-human original maximum unavailable. | partial | P1 |
 | TIME-001 | 60-hour weekly budget | Start each player turn with 60 hours, original modifier exceptions recorded. | Classic uses 60h (Modern retains 40h), hunger penalties still simplified. | partial | P0 |
-| TIME-002 | Movement and building entry | Distance-based movement; entering a building costs 2h. | Classic adds 2h per travel entry on top of simplified ring distance; DOS distance is unverified. | partial | P0 |
-| TIME-003 | Action time accounting | Full work session 6h paid for 8h; job application 4h; study 6h; relaxing 6h. | Classic 4h application and 6h relaxation; work 6h/8h pay, study 6h. v0.5.16 now supports proportional 1–5h partial shifts and cumulative six-hour work stat credit; exact rounding remains unverified. | partial | P0 |
+| TIME-002 | Movement and building entry | Distance-based movement; entering a building costs 2h. | Classic uses 170 original waypoints, source-derived tick estimator (steps + 40 per nonempty leg), and +2 Employment entry; playable waypoint-to-clock conversion remains provisional. | partial | P0 |
+| TIME-003 | Action time accounting | Full work 6h pays 8h; applications 4h; relax/study 6h; Classic actions stop at zero time. | v0.5.33 gives +1 work progression per successful action (full or partial), integer-truncated wages, and original agency/application time charges; the ten-action weekly limit and several action costs remain provisional. | partial | P0 |
 | JOB-001 | Single job, workplace locking | Exactly one primary job; work only at its workplace; switching replaces role. | Implemented with explicit switch confirmation. | implemented | P0 |
 | JOB-002 | Applications and openings | Requirements + chance-based no openings; failed applications still consume time. | Classic now uses the 37-job DOS/floppy catalog, stat/diploma qualification rejection (+4h/-1 Happiness), qualification-sensitive openings chance and same-week rejection lockout; original RNG order still unverified. | partial | P0 |
 | JOB-003 | Work-stat gains and caps | +1 experience/+1 dependability per work session up to job/degree caps. | Classic stat caps now use the DOS 37-job requirement data and completed diploma counts; XP/Dependability capped per authentic role. Work/dismissal edge cases still require DOS comparison. | partial | P0 |
 | JOB-004 | Dependability and firing | 20 initial, -3 per week; low stat warnings and dismissal on work attempts. | Classic starts Dependability 20 and decays 3/week; hiring below 10 resets it, low reliability warns, and work attempts below job requirement−5 dismiss without pay. Exact messages/DOS edges unverified. | partial | P0 |
 | JOB-006 | DOS-floppy employment catalog | 37 original DOS positions with employer, base wage, XP, Dependability, diplomas and uniforms; preserve CD-only distinction. | 37 documented floppy positions implemented in Classic data; two CD-only jobs omitted; shared modern building venues not 1:1; exact DOS binary comparison pending. | partial | P0 |
-| JOB-005 | Wages and raises | 8h pay for full 6h work, current wage; raise prerequisites, wage changes and risks. | Classic uses documented $5–$25 base hourly wages, listed-wage raises (+4h) and half-shift garnishment/$2 interest. Original macroeconomy pricing curve and partial shifts now earn proportional pay (DOS exact rounding unverified). | partial | P1 |
+| JOB-005 | Wages and raises | 8h pay for full 6h work, current wage; raise and risk rules. | v0.5.23 prorated partial wages carry a sixth-dollar remainder so 6 × 1h equals one 6h shift; exact DOS rounding and wage economy still provisional. | partial | P1 |
 | EDU-001 | Eleven branching degrees | 11 permanent named degrees with prerequisite edges and possible multi-course progress. | 11 named diplomas and original prerequisite graph now feed 37 DOS job qualifications; course availability/end-condition and original implementation variants still unverified. | partial | P1 |
 | EDU-002 | Course time and benefits | Enroll fees and 6h lessons, usually 10 lessons; studies can benefit from durables. | Classic enrollment $50, ten 6h lessons (1–5h partial final time permitted), computer and three-book study aids, graduation +5 happiness/reliability. Enrollment queue and item details require DOS validation. | partial | P1 |
 | ITEM-001 | Weekly uniform consumption | Three tiers, weekly wear including unworn; higher tier satisfies lower; budget/premium durations. | Implemented week-based casual/formal/business clothing with tier substitution. | implemented | P1 |
@@ -84,3 +84,53 @@ The published original-market prices, bundles and loan installment values are no
 - **JOB-003:** Completed cumulative six-hour blocks grant one capped experience and dependability credit. This anti-exploit rule is a modern implementation choice, **not** a claim about Sierra's treatment of short sessions. Progress resets when leaving a job.
 - **ECON-004:** Six eligible durables can be pledged, redeemed through two weeks, or purchased by a different human after expiry. A single Circuit City counter represents a pawn shop because the contemporary 12-location city does not yet have a dedicated pawn tile. Advance 45% of the reference price; redeem at principal +10% rounded up (at least $5). **These figures are provisional** and remain to be checked against the original game.
 - Modern Story and eras are unaffected. Full DOS mechanical parity remains incomplete. See ADR-0017 and `tests/classic-work-pawn.test.cjs`.
+
+
+### v0.5.24 original Classic geography and risk update
+
+Classic now has the original named thirteen-venue layout independent from Modern Story's thirteen-venue city. Z-Mart Discount and Black's Market are distinct physical destinations; Monolith Burger, Socket City, QT Clothing, the Factory, Rent Office and both apartment sites are correctly named. All original employer IDs remain. This resolves the **location identity gap**, but does not yet verify *original map movement cost arithmetic* or exact source sprites. Broken equipment, repair services, Wild Willy's bank/market robbery and insecure-housing burglary are present, but their rates are provisional. See ADR-0025 and `tests/classic-map-risk.test.cjs`.
+
+**v0.5.28 precision:** Classic `JOB-001/002` numeric degree identities, qualifications and hiring draw use attached DOS-derived source; economy wages are still balanced Life Loop rates rather than an exact `CostDItem` emulation. Rival future-income weighting and two-week reserves are explicitly heuristic (not verified original AI coefficients). See ADR-0029.
+
+## v0.5.34 — Reliability preflight and transparent paychecks
+
+Classic employer work checks now follow source ordering: dismiss at `dependability < required-5`, warn once per week at `< required-2` without consuming time or earning pay, otherwise perform work. After the warning, an eligible retry works. Pure `ClassicTime.paycheck` exposes full-shift gross versus partial-shift gross, arrears deduction, estimated fee and net; **garnishment is still provisional** pending the exact n108.sc temp0/temp1 flow and should not be claimed original parity. The rival reserves an action unit after the commute and does not travel after reaching the provisional ten-venue-action cap. Save marker is bounded by current week, old saves migrate with no warning already shown, Modern work unchanged. See ADR-0035.
+
+## v0.5.35 — Paycheck journal and opponent net-wage accounting
+
+`n108.sc` source confirms gross pay = hourly×8 for six action units and truncating proportionally for partial shifts. The deployed half-gross debt deduction and fee remain **provisional**; no substitution of unverified full-shift overwrite. Reconciled payroll writes a bounded/validated history for Classic shifts and exposes it in Finances. Jones forecasts actual *net* cash from two successive contracted shifts after arrears/fees and protects immediate bills before optional old-debt clearance. Old snapshots migrate; Modern remains isolated. Operator parity request: matched DOS 1/3/6-unit shifts with identical debt and wages. ADR-0036.
+
+## v0.5.36 — Classic turn boundary timing
+
+- **TURN-001:** Player-specific Classic closure now deducts 3 dependability once before control passes to the next player, including hotseat and AI; week reset no longer duplicates it.
+- **ECON-*/EVT-001:** Shared weekly economy, living, rent and loan phases now produce a deterministic bounded journal, without claiming original `startTrn` branch order.
+- **TIME-001:** The 60-unit game clock and route-time adapter have no new conversion assumptions. Modern mode unaffected. DOSBox empirical timing and full SCI state traces are still open.
+
+
+### v0.5.38 Classic board/event migration note
+
+- TIME-002: mobile Overview inspect is presentation-only, Explore travel spends the unchanged host-calculated time; mobile camera follows source-waypoint pawn.
+- TURN-001: Classic startTrn source states 10 (food storage) and 18 (uniform warning) emit bounded trace entries; spoil probability and full DOS event scheduling are not yet exact.
+
+### v0.5.39 Classic board journey and DOS states
+
+- Presentation-only departure/arrival and swipe override; board geography and 170-step planner unmodified.
+- State 12 source-labeled food-shortage journal (existing hunger rule, DOS consumable IDs not yet tracked).
+- State 34 source-labeled emergency clothing aid (two-week shortage heuristic, $90 award and eight-week cooldown **not source verified**).
+
+### v0.5.40 Classic relaxation, loan due and skippable journeys
+
+- DOS `startTrn.sc` state 6: source-backed relaxation −1 to floor 10 when item 28 absent. Separate saved Classic scalar; initial/rest values and original hot-tub store item are pending research.
+- State 20: record existing four-week loan check as due/covered/missed, no extra penalty or invented repayment formula.
+- Board travel: allow skipping the visual animation while preserving the one authoritative time deduction and centered arrival entry; Modern unaffected.
+
+
+### v0.5.41 Classic household and entrance presentation
+
+- Working household projection prevents broken computer project income, preserves household comfort from intact entertainment equipment, and avoids extra save/wire state. Equipment breakdown probability is a **compatibility approximation**.
+- Rest is actionable for isolated relaxation deficits; its +6 restoration is **not yet DOS verified**. Modern behavior is unchanged.
+- Original road stops determine board entrance overlays independently from production artwork; optional 13 × card/detail artwork contract is in `docs/classic-designer-handoff.md`.
+
+### v0.5.43 — Lifecycle transparency and optional household maintenance
+
+The source workboard records full item lifecycle states; ZipRunner v1 import remains implemented/remaining only. Classic AI maintenance is a provisional feature protecting essential cash reserves and using existing Socket City repairs; this does not establish new DOS-equivalent coefficients. No changes to source-backed travel, economic events or Modern modes.

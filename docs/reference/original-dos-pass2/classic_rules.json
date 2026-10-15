@@ -1,0 +1,81 @@
+{
+  "game": "Jones in the Fast Lane",
+  "version": "1.000.060",
+  "classification": "reference implementation; model input for The Life Loop, not live integration",
+  "turn": {
+    "timeCap": 60,
+    "ticksPerTimeUnitDefault": 20,
+    "endTurnDependabilityLoss": 3,
+    "monthlyCycleWeeks": 4,
+    "workTimeCost": 6,
+    "workPayHours": 8,
+    "jobApplicationTimeCost": 4,
+    "employmentScreenEnterCost": 2
+  },
+  "hiring": {
+    "degreeBonusMultiplier": 8,
+    "experienceAndDependabilityRandomOffset": 10,
+    "chanceBase": 30,
+    "specialAlwaysPassRandomOccupationId": 44,
+    "firingBelowMinDependabilityMinus": 5,
+    "warningBelowMinDependabilityMinus": 2
+  },
+  "economy": {
+    "initialGoodsReading": 100,
+    "priceMin": 1,
+    "priceIndexMin": 50,
+    "priceReadingBound": [
+      10,
+      190
+    ],
+    "dynamicForFixedPriceFalse": true,
+    "costBasis": "adjusted goods index (global309)"
+  },
+  "goals": {
+    "tracks": [
+      "money",
+      "happiness",
+      "education",
+      "career"
+    ],
+    "defaultGoalEach": 50,
+    "careerStepDependability": 8,
+    "careerStepPoints": 10,
+    "cashPerMoneyGoalPointApproximate": 100,
+    "allFourRequired": true
+  },
+  "rent": {
+    "initialLowCost": 325,
+    "baseSecurity": 475,
+    "everyWeeks": 4,
+    "askExtensionRolld12": {
+      "-1": "deny",
+      "0": "guarantee",
+      "1": "roll>3",
+      "2": "roll>6",
+      "3+": "roll>9"
+    }
+  },
+  "lottery": {
+    "rollMin": 0,
+    "rollMaxInclusive": 500,
+    "winIf": "quantity>roll",
+    "jackpotIf": "roll<=floor(quantity/20)",
+    "secondTierIf": "roll<=floor(quantity/5)",
+    "awards": [
+      5000,
+      500,
+      200
+    ],
+    "clearTicketsOnDraw": true
+  },
+  "dataFiles": [
+    "reference/pass1/original_jobs.json",
+    "reference/pass1/original_route.json",
+    "reference/pass1/original_education.csv",
+    "original_shops.json",
+    "ai_branch_map.json",
+    "weekly_events.json"
+  ],
+  "status": "numeric and flow models source-matched; not validated through live DOS runtime"
+}

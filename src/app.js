@@ -7,16 +7,135 @@ const Characters=window.LifeCharacters;
 // Feature switch remains OFF: editor, assets and compiler preserved but not exposed.
 const ENABLE_CHARACTER_CUSTOMIZATION=false;
 const SetupPrefs=window.LifeSetupPreferences;
+const SharedPortrait=window.LifeSharedPortraitUI;
 const preferencesStorage=(()=>{try{return window.localStorage;}catch{return null;}})();
 const characters=Characters.createStore((()=>{try{return window.localStorage;}catch{return null;}})());
 const SAVE_KEY='the-life-loop-v1';
-let game=new Game();let net;let toastTimer;let didShowWin=false;let classicEmployerFilter="";let showFutureJobApplications=false;
+let game=new Game();let net;let toastTimer;
+let chatChannel='social';
+const social=new window.LooprdSocialSession.SocialSession({store:preferencesStorage,
+ onChange:()=>chatRender(),
+ onProfile:profile=>{try{window.LooprdSharedProfile.createStore(preferencesStorage).set(profile);}catch{}SharedPortrait.refreshProfilePortrait().then(()=>render()).catch(()=>{});}
+});
+window.LifeLoopSocial=social;let didShowWin=false;let classicEmployerFilter="";let showFutureJobApplications=false;
 let mobileView='city';
 let openDrawer=null;
 let lastStoryFingerprint=null;
 let unreadStory=0;
 let venueInteraction={open:false,locationId:null,playerId:null,pending:false,lastMessage:""};
-let venueFocusReturn=null;let pendingGuestVenue=null;
+let venueFocusReturn=null;let pendingGuestVenue=null;let pendingGuestRoute=null;let routeTravelBusy=false;let routeOverlay=null;
+const CLASSIC_BOARD_PREF='the-life-loop.classic-board-view.v1';
+const ClassicJourney=window.LifeClassicJourney;
+const ClassicBoardHud=window.LifeClassicBoardHud;
+function setClassicJourney(phase,place='',quote=null){
+ const indicator=$('classicJourneyStatus');
+ const state=ClassicJourney.create(phase,place,quote);
+ indicator.hidden=!game.isClassic||phase==='idle';
+ indicator.dataset.phase=phase;indicator.textContent=state.message;
+ $('classicTravelControls').hidden=!game.isClassic||phase!=='departing';
+}
+let classicBoardView=(()=>{try{const v=window.localStorage?.getItem(CLASSIC_BOARD_PREF);if(v==='fit'||v==='explore')return v;}catch{}return window.matchMedia('(max-width:720px)').matches?'explore':'fit';})();
+let classicBoardStartCentered=false;
+let boardManualPan=false;
+let boardPanOrigin=null;
+const compactClassicBoard=()=>window.matchMedia('(max-width:720px)').matches;
+function classicBoardFollowPawn(point){
+ if(boardManualPan||!game.isClassic||classicBoardView!=='explore'||!compactClassicBoard()||!point)return;
+ const viewport=$('boardViewport');
+ const max=Math.max(0,viewport.scrollWidth-viewport.clientWidth);
+ viewport.scrollLeft=Math.max(0,Math.min(max,point.x-viewport.clientWidth/2));
+}
+
+function classicTurnCenterRender(online,ownTurn){
+ const node=$('classicTurnCenter');
+ node.hidden=!game.isClassic;
+ $('classicBoardClock').hidden=!game.isClassic;
+ if(!game.isClassic)return;
+ const state=ClassicBoardHud.model(game,online,ownTurn);
+ const key=`${state.id}/${state.week}`;
+ if(node.dataset.turnKey!==key){
+  node.dataset.turnKey=key;
+  node.classList.remove('turn-changed');
+  requestAnimationFrame(()=>node.classList.add('turn-changed'));
+ }
+ const localId=net?.role==='guest'?'friend':'player';
+ const sharedAvatar=state.id===localId?SharedPortrait.getPortrait():null;
+ $('classicTurnAvatar').innerHTML=sharedAvatar?`<img src="${sharedAvatar}" alt=""/>`:(state.id==='jones'?'😎':state.id==='friend'?'🧑‍🚀':'🧑‍🎨');
+ $('classicTurnAvatar').style.setProperty('--turn-color',state.color);
+ $('classicTurnKicker').textContent=state.ownerLabel;
+ $('classicTurnName').textContent=state.name;
+ $('classicTurnWeek').textContent=`WEEK ${state.week}`;
+ $('classicTurnDial').setAttribute('aria-valuemax',String(state.max));
+ $('classicTurnDial').setAttribute('aria-valuenow',String(state.remaining));
+ $('classicTurnDial').setAttribute('aria-valuetext',state.accessibleLabel);
+ $('classicDialFill').setAttribute('stroke-dasharray',`${state.percent} ${100-state.percent}`);
+ $('classicDialHand').setAttribute('transform',`rotate(${state.degrees} 50 50)`);
+ $('classicDialValue').textContent=String(state.remaining);
+ $('classicDialWeek').textContent=`WEEK #${state.week}`;
+ $('classicDialRemaining').textContent=`${state.remaining} / ${state.max} units`;
+ // A venue covers the garden clock, so repeat its status in the venue header.
+ // Both displays use this one authoritative view-model; only the game spends time.
+ const venueDial=$('venueClock');
+ venueDial.hidden=!venueInteraction.open;
+ venueDial.setAttribute('aria-valuemax',String(state.max));
+ venueDial.setAttribute('aria-valuenow',String(state.remaining));
+ venueDial.setAttribute('aria-valuetext',state.accessibleLabel);
+ venueDial.style.setProperty('--venue-clock-progress',`${state.percent}%`);
+ $('venueClockValue').textContent=String(state.remaining);
+ $('venueClockWeek').textContent=`WEEK ${state.week}`;
+ $('venueClockRemaining').textContent=`${state.remaining} / ${state.max} units`;
+}
+
+
+// Prevent the next Classic hotseat player from seeing the previous player's
+// balances or actions during a physical device handoff. Local-only; Online
+// co-op has separate auth and must never use this privacy overlay.
+const HotseatHandover=window.LifeClassicHotseatHandover;
+function showClassicHandover(){
+ const cover=$('classicHotseatHandover');
+ $('classicHandoverTitle').textContent=`${game.player.name}'s turn`;
+ // Overlay is independent of the game shell, and remains visible above
+ // existing menus, notifications, and Social chat.
+ cover.hidden=false;
+ for(const id of ['chatPanel','overlay'])$(id).inert=true;
+ document.querySelector('.shell').inert=true;
+ $('classicHandoverContinue').focus();
+}
+function hideClassicHandover(){
+ $('classicHotseatHandover').hidden=true;
+ document.querySelector('.shell').inert=false;
+ for(const id of ['chatPanel','overlay'])$(id).inert=false;
+}
+function classicBoardSync(){
+ const classic=game.isClassic;
+ $('classicBoardToolbar').hidden=!classic;
+ if(!classic)$('classicJourneyStatus').hidden=true;
+ const view=compactClassicBoard()?classicBoardView:'fit';
+ document.body.dataset.classicBoardView=view;
+ $('classicBoardFit').setAttribute('aria-pressed',String(view==='fit'));
+ $('classicBoardExplore').setAttribute('aria-pressed',String(view==='explore'));
+ if(!classic)return;
+ const jump=$('classicBoardJump');
+ if(jump.options.length!==game.places.length+1){jump.innerHTML='<option value="">Find building…</option>'+game.places.map(loc=>`<option value="${esc(loc.id)}">${esc(placeLabel(loc.id))}</option>`).join('');}
+}
+function classicBoardFind(id,behavior='smooth'){
+ const viewport=$('boardViewport'),tile=$('board').querySelector(`[data-travel="${id}"]`);
+ if(!game.isClassic||!tile)return;
+ const outer=viewport.getBoundingClientRect(),inner=tile.getBoundingClientRect();
+ const left=Math.max(0,viewport.scrollLeft+(inner.left-outer.left)-(outer.width-inner.width)/2);
+ viewport.scrollTo({left,behavior});
+}
+function classicBoardSetView(mode,{focusId=null}={}){
+ if(!compactClassicBoard()||(mode!=='fit'&&mode!=='explore'))return;
+ classicBoardView=mode;
+ boardManualPan=false;
+ try{window.localStorage?.setItem(CLASSIC_BOARD_PREF,mode);}catch{}
+ classicBoardSync();
+ $('boardViewport').scrollLeft=0;
+ routeOverlay?.invalidate?.();
+ requestAnimationFrame(()=>{if(mode==='explore')classicBoardFind(focusId||game.player.location,'instant');routeOverlay?.invalidate?.();if(focusId)routeOverlay?.preview(focusId,game);});
+}
+
 const wideScreen=window.matchMedia('(min-width:1600px)');
 const drawerScreen=window.matchMedia('(min-width:1025px) and (max-width:1599px)');
 const panelVisible=which=>wideScreen.matches||(mobileBreakpoint.matches?mobileView==='life':openDrawer==='story');
@@ -33,7 +152,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>'$'+Math.floor(n).toLocaleString('en-US');
 const percent=n=>Math.max(0,Math.min(100,Math.round(n)))+'%';
-const place=id=>D.places.find(x=>x.id===id);
+const place=id=>game.getPlace(id);
 const mobileBreakpoint=window.matchMedia('(max-width:1024px)');
 function setMobileView(view,{scroll=true}={}){
  if(!['city','life'].includes(view))return;
@@ -52,7 +171,7 @@ function setMobileView(view,{scroll=true}={}){
 function updateMobileAccessibility(){setMobileView(mobileView,{scroll:false});}
 const job=id=>game.getJob({job:id});
 const eraMeta=()=>D.worldEras[game.settings.era];
-const placeLabel=id=>eraMeta().names[D.places.findIndex(p=>p.id===id)]||place(id)?.name||id;
+const placeLabel=id=>game.isClassic?place(id)?.name||id:eraMeta().names[D.places.findIndex(p=>p.id===id)]||place(id)?.name||id;
 const icon={arc:'📖',favor:'🤝',pulse:'✷',chat:'💬',work:'⚒',relax:'☀',freelance:'💸',cook:'🍳',apply:'✉',raise:'↗',groceries:'🥬',bulkFood:'🥕',lottery:'🎲',meal:'🍲',study:'📖',deposit:'↘',withdraw:'↗',invest:'📊',sell:'📉',upgrade:'🏠',rentDebt:'✓',buy:'🛍',movie:'🎬',pass:'🎉',checkup:'🩺',clothes:'👔',course:'📚',enroll:'📝',classicStudy:'🎓',classicFresh:'🥬',classicNewspaper:'📰',classicLottery:'🎟️',classicLoanApply:'🏦',classicLoanPay:'💵',classicBroker:'📊',classicBuyStock:'📈',classicSellStock:'📉',classicSellLegacy:'📤'};
 function toast(msg,error=false){const el=$('toast');el.textContent=msg;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3100);}
 function store(){if(net?.role==='guest')return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(game.snapshot()));}catch(e){/* Local files may deny localStorage; manual export remains available. */}}
@@ -91,7 +210,7 @@ function venueFocusTrap(e){
  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
 }
 function render(){
- const p=game.player,j=game.getJob(p),workplace=j?D.jobWorkplace(j):null,score=game.scores(p),current=place(p.location);
+ const p=game.player,j=game.getJob(p),workplace=j?game.jobWorkplace(j):null,score=game.scores(p),current=place(p.location);
  if(venueInteraction.open&&(venueInteraction.locationId!==p.location||venueInteraction.playerId!==p.id||game.winner||(net?.role&&!net.ownTurn())))closeVenue({restoreFocus:false});
  const venueScroll=$('venueActions').scrollTop;
  const venueFocused=document.activeElement?.dataset?.act;
@@ -99,13 +218,13 @@ function render(){
 
  document.body.dataset.era=game.settings.era;
  document.body.dataset.ruleset=game.settings.ruleset;
- $('cityName').textContent=eraMeta().city.toUpperCase();
- $('topWeek').textContent='WEEK '+String(game.week).padStart(2,'0');
+ $('cityName').textContent=game.isClassic?'CLASSIC CITY':eraMeta().city.toUpperCase();
+ $('topWeek').textContent='WEEK '+String(game.week).padStart(2,'0')+(game.isClassic?' · '+(p.classicChoicesThisWeek||0)+'/10 ACTIONS':'');
  $('mobileWeek').textContent=String(game.week).padStart(2,'0');
  $('mobileHours').textContent=p.hours+'h';
  $('mobileCash').textContent=fmt(p.cash);
  $('mobilePlayer').textContent=p.name;
- $('economy').textContent=game.economy>=1.06?'MARKET BOOMING':game.economy<=.94?'MARKET COOLING':'MARKET STABLE';
+ $('economy').textContent=game.isClassic?`GOODS INDEX ${game.classicGoodsIndex} · ${game.classicGoodsIndex>105?'PRICES UP':game.classicGoodsIndex<95?'PRICES DOWN':'STABLE'}`:(game.economy>=1.06?'MARKET BOOMING':game.economy<=.94?'MARKET COOLING':'MARKET STABLE');
  
  const online=!!net?.role,ours=!online||net.ownTurn();
  const ourName=net?.role==='guest'?(game.players.find(x=>x.id==='friend')?.name||'Friend'):(game.players.find(x=>x.id==='player')?.name||'Host');
@@ -114,6 +233,7 @@ function render(){
  if(online&&!net.joined&&net.role==='host')turnTitle='WAITING FOR YOUR FRIEND TO JOIN';
  const roleLine=online?`${net.role==='host'?'Host':'Guest'} · ${net.joined?'2 players connected':'Waiting for friend'}`:'Local game';
  $('turnHeadline').textContent=turnTitle;$('turnDetails').textContent=roleLine;
+ classicTurnCenterRender(online,ours);
  $('turnBanner').dataset.owner=ours?'self':'other';$('turnBanner').dataset.online=String(online);
  $('turnLamp').title=online?(net.socketOpen?'WebSocket connected':net.lastSyncAt?'HTTP fallback / retrying':'Waiting for Looprd'):'Local play';
  $('turnConnection').textContent=online?`${net.socketOpen?'● WS live':net.lastSyncAt?'○ HTTP fallback':'○ Connecting'} · Room ${net.code} ↗`:'◎ Start online co-op ↗';
@@ -130,7 +250,7 @@ function render(){
  if($('roomVersion'))$('roomVersion').textContent=`Room version: ${net.version} · ${net.endpoint}`;
  if($('roomComponent'))$('roomComponent').textContent=`Component schema: ${net.infoStatus}`;
  
- $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${ENABLE_CHARACTER_CUSTOMIZATION&&p.appearance?Characters.avatar({...p.appearance,name:p.name},'sidebar'):(p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨')}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?`${esc(j.name)} · ${esc(workplace.label)} · ${fmt(p.wage)}/h`:'Unemployed · Apply at Career Center'}</div></div></div>${workplace?`<div class="workplace-hint">💼 Your workplace: <b>${esc(workplace.boardName)}</b>${workplace.department?` · ${esc(workplace.department)}`:''}</div>`:''}<div class="profile-mini"><span>📍 <b>${esc(placeLabel(current.id))}</b></span><span class="pill">${esc(D.dwellings[p.home].name)}</span></div>`;
+ $('profile').innerHTML=`<div class="profile-top"><div class="avatar" style="background:${esc(p.color)}">${p.id===(net?.role==='guest'?'friend':'player')&&SharedPortrait.getPortrait()?`<img class="shared-profile-avatar" src="${SharedPortrait.getPortrait()}" alt="Shared portrait"/>`:ENABLE_CHARACTER_CUSTOMIZATION&&p.appearance?Characters.avatar({...p.appearance,name:p.name},'sidebar'):(p.id==='jones'?'😎':p.id==='friend'?'🧑‍🚀':'🧑‍🎨')}</div><div><div class="profile-name">${esc(p.name)}</div><div class="profile-job">${j?`${esc(j.name)} · ${esc(workplace.label)} · ${fmt(p.wage)}/h`:'Unemployed · Apply at Career Center'}</div></div></div>${workplace?`<div class="workplace-hint">💼 Your workplace: <b>${esc(workplace.boardName)}</b>${workplace.department?` · ${esc(workplace.department)}`:''}</div>`:''}<div class="profile-mini"><span>📍 <b>${esc(placeLabel(current.id))}</b></span><span class="pill">${esc(game.isClassic?(p.home==='studio'?'Low-Cost Housing':'Le Security Apartments'):D.dwellings[p.home].name)}</span></div>`;
  $('balances').innerHTML=`<div class="stat-card"><div class="stat-label">CASH ON HAND</div><div class="stat-number">${fmt(p.cash)}</div><div class="stat-note">Ready to spend</div></div><div class="stat-card"><div class="stat-label">NET WORTH</div><div class="stat-number">${fmt(game.wealth(p))}</div><div class="stat-note">Including savings${p.rentDebt?' · debt':''}</div></div>`;
  const goalLabels={wealth:'💰 Wealth',happiness:'☀️ Happiness',education:'🎓 Education',career:'🚀 Career'};
  $('goals').innerHTML=(game.isClassic?`<div class="goal-budget">GOAL POINTS · ${game.goalPoints(p)}${p.isAI?' · '+esc(game.settings.jonesDifficulty.toUpperCase()):''}</div>`:'')+D.GOAL_KEYS.map(k=>`<div class="goal-item"><div class="goal-title"><strong>${goalLabels[k]}${game.isClassic?` · ${game.goalTargets(p)[k]}pt`:``}</strong><span class="goal-percent">${score[k]}%</span></div><div class="track" role="progressbar" aria-label="${k}" aria-valuenow="${score[k]}" aria-valuemin="0" aria-valuemax="100"><div style="width:${percent(score[k])}"></div></div></div>`).join('');
@@ -140,20 +260,24 @@ function render(){
  $('leaderboard').innerHTML=[...game.players].sort((a,b)=>game.progress(b)-game.progress(a)).map(x=>{
  const role=game.getJob(x)?.name||'Getting started';return `<div class="leader-entry ${x.id===p.id?'active':''}"><span class="leader-dot" style="background:${esc(x.color)}"></span><div class="leader-data"><div class="leader-name">${esc(x.name)}</div><div class="leader-role">${esc(role)}${game.isClassic?' · '+game.goalPoints(x)+' goal points':''}</div></div><strong class="leader-score">${game.progress(x)}%</strong></div>`;
  }).join('');
- $('board').innerHTML=D.places.map((loc,index)=>{
- const cost=game.travelCost(p.location,loc.id),hasHuman=game.players.some(x=>!x.isAI&&x.location===loc.id),isWorkplace=workplace?.place===loc.id;
+ classicBoardSync();
+ $('board').innerHTML=game.places.map((loc,index)=>{
+ const quote=game.travelQuote(p.location,loc.id,p.hours),cost=quote.hours,hasHuman=game.players.some(x=>!x.isAI&&x.location===loc.id),isWorkplace=workplace?.place===loc.id;
  const eventHere=!game.isClassic&&game.cityEvent.venue===loc.id;
  const rival=game.players.some(x=>x.isAI&&x.location===loc.id);
- return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''} ${isWorkplace?'is-workplace':''}" ${net?.role&&(!net.ownTurn()||net.busy)?'disabled':''} data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="${isWorkplace?'YOUR WORKPLACE · ':''}Visit ${esc(placeLabel(loc.id))}${cost?' · '+cost+' hour'+(cost!==1?'s':''):' · current location'}" aria-label="${esc(placeLabel(loc.id))}${isWorkplace?', your workplace':''}, ${cost?'travel '+cost+' hours':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${isWorkplace?`<span class="work-marker">${p.location===loc.id?'● YOU · WORK':'● WORK HERE'}</span>`:p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.id,true,game.settings.era,p.home)}</div><div class="tile-caption"><div class="tile-name">${esc(placeLabel(loc.id))}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
- }).join('')+`<div class="city-corner" aria-hidden="true"><span>🌳</span><small>PUBLIC GARDEN</small></div><div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`;
- $('timeStrip').innerHTML=`<div class="hour-pips" aria-label="${p.hours} of ${game.rules.hours} weekly hours remaining">${Array.from({length:game.rules.hours/2},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / ${game.rules.hours} h</div>`;
+ return `<button type="button" class="board-tile ${p.location===loc.id?'selected':''} ${isWorkplace?'is-workplace':''} ${game.isClassic&&!quote.ok?'travel-unavailable':''}" ${net?.role&&(!net.ownTurn()||net.busy)?'disabled':''} data-travel="${loc.id}" style="grid-area:${loc.cell[1]}/${loc.cell[0]};background:${loc.color}4a" title="${isWorkplace?'YOUR WORKPLACE · ':''}Visit ${esc(placeLabel(loc.id))}${cost?' · '+cost+' clock units'+(quote.entryHours?' including '+quote.entryHours+' Employment entry':''):' · current location'}" aria-label="${esc(placeLabel(loc.id))}${isWorkplace?', your workplace':''}, ${cost?'travel '+cost+' clock units':'current location'}"><div class="tile-topline"><span class="tile-num">${String(index+1).padStart(2,'0')}</span>${game.isClassic?`<span class="travel-cost" aria-hidden="true">${cost?cost+'u':'HERE'}</span>`:''}${isWorkplace?`<span class="work-marker">${p.location===loc.id?'● YOU · WORK':'● WORK HERE'}</span>`:p.location===loc.id?'<span class="you-marker">● YOU</span>':eventHere?'<span class="pulse-marker">✷ EVENT</span>':hasHuman?'<span class="you-marker">● PLAYER</span>':rival?'<span class="you-marker">● RIVAL</span>':''}</div><div class="tile-art" aria-hidden="true">${Art.scene(loc.artId||loc.id,true,game.settings.era,game.isClassic?(loc.id==='clinic'?'apartment':'studio'):p.home,game.isClassic?loc.id:null)}</div><div class="tile-caption"><div class="tile-name">${esc(placeLabel(loc.id))}</div><div class="tile-tag">${esc(loc.tag)}</div></div></button>`;
+ }).join('')+(game.isClassic
+ ?`<div class="board-empty-scene board-empty-scene-left" aria-hidden="true"><span>🌳</span><small>TREE-LINED ROAD</small></div><div class="board-empty-scene board-empty-scene-right" aria-hidden="true"><span>🌳</span><small>TREE-LINED ROAD</small></div><div class="board-clock-garden" aria-hidden="true"><div class="garden-label"><strong>PUBLIC GARDEN</strong><small>Town center landmark</small></div></div><div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${game.isClassic?'ORIGINAL CLASSIC CITY':esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`
+ :`<div class="city-corner" aria-hidden="true"><span>🌳</span><small>PUBLIC GARDEN</small></div><div class="hub"><div class="hub-decor">✳</div><div><div class="hub-flag"><span class="spark">✦</span> ${game.isClassic?'ORIGINAL CLASSIC CITY':esc(eraMeta().city.toUpperCase())} · ${game.isClassic?'CLASSIC RULES':'MODERN STORY'}</div><div class="hub-title">Make a life.<br/>Not just a living.</div><div class="hub-news">CITY RADIO · ${esc(game.bulletin)}</div></div><div class="hub-sketch" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div>`);
+ if(routeOverlay){routeOverlay.setState(game);routeOverlay.describe(game);}
+ $('timeStrip').innerHTML=`<div class="hour-pips" aria-label="${p.hours} of ${game.rules.hours} weekly hours remaining">${Array.from({length:game.rules.hours/2},(_,i)=>`<span class="${i<p.hours/2?'remaining':''}"></span>`).join('')}</div><div class="time-remaining">${p.hours} / ${game.rules.hours} ${game.isClassic?'units':'h'}</div>`;
  $('cityPulse').hidden=game.isClassic;
  const event=game.cityEvent,prices=Object.entries(event.prices).map(([sector,mult])=>`${sector} ${Math.round((mult-1)*100)>0?'+':''}${Math.round((mult-1)*100)}%`),pay=event.wage!==1?`shift pay +${Math.round((event.wage-1)*100)}%`:'';
  const legacies=D.storyArcs.filter(a=>!game.isClassic&&game.cityProjects[a.id]).map(a=>`${a.title} · ${a.sector==='wage'?'+5% shift wages':a.sector==='food'?'−5% food':'−8% leisure'}`);
  $('cityPulse').innerHTML=`<div class="pulse-icon">✷</div><div class="pulse-story"><span class="pulse-kicker">CITY PULSE · WEEKS ${game.cityEventStart}–${game.cityEventStart+3}</span><strong>${esc(event.title)}</strong><p>${esc(event.description)}</p><div class="pulse-mods">${[...prices,pay].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')||'<span>No price changes</span>'}${legacies.map(x=>`<span class="legacy-tag">★ ${esc(x)}</span>`).join('')}</div></div><div class="pulse-call"><span>COMMUNITY OPPORTUNITY</span><b>${esc(event.opportunity.title)}</b><small>At ${esc(placeLabel(event.venue))} · ${event.opportunity.hours}h · ${p.cityParticipation?.[game.cityEventStart]?'Already joined':'Available this month'}</small></div>`;
  const symbols={good:'✦',info:'●',warn:'!',news:'☼',muted:'·',travel:'↗'};
  $('journal').innerHTML=game.messages.filter(m=>m.actor==='system'||m.actor===p.id||m.actor==='jones').slice(0,10).map(m=>`<div class="journal-line ${esc(m.type)}"><span class="journal-icon">${symbols[m.type]||'·'}</span><span class="journal-message">${esc(m.message)}</span><span class="journal-week">W${m.week}</span></div>`).join('');
- const idx=D.places.indexOf(current)+1;
+ const idx=game.places.indexOf(current)+1;
  const citizen=D.citizens[current.id];
  const trust=game.relationship(p,current.id),relName=game.relationshipName(p,current.id),memory=p.memories?.[current.id],storyChoice=D.encounters[current.id].choices.find(c=>c.id===memory);
  const npcGreeting=memory?game.npcLine(current.id,p):citizen.greeting;
@@ -162,7 +286,7 @@ function render(){
  const relatedArcs=D.storyArcs.filter(a=>a.partner===current.id);
  const storyHelp=!game.isClassic&&localArc?`<div class="arc-progress"><b>📖 ${esc(localArc.title)}</b><span>${arcInfo.chapter>=3?'Story complete':`Chapter ${arcInfo.chapter+1}/3`}</span><small>${esc(arcInfo.chapter>=3?'A chapter of city history you helped write.':arcInfo.reason||'Next chapter is available in the activity list.')}</small></div>`:'';
  const links=(game.isClassic?[]:relatedArcs).filter(a=>(p.storyProgress?.[a.id]?.chapter||0)>0).map(a=>`<span class="story-partner">↗ ${esc(citizen.name)} is part of ${esc(a.title)}</span>`).join('');
- $('venueSummary').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.id,false,game.settings.era,p.home)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / ${D.places.length}</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card"><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}`;
+ $('venueSummary').innerHTML=`<div class="venue-scene"><span class="venue-mini">${esc(current.tag)}</span>${Art.scene(current.artId||current.id,false,game.settings.era,game.isClassic?(current.id==='clinic'?'apartment':'studio'):p.home,game.isClassic?current.id:null)}</div><div class="venue-level"><h2>${esc(placeLabel(current.id))}</h2><span class="venue-no">${String(idx).padStart(2,'0')} / ${game.places.length}</span></div><p class="venue-blurb">${esc(current.blurb)}</p><div class="npc-card" ${game.isClassic?'hidden':''}><div class="npc-avatar">${Art.person(current.id,false,game.settings.era)}</div><div class="npc-copy"><div class="npc-label">MEET THE LOCALS ${p.talkedWeek?.[current.id]===game.week?'· SPOKEN THIS WEEK':''}</div><strong>${esc(citizen.name)}</strong><span>${esc(citizen.title)}</span><p>“${esc(npcGreeting)}”</p></div></div><div class="friendship" ${game.isClassic?'hidden':''}><div class="friend-head"><span>♥ ${esc(relName)}</span><span>${trust} / 100 trust</span></div><div class="friend-track"><div style="width:${trust}%"></div></div><small>${storyChoice?'Remembers: '+esc(storyChoice.label):'Get to know '+esc(citizen.name)+' by talking each week.'}${trust<18?' · Favors unlock at 18 trust.':' · Friendship favors available every four weeks.'}</small></div>${storyHelp}${links}`;
  const allActions=game.actions();
  const classicEmployment=game.isClassic&&p.location==='agency';
  if(classicEmployment&&(!classicEmployerFilter||!game.jobs.some(j=>j.employer===classicEmployerFilter))){
@@ -177,10 +301,11 @@ function render(){
    if(classicEmployment&&classicEmployerFilter!=='all'&&a.req?.employer!==classicEmployerFilter)return false;
    return showFutureJobApplications||game.jobReasons(p,a.req).length===0;
  });
- const filterHtml=p.location==='agency'?`<div class="agency-hiring-panel"><strong>${qualified.length} positions match your qualifications</strong><small>${jobApplications.length-qualified.length} other positions in the career roadmap. Qualifications don't guarantee an opening.</small><label class="agency-expand"><input id="careerShowAll" type="checkbox" ${showFutureJobApplications?'checked':''}/> Show future jobs and missing requirements</label>${classicEmployment?`<label class="agency-filter"><span>APPLY AT EMPLOYER</span><select id="classicEmployerFilter" aria-label="Choose an employer"><option value="all" ${classicEmployerFilter==='all'?'selected':''}>All employers · Overview</option>${employers.map(e=>`<option value="${esc(e)}" ${e===classicEmployerFilter?'selected':''}>${esc(D.jobWorkplace(game.jobs.find(j=>j.employer===e)).label)} (${esc(e)} in Classic) · ${game.jobs.filter(j=>j.employer===e&&!game.jobReasons(p,j).length).length} eligible</option>`).join('')}</select></label><small>Choose a workplace to see its jobs. Qualified roles are shown first; future positions are optional.</small>`:''}</div>`:'';
+ const filterHtml=p.location==='agency'?`<div class="agency-hiring-panel"><strong>${qualified.length} positions match your qualifications</strong><small>${jobApplications.length-qualified.length} other positions in the career roadmap. Qualifications don't guarantee an opening.</small><label class="agency-expand"><input id="careerShowAll" type="checkbox" ${showFutureJobApplications?'checked':''}/> Show future jobs and missing requirements</label>${classicEmployment?`<label class="agency-filter"><span>APPLY AT EMPLOYER</span><select id="classicEmployerFilter" aria-label="Choose an employer"><option value="all" ${classicEmployerFilter==='all'?'selected':''}>All employers · Overview</option>${employers.map(e=>`<option value="${esc(e)}" ${e===classicEmployerFilter?'selected':''}>${esc(game.jobWorkplace(game.jobs.find(j=>j.employer===e)).label)} (${esc(e)} in Classic) · ${game.jobs.filter(j=>j.employer===e&&!game.jobReasons(p,j).length).length} eligible</option>`).join('')}</select></label><small>Choose a workplace to see its jobs. Qualified roles are shown first; future positions are optional.</small>`:''}</div>`:'';
  $('actionsCount').textContent=actions.filter(a=>a.enabled).length+' available';
- $('venueActions').innerHTML=venueInteraction.open?(filterHtml+(actions.length?actions.map(a=>{
-   const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled&&(!net?.role||net.ownTurn())&&!net?.busy&&!venueInteraction.pending?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
+ $('venueActions').innerHTML=venueInteraction.open?(filterHtml+(actions.length?actions.map((a,i)=>{
+   const header=game.isClassic&&['market','cinema'].includes(p.location)&&(i===0||actions[i-1].department!==a.department)?`<div class="venue-dept-heading"><span>${esc(a.department)}</span><small>${a.department==='Z-Mart Discount'?'Rotating discount stock · '+game.week:'Groceries, newspaper & lottery'}</small></div>`:'';
+   const base=a.id.split(':')[0];const prominent=a.id==='work'||a.id==='study';return `${header}<button type="button" class="action-card ${prominent?'primary':''} ${a.special?'special-'+a.special:''}" data-act="${esc(a.id)}" ${a.enabled&&(!net?.role||net.ownTurn())&&!net?.busy&&!venueInteraction.pending?'':'disabled'} title="${esc(a.enabled?a.detail:a.reason)}"><span class="action-symbol">${icon[base]||'✦'}</span><span class="action-info"><span class="action-name">${esc(a.title)}</span><span class="action-desc" style="display:block">${esc(a.enabled?a.detail:a.reason)}</span></span><span class="action-meta">${a.hours?'⏱ '+a.hours+'h':''}${a.price?'<br/><span class="price">'+fmt(a.price)+'</span>':''}</span></button>`;
  }).join(''):'<div class="hint-box">Explore another building to discover things to do.</div>')):'';
  $('venueTitle').textContent=placeLabel(current.id);
  $('venueDescription').textContent=current.blurb;
@@ -203,21 +328,47 @@ function render(){
 }
 function chatRender(){
  const panel=$('chatPanel'),toggle=$('chatToggle');
- const live=net?.canChat()||false;
- toggle.disabled=!live;toggle.setAttribute('aria-expanded',String(!panel.hidden));
- const badge=$('chatBadge');badge.hidden=!net?.chatUnread;badge.textContent=String(net?.chatUnread||'');
- if(!live){panel.hidden=true; if(net)net.chatOpen=false;}
- $('chatStatus').textContent=live?'Live through Looprd WSS · Messages are not saved':'Chat requires both players and a live WebSocket.';
+ const roomLive=net?.canChat()||false;
+ toggle.disabled=false;toggle.setAttribute('aria-expanded',String(!panel.hidden));
+ const unread=social.unread+(net?.chatUnread||0);
+ const badge=$('chatBadge');badge.hidden=!unread;badge.textContent=String(Math.min(99,unread));
+ $('chatSocialTab').setAttribute('aria-pressed',String(chatChannel==='social'));
+ $('chatRoomTab').setAttribute('aria-pressed',String(chatChannel==='room'));
+ $('chatSocialConnectForm').hidden=chatChannel!=='social'||social.connected;
+ $('chatSocialConnected').hidden=chatChannel!=='social'||!social.connected;
+ $('chatForm').hidden=chatChannel==='social'?!social.connected:!roomLive;
+ $('chatInput').placeholder=chatChannel==='social'?'Message the social lobby…':'Message your co-op partner…';
+ $('chatHeadingStatus').textContent=chatChannel==='social'?'SOCIAL · SHARED LOBBY':'ROOM · PRIVATE';
+ $('chatSocialIdentity').textContent=social.connected?`${social.profile?.displayName||'Profile'} · ${social.status}`:'';
+ $('chatStatus').textContent=chatChannel==='social'?(social.connected?
+  (social.error?`Looprd Social: ${social.error}`:'Looprd Social lobby · recent messages are stored on the Social server'):
+  'Connect a Social profile above to chat across games. Your game continues offline.'):
+  (roomLive?'Encrypted co-op room messages are not saved.':'Join a two-player co-op room with WebSocket access for private chat.');
  if(panel.hidden)return;
  const messages=$('chatMessages');
- messages.innerHTML=net.chatLines.map(m=>`<div class="chat-bubble ${m.own?'mine':''}"><small>${esc(m.name)}</small><span>${esc(m.text)}</span></div>`).join('')||'<p class="chat-empty">Only new messages appear here. Chat disappears when you disconnect.</p>';
+ if(chatChannel==='social'){
+  const mine=social.profile?.profileId;
+  messages.innerHTML=social.messages.map(m=>`<div class="chat-bubble ${m.authorId===mine?'mine':''}"><small>${esc(m.name)}</small><span>${esc(m.text)}</span></div>`).join('')||'<p class="chat-empty">Social chat will appear here when connected. No game-room invitation is needed.</p>';
+ }else{
+  messages.innerHTML=(net?.chatLines||[]).map(m=>`<div class="chat-bubble ${m.own?'mine':''}"><small>${esc(m.name)}</small><span>${esc(m.text)}</span></div>`).join('')||'<p class="chat-empty">Private messages appear here after both players connect to a co-op room.</p>';
+ }
  messages.scrollTop=messages.scrollHeight;
 }
 function setChatOpen(open){
  $('chatPanel').hidden=!open;
- net.chatOpen=!!open;
- if(open){net.chatUnread=0;chatRender();$('chatInput').focus();}
- else chatRender();
+ net.chatOpen=!!open&&chatChannel==='room';
+ if(open&&chatChannel==='room')net.chatUnread=0;
+ social.setActive(!!open&&chatChannel==='social');
+ chatRender();
+ if(open){if(chatChannel==='social'&&!social.connected){$('chatSocialOrigin').focus();}
+  else if(!$('chatForm').hidden)$('chatInput').focus();}
+}
+function setChatChannel(channel){
+ if(!['social','room'].includes(channel))return;
+ chatChannel=channel;net.chatOpen=channel==='room'&&!$('chatPanel').hidden;
+ if(net.chatOpen)net.chatUnread=0;
+ social.setActive(channel==='social'&&!$('chatPanel').hidden);
+ chatRender();
 }
 function onlineDialog(){
  const connected=!!net.role;
@@ -225,7 +376,7 @@ function onlineDialog(){
  const selectedProfile=ENABLE_CHARACTER_CUSTOMIZATION?characters.selected():null;
  showModal(`<section class="modal compact" aria-label="Online co-op"><div class="modal-head"><div><span class="eyebrow dark">PLAY TOGETHER FROM ANYWHERE</span><h2>Online co-op</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div>
  ${connected?`<p class="modal-lead"><strong>${esc(net.role==='host'?'You are hosting':'You are connected as guest')}</strong> · Game code <strong class="code-value">${esc(net.code)}</strong><br/>${esc(net.notice)} · ${net.joined?'Two players joined the room':'Waiting for a friend'}</p><div class="room-diagnostics" id="roomDiagnostics"><strong>Room status — <span id="roomTurnText">${net.ownTurn()?'YOUR TURN':`WAITING FOR ${esc(game.player.name)}`}</span></strong><span id="roomParticipants">Current player: ${esc(game.player.name)} · You: ${esc(net.role)} · Remote: ${esc(net.guestName||'Not named yet')}</span><span id="roomVersion">Looprd API: ${esc(net.endpoint)} · Room version: ${net.version}</span><span id="roomTransport">WebSocket: ${net.socketOpen?'Connected':'Not connected (HTTP polling fallback)'} · HTTP: ${net.lastSyncAt?'Last room response '+new Date(net.lastSyncAt).toLocaleTimeString():'Awaiting room response'}</span><span id="roomComponent">Component schema: ${esc(net.infoStatus)}</span><button type="button" class="modal-secondary" id="checkLooprd">Check Looprd component API</button></div><div class="online-controls"><button class="modal-secondary" id="copyInvite">Copy invitation link</button><button class="modal-secondary" id="disconnectOnline">Disconnect</button></div>`:
- `<p class="modal-lead">To host, choose <b>New Game → Online with a friend</b>. To join, enter the friend's code and Looprd server FQDN below.</p><form id="joinOnlineForm"><label class="field-label">LOOPRD SERVER FQDN<input class="form-input" name="url" type="text" required autocomplete="url" placeholder="api.server.country" value="${server}" /><small>Use your API server address only; /looprd/the-life-loop/v1 is added automatically.</small></label><label class="field-label">FRIEND CODE<input class="form-input" name="code" id="inviteCode" maxlength="15" autocomplete="off" placeholder="ABCD234567" required value="${esc(new URLSearchParams(location.search).get('join')||'')}" /></label>${ENABLE_CHARACTER_CUSTOMIZATION?`<label class="field-label">YOUR LOCAL CHARACTER<select class="form-select" id="joinCharacterPick">${profileOptions(selectedProfile?.id||'')}</select></label>`:''}<label class="field-label">YOUR DISPLAY NAME<input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||'Friend')}" required /></label><button class="modal-primary" type="submit">Join friend's game ↗</button></form>`}
+ `<p class="modal-lead">To host, choose <b>New Game → Online with a friend</b>. To join, enter the friend's code and Looprd server FQDN below.</p><form id="joinOnlineForm"><label class="field-label">LOOPRD SERVER FQDN<input class="form-input" name="url" type="text" required autocomplete="url" placeholder="api.server.country" value="${server}" /><small>Use your API server address only; /looprd/the-life-loop/v1 is added automatically.</small></label><label class="field-label">FRIEND CODE<input class="form-input" name="code" id="inviteCode" maxlength="15" autocomplete="off" placeholder="ABCD234567" required value="${esc(new URLSearchParams(location.search).get('join')||'')}" /></label>${ENABLE_CHARACTER_CUSTOMIZATION?`<label class="field-label">YOUR LOCAL CHARACTER<select class="form-select" id="joinCharacterPick">${profileOptions(selectedProfile?.id||'')}</select></label>`:''}<label class="field-label">YOUR DISPLAY NAME<input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||SharedPortrait.saved()?.displayName||'Friend')}" required /></label><button class="modal-primary" type="submit">Join friend's game ↗</button></form>`}
  <p class="modal-footnote">Multiplayer requires an external Looprd server over HTTPS/WSS when hosted on GitHub Pages. Invitation links include the server address and game code, never participant tokens. Participant tokens are kept in your browser session. The host must remain connected for guest turns.</p></section>`);
  if(connected){
   $('checkLooprd').addEventListener('click',async()=>{const button=$('checkLooprd');button.disabled=true;try{const outcome=await net.probe();toast(outcome);}catch(e){toast('Looprd check failed: '+e.message,true);}finally{if($('overlay').classList.contains('open')&&$('overlay').querySelector('#roomDiagnostics'))onlineDialog();}});
@@ -258,7 +409,7 @@ function showModal(html,kind='modal'){$('overlay').dataset.kind=kind;$('overlay'
 function confirmEmploymentSwitch(actionId){
  const p=game.player,oldJob=game.getJob(p),nextJob=job(actionId.split(':')[1]);
  if(!oldJob||!nextJob||oldJob.id===nextJob.id)return false;
- showModal(`<section class="modal compact" aria-label="Confirm job change"><div class="modal-head"><div><span class="eyebrow dark">ONE ACTIVE JOB AT A TIME</span><h2>Change employers?</h2></div><button class="modal-close" data-close aria-label="Cancel job change">×</button></div><p class="modal-lead">A successful application replaces your current position. If you are refused, you keep your existing job. You cannot work for both employers.</p><div class="employment-comparison"><div><small>CURRENT POSITION</small><strong>${esc(oldJob.name)}</strong><span>${esc(D.jobWorkplace(oldJob).label)} · ${fmt(p.wage)}/hour</span></div><div class="employment-switch-arrow">→</div><div><small>NEW POSITION</small><strong>${esc(nextJob.name)}</strong><span>${esc(D.jobWorkplace(nextJob).label)} · ${fmt(game.offeredWage(nextJob))}/hour</span></div></div><p class="modal-footnote">Applying costs ${game.rules.applicationHours} hours. If the application succeeds, the new job replaces your old one. A rejection costs time but never cancels your existing job.</p><button class="modal-primary" id="confirmEmploymentBtn" type="button">Apply for new position</button><button class="modal-secondary" data-close type="button">Keep my current job</button></section>`);
+ showModal(`<section class="modal compact" aria-label="Confirm job change"><div class="modal-head"><div><span class="eyebrow dark">ONE ACTIVE JOB AT A TIME</span><h2>Change employers?</h2></div><button class="modal-close" data-close aria-label="Cancel job change">×</button></div><p class="modal-lead">A successful application replaces your current position. If you are refused, you keep your existing job. You cannot work for both employers.</p><div class="employment-comparison"><div><small>CURRENT POSITION</small><strong>${esc(oldJob.name)}</strong><span>${esc(game.jobWorkplace(oldJob).label)} · ${fmt(p.wage)}/hour</span></div><div class="employment-switch-arrow">→</div><div><small>NEW POSITION</small><strong>${esc(nextJob.name)}</strong><span>${esc(game.jobWorkplace(nextJob).label)} · ${fmt(game.offeredWage(nextJob))}/hour</span></div></div><p class="modal-footnote">Applying costs ${game.rules.applicationHours} hours. If the application succeeds, the new job replaces your old one. A rejection costs time but never cancels your existing job.</p><button class="modal-primary" id="confirmEmploymentBtn" type="button">Apply for new position</button><button class="modal-secondary" data-close type="button">Keep my current job</button></section>`);
  $('confirmEmploymentBtn').addEventListener('click',async()=>{
    const result=await net.execute('act',actionId,()=>game.act(actionId));
    closeOverlay();
@@ -352,6 +503,7 @@ function editCharacter(id=null,returnTo='new'){
 }
 function newGameDialog(isInitial=false){
  const saved=restore(),selectedProfile=ENABLE_CHARACTER_CUSTOMIZATION?characters.selected():null,pref=SetupPrefs.read(preferencesStorage);
+ const sharedName=SharedPortrait.defaultName();
  const selected=(value,expected)=>value===expected?'selected':'';
  const checked=(value,expected)=>value===expected?'checked':'';
  const modeItems=[['solo','Solo vs. The Rival (AI)'],['hotseat','2 humans · same computer'],['online','Online co-op · friend code + Looprd'],['sandbox','Relaxed · Play alone']];
@@ -360,7 +512,7 @@ function newGameDialog(isInitial=false){
  ${ENABLE_CHARACTER_CUSTOMIZATION?`<section class="quick-character"><div class="section-heading"><span>PLAY AS</span><span class="muted micro">YOUR LOCAL CHARACTERS</span></div>
  <div class="quick-character-row"><label class="character-field"><span class="field-label">CHARACTER</span><select class="form-select" id="characterPick" name="characterId">${profileOptions(selectedProfile?.id||'')}</select></label><button type="button" class="character-small quick-manage" id="manageCharactersBtn">✎ Edit characters</button></div>
  <div id="characterPickPreview" class="quick-preview">${profilePreview(selectedProfile)}</div></section>`:''}
- <div class="new-form quick-identity"><label><span class="field-label">YOUR NAME</span><input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||'You')}" required /></label>
+ <div class="new-form quick-identity"><label><span class="field-label">YOUR NAME</span><input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||sharedName)}" required /></label>
  <label><span class="field-label">PLAY MODE</span><select class="form-select" id="gameMode" name="mode">${modeItems.map(([key,label])=>`<option value="${key}" ${selected(pref.mode,key)}>${label}</option>`).join('')}</select></label>
  <label id="friendField" style="display:${['hotseat','online'].includes(pref.mode)?'block':'none'};grid-column:1/-1"><span class="field-label">PLAYER 2 NAME</span><input class="form-input" name="friend" maxlength="24" value="Player 2" />${ENABLE_CHARACTER_CUSTOMIZATION?`<span class="field-label">PLAYER 2 LOCAL CHARACTER (OPTIONAL)</span><select class="form-select" id="friendCharacterPick" name="friendCharacterId">${profileOptions('')}</select>`:''}</label>
  <label id="onlineServerField" style="display:${pref.mode==='online'?'block':'none'};grid-column:1/-1"><span class="field-label">LOOPRD SERVER FQDN</span><input class="form-input" name="onlineServer" id="onlineServer" autocomplete="url" value="${esc(window.LifeOnline.suggestedServer())}" placeholder="api.server.country" ${pref.mode==='online'?'required':''}/><small>/looprd/the-life-loop/v1 is automatic. You get a room code after starting.</small></label></div>
@@ -392,16 +544,16 @@ function newGameDialog(isInitial=false){
   updatePreferences();
   if(net.role)net.disconnect();
   game=new Game({name:String(f.get('name')),character:ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===f.get('characterId'))||null:null,friendCharacter:ENABLE_CHARACTER_CUSTOMIZATION?characters.all().find(p=>p.id===f.get('friendCharacterId'))||null:null,mode:online?'hotseat':String(f.get('mode')),friend:String(f.get('friend')||''),ruleset:String(f.get('ruleset')||'classic'),era:String(f.get('era')||'current'),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(f.get(k))])),jonesDifficulty:String(f.get('jonesDifficulty')||'fair')});
-  didShowWin=false;closeVenue({restoreFocus:false});store();closeOverlay();render();
+  didShowWin=false;hideClassicHandover();closeVenue({restoreFocus:false});store();closeOverlay();render();
   if(online){try{await net.host(String(f.get('onlineServer')));onlineDialog();toast('Room created! Share '+net.code+' with your friend.');}catch(err){toast('Server did not create a room: '+err.message,true);newGameDialog();}}
-  else toast('Welcome to '+eraMeta().city+' · '+game.rules.name+'!');
+  else toast('Welcome to '+(game.isClassic?'Classic City':eraMeta().city)+' · '+game.rules.name+'!');
  });
- if($('resumeBtn'))$('resumeBtn').addEventListener('click',()=>{try{game=Game.load(saved);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();render();toast('Welcome back!');}catch(e){toast('Saved game could not be loaded: '+e.message,true);}});
+ if($('resumeBtn'))$('resumeBtn').addEventListener('click',()=>{try{game=Game.load(saved);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();if(HotseatHandover.resumeRequired(game,Boolean(net.role)))showClassicHandover();render();toast('Welcome back!');}catch(e){toast('Saved game could not be loaded: '+e.message,true);}});
 }
 function guide(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">THE PLAYER'S FIELD GUIDE</span><h2>Make every week count.</h2></div><button class="modal-close" data-close aria-label="Close">×</button></div><p class="modal-lead">Like the classic 1990s life-board games, you race to reach four goals at the same time: wealth, happiness, education and career.</p><div class="guide-grid"><div class="guide-item"><b>🕰️ Rules & era</b>Selected rules: ${esc(game.rules.name)} · ${game.rules.hours} hours/week. World: ${esc(eraMeta().label)} (${esc(eraMeta().city)}). Historical and Sci-Fi change only the presentation.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>💬 Build friendships</b>Talk each week, make meaningful story choices, and earn trust. At 18 trust, each local offers a special favor every four weeks.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>📖 Follow seasonal stories</b>After meeting a resident, earn trust to unlock three-stage shared stories. Chapter choices affect two residents, and can permanently improve city prices or wages.</div><div class="guide-item"><b>▥ Track your finances</b>Open Finances to see net worth, recent transactions, monthly expenses and your milestones. Moving money between accounts is not income.</div><div class="guide-item" ${game.isClassic?'hidden':''}><b>✷ Follow the City Pulse</b>A new event every four weeks changes prices and wages. Visit its featured venue for a once-per-event opportunity.</div><div class="guide-item"><b>📍 Travel costs time</b>Click any building on the city board to visit it. Farther destinations cost more hours.</div><div class="guide-item"><b>💼 One active job</b>Get hired at Career Center, work only at your employer, and apply there again to change jobs. Switching replaces your old position; you cannot hold two regular jobs.</div><div class="guide-item"><b>🎓 Career pathways</b>Classic has 11 branching diplomas and original DOS occupations; Modern has four staged degrees and specialist certificates. Careers span retail, hospitality, technology, finance, and management.</div><div class="guide-item"><b>🥑 Food, rent, and energy</b>Eat each week, pay monthly rent, rest when tired, and keep an emergency fund. In Classic, visit the Rent Office (Open Door Realty in the current era) during week 4 and every fourth week thereafter to pay rent in cash. Black’s Market offers fresh food in 1/2/4-week bundles; refrigeration holds 6 portions, a freezer expands it to 12. The bank handles monthly loans and six markets with no savings interest.</div><div class="guide-item"><b>👔 Clothing expires</b>Start with 6 weeks of casual clothes. All clothing wears down once each week, even unused. Dress and business outfits cover lower job requirements. Cheap clothes last less time.</div><div class="guide-item"><b>🏁 Beat the competition</b>The Rival takes a turn each week. Meet all four personal goal targets before they do to win.</div></div><p class="modal-lead" style="margin:16px 0 0">Every turn represents a week of life with up to ${game.rules.hours} hours of discretionary time in ${game.isClassic?'Classic (in-progress)':'Modern Story'} rules. Any unused time expires on Sunday. Your game saves locally after each action.</p><button type="button" class="modal-primary" data-close>Got it, let's play ↗</button></section>`);}
 function showWinner(){const p=game.players.find(x=>x.id===game.winner);if(!p)return;showModal(`<section class="modal compact winner-center"><div class="winner-art">🏆</div><span class="eyebrow dark">THE FINISH LINE</span><h2>${esc(p.name)} did it!</h2><p class="modal-lead">Four life goals achieved in ${game.week} weeks.<br/>The race was about money, joy, knowledge, and finding your place. What a ride.</p><button class="modal-primary" id="playAgainBtn" type="button">A new life awaits ↗</button><button class="modal-secondary" data-close>Look back at the city</button></section>`);$('playAgainBtn').addEventListener('click',()=>newGameDialog());}
 function loadDialog(){showModal(`<section class="modal compact"><div class="modal-head"><div><span class="eyebrow dark">PICK UP WHERE YOU LEFT OFF</span><h2>Welcome back.</h2></div><button class="modal-close" data-close>×</button></div><p class="modal-lead">Restore your latest local autosave or import a saved game JSON file.</p><button class="modal-primary" id="loadLocal">Restore local autosave</button><button class="modal-secondary" id="loadFile">Import a .json file</button><p class="modal-footnote">Loading replaces the current game. Export a save first if you want to keep it.</p></section>`);
- $('loadLocal').addEventListener('click',()=>{try{const data=restore();if(!data)throw Error('No autosave found');game=Game.load(data);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();render();store();toast('Saved game restored.');}catch(e){toast(e.message,true);}});
+ $('loadLocal').addEventListener('click',()=>{try{const data=restore();if(!data)throw Error('No autosave found');game=Game.load(data);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();if(HotseatHandover.resumeRequired(game,Boolean(net.role)))showClassicHandover();render();store();toast('Saved game restored.');}catch(e){toast(e.message,true);}});
  $('loadFile').addEventListener('click',()=>{$('filePicker').click();});}
 function showFinances(){
  const p=game.player,f=game.finances(p),series=f.history;
@@ -413,39 +565,94 @@ function showFinances(){
  const graph=`<svg class="finance-graph" viewBox="0 0 675 255" role="img" aria-label="Net worth and cash over the past ${series.length} recorded weeks"><title>Net worth and wallet cash</title>${axis}<polyline points="${points(wealth)}" fill="none" stroke="#2f7652" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${points(cash)}" fill="none" stroke="#b87f3f" stroke-width="3" stroke-dasharray="7 5" stroke-linecap="round" stroke-linejoin="round"/>${ticks}</svg>`;
  const entries=f.ledger.length?f.ledger.map(e=>`<tr><td>W${e.week}</td><td>${esc(e.detail)}</td><td>${esc(e.category)}</td><td class="money-change ${e.net<0?'negative':e.net>0?'positive':''}">${e.net===0?'Transfer':(e.net>0?'+':'−')+fmt(Math.abs(e.net))}</td></tr>`).join(''):'<tr><td colspan="4">No transactions yet. Take an action to start your history.</td></tr>';
  const milestones=f.milestones.length?f.milestones.map(m=>`<li><b>W${m.week}</b> ${esc(m.text)}</li>`).join(''):'<li>Your first milestone is still ahead.</li>';
- showModal(`<section class="modal finance-modal" aria-label="Financial history"><div class="modal-head"><div><span class="eyebrow dark">YOUR FINANCIAL STORY · WEEK ${game.week}</span><h2>Where the money goes.</h2><p class="modal-lead">${esc(p.name)} · Actual account changes, not estimated spending</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="finance-metrics"><div><span>NET WORTH</span><strong>${fmt(f.netWorth)}</strong></div><div><span>LAST 4 WEEKS · GAINS</span><strong>${fmt(f.income)}</strong></div><div><span>LAST 4 WEEKS · COSTS</span><strong>${fmt(f.expenses)}</strong></div></div><div class="finance-chart-heading"><b>Wealth over time</b><div class="finance-legend"><span>● Net worth</span><span>● Cash</span></div></div>${graph}<p class="finance-help">Transfers between cash, savings and investments are tracked but not counted as earnings. Weekend bills, rent, interest and investment performance are included in the net change.</p><div class="finance-bottom"><div><h3>Latest transactions</h3><div class="finance-table-scroll"><table class="finance-table"><thead><tr><th>Week</th><th>Activity</th><th>Type</th><th>Net change</th></tr></thead><tbody>${entries}</tbody></table></div></div><div><h3>Life milestones</h3><ol class="finance-milestones">${milestones}</ol></div></div></section>`);
+ const paychecks=game.isClassic?`<div class="careers-wardrobe"><b>Classic paycheck ledger · last ${p.classicPaycheckHistory.length} shifts</b>${p.classicPaycheckHistory.length?p.classicPaycheckHistory.slice(-5).reverse().map(e=>`<span>W${e.week} · ${e.shiftUnits}/6 clock · ${fmt(e.gross)} gross − ${fmt(e.garnished)} rent − ${fmt(e.fee)} fee = ${fmt(e.net)} received · arrears ${fmt(e.rentDebtAfter)}</span>`).join(''):'<span>No completed Classic shifts recorded yet.</span>'}<small>Recorded from actual settlements; projected take-home pay and arrears share the same engine calculation. The deduction and fee formula is provisional until the original DOS debt branch is traced.</small></div>`:'';
+ const maintenance=game.isClassic?game.classicMaintenancePlan(p):null;
+ const maintenancePanel=game.isClassic&&maintenance.choices.length?
+  `<div class="careers-wardrobe"><b>Household repairs · ${maintenance.choices.length} appliance(s)</b><span>${maintenance.choices.map(q=>`${esc(q.id)}: ${fmt(q.cost)} · ${q.affordable?'safe after reserve':'hold for essentials'}`).join(' · ')}</span><small>Repair quotes are Life Loop compatibility prices; Jones protects its two-week cash reserve before repairs.</small></div>`:'';
+ const classicNeeds=game.isClassic?`<div class="careers-wardrobe"><b>Classic relaxation · ${p.classicRelaxation}/30</b><span>Separate from happiness and energy. Weekly state 6 reduces it by one toward 10 when no hot tub is owned; taking a break restores six points.</span><small>The DOS decay/floor is source-backed. Starting value, rest recovery and item-28 integration remain compatibility assumptions.</small></div>`:'';
+ const turnJournal=game.isClassic?`<div class="careers-wardrobe"><b>Classic turn sequence · latest events</b>${game.classicTurnJournal.filter(e=>e.phase==='turn-close').slice(-3).reverse().map(e=>`<span>W${e.week} · ${esc(e.playerId)} · reliability −${e.amount} at turn close</span>`).join('')+game.classicTurnJournal.filter(e=>e.phase!=='turn-close').slice(-7).reverse().map(e=>`<span>W${e.week} · ${esc(e.playerId)} · ${esc(e.phase)}${e.amount?` · ${e.phase==='rent'?fmt(e.amount):e.amount+' reliability'}`:''}</span>`).join('')||'<span>No completed turn boundaries recorded yet.</span>'}<small>Source-backed: −3 reliability when each turn ends and rent assessed after week 4, 8, etc. Economy, living and rental phases are replayable migration order, not a byte-exact SCI startTrn trace.</small></div>`:'';
+ const marketIndices=game.isClassic?`<div class="careers-wardrobe"><b>Classic economy · eight live indices</b><span>Cycle: ${esc(game.classicEconomicPulse.phase)} · last shock W${game.classicEconomicPulse.lastIncidentWeek||"—"}</span>${game.classicEconomyReport().map(x=>`<span>${esc(x.id)} ${x.reading} (${x.change>=0?'+':''}${x.change})</span>`).join('')}<small>Weekly changes, same seeded economic state for consumer prices, offered wages and market prices. Exact DOS volatility, crisis probability and recovery effect remain provisional. Existing wages change only on a raise, job change or an explicit economic crisis.</small></div>`:'';
+ showModal(`<section class="modal finance-modal" aria-label="Financial history"><div class="modal-head"><div><span class="eyebrow dark">YOUR FINANCIAL STORY · WEEK ${game.week}</span><h2>Where the money goes.</h2><p class="modal-lead">${esc(p.name)} · Actual account changes, not estimated spending</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="finance-metrics"><div><span>NET WORTH</span><strong>${fmt(f.netWorth)}</strong></div><div><span>LAST 4 WEEKS · GAINS</span><strong>${fmt(f.income)}</strong></div><div><span>LAST 4 WEEKS · COSTS</span><strong>${fmt(f.expenses)}</strong></div></div>${marketIndices}${classicNeeds}${maintenancePanel}${paychecks}${turnJournal}<div class="finance-chart-heading"><b>Wealth over time</b><div class="finance-legend"><span>● Net worth</span><span>● Cash</span></div></div>${graph}<p class="finance-help">Transfers between cash, savings and investments are tracked but not counted as earnings. Weekend bills, rent, interest and investment performance are included in the net change.</p><div class="finance-bottom"><div><h3>Latest transactions</h3><div class="finance-table-scroll"><table class="finance-table"><thead><tr><th>Week</th><th>Activity</th><th>Type</th><th>Net change</th></tr></thead><tbody>${entries}</tbody></table></div></div><div><h3>Life milestones</h3><ol class="finance-milestones">${milestones}</ol></div></div></section>`);
 }
 function showCareers(){
  if(game.pendingEncounter){toast('Finish the current conversation first.',true);return;}
  const p=game.player;
+ const survival=game.isClassic?game.classicSurvivalBudget(p):null;
+ const careerPlan=game.isClassic?game.classicCareerPlan(p):null;
+ const jones=game.isClassic?game.players.find(x=>x.isAI):null;
  const tracks=Object.groupBy?Object.groupBy(game.jobs,j=>j.track||({repair:'Technology',teller:'Finance',tutor:'Academia',analyst:'Business',engineer:'Technology',director:'Business'}[j.id]||'General')):game.jobs.reduce((o,j)=>{const k=j.track||({repair:'Technology',teller:'Finance',tutor:'Academia',analyst:'Business',engineer:'Technology',director:'Business'}[j.id]||'General');(o[k]??=[]).push(j);return o;},{});
- const jobs=Object.entries(tracks).sort((a,b)=>a[0].localeCompare(b[0])).map(([track,roles])=>`<div class="career-track"><h3>${esc(game.isClassic?D.jobWorkplace(roles[0]).label:track)}</h3>${game.isClassic?`<small class="classic-employer-original">Original Jones employer: ${esc(track)} · Work at ${esc(D.jobWorkplace(roles[0]).boardName)}</small>`:''}${roles.slice().sort((a,b)=>a.tier-b.tier).map(j=>{
+ const jobs=Object.entries(tracks).sort((a,b)=>a[0].localeCompare(b[0])).map(([track,roles])=>`<div class="career-track"><h3>${esc(game.isClassic?game.jobWorkplace(roles[0]).label:track)}</h3>${game.isClassic?`<small class="classic-employer-original">Original Jones employer: ${esc(track)} · Work at ${esc(game.jobWorkplace(roles[0]).boardName)}</small>`:''}${roles.slice().sort((a,b)=>a.tier-b.tier).map(j=>{
    const reasons=game.jobReasons(p,j);
    const classicReq=game.isClassic?game.jobRequirement(j):null;
    const isCurrent=p.job===j.id;
    const dressed=game.isDressedFor(p,j);
-   return `<div class="career-role ${isCurrent?'active':''}"><div><strong>${esc(j.name)}</strong><small>${esc(D.jobWorkplace(j).label)}${game.isClassic?' (Classic: '+esc(j.employer)+')':''} · Level ${j.tier} · ${fmt(j.wage)}/hour base</small><small>${esc(D.clothing[j.clothes].name)} or better${game.isClassic?` · XP ${classicReq.experience} · Reliability ${classicReq.dependability}${classicReq.degrees.length?' · '+classicReq.degrees.map(id=>D.classicDegrees.find(x=>x.id===id).name).join(' + '):''}`:j.course?' · '+esc(D.courses.find(c=>c.id===j.course).name):''}</small></div><span class="career-status">${isCurrent?'CURRENT JOB':reasons.length?esc(reasons.join(' · ')):dressed?'READY TO APPLY':'UNIFORM NEEDED FOR SHIFTS'}</span></div>`;
+   return `<div class="career-role ${isCurrent?'active':''}"><div><strong>${esc(j.name)}</strong><small>${esc(game.jobWorkplace(j).label)}${game.isClassic?' (Classic: '+esc(j.employer)+')':''} · Level ${j.tier} · ${fmt(game.offeredWage(j))}/hour offered${game.isClassic?' · DOS #'+j.originalJobNum+' base '+fmt(j.originalBasePay)+'/h':''}</small><small>${esc(D.clothing[j.clothes].name)} or better${game.isClassic?` · XP ${classicReq.experience} · Reliability ${classicReq.dependability}${classicReq.degrees.length?' · '+classicReq.degrees.map(id=>D.classicDegrees.find(x=>x.id===id).name).join(' + '):''}`:j.course?' · '+esc(D.courses.find(c=>c.id===j.course).name):''}</small></div><span class="career-status">${isCurrent?'CURRENT JOB':reasons.length?esc(reasons.join(' · ')):!dressed?'UNIFORM NEEDED FOR SHIFTS':game.isClassic?(game.classicHiringChance(p,j)===100?'GUARANTEED':'HIRING '+game.classicHiringChance(p,j)+'%'):'READY TO APPLY'}</span></div>`;
  }).join('')}</div>`).join('');
  const certs=game.isClassic?D.classicDegrees.map(d=>{
     const prereqs=d.requires.map(id=>D.classicDegrees.find(x=>x.id===id).name);
     const completed=p.classicDegrees.includes(d.id);
-    return `<div class="career-course"><strong>${esc(d.name)}</strong><span>${prereqs.length?'Requires '+esc(prereqs.join(' + ')):'Available initially'} · ${game.classicLessons(p)} lessons at 6h · $50 enrollment · +5 reliability on graduation</span><b>${completed?'✓ Degree':`${p.classicProgress[d.id]||0}/${game.classicLessons(p)} lessons${p.classicEnrolled.includes(d.id)?' · ACTIVE':''}`}</b></div>`;
+    return `<div class="career-course"><strong>${esc(d.name)}${game.isClassic?' · DOS '+d.originalDegreeId:''}</strong><span>${prereqs.length?'Requires '+esc(prereqs.join(' + ')):'Available initially'} · ${game.classicLessons(p)} lessons at 6h · $50 enrollment · +5 reliability on graduation</span><b>${completed?'✓ Degree':`${p.classicProgress[d.id]||0}/${game.classicLessons(p)} lessons${p.classicEnrolled.includes(d.id)?' · ACTIVE':''}`}</b></div>`;
   }).join(''):D.courses.map(c=>`<div class="career-course"><strong>${esc(c.name)}</strong><span>${esc(c.detail)} · ${c.sessions} lessons at ${fmt(c.cost)} base each · requires Education ${c.education}</span><b>${p.coursesCompleted.includes(c.id)?'✓ Complete':`${p.courseProgress[c.id]||0}/${c.sessions} sessions`}</b></div>`).join('');
- showModal(`<section class="modal careers-modal" aria-label="Career progression roadmap"><div class="modal-head"><div><span class="eyebrow dark">YOUR CAREER ROADMAP</span><h2>Find your next chapter.</h2><p class="modal-lead">One job at a time. Apply at the Career Center; shifts require clothing at your workplace. ${game.isClassic?'Classic applications require the listed degrees, Experience and Dependability. Every job has its own stat caps; reliability below requirement − 5 causes dismissal when you try to work.':'Job offers depend on education, experience, reliability, and sometimes a short course.'}</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="careers-wardrobe"><b>Current wardrobe</b>${game.clothingSummary(p).map(x=>`<span class="${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)}: ${x.weeks}w</span>`).join('')}<small>Every category ages once per week, whether used or not.</small></div><h3 class="career-section-title">${game.isClassic?'Eleven Classic diplomas · university':'Specialist certificates · Brightside U'}</h3><div class="career-courses">${certs}</div><h3 class="career-section-title">Career paths</h3><div class="career-tracks">${jobs}</div><p class="modal-footnote">${game.isClassic?'Reference-based Classic progression. 37 documented DOS/floppy jobs, wages, uniforms and degrees are active. Two CD-only jobs and some location/building mechanics are not yet included.':'Base pay changes with the economy at hiring. Current wages can differ after raises. Buying clothing is separate from being eligible to apply.'}</p><button class="modal-primary" data-close type="button">Return to the city</button></section>`);
+ showModal(`<section class="modal careers-modal" aria-label="Career progression roadmap"><div class="modal-head"><div><span class="eyebrow dark">YOUR CAREER ROADMAP</span><h2>Find your next chapter.</h2><p class="modal-lead">One job at a time. Apply at the Career Center; shifts require clothing at your workplace. ${game.isClassic?'Classic applications require the listed degrees, Experience and Dependability. Employment Office entry adds 2 clock units; work costs up to 6 units and every successful work action increases experience and reliability subject to stat caps. Reliability below requirement − 5 causes dismissal when you try to work.':'Job offers depend on education, experience, reliability, and sometimes a short course.'}</p></div><button class="modal-close" data-close aria-label="Close">×</button></div><div class="careers-wardrobe"><b>Current wardrobe</b>${game.clothingSummary(p).map(x=>`<span class="${x.weeks<=1?'wardrobe-low':''}">${esc(x.name)}: ${x.weeks}w</span>`).join('')}<small>Every category ages once per week, whether used or not.</small></div>${game.isClassic?`<div class="careers-wardrobe"><b>Classic survival outlook · next two weeks</b><span>Essential costs ${fmt(survival.twoWeekNeeds)}</span><span>Liquid funds ${fmt(survival.liquidity)}</span><span>${survival.projectedGap>0?'Funding gap '+fmt(survival.projectedGap):'Essentials covered'}</span><span>Next shift: ${fmt(survival.projectedShiftGross)} gross / ${fmt(survival.projectedShiftIncome)} take-home; after two shifts: ${fmt(survival.projectedGapAfterWork)} remaining essential funding gap</span><small>Forecast includes food, rent due within two weeks and replacement uniform if nearly worn out; estimated costs, not automatic transactions. Suggested next available study: ${esc(careerPlan.recommendedDegree?.name||'None')} (career heuristic, not a DOS AI rule).</small></div>`:''}${game.isClassic?`<div class="careers-wardrobe"><b>DOS economy · market & rival diagnostics</b>${jones?`<span>Jones: ${jones.job?'Employed':'Unemployed '+jones.classicUnemployedWeeks+'w'} · failed searches ${jones.classicJobSearchFailures} · ${esc(game.getJob(jones)?.name||'Seeking work')}</span>`:''}<span>Goods ${game.classicGoodsIndex} · Economy ${game.classicEconomicIndices.readings.general} · Food week ${fmt(game.classicFoodPrice(1))} · 10-ticket lottery ${fmt(10)}</span><small>Historic source price formula, but seeded eight-index progression and wage mapping are provisional. New offers respond to the economy; signed employment wages remain fixed until changed through job actions. Expected two-week food unit ${fmt(survival.projectedFoodUnit)}.</small>${game.classicDecisionTrace.slice(-4).reverse().map(e=>`<small>Week ${e.week} · source branch #${e.ruleId} · place #${e.placeNum} · ${esc(e.reason)} · ${esc(e.outcome)}</small>`).join('')||'<small>Rival decisions appear after its first week. Branches 20, 28–30, 32, 37, 44, 46 are source-tagged; exact DOS thresholds remain provisional.</small>'}</div>`:''}<h3 class="career-section-title">${game.isClassic?'Eleven Classic diplomas · university':'Specialist certificates · Brightside U'}</h3><div class="career-courses">${certs}</div><h3 class="career-section-title">Career paths</h3><div class="career-tracks">${jobs}</div><p class="modal-footnote">${game.isClassic?'Reference-based Classic progression: 37 source jobs and 11 source-linked degrees. DOS wages are shown for reference; current playable wages remain separately balanced. Consumer-goods price calculations are source-derived. Eight coupled economic indices are seeded approximations, and original wage-index binding, waypoint-to-clock conversion, and full AI coverage remain provisional.':'Base pay changes with the economy at hiring. Current wages can differ after raises. Buying clothing is separate from being eligible to apply.'}</p><button class="modal-primary" data-close type="button">Return to the city</button></section>`);
 }
 function saveExport(){const file=new Blob([JSON.stringify({format:'the-life-loop-v1',...game.snapshot()},null,2)],{type:'application/json'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download=`the-life-loop-week-${String(game.week).padStart(2,'0')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Save file exported!');}
+// A preview never changes game state, player hours, or network state.
+function previewTravel(e){
+ const tile=e.target.closest?.('[data-travel]');
+ if(!tile||!game.isClassic||venueInteraction.open||routeTravelBusy)return;
+ routeOverlay?.preview(tile.dataset.travel,game);
+}
+$('classicTravelSkip').addEventListener('click',()=>routeOverlay?.finishAnimation());
+$('classicBoardFit').addEventListener('click',()=>classicBoardSetView('fit'));
+$('classicBoardExplore').addEventListener('click',()=>classicBoardSetView('explore'));
+$('classicBoardLocate').addEventListener('click',()=>{boardManualPan=false;if(compactClassicBoard()&&classicBoardView==='fit')classicBoardSetView('explore',{focusId:game.player.location});else classicBoardFind(game.player.location);});
+$('classicBoardJump').addEventListener('change',e=>{if(e.target.value)classicBoardFind(e.target.value);e.target.value='';});
+$('boardViewport').addEventListener('pointerdown',e=>{
+ boardPanOrigin=routeTravelBusy?{x:e.clientX,y:e.clientY,pointerId:e.pointerId}:null;
+},{passive:true});
+$('boardViewport').addEventListener('pointermove',e=>{
+ if(boardPanOrigin&&boardPanOrigin.pointerId===e.pointerId&&Math.abs(e.clientX-boardPanOrigin.x)>9){
+  boardManualPan=true;boardPanOrigin=null;
+ }
+},{passive:true});
+for(const name of ['pointerup','pointercancel'])$('boardViewport').addEventListener(name,()=>{boardPanOrigin=null;},{passive:true});
+$('board').addEventListener('pointerover',previewTravel);
+$('board').addEventListener('focusin',previewTravel);
+$('board').addEventListener('pointerout',e=>{if(!e.relatedTarget?.closest?.('[data-travel]')||e.relatedTarget.closest('[data-travel]')!==e.target.closest?.('[data-travel]'))routeOverlay?.clearPreview();});
+$('board').addEventListener('focusout',e=>{if(!e.relatedTarget?.closest?.('[data-travel]'))routeOverlay?.clearPreview();});
 $('board').addEventListener('click',async e=>{
- const btn=e.target.closest('[data-travel]');if(!btn||venueInteraction.open)return;
+ const btn=e.target.closest('[data-travel]');if(!btn||venueInteraction.open||routeTravelBusy)return;
  if(net.role&&!net.ownTurn()){toast('Your friend is taking their turn.',true);return;}
- const target=btn.dataset.travel;
- if(game.player.location===target){openVenue(target);return;}
+ const target=btn.dataset.travel,actorId=game.player.id,from=game.player.location;
+ // On a phone, the tiny Overview map is for navigation/inspection, not
+ // immediate spending of travel time. The second tap in Explore travels.
+ if(game.isClassic&&compactClassicBoard()&&classicBoardView==='fit'){
+  classicBoardSetView('explore',{focusId:target});
+  return;
+ }
+ routeOverlay?.clearPreview();
+ if(from===target){openVenue(target);return;}
  if(net.busy)return;
- btn.disabled=true;
- try{const result=await net.execute('travel',target,()=>game.travel(target));
-  if(result.ok&&net.role!=='guest'){store();render();openVenue(target);}
-  else if(result.ok&&net.role==='guest'){pendingGuestVenue=target;toast('Travel requested · waiting for host confirmation.');}
+ routeTravelBusy=true;boardManualPan=false;boardPanOrigin=null;btn.disabled=true;
+ try{
+  const quote=game.isClassic?game.travelQuote(from,target,game.player.hours):null;
+  const result=await net.execute('travel',target,()=>game.travel(target));
+  if(result.ok&&net.role!=='guest'){
+   if(game.isClassic)setClassicJourney('departing',placeLabel(target),quote);
+   store();render();
+   const arrived=await routeOverlay.animate(actorId,from,target,{onStep:point=>{if(game.player.id===actorId)classicBoardFollowPawn(point);}});
+   if(arrived){
+    routeOverlay.showArrival(target);classicBoardFind(target);
+    if(game.isClassic)setClassicJourney('arrived',placeLabel(target));
+   }
+   if(arrived&&game.player.id===actorId&&game.player.location===target&&(!net.role||net.ownTurn()))openVenue(target);
+  }else if(result.ok&&net.role==='guest'){
+   pendingGuestVenue=target;pendingGuestRoute={from,to:target,actorId};
+   if(game.isClassic)setClassicJourney('awaiting-host',placeLabel(target));
+   toast('Travel requested · waiting for host confirmation.');
+  }else if(game.isClassic)setClassicJourney('blocked',placeLabel(target));
   toast(result.message,!result.ok);
- }finally{if(btn.isConnected)btn.disabled=false;}
+ }finally{routeTravelBusy=false;$('classicTravelControls').hidden=true;if(btn.isConnected)btn.disabled=false;}
 });
 $('venueActions').addEventListener('change',e=>{
  if(!venueInteraction.open)return;
@@ -466,10 +673,25 @@ $('venueActions').addEventListener('click',async e=>{
 $('venueClose').addEventListener('click',()=>closeVenue());
 $('venueDone').addEventListener('click',()=>closeVenue());
 $('venueScrim').addEventListener('click',()=>closeVenue());
-$('endTurnBtn').addEventListener('click',async()=>{if(net.busy)return;closeVenue({restoreFocus:false});const result=await net.execute('endTurn',null,()=>game.endTurn());if(result.ok&&net.role!=='guest'){store();render();}toast(result.message,!result.ok);});
+$('endTurnBtn').addEventListener('click',async()=>{
+ if(net.busy||routeTravelBusy)return;
+ const before={isClassic:game.isClassic,mode:game.settings.mode,playerId:game.player.id};
+ closeVenue({restoreFocus:false});
+ const result=await net.execute('endTurn',null,()=>game.endTurn());
+ if(result.ok&&net.role!=='guest'){
+  if(HotseatHandover.required(before,game,Boolean(net.role)))showClassicHandover();
+  store();render();
+ }
+ toast(result.message,!result.ok);
+});
+$('classicHandoverContinue').addEventListener('click',()=>{hideClassicHandover();$('endTurnBtn').focus();});
 $('guideBtn').addEventListener('click',()=>{setUtilityMenu(false);guide();});
 $('charactersBtn').hidden=!ENABLE_CHARACTER_CUSTOMIZATION;
 if(ENABLE_CHARACTER_CUSTOMIZATION)$('charactersBtn').addEventListener('click',()=>{setUtilityMenu(false);showCharacterLibrary('new');});
+$('sharedProfileBtn').addEventListener('click',()=>{
+ SharedPortrait.open({onSaved:()=>{render();toast('Shared portrait saved locally.');}});
+ // SharedPortrait.open mounts its controls directly in the game overlay.
+});
 $('financeBtn').addEventListener('click',showFinances);
 $('careerBtn').addEventListener('click',showCareers);
 $('newBtn').addEventListener('click',()=>{setUtilityMenu(false);newGameDialog();});
@@ -482,19 +704,29 @@ document.querySelectorAll('[data-close-drawer]').forEach(b=>b.addEventListener('
 document.addEventListener('click',e=>{if(!e.target.closest('.utility-holder')){setUtilityMenu(false);setCoopMenu(false);}});
 $('turnConnection').addEventListener('click',onlineDialog);
 $('mobileNav').addEventListener('click',e=>{const tab=e.target.closest('[data-mobile-tab]');if(tab)setMobileView(tab.dataset.mobileTab);});
-mobileBreakpoint.addEventListener('change',updateLayout);wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);
+mobileBreakpoint.addEventListener('change',updateLayout);wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);window.matchMedia('(max-width:720px)').addEventListener('change',()=>{boardManualPan=false;classicBoardSync();$('boardViewport').scrollLeft=0;routeOverlay?.invalidate?.();});
 setMobileView('city',{scroll:false});
 $('onlineBtn').addEventListener('click',()=>setCoopMenu($('coopMenu').hidden));
 $('coopOpenDetails').addEventListener('click',()=>{setCoopMenu(false);onlineDialog();});
 $('chatToggle').addEventListener('click',()=>setChatOpen($('chatPanel').hidden));
 $('closeChat').addEventListener('click',()=>setChatOpen(false));
+$('chatSocialTab').addEventListener('click',()=>setChatChannel('social'));
+$('chatRoomTab').addEventListener('click',()=>setChatChannel('room'));
+$('chatSocialOrigin').value=social.suggestedOrigin;
+$('chatSocialConnectForm').addEventListener('submit',async e=>{e.preventDefault();const button=e.currentTarget.querySelector('button');button.disabled=true;
+ try{await social.connect($('chatSocialOrigin').value,$('chatSocialToken').value);$('chatSocialToken').value='';toast('Connected to Looprd Social lobby');}
+ catch(err){toast('Social connection failed: '+err.message,true);}finally{button.disabled=false;chatRender();}
+});
+$('chatSocialRefresh').addEventListener('click',()=>social.refresh().catch(err=>toast(err.message,true)));
+$('chatSocialDisconnect').addEventListener('click',()=>{social.disconnect();$('chatSocialToken').value='';});
 $('chatForm').addEventListener('submit',async e=>{e.preventDefault();const input=$('chatInput'),text=input.value.trim();if(!text)return;const button=$('chatSend');button.disabled=true;
- try{await net.sendChat(text);input.value='';}catch(err){toast('Chat unavailable: '+err.message,true);}finally{button.disabled=false;chatRender();}
+ try{if(chatChannel==='social')await social.sendChat(text);else await net.sendChat(text);input.value='';}
+ catch(err){toast('Chat unavailable: '+err.message,true);}finally{button.disabled=false;chatRender();}
 });
 $('saveBtn').addEventListener('click',saveExport);
 $('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
 $('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
-$('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
+$('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);routeOverlay?.cancel();$('classicTravelControls').hidden=true;didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();if(HotseatHandover.resumeRequired(game,Boolean(net.role)))showClassicHandover();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
 document.addEventListener('keydown',e=>{
  if(e.key==='Escape'){
   if($('overlay').classList.contains('open')){if($('overlay').dataset.kind!=='encounter'&&$('overlay').querySelector('[data-close]'))closeOverlay();return;}
@@ -504,8 +736,20 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Tab'&&venueInteraction.open&&!$('overlay').classList.contains('open'))venueFocusTrap(e);
 });
 net=new window.LifeOnline({getGame:()=>game,setGame:snap=>{game=Game.load(snap);didShowWin=!!game.winner;store();render();
- if(pendingGuestVenue){const target=pendingGuestVenue;if(net.ownTurn()&&game.player.location===target){pendingGuestVenue=null;openVenue(target);}else if(!net.ownTurn())pendingGuestVenue=null;}
+ if(pendingGuestVenue){
+  const target=pendingGuestVenue,journey=pendingGuestRoute;
+  if(net.ownTurn()&&game.player.location===target){
+   pendingGuestVenue=null;pendingGuestRoute=null;
+   const actorId=journey?.actorId||game.player.id;
+   routeTravelBusy=true;
+   routeOverlay.animate(actorId,journey?.from||target,target).then(ok=>{
+    routeTravelBusy=false;
+    if(ok&&game.player.id===actorId&&game.player.location===target&&net.ownTurn())openVenue(target);
+   });
+  }else if(!net.ownTurn()){pendingGuestVenue=null;pendingGuestRoute=null;}
+ }
  if(game.pendingEncounter&&net.ownTurn())showEncounter();else if($('overlay').dataset.kind==='encounter'){$('overlay').dataset.kind='';$('overlay').classList.remove('open');$('overlay').innerHTML='';}},render,toast,chatRender});
-render();newGameDialog(true);
+routeOverlay=new window.LifeRouteOverlay.RouteOverlay({frame:$('boardStage'),board:$('board'),svg:$('routeOverlay'),announce:$('routeAnnounce'),layout:window.LifeClassicRoutes,expectedVenues:D.classicPlaces.map(p=>p.id)});
+render();requestAnimationFrame(()=>{if(game.isClassic&&classicBoardView==='explore')classicBoardFind(game.player.location,'instant');});newGameDialog(true);
 net.resume().then(reconnected=>{if(reconnected){$('overlay').dataset.kind='';closeOverlay();toast('Reconnected to room '+net.code);}else if(new URLSearchParams(location.search).has('join'))onlineDialog();});
 })();

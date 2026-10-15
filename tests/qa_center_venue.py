@@ -23,7 +23,7 @@ with sync_playwright() as p:
   page.locator('#venueDone').click();page.wait_for_timeout(60)
   assert page.locator('#venueLayer').is_hidden()
   # New venue
-  page.locator('[data-travel="agency"]').click();page.wait_for_timeout(100)
+  page.locator('[data-travel="agency"]').click();page.locator('#venueLayer').wait_for(state='visible',timeout=2500)
   assert page.locator('#venueLayer').is_visible(),(w,'agency no popup')
   assert page.locator('#classicEmployerFilter').count()==1,(w,'employer filter')
   assert page.locator('#careerShowAll').count()==1

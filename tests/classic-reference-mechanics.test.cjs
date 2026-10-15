@@ -35,7 +35,7 @@ test('Relative rescue only happens after two stranded Classic weeks and is accou
 test('Relative rescue does not trigger when clothing or protected savings or pawnable goods prevent softlock',()=>{
  for(const setup of [p=>p.clothing.casual=3,p=>p.bank=100,p=>p.owned.push('computer')]){
   const g=classic(),p=g.player;p.cash=0;p.bank=0;p.clothing={casual:0,formal:0,business:0};p.groceries=0;p.owned=[];
-  setup(p);g.newWeek();g.newWeek();assert.equal(p.classicReliefCount,0);
+  setup(p);g.rand=()=>0.99;g.newWeek();g.newWeek();assert.equal(p.classicReliefCount,0);
  }
  const modern=new Game({ruleset:'modern',mode:'sandbox'});modern.player.cash=0;
  modern.player.clothing={casual:0,formal:0,business:0};modern.newWeek();modern.newWeek();

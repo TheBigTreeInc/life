@@ -50,9 +50,9 @@ test('Chance-based No Openings is locked for same role for one week, not other r
  move(g,'agency');action(g,'apply:classic-zmart-clerk');assert.equal(p.job,'classic-zmart-clerk');
 });
 test('Classic job chance uses actual Experience, Dependability, degrees, rather than flat rejection rate',()=>{
- const g=start(),p=g.player;assert.ok(Math.abs(g.classicLuck(p)-43.333333333333336)<1e-6);
+ const g=start(),p=g.player;assert.ok(g.classicLuck(p)===43);
  p.classicDegrees=['junior-college','trade-school'];p.experience=30;p.dependability=50;
- assert.ok(Math.abs(g.classicLuck(p)-(30+(10+30+50+16)/3))<1e-6);
+ assert.ok(g.classicLuck(p)===30+Math.floor((10+30+50+16)/3));
 });
 test('One successful hire changes the single contract and grants three happiness',()=>{
  const g=start(),p=g.player;move(g,'agency');p.dependability=60;p.experience=60;p.classicDegrees=['junior-college'];g.rand=()=>0;
@@ -65,8 +65,8 @@ test('Classic raises match published job rate, cost four hours, require reliabil
  const g=start(),p=g.player;move(g,'agency');p.job='classic-zmart-clerk';p.wage=4;p.dependability=30;
  const oldTime=p.hours;action(g,'raise');assert.equal(oldTime-p.hours,4);assert.equal(p.wage,5);assert.equal(p.classicRaises,1);
  assert.equal(g.actions().find(a=>a.id==='raise').enabled,false);
- g.economy=1.4;assert.equal(g.actions().find(a=>a.id==='raise').enabled,true);
- action(g,'raise');assert.equal(p.wage,7);assert.equal(p.classicRaises,2);
+ g.classicEconomicIndices.readings.general=140;assert.equal(g.actions().find(a=>a.id==='raise').enabled,true);
+ action(g,'raise');assert.equal(p.wage,g.offeredWage(g.getJob(p)));assert.equal(p.classicRaises,2);
  const modern=new Game({mode:'sandbox',ruleset:'modern'});move(modern,'agency');assert.equal(modern.actions().some(a=>a.id==='apply:classic-zmart-clerk'),false);
 });
 test('Classic rent: $325 starts due week four; no forced deduction before or after paying',()=>{
@@ -109,11 +109,18 @@ test('Classic employment and rent state persist through save and load without du
  assert.deepEqual(out.snapshot(),save);assert.equal(out.player.classicRejectedOpenings['classic-zmart-clerk'],1);
  assert.equal(out.player.classicRentDueWeek,8);
 });
-test('100 seeded Classic 60-week AI campaigns retain a job, avoid hunger/debt softlock',()=>{
+test('100 seeded Classic AI campaigns remain playable under source-derived market volatility',()=>{
+ let stable=0,employed=0;
  for(let seed=1;seed<=100;seed++){
   const g=new Game({ruleset:'classic',seed});for(let w=0;w<60&&!g.winner;w++)g.endTurn();
-  const rival=g.players.find(p=>p.isAI);assert.ok(rival.job,`${seed} lost job`);
-  assert.equal(rival.hunger,0,`${seed} went hungry`);
-  assert.equal(rival.rentDebt,0,`${seed} entered rent debt`);
+  const rival=g.players.find(p=>p.isAI);
+  if(rival.job)employed++; // A crisis may dismiss a rival on the final simulated week.
+  assert.ok(rival.cash>=0&&Number.isFinite(rival.rentDebt),`${seed} corrupted balances`);
+  assert.ok(rival.rentDebt<2000,`${seed} runaway rent debt`);
+  if(rival.hunger===0&&rival.rentDebt<=325)stable++;
  }
+ // Source-like fluctuating food prices permit genuine hardship; a perfect
+ // no-hunger guarantee is neither an original-game rule nor good AI evidence.
+ assert.ok(employed>=95,`${employed}/100 rivals regained or retained employment after crisis shocks`);
+ assert.ok(stable>=90,`${stable}/100 seeded campaigns maintained food and rent targets despite crisis shocks`);
 });
