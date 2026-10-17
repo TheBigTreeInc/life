@@ -71,6 +71,13 @@
       "kind": "mobile-turn-controls",
       "supersedes": "0.5.72",
       "notes": "Mobile End Week is available at top of board in Classic and Modern; remove building dropdown; use existing authoritative endTurn handler and disabled gating. Work by Done, mandatory return home, offline/Looprd and saves unchanged."
+    },
+    {
+      "version": "0.5.74",
+      "artifact": "the-life-loop-0.5.74-ziprunner.zip",
+      "kind": "player-visible-version-and-mobile-polish",
+      "supersedes": "0.5.73",
+      "notes": "About panel displays authoritative loaded bundle version, mode, release notes and copyable diagnostics on phones and desktop; no game-state changes."
     }
   ]
 }

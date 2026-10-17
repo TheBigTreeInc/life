@@ -1,6 +1,6 @@
-## v0.5.73 — Phone End Week button
+## v0.5.74 — Phone End Week button
 
-Artifact: `the-life-loop-0.5.73-ziprunner.zip` — complete source, playable `PLAY.html` and mobile UI tests.
+Artifact: `the-life-loop-0.5.74-ziprunner.zip` — complete source, playable `PLAY.html` and mobile UI tests.
 
 On phones, the city toolbar now puts **End week** at the top beside the Classic Overview/Explore controls, replacing the unused building-search dropdown. The phone button delegates to the existing authoritative End Week handler; the existing desktop control is unchanged. It becomes disabled while a venue is open, during movement/remote turns or after the game finishes. The top control remains reachable in Modern Story. Work still appears beside Done where available. Game turns, return-home travel/debt, hotseat and Looprd remain unchanged.
 

@@ -64,6 +64,7 @@ files += ['docs/decisions/ADR-0072-mobile-camera-work-and-gameplay-copy.md','TES
 files += ['docs/decisions/ADR-0073-mobile-top-end-week-and-stable-turn-handler.md','TEST-MOBILE-073.bat']
 files += ['docs/decisions/ADR-0071-original-route-clock-quantum-and-gap-audit.md','docs/reference/dos-route-clock-071.json','TEST-DOS-MOTION-071.bat']
 files += ['docs/v0.5.64-ziprunner-repair.md','docs/v0.5.65-ziprunner-versioned-compatibility.md','docs/decisions/ADR-0066-shared-i18n-locale-contract.md','TEST-LANGUAGE-066.bat','docs/v0.5.67-ziprunner-campaign-integration.md','TEST-CAMPAIGNS-067.bat','src/goal-presets.js','docs/v0.5.68-ziprunner-merged-goal-contract.md','TEST-MERGED-CONTRACT-068.bat','src/i18n.js','docs/release-ledger.json','docs/v0.5.69-merged-tree-contract-failures.md','TEST-MERGED-069.bat','TEST-ZIPRUNNER-REPAIR.bat']
+files += ['docs/decisions/ADR-0074-player-visible-version-and-mobile-about.md']
 # Ship all asset files, including the optional detached-house art reference and manifest.
 files += [p.relative_to(root).as_posix() for p in sorted((root/'assets/art/styles/contemporary-default').glob('*')) if p.is_file()]
 files += [p.relative_to(root).as_posix() for p in sorted((root/'assets/portraits/default').glob('*')) if p.is_file()]

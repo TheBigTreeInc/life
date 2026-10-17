@@ -1,6 +1,6 @@
-## v0.5.73 — Top-of-screen mobile End Week (LL-332)
+## v0.5.74 — Top-of-screen mobile End Week (LL-332)
 
-Release `the-life-loop-0.5.73-ziprunner.zip`: remove the building-search dropdown (keep tap-to-focus), place a minimum-44px mobile End Week control in the top city toolbar in Classic and Modern, retain Work beside Done, synchronize enabled/disabled state and forward click to the same validated End Week handler. Operator: verify narrow portrait widths, Dutch toggle, hotseat and a remote guest, Classic compulsory home return and overtime.
+Release `the-life-loop-0.5.74-ziprunner.zip`: remove the building-search dropdown (keep tap-to-focus), place a minimum-44px mobile End Week control in the top city toolbar in Classic and Modern, retain Work beside Done, synchronize enabled/disabled state and forward click to the same validated End Week handler. Operator: verify narrow portrait widths, Dutch toggle, hotseat and a remote guest, Classic compulsory home return and overtime.
 
 ## v0.5.72 — Mobile player-experience pass (LL-331)
 

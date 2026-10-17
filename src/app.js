@@ -10,6 +10,8 @@ const SetupPrefs=window.LifeSetupPreferences;
 const UX57=window.LifePass057;
 const GoalPresets=window.LifeGoalPresets;
 const I18n=window.LifeI18n;
+// The loaded HTML bundle is the authoritative release identity, not server or ZipRunner state.
+const LIFE_RELEASE=document.querySelector('meta[name="life-release-version"]')?.content||'unknown';
 const RulePresets=window.LifeRulePresets;
 const SharedPortrait=window.LifeSharedPortraitUI;
 const preferencesStorage=(()=>{try{return window.localStorage;}catch{return null;}})();
@@ -884,12 +886,32 @@ $('chatForm').addEventListener('submit',async e=>{e.preventDefault();const input
  try{if(chatChannel==='social')await social.sendChat(text);else await net.sendChat(text);input.value='';}
  catch(err){toast('Chat unavailable: '+err.message,true);}finally{button.disabled=false;chatRender();}
 });
+function aboutLifeDiagnostics(){
+ const ruleset=game?.isClassic?'Classic':'Modern';
+ return ['The Life Loop','Loaded bundle version: '+LIFE_RELEASE,'Ruleset: '+ruleset,
+   'Week: '+(game?.week??'—'),'Online mode: '+(net?.role||'local'),
+   'Language: '+(I18n.get?.()||'en'), 'Page: '+location.origin+location.pathname].join('\n');
+}
+function openAboutLife(){
+ setUtilityMenu(false);
+ $('aboutLifeVersion').textContent='v'+LIFE_RELEASE;
+ $('aboutLifeMode').textContent='Mode: '+(game.isClassic?'Classic':'Modern Story');
+ $('aboutLifeBtn').textContent='ⓘ About this game · v'+LIFE_RELEASE;
+ if(!$('aboutLifeDialog').open)$('aboutLifeDialog').showModal();
+}
+$('aboutLifeBtn').addEventListener('click',openAboutLife);
+for(const id of ['aboutLifeClose','aboutLifeDone'])$(id).addEventListener('click',()=>$('aboutLifeDialog').close());
+$('aboutLifeCopy').addEventListener('click',async()=>{
+ try{await navigator.clipboard.writeText(aboutLifeDiagnostics());toast('Game diagnostics copied.');}
+ catch{const text=aboutLifeDiagnostics();window.prompt('Copy game diagnostics',text);}
+});
 $('saveBtn').addEventListener('click',saveExport);
 $('loadBtn').addEventListener('click',()=>{if(net.role)toast('Disconnect from Online co-op before loading another game.',true);else loadDialog();});
 $('overlay').addEventListener('click',async e=>{const choice=e.target.closest('[data-choose]');if(choice&&!choice.disabled){const r=await net.execute('choose',choice.dataset.choose,()=>game.chooseEncounter(choice.dataset.choose));if(r.ok){$('overlay').dataset.kind='';closeOverlay();if(net.role!=='guest'){store();render();}}toast(r.message,!r.ok);return;}if(e.target.hasAttribute('data-close'))closeOverlay();});
 $('filePicker').addEventListener('change',async e=>{if(net.role){toast('Disconnect before importing a save.',true);e.target.value='';return;}const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Save file is too large');const obj=JSON.parse(await file.text());game=Game.load(obj);routeOverlay?.cancel();$('classicTravelControls').hidden=true;didShowWin=!!game.winner;closeVenue({restoreFocus:false});closeOverlay();if(HotseatHandover.resumeRequired(game,Boolean(net.role)))showClassicHandover();render();store();toast('Save imported successfully.');}catch(err){toast('Could not load save: '+err.message,true);}e.target.value='';});
 document.addEventListener('keydown',e=>{
  if(e.key==='Escape'){
+  if($('aboutLifeDialog').open){$('aboutLifeDialog').close();return;}
   if($('overlay').classList.contains('open')){if($('overlay').dataset.kind!=='encounter'&&$('overlay').querySelector('[data-close]'))closeOverlay();return;}
   if(venueInteraction.open){closeVenue();return;}
   setUtilityMenu(false);setCoopMenu(false);closeDrawer();return;

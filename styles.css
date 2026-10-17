@@ -1243,3 +1243,14 @@ body[data-ruleset="classic"] .board-grid>.board-tile[data-camera-focus="true"]{o
  #classicBoardLocate:before{content:'◎';font-size:16px}
  .mobile-end-turn:not([hidden]){min-width:92px;padding:6px 7px;font-size:11px}
 }
+
+/* v0.5.74: clear game identity without consuming phone board space. */
+.life-about{border:1px solid #bfd0c5;border-radius:18px;max-width:min(94vw,440px);width:100%;padding:0;background:#f9faf4;color:#1d322a;box-shadow:0 18px 55px #0005;}
+.life-about::backdrop{background:#0b161bc9;}
+.life-about header,.life-about footer{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:16px 20px;}
+.life-about header{border-bottom:1px solid #d5ded8;}.life-about header h2{margin:0;font-size:1.25rem;}
+.life-about header button{font-size:1.4rem;min-width:44px;min-height:44px;}
+.life-about-body{padding:10px 20px 18px;line-height:1.55;}.life-about-version{font-size:1.1rem;}.life-about-heading{font-weight:700;margin-bottom:2px;}
+.life-about-note{font-size:.85rem;color:#4f6459;}.life-about footer{border-top:1px solid #d5ded8;}
+.life-about footer button{min-height:44px;padding:8px 12px;border-radius:8px;}
+@media(max-width:720px){.life-about{max-height:calc(100dvh - 30px);overflow:auto;}.life-about footer{position:sticky;bottom:0;background:#f9faf4;}}
