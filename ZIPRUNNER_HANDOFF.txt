@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.69
-filename: the-life-loop-0.5.69-ziprunner.zip
+version: 0.5.70
+filename: the-life-loop-0.5.70-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -141,3 +141,5 @@ notes_v064: Classic new games use original room1.sc starting zero happiness, 25 
 notes_v064_repair: Corrected ZipRunner overlay compatibility with retained local language-campaign.test.cjs. index.html now exposes functional #languageSelect; src/app.js synchronizes it with existing New Game #gameLanguage and saved locale. tests/language-compat-064.test.cjs guards both HTML and offline PLAY.html. v0.5.64 DOS gameplay unchanged. Clean overlay should preserve user local configuration and unshipped tests.
 
 notes_v066: Actual I18n.set API added and wired to toolbar and New Game selectors for ZipRunner retained language-campaign.test.cjs compatibility; static labeled game UI can translate without resetting the game. v0.5.65 failed on missing I18n.set call; no DOS gameplay/Looprd API changes. Offline/Pages builds and test coverage included; unique 0.5.69 release, no push.
+
+notes_v070: Dutch now translates actual rendered game UI, venue actions, Classic/Modern scene descriptions, status indicators, New Game, chat controls and dialogs. I18n.apply after render/showModal, safe locale switch without changing saves/game mechanics. Remaining prose/story translation tracked as LL-301. No Looprd schema change.

@@ -43,6 +43,13 @@
       "kind": "merged-tree-compatibility",
       "supersedes": "0.5.68",
       "notes": "Remove local-test exclusion assertion, restore key-based public EN/NL localization, separate campaign goals from v057 legacy pacing, and add food serialization/expiration regression. Keep save formats and DOS food ordering unchanged."
+    },
+    {
+      "version": "0.5.70",
+      "artifact": "the-life-loop-0.5.70-ziprunner.zip",
+      "kind": "Dutch-gameplay-rendering-fix",
+      "supersedes": "0.5.69",
+      "notes": "Translate dynamically generated Classic/Modern gameplay UI and dialogs in EN/NL, restoring English on switch without game-state/save mutation. DOS travel timing remains next parity work."
     }
   ]
 }

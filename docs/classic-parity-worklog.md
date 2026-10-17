@@ -39,3 +39,7 @@ Each corrective source ZIP must increment the numeric version, including package
 ## v0.5.69 source overlay language repair
 
 The local retained `language-campaign.test.cjs` now expects `I18n.set(...)`. This version adds a shared controller instead of writing only to locale storage. Core DOS time/AI/economy comparisons remain scheduled. No claim of testing the unshipped local test or DOSBox runtime.
+
+## v0.5.70 — Dutch presentation repair (DOS parity unaffected)
+
+A stored NL language preference previously translated only some static markers while the active game still displayed English. The renderer now calls localization on generated gameplay UI and restores English on toggling. This does not close DOS movement-clock, AI or simulation parity work. See ADR-0070; LL-301 remains for comprehensive story/event translation.

@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.69",
-  "summary": "v0.5.69: Fix six ZipRunner merge failures from 0.5.68 source/test contracts. Preserve DOS source food ordering, historical saves and runtime privacy. Add regression tests for translated keys, goal thresholds and typed consumable replay. New release identity.",
+  "version": "0.5.70",
+  "summary": "v0.5.70: Dutch gameplay presentation now updates on each render and language switch. Translate Classic/Modern location descriptions, menus, action buttons, goal/clock panels and modal labels without mutating game state. Original DOS rules and saved games unchanged; prose localization remains LL-301.",
   "implemented": [
     {
       "id": "LL-177",
@@ -1170,6 +1170,16 @@
         "Confirm the retained tests language-campaign.test.cjs and classic-food-inventory.test.cjs pass, or attach their complete source when they still conflict.",
         "Exercise EN/NL both language selectors; confirm quick/standard/extended choices update all goals and previous saves load unchanged.",
         "Check new Classic meal storage and one-week takeout expiration; compare against DOS and keep all player config/private files."
+      ]
+    },
+    {
+      "id": "LL-329",
+      "title": "Rendered Dutch gameplay and live language switching",
+      "summary": "Apply UI localization to dynamically rendered status, story panels, Classic and Modern venue actions, locale-aware dialogs and accessibility labels. Preserve chat messages, original employer identity, game mechanics and saves.",
+      "operator_checks": [
+        "Switch EN -> NL -> EN during an active Classic campaign and verify board, goals, location panels and action labels.",
+        "Open New Game, Finance/Career dialogs and multiplayer/chat; confirm controls are localized without translating messages typed by people.",
+        "Run node tools/verify.mjs and then import the full source ZIP into ZipRunner, retaining local state and configuration."
       ]
     }
   ],

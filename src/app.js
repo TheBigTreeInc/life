@@ -177,7 +177,7 @@ const job=id=>game.getJob({job:id});
 const eraMeta=()=>D.worldEras[game.settings.era];
 const placeLabel=id=>game.isClassic?place(id)?.name||id:eraMeta().names[D.places.findIndex(p=>p.id===id)]||place(id)?.name||id;
 const icon={arc:'📖',favor:'🤝',pulse:'✷',chat:'💬',work:'⚒',relax:'☀',freelance:'💸',cook:'🍳',apply:'✉',raise:'↗',groceries:'🥬',bulkFood:'🥕',lottery:'🎲',meal:'🍲',study:'📖',deposit:'↘',withdraw:'↗',invest:'📊',sell:'📉',upgrade:'🏠',rentDebt:'✓',buy:'🛍',movie:'🎬',pass:'🎉',checkup:'🩺',clothes:'👔',course:'📚',enroll:'📝',classicStudy:'🎓',classicFresh:'🥬',classicNewspaper:'📰',classicLottery:'🎟️',classicLoanApply:'🏦',classicLoanPay:'💵',classicBroker:'📊',classicBuyStock:'📈',classicSellStock:'📉',classicSellLegacy:'📤'};
-function toast(msg,error=false){const el=$('toast');el.textContent=msg;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3100);}
+function toast(msg,error=false){const el=$('toast');el.textContent=I18n.uiText(msg);el.classList.toggle('error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3100);}
 function store(){if(net?.role==='guest')return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(game.snapshot()));}catch(e){/* Local files may deny localStorage; manual export remains available. */}}
 function restore(){try{const data=localStorage.getItem(SAVE_KEY);return data?JSON.parse(data):null;}catch(e){return null;}}
 function updateVenueAccessibility(){
@@ -329,6 +329,7 @@ function render(){
  if(game.winner&&!didShowWin){closeVenue({restoreFocus:false});didShowWin=true;showWinner();}
  if(game.pendingEncounter&&(!net?.role||net.ownTurn())&&$('overlay').dataset.kind!=='encounter')showEncounter();
  chatRender();
+ I18n.apply(); // The entire live board/venue is reconstructed each render.
 }
 function chatRender(){
  const panel=$('chatPanel'),toggle=$('chatToggle');
@@ -409,7 +410,7 @@ function hint(p){
  return game.isClassic?'Focus on employment, education, food and rent. Job applications can fail even when qualified.':'Visit the City Pulse opportunity before the month ends; events move every four weeks.';
 }
 function closeOverlay(){if(game.pendingEncounter&&$('overlay').dataset.kind==='encounter')return;$('overlay').classList.remove('open');$('overlay').dataset.kind='';$('overlay').innerHTML='';}
-function showModal(html,kind='modal'){$('overlay').dataset.kind=kind;$('overlay').innerHTML=html;$('overlay').classList.add('open');}
+function showModal(html,kind='modal'){$('overlay').dataset.kind=kind;$('overlay').innerHTML=html;$('overlay').classList.add('open');I18n.apply();}
 function confirmEmploymentSwitch(actionId){
  const p=game.player,oldJob=game.getJob(p),nextJob=job(actionId.split(':')[1]);
  if(!oldJob||!nextJob||oldJob.id===nextJob.id)return false;
@@ -588,6 +589,8 @@ function newGameDialog(isInitial=false){
      const option=$('goalPreset').querySelector(`option[value="${id}"]`);
      option.textContent=UX57.t(language,caption)+(points?' · '+points:'');
    }
+   render(); // Change presentation only; game/save state is untouched.
+   I18n.apply();
  };
  $('gameLanguage').addEventListener('change',applySetupLanguage);
  form.addEventListener('input',e=>{if(e.target.type==='range')updatePresetFromSliders();});
@@ -813,6 +816,7 @@ $('languageSelect').addEventListener('change',e=>{
  document.documentElement.lang=language;
  const setupLanguage=$('gameLanguage');
  if(setupLanguage){setupLanguage.value=language;setupLanguage.dispatchEvent(new Event('change',{bubbles:true}));}
+ else {render();I18n.apply();}
 });
 $('newBtn').addEventListener('click',()=>{setUtilityMenu(false);newGameDialog();});
 $('utilityMenuBtn').addEventListener('click',()=>setUtilityMenu($('utilityMenu').hidden));

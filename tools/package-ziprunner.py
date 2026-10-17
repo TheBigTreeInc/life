@@ -59,6 +59,7 @@ files += ['src/classic-consumables-064.js','src/classic-food.js','tests/classic-
 # Always ship every test executed by tools/verify.mjs. Otherwise merged ZipRunner trees
 # can test files that were accidentally omitted from the release archive.
 files += [q.relative_to(root).as_posix() for q in sorted((root/'tests').glob('*.test.cjs')) if q.is_file() and q.relative_to(root).as_posix() not in files]
+files += ['docs/decisions/ADR-0070-rendered-dutch-gameplay.md','TEST-DUTCH-GAMEPLAY.bat']
 files += ['docs/v0.5.64-ziprunner-repair.md','docs/v0.5.65-ziprunner-versioned-compatibility.md','docs/decisions/ADR-0066-shared-i18n-locale-contract.md','TEST-LANGUAGE-066.bat','docs/v0.5.67-ziprunner-campaign-integration.md','TEST-CAMPAIGNS-067.bat','src/goal-presets.js','docs/v0.5.68-ziprunner-merged-goal-contract.md','TEST-MERGED-CONTRACT-068.bat','src/i18n.js','docs/release-ledger.json','docs/v0.5.69-merged-tree-contract-failures.md','TEST-MERGED-069.bat','TEST-ZIPRUNNER-REPAIR.bat']
 # Ship all asset files, including the optional detached-house art reference and manifest.
 files += [p.relative_to(root).as_posix() for p in sorted((root/'assets/art/styles/contemporary-default').glob('*')) if p.is_file()]

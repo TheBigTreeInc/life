@@ -1,6 +1,6 @@
 ## v0.5.69 — ZipRunner local-language contract repair
 
-Artifact: `the-life-loop-0.5.69-ziprunner.zip` — full-source ZipRunner release, includes playable `PLAY.html`.
+Artifact: `the-life-loop-0.5.70-ziprunner.zip` — full-source ZipRunner release, includes playable `PLAY.html`.
 
 - Shared `I18n.set(...)` API in `src/i18n.js`; both toolbar and New Game selectors persist and synchronize EN/NL.
 - Local `language-campaign.test.cjs` was retained by ZipRunner, absent from the source archive, and previously failed on `/I18n\.set\(/`. This version integrates that call and adds a direct regression rather than suppressing the test.
