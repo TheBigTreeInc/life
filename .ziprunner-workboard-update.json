@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.52",
-  "summary": "v0.5.52 reroutes the painted Classic street to actual storefront frontage aprons, adds connected visible footpaths to all 13 doors and makes the pawn follow the same continuous route as its highlight. Historical 170-waypoint travel/clock rules, saves and Looprd Social unchanged.",
+  "version": "0.5.64",
+  "summary": "0.5.64: Source-backed DOS player start (happiness 0, relaxation 25, cash $200, empty pantry), distinct fast-food identity, week states 8/10/12/14/16 storage-before-consumption, and unpenalized 60h Classic week; legacy saves/Modern preserved. Original emulator runtime and AI endurance remain open.",
   "implemented": [
     {
       "id": "LL-177",
@@ -153,7 +153,7 @@
       "title": "Rival layoff recovery and essentials protection",
       "summary": "Fix unemployed travel loop; apply for a qualified role before leaving ACNE; add one-food-unit conservative buffer during downturn.",
       "operator_checks": [
-        "Advance a crisis scenario and check Jones applies at Employment Office before heading back to Black\u2019s Market."
+        "Advance a crisis scenario and check Jones applies at Employment Office before heading back to Black’s Market."
       ]
     },
     {
@@ -215,7 +215,7 @@
     {
       "id": "LL-206",
       "title": "Original waypoint tick estimator",
-      "summary": "Implement source-derived steps + 2\u00d720 tick estimate per traveled leg independently of the provisional playable action-clock time conversion.",
+      "summary": "Implement source-derived steps + 2×20 tick estimate per traveled leg independently of the provisional playable action-clock time conversion.",
       "operator_checks": [
         "Hover venues to compare actual spending units and the independent original source-estimate ticks."
       ]
@@ -399,7 +399,7 @@
     {
       "id": "LL-229",
       "title": "DOS weekly computer bonus state 4",
-      "summary": "Replace approximate Classic computer bank bonus with 1/7 draw and 20\u2013100 cash as supported by startTrn.sc, with sourceState=4 diagnostics; retain Modern behavior.",
+      "summary": "Replace approximate Classic computer bank bonus with 1/7 draw and 20–100 cash as supported by startTrn.sc, with sourceState=4 diagnostics; retain Modern behavior.",
       "operator_checks": [
         "Use deterministic rolls to verify no-computer, win/loss, minimum and maximum awards; check Classic/Modern isolation."
       ]
@@ -503,7 +503,7 @@
     {
       "id": "LL-242",
       "title": "Separate source-linked Classic relaxation",
-      "summary": "Introduce validated 10\u201330 relaxation independent from energy/happiness; recover source state 6 weekly \u22121 to floor 10 with an explicitly provisional rest adapter.",
+      "summary": "Introduce validated 10–30 relaxation independent from energy/happiness; recover source state 6 weekly −1 to floor 10 with an explicitly provisional rest adapter.",
       "operator_checks": [
         "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
@@ -785,7 +785,7 @@
       "title": "Separate road preview from storefront art",
       "summary": "Draw a subtle, rounded hover path on public streets with an independent door target marker and short threshold; do not draw the travel highlight through storefront illustrations.",
       "operator_checks": [
-        "Hover Bank, Black\u2019s Market, Z-Mart, Socket City and Factory; preview points must remain outside shop bounds."
+        "Hover Bank, Black’s Market, Z-Mart, Socket City and Factory; preview points must remain outside shop bounds."
       ]
     },
     {
@@ -828,7 +828,7 @@
       "summary": "Draw permanent paved footpaths to all 13 commissioned art entrances and highlight the full walk; animate the pawn continuously from one door via public streets to the next.",
       "priority": "medium",
       "operator_checks": [
-        "Hover Bank and Black\u2019s Market; verify both street and door segments appear; complete and skip a pawn journey; inspect no invisible teleport."
+        "Hover Bank and Black’s Market; verify both street and door segments appear; complete and skip a pawn journey; inspect no invisible teleport."
       ]
     },
     {
@@ -838,6 +838,287 @@
       "priority": "medium",
       "operator_checks": [
         "Run python tests/qa_storefront_frontage.py and node tools/verify.mjs; verify the in-venue clock shows 55/60 after a five-unit trip."
+      ]
+    },
+    {
+      "id": "LL-284",
+      "title": "DOS Employment end-of-week time cap",
+      "summary": "Allow Classic job applications and raises with 1–3 remaining, cap actual charged units at zero remaining, preserve qualification and Modern restrictions.",
+      "priority": "high",
+      "operator_checks": [
+        "Run node --test tests/classic-dos-time-parity.test.cjs and node tools/dos-time-audit.mjs; verify full build and legacy saves."
+      ]
+    },
+    {
+      "id": "LL-285",
+      "title": "Executable original clock reference and timing audit",
+      "summary": "Reference room1.sc tick overflow and quote all 156 original-venue directed route legs alongside provisional player time without changing the travel model.",
+      "priority": "high",
+      "operator_checks": [
+        "Run node --test tests/classic-dos-time-parity.test.cjs and node tools/dos-time-audit.mjs; verify full build and legacy saves."
+      ]
+    },
+    {
+      "id": "LL-286",
+      "title": "Late-week timing parity regression and release",
+      "summary": "Test late applications, raises, zero-hour blocking, Modern isolation, source tick boundaries, save compatibility, browser smoke and clean ZipRunner build.",
+      "priority": "high",
+      "operator_checks": [
+        "Run node --test tests/classic-dos-time-parity.test.cjs and node tools/dos-time-audit.mjs; verify full build and legacy saves."
+      ]
+    },
+    {
+      "id": "LL-287",
+      "title": "DOS weekly state-order and invented-event cleanup",
+      "summary": "Run source-backed lottery, computer bonus, relaxation before the Classic living/wardrobe transition; stop Modern-only arbitrary spending in Classic. Preserve provisional pantry semantics until distinct DOS consumable IDs exist.",
+      "operator_checks": [
+        "Check seeded Classic source-order tests, food/rent AI survivability and Modern unchanged."
+      ]
+    },
+    {
+      "id": "LL-288",
+      "title": "Pinned canonical Social JavaScript SDK integration",
+      "summary": "Load official Social JS SDK from immutable Git commit on demand with Git object integrity verification and no persistent tokens.",
+      "operator_checks": [
+        "Verify remote source integrity rejects mutations and no game save contains an account secret."
+      ]
+    },
+    {
+      "id": "LL-289",
+      "title": "Shared Social account login and registration",
+      "summary": "Use Social account credentials, share an in-memory session with the game chat and modular portrait editor, preserve co-op capability separation.",
+      "operator_checks": [
+        "Verify sign-in/register, lobby, profile revisions, logout and original account IDs."
+      ]
+    },
+    {
+      "id": "LL-290",
+      "title": "Weekly/Social integrated regression and source handoff",
+      "summary": "Extend mandatory automated tests, production-style browser smoke, docs and ZipRunner lifecycle with separate service needs.",
+      "operator_checks": [
+        "Run node tools/verify.mjs from clean source and verify the packaged ZIP and browser UI."
+      ]
+    },
+    {
+      "id": "LL-291",
+      "title": "Classic end-of-turn home return and clock overdraft",
+      "summary": "Use route geometry to force home at turn close, deduct remaining clock, and carry excess into the next shared week for each player including AI.",
+      "operator_checks": [
+        "Run tests/home-return-rules.test.cjs; verify a 1-unit clock at Market returns home and reduces next weekly clock by walking overrun."
+      ]
+    },
+    {
+      "id": "LL-292",
+      "title": "Game-family presets and custom house rules",
+      "summary": "Immutable Classic and Modern defaults. New Game offers opt-in forced return and carryover toggles without changing either family venue or event catalog.",
+      "operator_checks": [
+        "New Game Advanced shows defaults for Classic and Modern, Custom state, reset and browser preference persistence."
+      ]
+    },
+    {
+      "id": "LL-293",
+      "title": "Homeward turn debt serialization and regression",
+      "summary": "Validate return travel debt in import/hosted game snapshots and preserve per-player hotseat staging, old-save migration, Modern isolation and offline browser build.",
+      "operator_checks": [
+        "Run full verifier and multiplayer/save/rules tests; confirm older saves load and overrun cannot be forged negative."
+      ]
+    },
+    {
+      "id": "LL-294",
+      "title": "Animated mandatory Classic journey home",
+      "summary": "Use the existing 170-waypoint pedestrian route and a skip/reduced-motion fallback before ending a turn; retain authoritative debt in Game.endTurn.",
+      "operator_checks": [
+        "View end week from a distant shop, skip while walking, and verify after-turn 60h minus owed travel; hotseat prompts after the animation."
+      ]
+    },
+    {
+      "id": "LL-295",
+      "title": "Expanded per-game house rules",
+      "summary": "Add defaults-backed toggles for food spoilage, rent happiness penalties and market fluctuation, without altering shops or game family.",
+      "operator_checks": [
+        "Start Classic/Modern with default and custom rules and check old-save migration and weekly outcomes."
+      ]
+    },
+    {
+      "id": "LL-296",
+      "title": "v0.5.56 delivery, source tests and release diagnostics",
+      "summary": "Cover default parity, alternative house rules, transition order, local preferences and full ZipRunner verification.",
+      "operator_checks": [
+        "Run node tools/verify.mjs from a clean extract; test browser click-through and real online host/guest before public deployment."
+      ]
+    },
+    {
+      "id": "LL-297",
+      "title": "Closing-week Classic food audit",
+      "summary": "Attribute pantry consumption, hunger and food purchases to the completed week with pure validated reducer; preserve original state order, modern rules and current storage probabilities.",
+      "operator_checks": [
+        "Play four Classic weeks with and without a pantry purchase; inspect food-week-close records and verify identical pantry/hunger results to 0.5.56."
+      ]
+    },
+    {
+      "id": "LL-298",
+      "title": "Selectable match goal presets",
+      "summary": "Add Quick (30 each), Standard (50 each), Extended (75 each) and Custom goals on New Game; preserve independent sliders and classic difficulty/house rules.",
+      "operator_checks": [
+        "Select presets, change one slider to Custom, reset, save preferences, resume old games and confirm goals alone change, not clock."
+      ]
+    },
+    {
+      "id": "LL-299",
+      "title": "English/Dutch setup localization foundation",
+      "summary": "Persist EN/NL selection locally, translate first New Game pacing labels and goal names with English fallback; keep engine/network/saves language-neutral.",
+      "operator_checks": [
+        "Toggle English and Nederlands in Game Settings and confirm texts update without resetting slider values."
+      ]
+    },
+    {
+      "id": "LL-300",
+      "title": "v0.5.57 regression, package and operator handoff",
+      "summary": "Add focused tests, ADR, parity notes and versioned full-source offline ZipRunner handoff.",
+      "operator_checks": [
+        "Run node tools/verify.mjs and node tools/package-ziprunner.py, verify all version gates, check offline PLAY.html and review Looprd descriptor release."
+      ]
+    },
+    {
+      "id": "LL-303",
+      "title": "Classic source goal scores and victory",
+      "summary": "Use reference DOS progress weighted by target goal points; discrete career stat, completed-degree education and independent goal gate; Modern untouched.",
+      "operator_checks": [
+        "Launch Classic at uneven custom goals, inspect point/target labels and leaderboard; a missing single goal must block victory.",
+        "Load an existing save and confirm Modern rules, Custom Classic house rules and multiplayer still behave as before."
+      ]
+    },
+    {
+      "id": "LL-304",
+      "title": "Goal parity regression and portable build",
+      "summary": "Add pure original DOS parity module and regression cases for unbalanced goals, fractional assets, threshold edges, rivals, saves, offline Pages and source package.",
+      "operator_checks": [
+        "Run TEST-GOALS.bat or npm run test:goals and node tools/verify.mjs.",
+        "Open packaged PLAY.html and inspect the progress bar/leaderboard; no automatic Git push."
+      ]
+    },
+    {
+      "id": "LL-305",
+      "title": "Clock-end venue actions and Classic 10-action rule separation",
+      "summary": "Permit Classic zero-time in-venue transactions at clock exhaustion, keep timed actions/travel blocked, make prior hard ten-action gate an opt-in house rule; compare seven source-identified routes without changing unproven travel costs.",
+      "operator_checks": [
+        "At 0 hours remaining inside Bank, deposit/withdraw $100; timed broker action and new travel must fail without charging money or moving.",
+        "With the optional ten-action rule ON, the eleventh zero-time deposit must be refused; with it OFF, transfers continue as long as resources allow.",
+        "Verify seven source route cases, Classic forced return, old/remote saves and Modern isolation; original DOSBox route timing remains incomplete."
+      ]
+    },
+    {
+      "id": "LL-311",
+      "title": "Classic happiness and source-state food-stress audit",
+      "summary": "Apply the verified source state-12 -2 hunger happiness and no-food state-14 conditional cash/stress event; add exact source state-24 pure mapping without speculative integration and four-week save-backed Finances wellbeing diagnostics. Preserve original house rules, Modern mode and open item LL-306.",
+      "operator_checks": [
+        "Run TEST-HAPPINESS.bat and node tools/verify.mjs; inspect Classic Finances after four weeks for week-by-week hunger, cash, joy and relaxation, including the monthly rent penalty.",
+        "Verify exact DOS 0..3, 0..4 and 30..cap roll boundaries and no-food/no-cash cases; restore old saves, test Modern/Custom Classic, and check standalone PLAY.html; full DOS event parity remains open."
+      ]
+    },
+    {
+      "id": "LL-312",
+      "title": "Source food-storage happiness penalties",
+      "summary": "Implement DOS state 10 spoiled/unrefrigerated fresh-food happiness -2 and excess stored food -1; retain current meal ordering until consumable IDs + AI can migrate.",
+      "operator_checks": [
+        "In Classic with no fridge, leave uneaten fresh food and finish a week: loss of food and 2 happiness. In fridge with >6 remaining, trim to 6 and lose 1 happiness. Disable food spoilage in Custom and verify no loss."
+      ]
+    },
+    {
+      "id": "LL-313",
+      "title": "Fourth-week loan notices and bounded penalties",
+      "summary": "Align monthly loan check with the fourth completed week; distinguish first warning from a later negative-schedule -1 happiness approximation; preserve payments and credit history.",
+      "operator_checks": [
+        "Take an unpaid loan through weeks 4 and 8: first notice is on closed week 4, no extra -3 happiness; second notice records a late schedule and -1. Save and reload the game."
+      ]
+    },
+    {
+      "id": "LL-314",
+      "title": "Original n108 source payroll comparator",
+      "summary": "Provide side-effect-free original n108 full-gross rent calculation for 1/3/6-unit work, retaining bounded actual cash transactions pending DOS runtime evidence.",
+      "operator_checks": [
+        "Run TEST-OBLIGATIONS.bat; verify source 1/3/6-unit $7-wage/$100-debt comparator gives $26 net each, and production partial-shift net never exceeds earned gross."
+      ]
+    },
+    {
+      "id": "LL-315",
+      "title": "Original Jones raise/promotion and rest priority gates",
+      "summary": "Source-derived raise cap and thresholds, qualified promotion checks and relaxation-based home recovery.",
+      "operator_checks": [
+        "At ACNE, reach minimum dependability and verify only two raises are possible.",
+        "In seeded Classic, verify Jones rests when relaxation is 10 or below 17; compare original #32/#37 branches."
+      ]
+    },
+    {
+      "id": "LL-316",
+      "title": "Rival survival and branch decision audit",
+      "summary": "Correct original food purchase source identity (#27), preserve live cash/food/rent priority, stabilize long hardship counter.",
+      "operator_checks": [
+        "Inspect Career Roadmap decision trace for food market branch #27.",
+        "Export/import a 20-week seed-4 Classic game and confirm deterministic Jones state and hardship counter."
+      ]
+    },
+    {
+      "id": "LL-317",
+      "title": "Source predicate adapter and reproducible release tests",
+      "summary": "Publish pure DOS-branch predicate module and regression tests for new Classic behaviors and Modern isolation.",
+      "operator_checks": [
+        "Run TEST-JONES-AI.bat and node tools/verify.mjs.",
+        "Verify complete v0.5.62 source ZIP, offline PLAY.html, and Modern Story."
+      ]
+    },
+    {
+      "id": "LL-318",
+      "title": "Original DOS pawn price formula and happiness impacts",
+      "summary": "New Classic pawn lot uses adjusted goods price 40% offer, purchase price 50% redemption (reference proxy), one happiness loss and fridge food loss; save and Modern preserved.",
+      "operator_checks": [
+        "Use Classic Second Chance Pawn and compare quoted values before and after economy moves.",
+        "Pawn a refrigerator with fresh food and confirm food/happiness effects; reload older saved lot."
+      ]
+    },
+    {
+      "id": "LL-319",
+      "title": "Original Black’s Market price tests and DOS economy RNG comparators",
+      "summary": "Regression for 1/2/4 week food bundle source prices, original DOS index drift math and event RNG gates; comparator is not connected to live compatibility economy.",
+      "operator_checks": [
+        "Run npm run test:retail-pawn and verify seven goods-index readings.",
+        "Compare deterministic economic source trace with economicIndex.sc before considering any live replacement."
+      ]
+    },
+    {
+      "id": "LL-320",
+      "title": "v0.5.63 source/ZipRunner release and compatibility verification",
+      "summary": "ADR, parity worklog, reproducible offline Pages builds, save/Modern isolation checks and full-source ZipRunner release.",
+      "operator_checks": [
+        "Run TEST-RETAIL-PAWN.bat and node tools/verify.mjs.",
+        "Import v0.5.63 ZIP, open PLAY.html, verify old save restores and no Looprd source API change."
+      ]
+    },
+    {
+      "id": "LL-321",
+      "title": "Original DOS Classic new-game initial statistics",
+      "summary": "Set Classic fresh-start happiness 0, relaxation 25, cash $200 and empty pantry from room1.sc Player init; preserve Modern, custom goals and old saved states.",
+      "operator_checks": [
+        "Compare a new Classic opening screen with room1.sc and DOSBox original.",
+        "Create a Modern Story game, import an old Classic save and verify neither has initial stats overwritten."
+      ]
+    },
+    {
+      "id": "LL-322",
+      "title": "Versioned DOS food items, storage ordering and clock isolation",
+      "summary": "Implement fresh vs indexed fast food from fastFood.sc, startTrn state order 8/10/12/14/16, food expiration and 6/12-week freezer storage, initial mood benefits, and no hunger time penalty in Classic; retain legacy save pantry semantics.",
+      "operator_checks": [
+        "Buy each Monolith Burger food and test two weekly turnovers without a fridge.",
+        "Buy fresh food and test spoilage with no fridge, 6-cap fridge, 12-cap freezer; verify Classic 60 hours and Modern existing rules."
+      ]
+    },
+    {
+      "id": "LL-323",
+      "title": "v0.5.64 source release, parity evidence and replay regression",
+      "summary": "Pure rule adapter, deterministic tests, source ADR and parity worklog, updated ZIP metadata, ZipRunner lifecycle, complete offline and Pages artifacts, new source ZIP.",
+      "operator_checks": [
+        "Run TEST-DOS-FOOD.bat, node tools/verify.mjs and a clean extracted source rebuild.",
+        "Verify new Classic food turns, save/load migration, 30 seeded Jones campaign benchmark and Looprd unchanged contract in PLAY.html."
       ]
     }
   ],
@@ -957,7 +1238,7 @@
     {
       "id": "LL-134",
       "title": "Original detailed economy, merchandise, events and security parity",
-      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black\u2019s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
+      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black’s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
       "priority": "high",
       "operator_checks": [
         "Record DOS reference walkthrough for robberies, item breakage, price changes and real estate moves."
@@ -966,10 +1247,10 @@
     {
       "id": "LL-147",
       "title": "Full original DOS store-location and retail risk parity",
-      "summary": "Revisit the 13 shared board constraint versus original separate Z-Mart/Black\u2019s Market physical buildings. Verify exact original weekly inventory, discount price, equipment breakdown rates, tickets, economy fluctuations and residence theft with captured DOS sessions. Current rotating shelves and outcomes are explicit approximations.",
+      "summary": "Revisit the 13 shared board constraint versus original separate Z-Mart/Black’s Market physical buildings. Verify exact original weekly inventory, discount price, equipment breakdown rates, tickets, economy fluctuations and residence theft with captured DOS sessions. Current rotating shelves and outcomes are explicit approximations.",
       "priority": "high",
       "operator_checks": [
-        "Record week-by-week DOS inventory at Z-Mart and Black\u2019s Market and durability/breakage events; compare with Life Loop."
+        "Record week-by-week DOS inventory at Z-Mart and Black’s Market and durability/breakage events; compare with Life Loop."
       ]
     },
     {
@@ -1055,6 +1336,69 @@
       "title": "Cross-game single sign-on and social deployment",
       "summary": "Implement production OIDC browser login, trusted issuer, short-lived game-scoped tokens, game server validation and remote two-client social deployment.",
       "priority": "high"
+    },
+    {
+      "id": "LL-301",
+      "title": "Complete Dutch gameplay translation",
+      "summary": "Translate entire gameplay, screen reader copy, events, shops and storyline through presentation keys only; keep network save data independent of locale.",
+      "priority": "medium",
+      "operator_checks": [
+        "Walk through Classic, Modern and a Looprd guest in both languages."
+      ]
+    },
+    {
+      "id": "LL-302",
+      "title": "DOS food-consumable parity and match-length benchmark",
+      "summary": "Source DOS food IDs, new-game pantry and storage-before-consumption implemented in 0.5.64; full DOS food illness RNG, item provenance, and 5+ side-by-side match-duration samples remain unverified.",
+      "priority": "medium",
+      "operator_checks": [
+        "Record DOS reference food scenario and week-by-week race, compare against Classic."
+      ]
+    },
+    {
+      "id": "LL-306",
+      "title": "Classic happiness and weekend sequence",
+      "summary": "Match original happiness/relaxation and random weekend events using source states and runtime captures; proposed v0.5.60.",
+      "priority": "medium",
+      "operator_checks": [
+        "Provide edition-matched DOS runtime capture and compare with equal-seed Classic scenario before accepting parity."
+      ]
+    },
+    {
+      "id": "LL-307",
+      "title": "Classic economic obligations",
+      "summary": "Finish food illness/consumables, rent extensions, loans and garnishment parity against reference; proposed v0.5.61.",
+      "priority": "medium",
+      "operator_checks": [
+        "Provide edition-matched DOS runtime capture and compare with equal-seed Classic scenario before accepting parity."
+      ]
+    },
+    {
+      "id": "LL-308",
+      "title": "DOS rival AI branch fidelity",
+      "summary": "Complete original ordered Jones career and survival branches with reproducible scenarios; proposed v0.5.62.",
+      "priority": "medium",
+      "operator_checks": [
+        "Provide edition-matched DOS runtime capture and compare with equal-seed Classic scenario before accepting parity."
+      ]
+    },
+    {
+      "id": "LL-309",
+      "title": "Classic catalog and RNG parity",
+      "summary": "Finish item-specific pricePaid, six-item original pawn slots and resale, original eight-index live RNG, economic event probabilities and four-person local rounds; source comparators and pawn reference-price candidate now built in v0.5.63.",
+      "priority": "medium",
+      "operator_checks": [
+        "Provide edition-matched DOS runtime capture and compare with equal-seed Classic scenario before accepting parity."
+      ]
+    },
+    {
+      "id": "LL-310",
+      "title": "Original DOS starting happiness audit",
+      "summary": "Recovered room1.sc Player class confirms 0 happiness, 25 relaxation and $200 cash, now applied to new Classic games in 0.5.64; executable DOSBox starting-state and fractional education runtime confirmation remain open.",
+      "priority": "medium",
+      "operator_checks": [
+        "Provide edition-matched DOS runtime capture and compare with equal-seed Classic scenario before accepting parity."
+      ]
     }
   ]
 }

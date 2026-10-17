@@ -10,7 +10,7 @@ function validateProfile(input,portraitAPI=typeof globalThis!=='undefined'?globa
  if(input.schema!==undefined&&input.schema!==SCHEMA)throw Error('Unsupported shared profile schema');
  const name=text(input.displayName,24);if(!name)throw Error('Display name is required');
  const profileId=input.profileId===null||input.profileId===undefined?null:String(input.profileId);
- if(profileId!==null&&!/^[a-zA-Z0-9_-]{8,72}$/.test(profileId))throw Error('Invalid profile ID');
+ if(profileId!==null&&!(/^[a-zA-Z0-9_-]{8,72}$/.test(profileId)||/^acct_[1-9][0-9]{0,15}$/.test(profileId)))throw Error('Invalid profile ID');
  const appearance=input.appearance??null;
  if(appearance!==null){
   if(!isObj(appearance)||appearance.schema!=='modular-portraits.identity/v1'||!Object.hasOwn(PACKS,appearance.pack)||!Number.isInteger(appearance.revision)||JSON.stringify(appearance).length>16384)throw Error('Unsupported portrait identity');

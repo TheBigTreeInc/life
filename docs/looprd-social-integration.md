@@ -30,3 +30,9 @@ The game Chat icon opens a two-channel panel. **Social lobby** can be used indep
 - Social messages are fetched after connecting, on send and roughly every eight seconds while visible. Social history belongs to Social (7 days/100 records), unlike transient private co-op messages. The game shows up to the latest 50 messages.
 - Browser origin must be allowed by the Looprd host CORS policy. `LOOPRD_ORIGINS` must include the deployed static game origin for direct browser POST; a locally served game requires its local origin. No special CORS bypass is provided.
 - Disconnect or network failure must never block local gameplay or the game-room snapshot/turn path.
+
+## v0.5.54 — Canonical Social account SDK
+
+The primary chat/portrait sign-in now uses the current `TheBigTreeInc/social` browser SDK (`client/sdk/looprd-social.js`) rather than asking the user for a development token. Account register/login, profile revision control, lobby feed/send and revocable logout are Social-owned. The SDK is fetched only when signing in, pinned to immutable commit `62d46319a44def5d7489dbf533ea0bf9981d4358`, checked against the Git blob hash before importing, and held in memory. The game has a separate co-op room token and does not treat a Social session as proof of game authorization.
+
+The previous development bridge and token client remain present for backwards-compatible local tests, but no longer appear as the default controls. The publisher of Social should eventually provide its SDK as a first-party, versioned static asset with a SHA-256 manifest rather than relying on pinned raw GitHub content at runtime. Accounts are server-local, not federated. Current Social account IDs (`acct_1` etc.) are accepted in the profile boundary.

@@ -1,4 +1,4 @@
-import {readFileSync,statSync} from 'node:fs';
+import {readFileSync,statSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {reconcile} from './reconcile-workboard.mjs';
@@ -6,6 +6,7 @@ const root=resolve(import.meta.dirname,'..');
 const load=rel=>readFileSync(resolve(root,rel),'utf8');
 execFileSync(process.execPath,[resolve(root,'tools/build-offline.mjs')],{stdio:'inherit'});
 const pkg=JSON.parse(load('package.json'));
+const atLeast=baseline=>pkg.version.split('.').map(Number).reduce((n,v)=>n*1000+v,0)>=baseline.split('.').map(Number).reduce((n,v)=>n*1000+v,0);
 const manifest=JSON.parse(load('.ziprunner-workboard-update.json'));
 const tasks=[...manifest.implemented,...manifest.remaining];
 // Workboard updates are incremental. ZipRunner rejects implemented/remaining lists
@@ -106,6 +107,7 @@ if(!load('package.json').includes('build:pages'))errors.push('No GitHub Pages bu
 if(!allImplemented.some(t=>t.id==='LL-067')||!allImplemented.some(t=>t.id==='LL-070'))errors.push('Online co-op workboard tasks missing');
 if(!load('looprd.yaml').includes('looprd/v1')||!load('looprd.yaml').includes('the-life-loop')||!load('looprd.yaml').includes('websocket:'))errors.push('Looprd component missing or invalid');
 if(!load('src/network.js').includes('class LifeOnline')||!load('index.html').includes('id="onlineBtn"')||!play.includes('class LifeOnline'))errors.push('Online multiplayer browser adapter missing');
+if(!['LL-294','LL-295','LL-296'].every(id=>manifest.implemented.some(t=>t.id===id))||!load('src/app.js').includes("await routeOverlay?.animate(actorId,from,'home'")||!load('src/rule-presets.js').includes('marketFluctuations')||!load('docs/decisions/ADR-0056-homeward-animation-and-house-rule-extensions.md').includes('**Status:** Accepted'))errors.push('v0.5.56 homeward animation and customizable weekly rules missing');
 if(!load('docs/decisions/ADR-0006-online-multiplayer-looprd.md').includes('**Status:** Accepted'))errors.push('Online multiplayer architecture decision missing');
 if(!load('docs/decisions/ADR-0007-responsive-mobile-layout.md').includes('**Status:** Accepted'))errors.push('Responsive UI architecture decision missing');
 if(!load('docs/decisions/ADR-0008-adaptive-drawers-and-turn-ownership.md').includes('**Status:** Accepted'))errors.push('Sliding panels/turn ownership architecture decision missing');
@@ -161,7 +163,12 @@ if(!load('docs/decisions/ADR-0019-classic-goals-jones-and-employer-office.md').i
 if(!load('src/app.js').includes('showFutureJobApplications=false')||!load('src/data.js').includes("id:'pawn'"))errors.push('Shared 13-venue board and eligible-first careers not present');
 if(!allImplemented.some(t=>t.id==='LL-131')||!allImplemented.some(t=>t.id==='LL-132')||!allImplemented.some(t=>t.id==='LL-133')||!manifest.remaining.some(t=>t.id==='LL-134'))errors.push('v0.5.19 printed-reference parity workboard tasks missing');
 if(!load('docs/decisions/ADR-0020-printed-reference-classic-economy.md').includes('**Status:** Accepted'))errors.push('Original primary-source parity decision missing');
+if(atLeast('0.5.57')&&(!load('src/app.js').includes('goalPreset')||!load('src/engine.js').includes('closeWeekFood')||!load('src/life-pass-057.js').includes('closeWeekFood')||!load('docs/decisions/ADR-0057-weekly-food-goals-and-localization.md').includes('**Status:** Accepted')))errors.push('v0.5.57 food goals and localization integration missing');
 if(!load('src/engine.js').includes('classicOwnedValue(')||!load('src/engine.js').includes('classicStudyProgress(')||!load('src/engine.js').includes('classicEmergencyRelief('))errors.push('Classic reference parity gameplay missing');
+if(atLeast('0.5.58')&&(!load('src/engine.js').includes('ClassicGoals.progress(')||!load('src/classic-goals.js').includes('careerStat')||!load('docs/decisions/ADR-0058-source-weighted-goal-parity.md').includes('**Status:** Accepted')||!['LL-303','LL-304'].every(id=>manifest.implemented.some(t=>t.id===id))))errors.push('v0.5.58 Classic source goal parity gate missing');
+if(atLeast('0.5.59')&&(!load('src/app.js').includes('name="weeklyActionLimit"')||!load('src/engine.js').includes('hours===0')||!load('src/classic-time.js').includes('routeClockScenario')||!load('docs/decisions/ADR-0059-clock-end-actions-and-route-evidence.md').includes('**Status:** Accepted')||!manifest.implemented.some(t=>t.id==='LL-305')))errors.push('v0.5.59 clock parity gate missing');
+if(atLeast('0.5.60')&&(!load('src/engine.js').includes('ClassicWeekly.cashStress(')||!load('src/app.js').includes('Classic happiness · last four weeks')||!load('src/classic-weekly-events.js').includes('headlineHappiness')||!load('docs/decisions/ADR-0060-source-food-cash-stress-and-happiness-audit.md').includes('**Status:** Accepted')||!manifest.implemented.some(t=>t.id==='LL-311')))errors.push('v0.5.60 source happiness parity gate missing');
+if(atLeast('0.5.61')&&(!load('src/classic-time.js').includes('originalGarnishmentReference')||!load('src/classic-weekly-events.js').includes('happinessDelta:lost>0')||!load('src/engine.js').includes('ClassicWeekly.loanDueTrace(closedWeek')||!load('docs/decisions/ADR-0061-classic-food-loans-and-paycheck-evidence.md').includes('**Status:** Accepted')||!['LL-312','LL-313','LL-314'].every(id=>manifest.implemented.some(t=>t.id===id))))errors.push('v0.5.61 obligation parity contract missing');
 if(!['LL-135','LL-136','LL-137','LL-138','LL-139'].every(id=>allImplemented.some(t=>t.id===id)))errors.push('Centered venue workboard tasks missing');
 if(!load('docs/decisions/ADR-0021-board-centered-venue-interactions.md').includes('**Status:** Accepted'))errors.push('Centered venue architecture decision missing');
 if(load('index.html').includes('id="gameActions"')||load('index.html').includes('id="destinationDrawerBtn"')||load('index.html').includes('data-mobile-tab="actions"'))errors.push('Old destination pane or mobile Activities tab remains');
@@ -208,10 +215,38 @@ if(!['LL-264','LL-265','LL-266','LL-267'].every(id=>manifest.implemented.some(t=
 if(!load('index.html').includes('id="classicHotseatHandover"')||!load('PLAY.html').includes('LifeClassicHotseatHandover')||!load('docs/decisions/ADR-0047-classic-hotseat-privacy-and-mobile-road-scenery.md').includes('**Status:** Accepted'))errors.push('Classic hotseat privacy handover missing');
 if(!load('index.html').includes('id="chatSocialTab"')||!load('index.html').includes('src/looprd-social-session.js')||!load('PLAY.html').includes('class SocialSession')||!load('docs/decisions/ADR-0046-game-chat-social-service-boundary.md').includes('**Status:** Accepted'))errors.push('Shared Social chat integration missing');
 if(!load('looprd.yaml').includes('migrations:')||!load('looprd.yaml').includes('ADD COLUMN "chatKey"'))errors.push('Looprd game schema migration missing');
+if(!load('PLAY.html').includes('LifeSocialSdkLoader')||!load('index.html').includes('id="chatSocialRegister"')||!load('docs/decisions/ADR-0054-classic-weekly-parity-and-social-js-sdk.md').includes('**Status:** Accepted'))errors.push('v0.5.54 Social SDK and Classic source release incomplete');
+if(!load('src/rule-presets.js').includes('forcedReturnHome')||!load('PLAY.html').includes('LifeRulePresets')||!load('src/engine.js').includes('closeReturnJourney(')||!load('src/app.js').includes('id="restoreRulePreset"')||!load('docs/decisions/ADR-0055-homeward-time-debt-and-rule-presets.md').includes('**Status:** Accepted'))errors.push('v0.5.55 homeward rule or custom preset integration missing');
+if(atLeast('0.5.62')&&(!load('src/classic-jones-source.js').includes('raiseEligible')||
+   !load('src/engine.js').includes('ClassicJones.raiseEligible(')||
+   !load('PLAY.html').includes('root.LifeClassicJonesSource=api')||
+   !load('TEST-JONES-AI.bat').includes('classic-jones-source-062.test.cjs')||
+   !load('docs/decisions/ADR-0062-jones-source-branch-priorities.md').includes('**Status:** Accepted')||
+   !['LL-315','LL-316','LL-317'].every(id=>manifest.implemented.some(t=>t.id===id))))
+  errors.push('v0.5.62 Jones source decision adapter/QA missing');
+if(atLeast('0.5.63')&&(!load('src/classic-retail-pawn-063.js').includes('pawnQuote')||
+   !load('src/engine.js').includes('ClassicRetailPawn.pawnQuote(')||
+   !load('index.html').includes('src/classic-retail-pawn-063.js')||
+   !load('PLAY.html').includes('root.LifeClassicRetailPawn=api')||
+   !load('TEST-RETAIL-PAWN.bat').includes('classic-retail-pawn-economy-063.test.cjs')||
+   !load('docs/decisions/ADR-0063-source-retail-pawn-economic-audit.md').includes('**Status:** Accepted')||
+   !['LL-318','LL-319','LL-320'].every(id=>manifest.implemented.some(t=>t.id===id))))
+  errors.push('v0.5.63 pawn source quotes, economic audit and release evidence missing');
+if(atLeast('0.5.64')&&(!load('src/classic-consumables-064.js').includes('classic-consumables.v1')||
+   !load('src/engine.js').includes('ClassicFood.week(')||
+   !load('index.html').includes('src/classic-consumables-064.js')||
+   !load('PLAY.html').includes('root.LifeClassicConsumables=api')||
+   !load('TEST-DOS-FOOD.bat').includes('classic-dos-consumables-064.test.cjs')||
+   !load('docs/decisions/ADR-0064-dos-opening-stats-and-consumable-identity.md').includes('**Status:** Accepted')||
+   !['LL-321','LL-322','LL-323'].every(id=>manifest.implemented.some(t=>t.id===id))))
+  errors.push('v0.5.64 DOS starting state, food identities and release evidence missing');
 if(errors.length)throw Error(errors.join('\n'));
 reconcile({check:true});
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);
 // Verify Pages artifacts from a clean source checkout, not only the standalone offline build.
 execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,stdio:'inherit'});
-execFileSync(process.execPath,['--test','tests/game.test.cjs','tests/rules-era.test.cjs','tests/classic-parity.test.cjs','tests/classic-jobs-rent.test.cjs','tests/classic-banking-food.test.cjs','tests/multiplayer.test.cjs','tests/mobile-ui.test.cjs','tests/characters.test.cjs','tests/art-pack.test.cjs','tests/setup-preferences.test.cjs','tests/classic-work-pawn.test.cjs','tests/toolbar-ticker.test.cjs','tests/portrait-gallery.test.cjs','tests/character-compiler.test.cjs','tests/customization-disabled.test.cjs','tests/shared-board-careers.test.cjs','tests/classic-goals-competition.test.cjs','tests/classic-reference-mechanics.test.cjs','tests/center-venue-interactions.test.cjs','tests/employer-board-link.test.cjs','tests/classic-discount-market.test.cjs','tests/classic-clock-employment.test.cjs','tests/classic-map-risk.test.cjs','tests/route-graph.test.cjs','tests/route-browser-wiring.test.cjs','tests/classic-route-clock.test.cjs','tests/original-dos-route-jobs-ai.test.cjs','tests/classic-migration-career-survival.test.cjs','tests/classic-pass2-source.test.cjs','tests/classic-economic-migration.test.cjs','tests/classic-economic-events.test.cjs','tests/classic-ai-career-recovery.test.cjs','tests/classic-original-timing.test.cjs','tests/classic-work-warning-garnishment.test.cjs','tests/classic-paycheck-audit.test.cjs','tests/classic-turn-sequence.test.cjs','tests/classic-board-weekly.test.cjs','tests/classic-journey-entry.test.cjs','tests/classic-relaxation-journey-skip.test.cjs','tests/classic-household-entrance.test.cjs','tests/classic-maintenance-lifecycle.test.cjs','tests/classic-production-board-hud.test.cjs','tests/shared-profile-portrait.test.cjs','tests/looprd-social-chat.test.cjs','tests/classic-hotseat-handover.test.cjs','tests/classic-smooth-route.test.cjs','tests/classic-pawn-doorway.test.cjs'],{cwd:root,stdio:'inherit'});
+// Keep the release gate comprehensive as new regression files are added.
+// A static hand-maintained list silently skipped recent house-rule tests.
+const regressionFiles=readdirSync(resolve(root,'tests')).filter(name=>name.endsWith('.test.cjs')).sort().map(name=>'tests/'+name);
+execFileSync(process.execPath,['--test',...regressionFiles],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

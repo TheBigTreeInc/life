@@ -21,6 +21,37 @@
      estimatedTicks:originalTravelTicks(steps),quantumTicks:ROUTE_QUANTUM,
      clockLimit:TURN_UNITS,conversion:'provisional-v0.5.33'});
  }
+ // room1.sc timeKeep.doit: an explicit time charge adds its full nominal cost,
+ // then caps global323 at 60. Actions are allowed while global323 is below 60.
+ // Our save format records REMAINING units, so a 4-unit application at 58/60
+ // spends only the last 2 available units. This is distinct from prorated work PAY.
+ function cappedActionCharge(remaining,nominal){
+   whole(remaining,'clock remaining');whole(nominal,'nominal charge');
+   if(remaining>TURN_UNITS)throw Error('Clock exceeds weekly limit');
+   return Object.freeze({nominal,charged:Math.min(remaining,nominal),remainingAfter:Math.max(0,remaining-nominal),
+     saturated:remaining<nominal,source:'room1.sc:timeKeep.doit'});
+ }
+ // Exact TIMEKEEP.doIt implicit tick condition in room1.sc:1473–1488.
+ // Increment THEN compare strictly greater than global475 (not >=).
+ // This is a reference simulator, NOT a claim that browser rAFs equal SCI ticks.
+ function dosClockFrames(current,carry,frames,quantum=ROUTE_QUANTUM){
+   whole(current,'clock elapsed');whole(carry,'tick carry');whole(frames,'frames');whole(quantum,'tick quantum');
+   if(current>TURN_UNITS||!quantum||carry>quantum)throw Error('Invalid DOS clock state');
+   const advances=Math.floor((carry+frames)/(quantum+1));
+   const nextCarry=(carry+frames)%(quantum+1);
+   return Object.freeze({elapsed:Math.min(TURN_UNITS,current+advances),carry:nextCarry,
+     advancedUnits:Math.min(TURN_UNITS-current,advances),quantum});
+ }
+ // Scenarios show how SCI's implicit timeKeep ticks advance at a chosen
+ // global475. This is a *bounded what-if* measurement, not a proved playable
+ // walking duration: animation frames, start-carry and moveSpeed are unknown.
+ function routeClockScenario(steps,{quantum=ROUTE_QUANTUM,carry=0,elapsed=0}={}){
+   whole(steps,'waypoint steps');whole(quantum,'tick quantum');whole(carry,'tick carry');whole(elapsed,'clock elapsed');
+   const ticks=originalTravelTicks(steps,quantum);
+   const clock=dosClockFrames(elapsed,carry,ticks,quantum);
+   return Object.freeze({steps,routeTicks:ticks,quantum,startingCarry:carry,startingElapsed:elapsed,
+     ...clock,calibrated:false,classification:'SCI AI estimate mapped to TIMEKEEP for audit only'});
+ }
  function workProgress(remaining){whole(remaining,'work time');return remaining>0?1:0;}
  // n108.sc: dismissal is checked before the single low-reliability warning.
  // The warning is gated to one eligible attempt per weekly action turn.
@@ -29,6 +60,23 @@
    if(dependability<requiredDependability-5)return 'dismissal';
    if(dependability<requiredDependability-2&&!warningAlreadyShown)return 'warning';
    return 'ready';
+ }
+ // n108.sc localproc_0: compare DOS take-home pay and remaining arrears.
+ // In the original, the rental deductions use the FULL six-unit gross even
+ // when a partial shift earned less. Keep as reference only until runtime
+ // validation; negative or unexpectedly high net is possible in source code.
+ function originalGarnishmentReference(hourly,remaining,rentDebt){
+   whole(hourly,'hourly wage');whole(remaining,'work time');whole(rentDebt,'rent arrears');
+   if(remaining>6)throw Error('Invalid source shift');
+   const fullGross=8*hourly,earnedGross=Math.trunc(fullGross*remaining/6),halfGross=Math.trunc(fullGross/2);
+   let net=earnedGross,arrearsAfter=rentDebt;
+   if(rentDebt>0){
+     if(halfGross>rentDebt){net=fullGross-rentDebt;arrearsAfter=0;}
+     else{net=halfGross-2;arrearsAfter=rentDebt-halfGross;}
+   }
+   return Object.freeze({source:'n108.sc:localproc_0',fullGross,earnedGross,net,arrearsAfter,
+     rentCredited:rentDebt-arrearsAfter,comparisonOnly:true,
+     anomalous:net<0||net>earnedGross||earnedGross-net!==rentDebt-arrearsAfter});
  }
  // Provisional *garnishment* calculation, isolated from source-derived gross.
  // Exact n108.sc temp0/temp1 overwrite and debt-fee ordering need a DOS trace.
@@ -58,7 +106,7 @@
  }
 
  const api=Object.freeze({schema:'classic-time.v1',TURN_UNITS,ROUTE_QUANTUM,EMPLOYMENT_ENTRY_UNITS,
-   originalTravelTicks,travelBreakdown,workProgress,workStanding,paycheck,settlePaycheck});
+   originalTravelTicks,travelBreakdown,cappedActionCharge,dosClockFrames,routeClockScenario,workProgress,workStanding,originalGarnishmentReference,paycheck,settlePaycheck});
  root.LifeClassicTime=api;
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -1,3 +1,94 @@
+## v0.5.64 — Original starting stats and distinct DOS food identity
+
+Artifact: `the-life-loop-0.5.64-ziprunner.zip` — complete ZipRunner source and offline `PLAY.html`.
+
+- **Starting conditions:** Fresh Classic games use the recovered `room1.sc` Player defaults: Happiness **0**, Relaxation **25**, cash **$200**, and no food; this removes the old instant happiness-goal completion. Custom victory goal presets remain configurable; Modern starts unchanged.
+- **DOS food model:** Classic distinguishes Black's Market fresh food from Monolith Burger's Astro Chicken, Hamburgers, Cheeseburgers and Fries. Week-end processing applies `startTrn.sc` states 8 → 10 → 12 → 14 → 16, including checking refrigerator/freezer storage **before** consuming a food unit. Fresh food without a refrigerator spoils even when a meal is due; takeout indices 3/4/5 expire each week; Astro Chicken (index 2) can carry forward.
+- **Original clock:** Repeated hunger does not shorten a Classic player's 60-unit week. The Modern Story hunger/clock model is unchanged.
+- **Save transition:** New Classic games use an explicitly versioned consumable identity; old saves continue on the legacy pantry calculations until a future opt-in migration. Jones emergency food purchases now select a viable diner food without a fridge. Existing saves, Modern, Custom Classic house rules and Looprd wire compatibility are protected.
+- **Open:** Exact DOSBox start-screen confirmation, end-to-end game duration, original fast-food item price-paid history, all DOS illness probabilities, and Jones AI balancing from harder original starting conditions (27 of 30 deterministic campaigns meet the prior endurance criterion). Other original economic and multiplayer gaps remain outstanding.
+
+Run `TEST-DOS-FOOD.bat` or `npm run test:dos-food` for the narrow acceptance suite, followed by `node tools/verify.mjs`. The full-source ZIP is for local ZipRunner import; no push/deployment.
+
+## v0.5.63 — DOS pawn pricing and retail/economy source audit
+
+Artifact: `the-life-loop-0.5.63-ziprunner.zip` — complete ZipRunner source and offline `PLAY.html`.
+
+- **Pawn Shop:** New Classic pledges use the original formula (40% of goods-index-adjusted purchase price; redemption at 50% of purchase price), with the item's current **reference price as an explicit stand-in** until individual price-paid history exists. Pawning deducts one happiness; pledging the fridge loses remaining fresh food and another point. New quotes are pinned to the pawn date and protected against modified save payloads; old lots and Modern rates are unchanged. The two-week expiry and broker supply mechanics remain provisional.
+- **Retail:** Source-verified Black's Market 1/2/4 week $55/$100/$190 food and ten-ticket lottery are retained and now tested across economic readings.
+- **Economy and events:** Original per-index source arithmetic and random headline eligibility are available as a deterministic **read-only** comparator, without replacing the existing compatibility economy and risking saved state / changed RNG draws.
+- **Remaining:** Precise per-item historical purchase prices, pawn counter six-slot rule, original resale lifecycle, source-driven eight-index economic migration, original event-probability integration and four-human Classic rounds.
+
+Run `TEST-RETAIL-PAWN.bat`, then `node tools/verify.mjs`. See `docs/decisions/ADR-0063-source-retail-pawn-economic-audit.md`.
+
+## v0.5.62 — Original Jones AI source gates, priority and replay
+
+Artifact: `the-life-loop-0.5.62-ziprunner.zip` — complete ZipRunner source plus offline `PLAY.html`.
+
+- **WhereShouldIGo.sc original branch gates:** Correct two-raise cap and dependability requirement (`minDepend+10+5×raises`); source-linked promotion cap check, work skill-gap estimate, relaxation-driven rest priorities and eligible study cash/enrollment precondition.
+- **Survival decisions:** Correct Black's Market food-purchase branch identity to **#27**, retain playable food/rent/employment/clothing priority, and cap the two-check relative-aid streak to stay consistent with save/load. All readable in the Career Roadmap decision trace.
+- **Parity honesty:** The recovered predicates and their order are source-grounded, but the entire DOS SCI branch tree, its random gates, original travel quantization and economic utility weights are **not** yet ported. Existing practical reserve and promotion-action heuristics remain explicit. See `docs/decisions/ADR-0062-jones-source-branch-priorities.md` and `docs/reference/dos-jones-branch-audit.md`.
+- **Compatibility:** Classic and Custom Classic retain the existing house rules, forced return home, multiplayer snapshots, locally saved games and game versions. Modern employment/AI remains separate. No Git publish or Looprd protocol change.
+
+Run `TEST-JONES-AI.bat` for focused cases, then `node tools/verify.mjs` to rebuild fully offline and Pages versions.
+
+## v0.5.61 — Classic food storage penalties, loan schedule and rent-pay comparison
+
+Artifact: `the-life-loop-0.5.61-ziprunner.zip` — complete ZipRunner source and offline `PLAY.html`.
+
+- DOS **startTrn.sc state 10**: discard remaining unrefrigerated fresh food (−2 happiness) and trim excess fridge/freezer stock (−1 happiness). Existing meal-then-storage ordering remains temporarily for playable Classic + rival; reversing it prematurely caused hunger and rent-debt regressions in seeded games. `docs/decisions/ADR-0061-classic-food-loans-and-paycheck-evidence.md` tracks the remaining change.
+- DOS **state 20**: loan monthly check is now keyed to the **completed week 4/8/12**, not the next week number. A first missed payment produces a notice, without our earlier invented −3 happiness; subsequent missed-month −1 is a documented approximation pending DOS `paySched` mapping. Existing payment amount, monthly credit model and rent bills are kept.
+- **n108.sc rent wage garnishment**: expose an exact **read-only** source comparator for 1/3/6-unit paychecks, with the original full-six-unit basis and surprising partial-shift outcomes. Live transactions remain the bounded compatibility formula until DOSBox confirms the source's accounting (do not silently mint income). Includes tests and user-visible comparison in the work preview.
+- Classic Custom no-spoilage rules, Modern, save/network schemas, economy and travel remain supported. No Git push or live deployment.
+
+Run `TEST-OBLIGATIONS.bat`, then `node tools/verify.mjs` to regenerate offline and Pages artifacts. Source-recovered rules are labeled separately from still-provisional runtime behavior.
+
+## v0.5.60 — DOS food-stress happiness and weekly wellbeing audit
+
+Artifact: `the-life-loop-0.5.60-ziprunner.zip` (complete source, playable offline HTML, reproducible source-state tests).
+
+- Classic missed-food Happiness now follows original `startTrn.sc` state 12 (−2), with a **conditional state 14** −4 happiness and a $30…capped cash loss; the verified branch is limited to no food (not all DOS consumable identities).
+- A bounded four-week happiness/cash/relaxation audit appears in Classic Finances. The original economic headline state-24 numerical table is tested but is **not yet used** by our provisional market triggers.
+- Modern remains unchanged, and original source ordering, return-home debt, house rules, saves, and social/Looprd interfaces are preserved. Starting happiness 62, housing comfort, rest and item effects still require original DOS runtime evidence.
+- Run `TEST-HAPPINESS.bat` or `npm run test:happiness`, then `node tools/verify.mjs` for both offline and Pages. See [ADR-0060](docs/decisions/ADR-0060-source-food-cash-stress-and-happiness-audit.md).
+
+## v0.5.59 — Clock boundaries, actions and audit harness
+
+Artifact: `the-life-loop-0.5.59-ziprunner.zip` (complete source, offline PLAY.html and route evidence matrix).
+
+- Classic's **zero-unit clock no longer prevents zero-time banking and shopping interactions** in the current building; timed actions and new travel still require sufficient clock. Original source/community turn description permits venue transactions after the meter reaches 60, until leaving the location.
+- The previous ten-event-per-week cap is **optional** (`Game Settings → House Rules → Restrict to ten venue actions`), default **off** in Classic. It was never proven to be the original game rule. Old saved counts remain valid; Modern is unchanged.
+- Added a source-identified **seven-route waypoint/clock scenario matrix** and a bounded SCI frame estimator. **Important:** this is an estimated original-AI tick model, *not* measured player travel hours. No unsupported conversion constant was installed; original walking clock charges stay provisional.
+- Same gameplay environments, saved progress, homeward overtime, Social/Looprd API and translations. `docs/decisions/ADR-0059-clock-end-actions-and-route-evidence.md`, `docs/classic-parity-worklog.md`.
+- Test: `TEST-TIME.bat` / `npm run test:time`, and `node tools/verify.mjs`. Open `PLAY.html` to check zero-time bank/food purchases and the new house-rule checkbox.
+
+## v0.5.58 — Source-corrected Classic goal scoring and progress
+
+Artifact: `the-life-loop-0.5.58-ziprunner.zip` (complete source, offline PLAY.html, workboard and parity worklog).
+
+- Classic progress is now weighted by the **actual goals** (DOS `viewGoals.sc`), not an equal average of goal percentages. All four thresholds must still be achieved individually.
+- The career stat advances in **10-point steps per 8 Dependability**, only while employed; completed diplomas contribute the original `0 / 1 + 9×degrees` education award formula. Partial-study goal credit is held for DOS runtime reconciliation.
+- The Classic goal panel displays current score/target point values and weighted overall percentage. Modern scoring and current starting Happiness are untouched.
+- Continued full offline/Pages builds, deterministic tests and old-save/Custom Classic house-rule isolation. Worklog: `docs/classic-parity-worklog.md`; ADR-0058.
+
+## v0.5.57 — Closing-week food trace, match-length goals and Dutch setup
+
+Artifact: `the-life-loop-0.5.57-ziprunner.zip` (complete source, offline PLAY.html and ZipRunner manifest).
+
+- Classic food close now includes the *completed* week number in deterministic trace; the validated reducer preserves existing pantry, hunger, happiness and source state 2/4/6 order. No DOS-exact storage RNG is claimed.
+- Game Settings supports **Quick (30), Standard (50), Extended (75), Custom** targets for each of the four life goals. Higher targets lengthen the *goal challenge*, not per-action animations or AI speed. These are selectable UX targets, **not historically verified Sierra modes**.
+- Setup supports **English/Nederlands** for the new pacing controls and goal names, with English fallback and browser-local language storage. This is not yet an entirely translated game.
+- Carry-home overtime, custom house rules and both Classic/Modern mode mechanics remain present; old saves retain their previously saved goals.
+- Full suite: `node tools/verify.mjs`; Windows local: `TEST-LOCAL.bat`. The Looprd YAML release identifier advances to 0.5.57 by project version gate, but the component route/API is unchanged. No automatic push/deploy.
+
+## v0.5.56 — Homeward animation and expanded house rules
+
+Classic's forced trip home is now animated on the existing street route before the end-turn command is committed, so the next hotseat player is never revealed during the walk. Skip Travel and reduced-motion remain supported. **The engine still charges the full homeward travel cost and carries any overtime to the next week.** Three independent per-game switches now control leftover food spoilage, the happiness penalty for late rent (not the rent debt itself), and weekly market fluctuations. Classic/Modern remain distinct game families. Existing saves preserve their original behavior through defaulted rules. No Looprd/Social server migration.
+
+Source checks: `node tools/build-pages.mjs && node tools/verify.mjs`. Interactive browser and real host/guest acceptance remain operator checks. See ADR-0056.
+
+Artifact: `the-life-loop-0.5.56-ziprunner.zip`
+
 # The Life Loop — v0.5.49
 
 ## v0.5.43 — Workboard lifecycle reconciliation and household maintenance
@@ -133,7 +224,7 @@ Push the flat-root source to a public repository on `main` and set Settings → 
 
 ## ZipRunner
 
-Project: `the-life-loop` · Artifact: `the-life-loop-0.5.52-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
+Project: `the-life-loop` · Artifact: `the-life-loop-0.5.53-ziprunner.zip` · Full source, flat-root ZIP. Drop into `C:\Users\dorbi\source\_ziprunner_inbox`; run `node tools/verify.mjs`. Preserve `.git` and machine-local settings.
 
 
 ## Classic economy improvements — v0.5.1
@@ -397,7 +488,7 @@ A Classic pawn now leaves its illustrated doorway with a short threshold movemen
 
 **Test:** `node --test tests/classic-pawn-doorway.test.cjs`, `python tests/qa_pawn_doorway.py`, and `node tools/verify.mjs`. No server changes required.
 
-Artifact: `the-life-loop-0.5.52-ziprunner.zip`
+Artifact: `the-life-loop-0.5.53-ziprunner.zip`
 
 
 ### v0.5.52 — Visible storefront frontage paths
@@ -408,4 +499,25 @@ The Public Garden clock stays visibly above the southern route. Original 170-way
 
 **Local browser QA:** `python tests/qa_storefront_frontage.py` at 320, 390, 768 and 1440px; check all 13 footpaths, the two frontage lanes, mobile Explore/Overview, the actual Bank walk (5 units), destination doorway and the in-venue clock. See ADR-0052.
 
-Artifact: `the-life-loop-0.5.52-ziprunner.zip`
+Artifact: `the-life-loop-0.5.53-ziprunner.zip`
+
+## v0.5.53 — DOS time-boundary parity
+
+Classic Employment applications and raises use the original DOS time-cap behavior: a nominal four-unit interaction may finish with only 1–3 clock units remaining; it cannot begin at zero. Run `node tools/dos-time-audit.mjs` for 156 directional route quotes and the source tick-reference comparisons. The travel-cost converter is still provisional. `TEST-DOS-TIME-AUDIT.bat` runs the focused tests; see ADR-0053.
+
+Artifact: `the-life-loop-0.5.53-ziprunner.zip`
+
+## v0.5.54 — Classic weekly simulation and Social SDK integration
+
+Artifact: `the-life-loop-0.5.54-ziprunner.zip`
+
+- Source-supported weekly order: lottery → computer bonus → relaxation, then existing compatibility meal/storage and clothing. The invented random spending event is Modern-only. Note original food IDs and rent/loan timing remain provisional.
+- Social account sign-in/register now imports the official pinned SDK from TheBigTreeInc/social at an immutable revision, verifies Git blob SHA before executing it, and uses the same page-scoped profile/lobby session. Credentials are never saved in Life. Disconnect signs out of Social and revokes that device session.
+- The legacy token client code remains for the existing regression and local development bridge but is no longer the primary UI. No Life/Looprd server schema change required. The browser must be able to fetch the pinned SDK from raw.githubusercontent.com; remote network testing is operator-side until reachable.
+- `node tools/verify.mjs` covers the new weekly/Social source tests, and the release ZIP carries the documentation and versioned workboard delta.
+
+## v0.5.55 — Return home and per-game House Rules
+
+Artifact: `the-life-loop-0.5.55-ziprunner.zip`
+
+Classic games now return every player home at turn end, even with insufficient clock time. Excess travel is deducted from the player's next week. New Game → Game Settings → House Rules can disable the homeward return, forgive overtime or opt Modern into this mechanic. Default Modern keeps its own shops, events and free-end movement. Presets, overrides and per-player travel debt persist in save and multiplayer snapshots. No Looprd or Social schema changes. Exact DOS waypoint-to-clock equivalence is still provisional (ADR-0055).

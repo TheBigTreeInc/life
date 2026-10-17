@@ -61,7 +61,7 @@ test('phone Overview first tap inspects rather than spending travel time; Explor
 });
 test('source-state food and clothing event contracts reject invalid input',()=>{
  const t=Weekly.foodStorageTrace(9,6,true,false);
- assert.equal(t.sourceState,10);assert.equal(t.lost,3);assert.equal(t.storageLimit,6);assert.equal(t.probabilityVerified,false);
+ assert.equal(t.sourceState,10);assert.equal(t.lost,3);assert.equal(t.storageLimit,6);assert.equal(t.happinessDelta,-1);assert.equal(t.sourceVerified,true);
  assert.equal(Weekly.foodStorageTrace(3,0,false,false).storageLimit,null);
  assert.throws(()=>Weekly.foodStorageTrace(-1,0,false,false));
  assert.equal(Weekly.clothingWarning(2,1).oneWeekRemaining,true);
@@ -74,9 +74,9 @@ test('Classic weekly food spoilage logs state 10, without invented medical charg
  const before=g.classicWeekEvents.length;
  const notes=g.weekend(p);
  assert.equal(p.groceries,0);assert.equal(p.cash,25);
- assert.ok(notes.some(n=>n.includes('Unrefrigerated food spoiled')));
- const event=g.classicWeekEvents.slice(before).find(e=>e.kind==='food-storage');
- assert.equal(event.sourceState,10);assert.equal(event.lost,3);
+ assert.ok(notes.some(n=>n.includes('Fresh food lost before consumption')));
+ const event=g.classicWeekEvents.slice(before).find(e=>e.kind==='food-dos-064');
+ assert.deepEqual(event.sourceStateOrder,[8,10,12,14,16]);assert.equal(event.storageLoss,3);
 });
 test('Classic clothing warnings have DOS state 18 in event history; Modern has no such event',()=>{
  const g=classic();g.player.clothing.casual=2;g.newWeek();

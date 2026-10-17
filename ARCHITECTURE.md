@@ -223,3 +223,12 @@ The turn-owner display remains a stable board-center element, while the actual C
 ### Classic street visualization v0.5.50
 
 The source route graph (`routes.v1.json`) and 170 historic DOS waypoint indexes own all travel identity and cost. `src/route-overlay.js` renders that graph on a continuous 5×5 tile-gutter promenade and rounds presentation corners without changing authoritative decisions. A visual doorway marker derived from artwork is separate from the public street preview, and arrival selects the original venue ID. No additional network or saved data field is introduced.
+
+## ADR-0055 — Game family vs house rules
+
+Classic and Modern are immutable simulation/content families. Per-game normalized rule overrides change named mechanics but do not change shops, careers, actors or events. Classic requires returning home at turn close and borrowing next-week time by default; Modern stays unforced unless a custom rule opts in. See `docs/decisions/ADR-0055-homeward-time-debt-and-rule-presets.md`. No Social or Looprd schema change.
+
+
+## v0.5.56 — Architecture supplement
+
+Mandatory Classic homeward travel now has a client-only road animation before end turn; the authoritative host/engine still charges travel cost and carries weekly debt. No new game-mode content or server contract. Game-family presets remain immutable and normalize three additional house-rule switches (food spoilage, overdue-rent happiness loss, market fluctuation), all default enabled. These are deliberate deviations from the base world; Classic food type separation, DOS movement timing and original economy formulas remain outstanding. Tests: `tests/home-return-rules.test.cjs` and `tests/house-rules-weekly.test.cjs`; manual host/guest and browser UI acceptance pending.

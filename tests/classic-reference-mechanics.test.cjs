@@ -6,18 +6,18 @@ const classic=()=>new Game({ruleset:'classic',mode:'sandbox',seed:43,goals:{weal
 test('Printed Quick Reference: Classic wealth includes durable possessions, Modern remains unchanged',()=>{
  const g=classic(),p=g.player;assert.equal(g.classicGoalStats(p).wealth,2);
  p.owned=['fridge','computer'];assert.equal(g.classicOwnedValue(p),845);
- assert.equal(g.classicGoalStats(p).wealth,10.45);assert.equal(g.finances(p).netWorth,1045);
+ assert.equal(g.classicGoalStats(p).wealth,10);assert.equal(g.finances(p).netWorth,1045);
  p.owned.push('computer');assert.equal(g.classicOwnedValue(p),845,'duplicate inventory entries do not mint asset value');
- p.owned=['computer'];assert.equal(g.classicGoalStats(p).wealth,7.9);
+ p.owned=['computer'];assert.equal(g.classicGoalStats(p).wealth,7);
  const modern=new Game({ruleset:'modern',mode:'sandbox'});
  const start=modern.scores(modern.player).wealth;
  modern.player.owned.push('fridge');assert.equal(modern.scores(modern.player).wealth,start);
 });
 
-test('Printed Quick Reference: unfinished university study advances Classic education points',()=>{
- const g=classic(),p=g.player;assert.equal(g.classicGoalStats(p).education,1);
- p.classicProgress={'junior-college':5};assert.equal(g.classicGoalStats(p).education,5.5);
- p.classicProgress={'junior-college':9};assert.equal(g.classicGoalStats(p).education,9.1);
+test('DOS university source: only completed degrees advance Classic education points',()=>{
+ const g=classic(),p=g.player;assert.equal(g.classicGoalStats(p).education,0);
+ p.classicProgress={'junior-college':5};assert.equal(g.classicGoalStats(p).education,0);
+ p.classicProgress={'junior-college':9};assert.equal(g.classicGoalStats(p).education,0);
  p.classicDegrees=['junior-college'];delete p.classicProgress['junior-college'];
  assert.equal(g.classicGoalStats(p).education,10);
  assert.equal(Game.load(g.snapshot()).classicGoalStats(Game.load(g.snapshot()).player).education,10);

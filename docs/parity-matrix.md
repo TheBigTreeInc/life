@@ -1,3 +1,12 @@
+## v0.5.61 source-obligation migration
+
+- **ECON-002:** The original executes fresh-food storage state 10 **before** consumables state 12. Life preserves meal-first compatibility until the original consumable IDs and opponent food decisions are modeled, but now applies the source-verified `−2` spoiled-food and `−1` over-cap happiness effects. No invented doctor bill.
+- **ECON-003:** Original state 20 evaluates at the **completed fourth week** and distinguishes schedule-zero notices from negative-schedule −1 happiness. The Life saved `classicLoanPaidThrough` translates to a monthly approximation; no claim of true `paySched` equivalence.
+- **ECON-001:** Original `n108.sc:localproc_0` garnishment uses full 6-unit pay as its debt basis, even for partial shifts, and can result in disproportionate net cash. A pure comparator now exposes it, while the live bounded compatibility paycheck remains unchanged, with original runtime evidence still required.
+- **EVT-001:** State-14 `local6==-1` random 0…1 cash-stress outcome is representable as a pure reducer, not wired until food-item identity can distinguish spoilage from other consumables.
+
+
+
 # Original gameplay parity matrix — architectural backlog
 
 **Architecture revision:** 1.3 · **Implementation baseline:** v0.5.0 · **Evidence:** guide-based, pending binary side-by-side verification.
@@ -134,3 +143,32 @@ Classic employer work checks now follow source ordering: dismiss at `dependabili
 ### v0.5.43 — Lifecycle transparency and optional household maintenance
 
 The source workboard records full item lifecycle states; ZipRunner v1 import remains implemented/remaining only. Classic AI maintenance is a provisional feature protecting essential cash reserves and using existing Socket City repairs; this does not establish new DOS-equivalent coefficients. No changes to source-backed travel, economic events or Modern modes.
+
+### v0.5.53 — Source-backed late Employment actions
+
+- **TIME-003:** DOS `employment.sc` checks only that action time has not reached 60 before it calls `gTimeKeep doit: visitTime`; `room1.sc` then caps elapsed time at 60. Classic applications/raises may therefore use the last 1–3 units of a nominal 4-unit interaction, while Modern retains its ordinary minimum-cost rule. Action at zero is blocked. `node tools/dos-time-audit.mjs` generates a 156-leg source AI tick/estimated player-unit comparison without claiming exact route time parity. See ADR-0053.
+
+### v0.5.57 — Weekly food audit and selectable match-length goals
+
+- **ECON-002:** Classic food step now receives the previous week ID and records it in bounded weekly events; pure meal reducer covers prior pantry availability, hunger and food happiness exactly as current compatibility model. State 10 storage follows unchanged, including v0.5.56 custom food-spoilage rule. DOS exact food IDs/chance remain partial.
+- **GOAL-001:** Four goal presets: Quick=30, Standard=50, Extended=75 per goal, Custom=existing manual sliders; race equations unchanged, no claims about original match lengths.
+- **MOD-001:** Locale is browser-local, gameplay snapshots/network wire language-neutral; only select New Game text is currently translated (English/Dutch).
+
+
+### v0.5.58 — Goal scoring correction
+
+- **GOAL-001:** Classic viewGoals.sc progress is now `floor(100 * sum(min(integer stat, goal)) / sum(goal))`, while victory still requires all four raw thresholds. The earlier equally weighted average was incorrect when sliders differed.
+- **GOAL-002:** Career uses source discrete `min(100,floor(Dependability/8) * 10)` while employed, zero unemployed. Education now follows `0` for no diplomas, or `1 + 9 × completed` after the first award. The printed Quick Reference's partial-study language conflicts with this source interpretation; verify in original DOS runtime before claiming parity for partial credits. Cash/owned goods valuation and starting Happiness are still provisional.
+- **MOD-001:** Modern scores untouched; Classic per-game custom house rules and historical saves retain their configuration.
+- **Worklog:** `docs/classic-parity-worklog.md`, ADR-0058, LL-303–LL-310.
+
+
+### v0.5.59 — Clock-end behavior and action count
+
+- **TIME-001/TIME-003:** Classic zero-time actions at zero remaining weekly clock now work inside the current venue, as documented for the original game; positive-time actions and new travel still require available time. The old generic 0h action lockout was an implementation discrepancy.
+- **TIME-003:** The former fixed 'ten actions per week' interpretation was not source-verified. This release removes it from Classic defaults and preserves it as an opt-in house rule (`weeklyActionLimit`). Multiplayer snapshot and browser preference normalize this option; Modern's clock remains separate.
+- **TIME-002:** Seven source-indexed journey tests and SCI hypothetical frame estimator were added. **Game travel costs are deliberately unchanged and provisional:** AI route tick estimates cannot establish human clock units without original DOS runtime observations. See ADR-0059, LL-175, `docs/reference/dos-time-observation-template.csv`.
+
+### v0.5.60 — DOS weekly happiness and food stress
+
+EVT-001 / ECON-002: no-food state 12 now charges **−2 happiness**; verified no-food state 14 conditionally charges **−4 happiness** plus cash, using the original discrete rolls and fixed $50/$200 caps. Other consumable identities (3–5), rare homeowner/asset accidents and original full state-24 event-code mapping remain unresolved. Pure state-24 happiness deductions are tested but not applied to Life's provisional macro-index events. Classic Finances shows four-week wellbeing; Modern remains unchanged. See ADR-0060.

@@ -71,7 +71,7 @@ test('Classic raises match published job rate, cost four hours, require reliabil
 });
 test('Classic rent: $325 starts due week four; no forced deduction before or after paying',()=>{
  const g=start(),p=g.player;p.cash=400;move(g,'housing');assert.equal(g.actions().find(a=>a.id==='classicPayRent').enabled,false);
- for(let i=0;i<3;i++)g.endTurn();assert.equal(g.week,4);assert.equal(p.classicRentDueWeek,4);
+ for(let i=0;i<3;i++)g.endTurn();assert.equal(g.week,4);assert.equal(p.classicRentDueWeek,4);move(g,'housing');
  assert.equal(g.actions().find(a=>a.id==='classicPayRent').enabled,true);
  p.cash=400;action(g,'classicPayRent');assert.equal(p.cash,75);assert.equal(p.classicRentDueWeek,8);
  g.endTurn();assert.equal(p.rentDebt,0);assert.equal(p.classicRentDueWeek,8);
@@ -84,10 +84,10 @@ test('Missing rent creates debt on week five, does not silently drain savings, a
  p.cash=500;move(g,'housing');assert.equal(g.actions().find(a=>a.id==='classicRentExtension').enabled,false);
 });
 test('Rent extension first request always succeeds; only one request per week; next due follows grace week',()=>{
- const g=start(),p=g.player;move(g,'housing');for(let i=0;i<3;i++)g.endTurn();
+ const g=start(),p=g.player;move(g,'housing');for(let i=0;i<3;i++)g.endTurn();move(g,'housing');
  action(g,'classicRentExtension');assert.equal(p.classicRentDueWeek,5);assert.equal(p.classicExtensions,1);
  assert.equal(g.actions().find(a=>a.id==='classicRentExtension').enabled,false);
- g.endTurn();assert.equal(g.week,5);assert.equal(p.rentDebt,0);
+ g.endTurn();assert.equal(g.week,5);assert.equal(p.rentDebt,0);move(g,'housing');
  p.cash=400;assert.equal(g.actions().find(a=>a.id==='classicPayRent').enabled,true);
 });
 test('Classic rent debt garnishes half the gross shift and $2 fee, capped when debt is small',()=>{

@@ -87,10 +87,10 @@ test('Rival plans sustainable starting employment using hiring, salary, distance
  assert.equal(g.classicAIPlan(p).jobCandidates[0].score,first.jobCandidates[0].score);
  const before=g.seed;g.classicAIPlan(p);assert.equal(g.seed,before,'planning must not consume RNG');
  p.groceries=0;p.fed=false;p.cash=350;p.classicRentDueWeek=g.week;
- const need=g.classicAIPlan(p);assert.equal(need.foodReserve,g.classicFoodPrice(1));
- assert.deepEqual(need.urgentOrder,['cinema'],'spend on essential food before paying an unaffordable rent+food combination');
+ const need=g.classicAIPlan(p);assert.equal(need.foodReserve,g.classicAIFoodPurchase(p).cost);
+ assert.deepEqual(need.urgentOrder,['diner'],'spend on essential food before paying an unaffordable rent+food combination');
  p.cash=500;const both=g.classicAIPlan(p);
- assert.equal(both.urgentOrder.length,2);assert.ok(both.urgentOrder.includes('housing'));assert.ok(both.urgentOrder.includes('cinema'));
+ assert.equal(both.urgentOrder.length,2);assert.ok(both.urgentOrder.includes('housing'));assert.ok(both.urgentOrder.includes('diner'));
  p.clothing={casual:0,formal:0,business:0};p.cash=10;
  const empty=g.classicAIPlan(p);assert.equal(empty.bestJob,null,'no imaginary affordable uniforms');
 });

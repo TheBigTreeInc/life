@@ -41,7 +41,7 @@ test('camera manual override requires an actual swipe while the pawn is moving',
  assert.match(js,/if\(boardManualPan\|\|!game\.isClassic/);
 });
 test('DOS food-shortage state 12 is a trace, not an additional penalty or RNG draw',()=>{
- const g=classic(),p=g.player;p.fed=false;p.groceries=0;p.cash=0;
+ const g=classic(),p=g.player;p.fed=false;p.groceries=0;p.cash=0;p.classicFoodV2=null;
  g.weekend(p);
  const e=g.classicWeekEvents.find(x=>x.kind==='food-shortage');
  assert.equal(e?.sourceState,12);assert.equal(e.shortage,true);assert.equal(e.hungerAfter,p.hunger);

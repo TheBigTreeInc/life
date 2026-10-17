@@ -38,7 +38,7 @@ test('Classic university requires paid enrollment and supports four concurrent c
 test('Ten lessons complete a Classic diploma and provide uncapped graduation boost',()=>{
  const game=g(),p=game.player;go(game,'university');p.cash=2000;doIt(game,'enroll');
  p.classicProgress['junior-college']=9;p.classicEnrolled=['junior-college'];p.classicEnrollmentCredits=0;
- p.dependability=97;const result=doIt(game,'classicStudy:junior-college');
+ p.dependability=97;p.happiness=62;const result=doIt(game,'classicStudy:junior-college');
  assert.match(result.message,/Graduated/);assert.ok(p.classicDegrees.includes('junior-college'));
  assert.equal(p.dependability,100);assert.equal(p.happiness,67);assert.equal(p.classicProgress['junior-college'],undefined);
  assert.equal(game.actions().find(a=>a.id==='classicStudy:business-admin').enabled,false); // must enroll

@@ -40,7 +40,7 @@ test('workboard lifecycle is complete and a corrupt status mapping makes release
  const life=read('docs/workboard-lifecycle.json'),manifest=read('.ziprunner-workboard-update.json'),historical=read('docs/workboard-history.json');
  assert.equal(life.release,read('package.json').version);
  assert.equal(life.items.length,historical.implemented.length+manifest.implemented.length+manifest.remaining.length);
- assert.equal(life.counts.blocked,15);
+ assert.equal(life.counts.blocked,Object.keys(read('docs/workboard-classifications.json').blocked).length);
  assert.ok(life.items.some(t=>t.id==='LL-175'&&t.status==='blocked'&&t.unblock_when));
  assert.ok(life.items.some(t=>t.id==='LL-251'&&t.status==='done'&&t.evidence.operator_checks.length));
  assert.ok(life.items.every(t=>!['done','blocked'].includes(t.status)|| (t.status==='done'?!!t.evidence:!!t.unblock_when)));

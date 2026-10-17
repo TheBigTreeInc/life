@@ -13,10 +13,10 @@ test('DOS state 6 models separate relaxation, floor ten, and hot-tub exemption w
  assert.equal(Weekly.relaxationStep(12,true).after,12);
  assert.throws(()=>Weekly.relaxationStep(9),/Invalid DOS relaxation/);
  const g=classic(),p=g.player;
- assert.equal(p.classicRelaxation,16);
- g.newWeek();assert.equal(p.classicRelaxation,15);
+ assert.equal(p.classicRelaxation,25);
+ g.newWeek();assert.equal(p.classicRelaxation,24);
  const trace=g.classicWeekEvents.find(e=>e.kind==='relaxation'&&e.playerId===p.id);
- assert.equal(trace?.sourceState,6);assert.equal(trace?.after,15);
+ assert.equal(trace?.sourceState,6);assert.equal(trace?.after,24);
  p.classicRelaxation=10;g.newWeek();assert.equal(p.classicRelaxation,10);
 });
 test('Classic rest restores its own relaxation reserve and saves roundtrip, not Modern rules',()=>{
@@ -34,17 +34,20 @@ test('Classic rest restores its own relaxation reserve and saves roundtrip, not 
  const modern=new Game({mode:'sandbox',ruleset:'modern',seed:540});
  modern.newWeek();assert.equal(modern.classicWeekEvents.length,0);
 });
-test('DOS state 20 loan schedule reuses existing consequences without extra charges',()=>{
- assert.equal(Weekly.loanDueTrace(5,0,100).missed,true);
- assert.equal(Weekly.loanDueTrace(5,1,100).missed,false);
- assert.equal(Weekly.loanDueTrace(4,0,100).due,false);
- assert.equal(Weekly.loanDueTrace(5,0,0).due,false);
- assert.throws(()=>Weekly.loanDueTrace(5,-1,100),/Invalid DOS loan/);
+test('DOS state 20 checks the *completed* fourth week and separates notice from late schedule',()=>{
+ assert.equal(Weekly.loanDueTrace(4,0,100).missed,true);
+ assert.equal(Weekly.loanDueTrace(4,1,100).missed,false);
+ assert.equal(Weekly.loanDueTrace(5,0,100).due,false);
+ assert.equal(Weekly.loanDueTrace(4,0,0).due,false);
+ assert.equal(Weekly.loanDueTrace(8,0,100).overdueMonths,2);
+ assert.equal(Weekly.loanDueTrace(8,0,100).notice,'late');
+ assert.throws(()=>Weekly.loanDueTrace(4,-1,100),/Invalid DOS loan/);
  const g=classic(),p=g.player;
  g.week=4;p.debt=150;p.classicLoanPaidThrough=0;
  g.newWeek();
  const trace=g.classicWeekEvents.find(e=>e.kind==='loan-due'&&e.playerId===p.id);
- assert.equal(trace?.sourceState,20);assert.equal(trace?.missed,true);assert.equal(trace?.dueMonth,1);
+ assert.equal(trace?.sourceState,20);assert.equal(trace?.missed,true);assert.equal(trace?.closedWeek,4);
+ assert.equal(trace?.dueMonth,1);assert.equal(trace?.notice,'payment-required');
  assert.equal(trace?.penaltyVerified,false);assert.equal(p.classicLoanDefaults,1);
  assert.equal(Game.load(g.snapshot()).classicWeekEvents.some(e=>e.sourceState===20),true);
 });

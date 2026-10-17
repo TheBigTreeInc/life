@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.52
-filename: the-life-loop-0.5.52-ziprunner.zip
+version: 0.5.64
+filename: the-life-loop-0.5.64-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -112,3 +112,28 @@ notes_v0550: Smooth gutter-only Classic street route and separate doorway target
 notes_0551: Animate short entrance/exit footsteps with an opacity transition to the street; no social or game-server changes.
 
 notes_0552: Main street passes the visible storefront frontage instead of the central park. All 13 sidewalks remain linked and hover/path/pawn are continuous to the hand-placed doors. In-game garden dial clearance preserved; visual-only, no Social/Looprd changes. Browser acceptance: tests/qa_storefront_frontage.py. ADR-0052.
+
+notes_classic_0553: Original Employment JobDItem checks clock <60 then charges nominal visitTime; implement saturated 1–3-unit final applications and raises. Add pure room1.sc >quantum frame accumulator and 156 directed journey timing audit; player travel conversions still provisional. No game/Looprd/Social schema change. ADR-0053, TEST-DOS-TIME-AUDIT.bat.
+
+notes_classic_0554: Source-driven Classic weekly lottery/computer/relaxation ordering, no invented casual cash events in Classic; pantry/storage still provisional until DOS consumable identities are modeled. Social uses pinned immutable GitHub SDK with blob integrity check and account login/registration in chat and portrait editor. Memory-only Social session, no game co-op role escalation. No server DB schema change; external JS retrieval requires browser access to GitHub raw.
+
+notes_classic_0555: Classic source-inspired default forces a return home after End Week. Overrun subtracts next-week available time. Modern defaults to free end positions; custom rules can opt either family into/out of return and overtime. Per-player travel debt is save-backed and snapshot-validated. No Looprd/Social schema change. See ADR-0055 and tests/home-return-rules.test.cjs.
+
+notes_house_rules_0556: Classic mandatory homeward journey now animates before authoritative end-turn, with Skip and reduced-motion support. Added custom food spoilage, unpaid-rent happiness and market fluctuation rules. All defaults preserve v0.5.55 gameplay. No Looprd/Social schema migration; Live two-client QA remains pending.
+
+notes_v057: Classic closing-week food trace preserves source order and house rules; 4 goal presets (Quick/Standard/Extended/Custom), local English/Dutch New Game settings vocabulary with fallback. Complete Dutch gameplay translation and DOS simulator parity pending. v0.5.56 return-home rules intact. looprd.yaml release tag updated only; server contract unchanged; no push or deploy.
+
+notes_v058: Source-weighted Classic progress and discrete career/education DOS formulas; original match-pacing worklog, no change to Modern or custom Classic rules or game saves; original opening Happiness and partial-credit parity require DOS runtime evidence. TEST-GOALS.bat. looprd.yaml release metadata synchronized without API changes; no push/deploy.
+
+notes_v059: Source-backed zero-clock Classic venue transactions; 10-interaction restriction moved to optional house rule (default OFF), old snapshots normalize safely. Six+ DOS waypoint scenario comparisons and hypothetical SCI frame estimator; playable travel unit formula unchanged pending original DOS trace. TEST-TIME.bat, reference capture CSV, no push/deploy.
+
+notes_v060: Classic source state-12 shortage happiness -2 and state-14 no-food cash stress with discrete RNG; source state-24 happiness table pure only (economic trigger unverified); 4-week wellbeing ledger shown in Finances. No new save field/Looprd/Social endpoint. TEST-HAPPINESS.bat. ADR-0060. No Git push.
+
+notes_classic_061: Source-backed Classic discarded-food happiness (-2 no fridge, -1 over-cap); completed-week 4/8/12 loan notices and first-warning no penalty (later -1 approximate); independent original n108 partial/full wage garnishment comparator does not change live payroll. Active food consumption precedes storage to protect current AI and game stability, despite original DOS inverse order; original food IDs, exact paySched mapping and DOSBox wage comparison remain open. Tests: TEST-OBLIGATIONS.bat. Workboard LL-312..314. No Git push.
+architecture_decision_61: docs/decisions/ADR-0061-classic-food-loans-and-paycheck-evidence.md
+
+notes_classic_062: Original source-backed Jones predicates 28/29/30/32/37/44/46, food decision identity 27, 2-raise source cap, rescue counter load compatibility, and 10 seeded/source regression tests. Complete 1-49 branch/RNG parity remains pending. Modern/Looprd contracts unchanged, no Git push.
+
+notes_classic_063: New DOS pawnShop.sc price math (40% adjusted purchase price offer, 50% purchase-price redemption; item reference price proxy), -1 happiness per pawn and additional fridge food loss, old pawn lots unaffected. Original economicIndex.sc index/headline RNG available as pure non-mutating audit only; live economic model, original pawn pricePaid, resale/deadline semantics and four-human support still open. Full source including PLAY.html; node tools/verify.mjs; TEST-RETAIL-PAWN.bat. No server API changes or automatic git push.
+
+notes_v064: Classic new games use original room1.sc starting zero happiness, 25 relaxation, $200 and no food; takeout indices 2/3/4/5 from fastFood.sc; Black’s Market fresh food index1; original startTrn.sc state ordering storage-before-food consumption; 60 units remain independent of hunger. Existing Classic saves without classicFoodV2 keep prior food path, Modern unchanged. Run TEST-DOS-FOOD.bat, node tools/verify.mjs and a live PLAY.html operator smoke test. DOSBox runtime and original multiweek AI endurance still open; no Git push/deploy performed.

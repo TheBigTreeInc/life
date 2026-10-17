@@ -61,8 +61,8 @@ test('Source order planner chooses ACNE, rent, food and work with original numer
  assert.equal(g.classicSourceDecision(p).ruleId,1);
  assert.equal(g.classicSourceDecision(p).placeNum,6);
  p.job='classic-monolith-cook';p.wage=5;p.location='home';p.groceries=0;p.cash=1000;
- assert.equal(g.classicSourceDecision(p).ruleId,24);
- assert.equal(g.classicSourceDecision(p).placeNum,3);
+ assert.equal(g.classicSourceDecision(p).ruleId,27);
+ assert.equal(g.classicSourceDecision(p).placeNum,10); // No fridge: Monolith Burger
  p.classicRentDueWeek=g.week;
  assert.equal(g.classicSourceDecision(p).ruleId,7);
  assert.equal(g.classicSourceDecision(p).placeNum,1);

@@ -47,12 +47,12 @@ test('Changing employer or dismissal resets work credit; arbitrary action cannot
 test('Pawn valuable at dedicated Second Chance Pawn and redeem it within the deadline, with full ledger and save roundtrip',()=>{
  const g=classic(),p=tech(g);p.owned.push('computer');
  const priorCash=p.cash;const pawn=action(g,'classicPawn:computer');assert.equal(pawn.enabled,true);
- assert.equal(g.act(pawn.id).ok,true);assert.equal(p.owned.includes('computer'),false);assert.equal(p.cash,priorCash+265);
+ assert.equal(g.act(pawn.id).ok,true);assert.equal(p.owned.includes('computer'),false);assert.equal(p.cash,priorCash+236);
  assert.equal(g.classicPawnLots.length,1);const lot=g.classicPawnLots[0];assert.equal(lot.dueWeek,3);
  const loaded=Game.load(g.snapshot());const p2=loaded.player;p2.location='pawn';
- const redeem=action(loaded,'classicRedeem:'+lot.id);assert.equal(redeem.price,292);assert.equal(redeem.enabled,true);
+ const redeem=action(loaded,'classicRedeem:'+lot.id);assert.equal(redeem.price,295);assert.equal(redeem.enabled,true);
  assert.equal(loaded.act(redeem.id).ok,true);assert.ok(p2.owned.includes('computer'));
- assert.equal(loaded.classicPawnLots.length,0);assert.equal(p2.cash,priorCash-27);
+ assert.equal(loaded.classicPawnLots.length,0);assert.equal(p2.cash,priorCash-59);
  assert.equal(loaded.finances(p2).ledger.some(r=>r.category==='pawn'),true);
 });
 test('Expired pawn cannot be redeemed and can be purchased once by the other human player',()=>{

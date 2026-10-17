@@ -1,3 +1,56 @@
+## v0.5.64 — DOS opening state and consumable identity (LL-321…LL-323)
+
+**Artifact:** `the-life-loop-0.5.64-ziprunner.zip` · **Status:** source-verified implementation candidate, pending operator DOSBox/browser acceptance.
+
+- **LL-321:** Source `room1.sc` confirms fresh Classic defaults: 0 happiness, 25 relaxation, $200 cash, 0 stored food. Modern and older save values are not reset.
+- **LL-322:** Source `fastFood.sc` / `startTrn.sc` food IDs, first-purchase happiness benefits, storage-before-consumption, expiration and 60-unit clock. Black's Market still offers 1/2/4-week fresh food. DOS exact illness sequence and other item details remain open.
+- **LL-323:** Dedicated source adapter, deterministic food/clock/save tests, DOS evidence ADR, workboard, offline/Pages build and ZipRunner full source release.
+- **Original DOS acceptance:** Observe start stats, no-fridge spoiled fresh food, Astro Chicken vs fries across two weekly boundaries, fridge-cap at 6 and freezer-cap at 12, Classic AI food survival, and Modern isolation in a live browser; DOSBox side-by-side remains necessary for parity certification.
+
+## v0.5.61 — Food storage, scheduled debt and source paycheck comparison
+
+**Artifact:** `the-life-loop-0.5.61-ziprunner.zip` · **Status:** implementation candidate, pending operator acceptance.
+
+- **LL-312:** DOS state-10 food-loss happiness amounts (−2 no refrigerator, −1 for excess storage) with source-labeled events; source-before-meal ordering remains blocked by merged consumable IDs/AI and is not claimed fixed.
+- **LL-313:** Original state-20 loan notice check tied to week 4/8/12 close, with first notice vs subsequent negative-schedule cases; underlying DOS paySched transition mapping remains provisional.
+- **LL-314:** Source n108 paycheck comparator with 1/3/6 unit test cases. Live garnishment intentionally unchanged; exact DOSBox accounting comparison remains for later pass.
+
+**Operator checks:** Fresh Classic solo week 4 loan notice, pay before next due cycle, test fridge/no-fridge spoilage, run `TEST-OBLIGATIONS.bat` and `node tools/verify.mjs`, confirm Modern and existing save import. Do not push/deploy automatically.
+
+## v0.5.60 — Happiness, relaxation and weekend source branches
+
+**Artifact:** `the-life-loop-0.5.60-ziprunner.zip` · **LL-311 implementation candidate**, remaining source/event gaps preserved in LL-306 and LL-307; operator review pending.
+
+- Source-matched `startTrn.sc` state 12: Classic missed food costs 2 happiness instead of 8; Modern starvation is unchanged.
+- State 14: implement the *no-food* conditional cash expense and −4 happiness with saved event trace, source-order RNG and 10-relaxation override. All other original consumable branches are still pending item identity work.
+- State 24: pure tested happiness table only. Do not apply it to unverified Life economy phase mapping.
+- Four-week deterministic happiness / relaxation / cash accounting displayed in Classic Finances, without new save fields or Looprd contracts.
+- **QA:** `TEST-HAPPINESS.bat`, `node tools/verify.mjs`, clean ZIP replay, old-save/Modern/Custom Classic and live browser operator checks. No Git push or deployment.
+
+## v0.5.57 — Food audit, match length and language
+
+**Artifact:** `the-life-loop-0.5.57-ziprunner.zip` · **Operator review pending**.
+
+- LL-297: Classic food accounting tagged to the closing week, preserving v0.5.56 house rules and DOS-source phase order.
+- LL-298: Quick/Standard/Extended/Custom victory goal presets using the existing four goal sliders.
+- LL-299: EN/NL setup translation foundation and English fallback, local language persistence.
+- LL-300: Complete source ZIP, tests and synchronized docs/version; manual browser/online acceptance needed.
+- Remaining: LL-301 full-game translation; LL-302 original DOS food and match-length baseline.
+
+Operator acceptance: import complete ZIP, verify Classic mandatory homecoming, default and custom game rules, goal preset selector, EN/NL setup toggle, old save load, Modern isolation, and offline browser. Do not manually mark done until reviewed. No automatic Git push or server deploy.
+
+# The Life Loop — workboard v0.5.56
+
+Full-source release: `the-life-loop-0.5.56-ziprunner.zip`. ZipRunner workboard update remains incremental; see `.ziprunner-workboard-update.json` and lifecycle reconciliation.
+
+- [x] LL-294 — Animate mandatory Classic homeward journey on the existing routes, before authoritative end turn, with Skip/reduced-motion.
+- [x] LL-295 — New Game house rules: food spoilage, rent happiness penalty and market fluctuations, default-preserving and distinct from Classic/Modern content.
+- [x] LL-296 — Regression tests, save migration, parity and source package handoff.
+
+Operator checks pending: visual playback in browser, reduced-motion UI and real two-client Looprd host/guest turn synchronization. No server schema change.
+
+---
+
 # The Life Loop — workboard v0.5.43
 
 Full-source release: `the-life-loop-0.5.46-ziprunner.zip`. Workboard update schema: `ziprunner.workboard-update.v1`.
@@ -636,3 +689,69 @@ Open: live deployed Social and game-room authorization remain separate. Original
 - **LL-283 (Done):** Keep Public Garden clock text clear of the southern path and verify phone/tablet/desktop, 5-unit Bank travel, arrival geometry and venue clock.
 - **Artifact:** `the-life-loop-0.5.52-ziprunner.zip` (game source only; no Social server/database changes).
 - **Operator review:** Inspect real Windows browser at desktop and narrow phone; compare the illustrated door targets to final author assets, since doorway metadata is hand-calibrated. No automatic Git push.
+
+### v0.5.53 — DOS source clock boundaries and audit
+
+- **LL-284 (Done):** Classic Employment capped 4-unit applications and raises at end of week.
+- **LL-285 (Done):** Pure source timeKeep simulator and all 156 directional source-vs-provisional time audit.
+- **LL-286 (Done):** Complete Classic time-parity unit tests, modern separation and ZipRunner verification.
+- **Remaining:** Player walking-time conversion requires side-by-side DOS captures.
+- **Artifact:** `the-life-loop-0.5.53-ziprunner.zip`.
+
+### v0.5.54 — Source-backed weekly state ordering + canonical Social browser SDK
+
+- **Artifact:** `the-life-loop-0.5.54-ziprunner.zip`.
+- **Done:** LL-287, LL-288, LL-289, LL-290 (source/test gates; live Social connection awaits operator browser acceptance).
+- **Still provisional:** DOS pantry/spoilage identity and sequencing, monthly debt windows, economic probability, original AI event semantics and travel tick conversion.
+- **External need:** Social should publish a versioned same-origin/browser SDK with SHA-256 manifest to replace the GitHub raw hotload in a later pass. Social `game_activity`, friend invitations and secure game tickets are separate future service features, not prerequisites for lobby chat.
+
+## v0.5.55 — Rule presets and forced homeward journeys
+
+- LL-291: homeward route and next-week time debt for human/AI players.
+- LL-292: family-preserving New Game house-rule toggles, defaults and persisted preferences.
+- LL-293: save/online debt validation, old-save migration and regression tests.
+- Artifact: `the-life-loop-0.5.55-ziprunner.zip`.
+
+
+## v0.5.58 — Source-backed Classic goal parity and ranked worklog
+
+**Artifact:** `the-life-loop-0.5.58-ziprunner.zip`.
+
+- **LL-303 (implementation candidate):** DOS source weighted goal progress, discrete employment-dependent career score, completed-diploma education stat and independent victory checks. The UI now shows actual Classic stats and targets; Modern scoring is unchanged.
+- **LL-304 (implementation candidate):** New portable goal module with separate source regression tests and ZipRunner/Pages build integration; existing Classic house rules, locale, saves and forced-home behaviors are retained.
+- **LL-305–LL-310:** Clock, happiness, food/rent, rival AI, retail/economy and original starting Happiness remain open, with source requirements and acceptance checks in `docs/classic-parity-worklog.md`.
+- **Operator review:** Start Classic Standard/Extended/Custom, test unequal targets and the score readout; save/load, compare Modern, then inspect the completed goal gate. Run `TEST-GOALS.bat` and `node tools/verify.mjs`. No Git push or deployment.
+
+
+## v0.5.59 — Source Clock Bounds, Seven-Route Evidence and Optional Action Limit
+
+**Artifact:** `the-life-loop-0.5.59-ziprunner.zip` · **LL-305 implementation candidate**; operator review pending.
+
+- Replaces the unsupported 'all Classic actions stop at zero' rule with zero-cost in-venue actions allowed at 0 remaining units. Travel to another venue and all timed actions remain blocked until next week; no automatic end-turn RPC changes.
+- Makes the speculative ten-interaction gate an explicit **off-by-default house rule** with save/preference support; toggling on preserves the old ten-action behavior. The optional cap does not affect Modern mode.
+- Seven original 170-waypoint trip cases, source-AI tick estimate and a transparent read-only counter approximation; *no claim* of exact DOS walking-hour calibration. Original measurements remain blocked in LL-175.
+- New Classic/Modern/save/regression cases, synchronized offline/Pages builds and operator review checklist. ADR-0059 and `docs/reference/dos-time-observation-template.csv`.
+
+**Operator checks:** Run `TEST-TIME.bat` and `node tools/verify.mjs`. At the Bank after 0h remain: deposit/withdraw still work; travel out and timed Broker entry fail. At Black's Market buy food at 0h when cash allows. Enable 10-action house rule and verify the eleventh deposit is refused. Check a 2-player save and a Modern session. DOSBox observations still required for true route calibration. No Git push.
+
+
+## v0.5.62 — Source-grounded Jones decision thresholds and career balance
+
+**Artifact:** `the-life-loop-0.5.62-ziprunner.zip` · Implementation candidate; pending operator QA.
+
+- **LL-315:** Real source-backed two-raise gate, qualified career ladder checks and relaxation-governed rest. Source predicates are pure; real actions continue to require a legal venue, enough time and affordable costs.
+- **LL-316:** Food branch identity correction #27; recovery sequence is replay-tested and the two-week hardship counter now stays serializable.
+- **LL-317:** Dedicated AI source helper, source branch worksheet, seeded multiplayer/save and Modern-mode checks, full offline/Pages release gate.
+- **Still open:** LL-308/LL-190 exhaustive 1–49 branch order, original RNG gates, economic salary coefficients, source travel-time mapping and exact DOS runtime behavior.
+
+**Operator checks:** run `TEST-JONES-AI.bat` and `node tools/verify.mjs`; verify raise cap at ACNE, weekly rival food/rent purchases and deliberate low-relaxation home visits; save/load after 20 weeks. No Git push.
+
+## v0.5.63 — Pawn/shop source quotes and read-only economic RNG comparators
+
+**Artifact:** `the-life-loop-0.5.63-ziprunner.zip` · Implementation candidate; pending operator QA.
+
+- **Classic pawn:** `pawnShop.sc` percentage arithmetic, −1 happiness per pledge, fridge freshness loss; use reference price proxy, not real historical `pricePaid` (not yet stored). New quote is stored and validated; old lots and Modern mechanics unchanged.
+- **Original market:** original 1/2/4-unit food prices and ten-ticket offering were already implemented; this pass locks them under goods-index regression tests.
+- **Economic audit:** read-only exact per-index source comparator and `economicIndex.sc` inclusive event draws; live compatibility economy deliberately unchanged.
+- **Outstanding:** original purchase-price provenance, pawn counter six-slot / resale lifecycle, exact economic series/seeded source event integration, DOS game length and 4-player UI.
+- **Acceptance:** run TEST-RETAIL-PAWN.bat, node tools/verify.mjs, clean ZIP extraction; operator verifies Classic and Modern item transactions in browser. No Git push or Looprd API change.

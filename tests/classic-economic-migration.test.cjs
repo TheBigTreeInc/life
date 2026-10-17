@@ -84,7 +84,7 @@ test('rival source-order last resort uses exact pawn destination and action iden
  let decision=g.classicSourceDecision(p);
  assert.equal(decision.ruleId,23);assert.equal(decision.destination,'pawn');
  assert.equal(decision.actionCode,'classicPawn:computer');
- p.classicRentDueWeek=g.week;p.groceries=1;
+ p.classicRentDueWeek=g.week;p.groceries=1;p.classicFoodV2=null;
  decision=g.classicSourceDecision(p);
  assert.equal(decision.ruleId,10,'Rent extension must precede pawning');
  p.classicExtensionAttemptWeek=g.week;

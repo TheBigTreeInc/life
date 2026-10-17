@@ -1,6 +1,6 @@
 {
   "name": "the-life-loop",
-  "version": "0.5.52",
+  "version": "0.5.64",
   "private": true,
   "description": "Online two-human friend-code co-op via Looprd HTTP actions and WebSocket room notifications; Classic and Modern preserved",
   "scripts": {
@@ -10,13 +10,19 @@
     "test": "node --test tests/*.test.cjs",
     "verify": "node tools/verify.mjs",
     "test:classic": "node --test tests/classic-economic-migration.test.cjs tests/classic-pass2-source.test.cjs tests/classic-migration-career-survival.test.cjs tests/classic-jobs-rent.test.cjs tests/original-dos-route-jobs-ai.test.cjs tests/classic-economic-events.test.cjs tests/classic-ai-career-recovery.test.cjs",
-    "test:time": "node --test tests/classic-original-timing.test.cjs tests/classic-route-clock.test.cjs tests/classic-clock-employment.test.cjs tests/classic-work-pawn.test.cjs",
-    "test:work": "node --test tests/classic-work-warning-garnishment.test.cjs tests/classic-original-timing.test.cjs tests/classic-work-pawn.test.cjs",
+    "test:time": "node --test tests/classic-original-timing.test.cjs tests/classic-route-clock.test.cjs tests/classic-clock-employment.test.cjs tests/classic-work-pawn.test.cjs tests/classic-dos-time-parity.test.cjs tests/classic-clock-source-matrix.test.cjs",
+    "test:work": "node --test tests/classic-work-warning-garnishment.test.cjs tests/classic-original-timing.test.cjs tests/classic-work-pawn.test.cjs tests/classic-dos-time-parity.test.cjs",
     "test:paychecks": "node --test tests/classic-paycheck-audit.test.cjs tests/classic-work-warning-garnishment.test.cjs",
     "test:turns": "node --test tests/classic-turn-sequence.test.cjs tests/classic-jobs-rent.test.cjs tests/classic-clock-employment.test.cjs",
     "test:classic-board": "node --test tests/classic-board-weekly.test.cjs",
     "test:journey": "node --test tests/classic-journey-entry.test.cjs tests/classic-board-weekly.test.cjs tests/route-graph.test.cjs",
-    "test:classic-journey": "node --test tests/classic-journey-entry.test.cjs tests/classic-relaxation-journey-skip.test.cjs"
+    "test:classic-journey": "node --test tests/classic-journey-entry.test.cjs tests/classic-relaxation-journey-skip.test.cjs",
+    "test:goals": "node --test tests/classic-goal-parity.test.cjs tests/classic-goals-competition.test.cjs tests/classic-parity.test.cjs",
+    "test:happiness": "node --test tests/classic-happiness-weekend-parity.test.cjs tests/classic-relaxation-journey-skip.test.cjs tests/classic-weekly-source-order.test.cjs",
+    "test:obligations": "node --test tests/classic-obligations-source-061.test.cjs tests/classic-banking-food.test.cjs tests/classic-paycheck-audit.test.cjs",
+    "test:ai": "node --test tests/classic-jones-source-062.test.cjs tests/classic-ai-career-recovery.test.cjs tests/classic-migration-career-survival.test.cjs tests/classic-pass2-source.test.cjs",
+    "test:retail-pawn": "node --test tests/classic-retail-pawn-economy-063.test.cjs tests/classic-work-pawn.test.cjs tests/classic-discount-market.test.cjs tests/classic-economic-events.test.cjs",
+    "test:dos-food": "node --test tests/classic-dos-consumables-064.test.cjs"
   },
   "license": "UNLICENSED"
 }

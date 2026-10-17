@@ -219,3 +219,24 @@ Classic HUD derives its only 60-unit clock from the authoritative active player'
 ### Street-rendering regression boundary v0.5.50
 
 Classic route rendering does not modify waypoint counts, route quotes, clock consumption, employment actions, save snapshots, room authority or Social data. Browser QA checks that highlighted segments avoid all building tile interiors at four viewport widths. This is not evidence that the provisional original DOS waypoint-to-clock conversion is accurate; original runtime calibration remains in backlog.
+
+## v0.5.53 source-timing audit
+
+Classic Employment 4-unit applications and raise interactions now cap at the end of 60-unit week instead of being blocked when fewer than 4 units remain. Source: DOS `employment.sc` + `room1.sc` timeKeep. Controlled by `classic-time.js`; saves unchanged. `dosClockFrames()` reproduces the strict tick threshold but is comparison-only, not browser-time simulation. `node tools/dos-time-audit.mjs` enumerates all 156 venue-to-venue estimates and labels the existing player travel clock conversion provisional. Modern gameplay and Social remain isolated.
+
+## v0.5.54 — Weekly simulation timing audit
+
+Verified from `sluicebox/sci-scripts` Jones DOS 1.000.060 `startTrn.sc`: state 2 lottery, state 4 computer, state 6 relaxation, state 10 food storage, state 12 shortage cleanup, state 16 consumption/rent, state 18 clothing, state 20 loan, state 24 headlines and state 26 crises. This pass fixes Life's lottery/computer/relaxation relative ordering and moves Classic clothing processing to after the weekend. It eliminates non-DOS random leisure expenses from Classic.
+
+**Not claimed as DOS parity:** Life still consumes from one `groceries` pool and performs spoilage *after* a pantry meal; the original uses distinct item IDs, and changing this without implementing those IDs caused AI hunger and debt regressions in our 60-week seeded tests. The legacy combined pantry remains intentionally preserved. Rent windows and crisis rolls have not been altered. Modern-mode leisure events remain unchanged.
+
+Social integration is game-independent: canonical browser SDK pinned to a fixed Social Git revision, memory-only Social session, and direct API calls under the chosen Looprd origin. No modifications to the game-room server authority.
+
+## v0.5.55 Home-return and custom-preset parity
+
+Implemented and tested the compulsory homeward path at every end of a Classic player/AI turn. The route costs the same units as voluntary journey calculations; any unpaid remainder is subtracted from the following week's time budget. Restore from older save formats safely. Distinguish the Classic and Modern content worlds from optional home-return and overtime rules in the creation dialog. The DOS source turn timing is an approximation until route-tick traces are authoritative.
+
+
+## v0.5.56 — Gameplay parity supplement
+
+Mandatory Classic homeward travel now has a client-only road animation before end turn; the authoritative host/engine still charges travel cost and carries weekly debt. No new game-mode content or server contract. Game-family presets remain immutable and normalize three additional house-rule switches (food spoilage, overdue-rent happiness loss, market fluctuation), all default enabled. These are deliberate deviations from the base world; Classic food type separation, DOS movement timing and original economy formulas remain outstanding. Tests: `tests/home-return-rules.test.cjs` and `tests/house-rules-weekly.test.cjs`; manual host/guest and browser UI acceptance pending.

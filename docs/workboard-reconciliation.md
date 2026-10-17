@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.52
+# Workboard lifecycle reconciliation — v0.5.64
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 247 done (historical claims included); 15 blocked; 12 in progress; 3 to do.
+**Counts:** 280 done (historical claims included); 16 blocked; 12 in progress; 9 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -21,6 +21,7 @@
 - **LL-189 — Original multivariate EconomicIndex emulator parity:** Multi-index economic transition formulas lack original emulator/reference verification. **Unblock:** Collect repeatable DOS economic-index sequences or source proofs.
 - **LL-190 — Exhaustive ordered opponent SCI branches and event order:** The complete SCI decision branch ordering is not yet recovered. **Unblock:** Map and verify the outstanding WhereShouldIGo.sc branches from source/runtime traces.
 - **LL-263 — Cross-game single sign-on and social deployment:** No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO. **Unblock:** Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services.
+- **LL-310 — Original DOS starting happiness audit:** DOS original starting stats and exact fractional university credit semantics have not yet been demonstrated from an executable/runtime trace. **Unblock:** Provide a version-matched original DOS capture proving initial Happiness and partial-lesson education stat increments.
 
 ## In progress
 
@@ -42,6 +43,12 @@
 - **LL-011:** Audio and weather ambience
 - **LL-086:** Portable character library export/import and device persistence QA
 - **LL-098:** Optional downloadable local style packs
+- **LL-301:** Complete Dutch gameplay translation
+- **LL-302:** DOS food-consumable parity and match-length benchmark
+- **LL-306:** Classic happiness and weekend sequence
+- **LL-307:** Classic economic obligations
+- **LL-308:** DOS rival AI branch fidelity
+- **LL-309:** Classic catalog and RNG parity
 
 ## Done (current ZipRunner update)
 
@@ -149,6 +156,39 @@
 - **LL-281:** Street tracks visible illustrated storefronts
 - **LL-282:** Visible doorway sidewalks and continuous pawn journey
 - **LL-283:** Storefront and garden clock browser regression
+- **LL-284:** DOS Employment end-of-week time cap
+- **LL-285:** Executable original clock reference and timing audit
+- **LL-286:** Late-week timing parity regression and release
+- **LL-287:** DOS weekly state-order and invented-event cleanup
+- **LL-288:** Pinned canonical Social JavaScript SDK integration
+- **LL-289:** Shared Social account login and registration
+- **LL-290:** Weekly/Social integrated regression and source handoff
+- **LL-291:** Classic end-of-turn home return and clock overdraft
+- **LL-292:** Game-family presets and custom house rules
+- **LL-293:** Homeward turn debt serialization and regression
+- **LL-294:** Animated mandatory Classic journey home
+- **LL-295:** Expanded per-game house rules
+- **LL-296:** v0.5.56 delivery, source tests and release diagnostics
+- **LL-297:** Closing-week Classic food audit
+- **LL-298:** Selectable match goal presets
+- **LL-299:** English/Dutch setup localization foundation
+- **LL-300:** v0.5.57 regression, package and operator handoff
+- **LL-303:** Classic source goal scores and victory
+- **LL-304:** Goal parity regression and portable build
+- **LL-305:** Clock-end venue actions and Classic 10-action rule separation
+- **LL-311:** Classic happiness and source-state food-stress audit
+- **LL-312:** Source food-storage happiness penalties
+- **LL-313:** Fourth-week loan notices and bounded penalties
+- **LL-314:** Original n108 source payroll comparator
+- **LL-315:** Original Jones raise/promotion and rest priority gates
+- **LL-316:** Rival survival and branch decision audit
+- **LL-317:** Source predicate adapter and reproducible release tests
+- **LL-318:** Original DOS pawn price formula and happiness impacts
+- **LL-319:** Original Black’s Market price tests and DOS economy RNG comparators
+- **LL-320:** v0.5.63 source/ZipRunner release and compatibility verification
+- **LL-321:** Original DOS Classic new-game initial statistics
+- **LL-322:** Versioned DOS food items, storage ordering and clock isolation
+- **LL-323:** v0.5.64 source release, parity evidence and replay regression
 
 ## Importer handoff
 

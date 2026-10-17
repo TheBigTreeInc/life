@@ -14,8 +14,8 @@ test('Classic starts with exactly $200 in hand, zero savings, while Modern balan
 });
 test('Classic four goal formulas reflect original goal-point statistics',()=>{
  const g=new Game({...base,mode:'sandbox'}),p=g.player;
- assert.deepEqual(g.classicGoalStats(p),{wealth:2,happiness:62,education:1,career:0});
- assert.deepEqual(g.scores(p),{wealth:4,happiness:100,education:2,career:0});
+ assert.deepEqual(g.classicGoalStats(p),{wealth:2,happiness:0,education:0,career:0});
+ assert.deepEqual(g.scores(p),{wealth:4,happiness:0,education:0,career:0});
  p.cash=3500;p.bank=500;p.invested=500;p.happiness=43;p.classicDegrees=['junior-college','trade-school'];p.job='classic-monolith-cook';p.dependability=40;
  assert.deepEqual(g.classicGoalStats(p),{wealth:45,happiness:43,education:19,career:50});
  assert.deepEqual(g.scores(p),{wealth:90,happiness:86,education:38,career:100});

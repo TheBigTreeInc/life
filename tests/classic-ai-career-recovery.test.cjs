@@ -28,7 +28,7 @@ test('Source career decision is pure and selects legitimate raise branch 28 with
 
 test('Source branch 29 uses qualified promotion that improves the current contract',()=>{
  const g=make(),p=wellFunded(g);p.job='classic-monolith-cook';p.wage=3;p.workSessions=4;p.experience=95;p.dependability=95;
- p.classicDegrees=D.classicDegrees.map(d=>d.id);p.raiseWeek=g.week;
+ p.classicDegrees=D.classicDegrees.map(d=>d.id);p.raiseWeek=g.week;p.classicRaises=2;
  const signal=g.classicCareerDecision(p);
  assert.ok(signal,'career candidate exists');assert.equal(signal.id,29);
  assert.ok(signal.action.startsWith('apply:'));
@@ -48,7 +48,7 @@ test('Branch 20 renews expiring formal uniform BEFORE discretionary university c
 test('Progress toward a source degree produces education branch 44 with a feasible action',()=>{
  const g=make(),p=wellFunded(g);g.week=2;
  p.job='classic-monolith-cook';p.wage=200;p.raiseWeek=g.week;p.workSessions=4;p.experience=10;p.dependability=30;
- p.classicEnrolled=['junior-college'];p.classicProgress={'junior-college':1};
+ p.classicEnrolled=['junior-college'];p.classicProgress={'junior-college':1};p.classicRelaxation=20;
  const decision=g.classicCareerDecision(p);
  assert.equal(decision.id,44);assert.ok(decision.action.startsWith('classicStudy:'));
  const snapshot=g.snapshot();g.classicCareerDecision(p);assert.deepEqual(g.snapshot(),snapshot,'source career lookups never consume RNG');

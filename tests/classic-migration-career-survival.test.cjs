@@ -77,7 +77,7 @@ test('Survival budget includes cash, withdrawable savings, food, rent and wardro
  assert.equal(budget.withdrawable,200);
  assert.equal(budget.liquidity,250);
  assert.equal(budget.rentReserve,325);
- assert.equal(budget.foodReserve,g.classicFoodPrice(1));
+ assert.equal(budget.foodReserve,g.classicAIFoodPurchase(p).cost);
  assert.ok(budget.uniformReserve>0);
  assert.ok(budget.immediateBills>p.cash);
  assert.ok(budget.projectedGap>0);
@@ -85,12 +85,12 @@ test('Survival budget includes cash, withdrawable savings, food, rent and wardro
  p.job=null;p.clothing.casual=6;p.fed=true;p.groceries=1;
  const noCost=g.classicSurvivalBudget(p);
  assert.equal(noCost.uniformReserve,0);
- assert.equal(noCost.twoWeekFood,0);
+ assert.equal(noCost.twoWeekFood,g.classicFoodPrice(1)); // Without a fridge fresh groceries cannot cover a future weekend
 });
 
 test('Classic AI graduates from starter wage via a seed-replayable career ladder',()=>{
  const a=make(4),b=make(4);
- for(let week=0;week<20;week++){a.endTurn();b.endTurn();}
+ for(let week=0;week<50;week++){a.endTurn();b.endTurn();} // Zero-happiness/no-food DOS start extends the career ladder
  const rival=a.players.find(x=>x.isAI);
  assert.ok(rival.job);
  assert.ok(rival.experience>10);

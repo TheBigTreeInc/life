@@ -1,5 +1,7 @@
 (function (root) {
 'use strict';
+const ClassicGoals=root.LifeClassicGoals||(typeof require==='function'?require('./classic-goals.js'):null);
+if(!ClassicGoals)throw Error('Classic goal parity adapter unavailable');
 const Pass2 = root.LifeClassicPass2 || (typeof require === 'function' ? require('./classic-pass2-rules.js') : null);
 if(!Pass2)throw Error('Classic source rules unavailable');
 const ClassicTime=root.LifeClassicTime||(typeof require==='function'?require('./classic-time.js'):null);
@@ -7,13 +9,23 @@ if(!ClassicTime)throw Error('Classic timing rules unavailable');
 const ClassicTurn=root.LifeClassicTurnSequence||(typeof require==='function'?require('./classic-turn-sequence.js'):null);
 if(!ClassicTurn)throw Error('Classic turn sequence unavailable');
 const ClassicWeekly=root.LifeClassicWeeklyEvents||(typeof require==='function'?require('./classic-weekly-events.js'):null);
+const ClassicFood=root.LifeClassicConsumables||(typeof require==='function'?require('./classic-consumables-064.js'):null);
+if(!ClassicFood)throw Error('DOS consumable identity model unavailable');
+const Life57=root.LifePass057||(typeof require==='function'?require('./life-pass-057.js'):null);
+if(!Life57)throw Error('Food transition adapter unavailable');
 if(!ClassicWeekly)throw Error('Classic weekly events unavailable');
+const ClassicJones=root.LifeClassicJonesSource||(typeof require==='function'?require('./classic-jones-source.js'):null);
+if(!ClassicJones)throw Error('Classic Jones source predicates unavailable');
 const ClassicHousehold=root.LifeClassicHousehold||(typeof require==='function'?require('./classic-household.js'):null);
 if(!ClassicHousehold)throw Error('Classic household adapter unavailable');
 const ClassicEconomy = root.LifeClassicEconomy || (typeof require === 'function' ? require('./classic-economy.js') : null);
 if(!ClassicEconomy)throw Error('Classic economic indices unavailable');
+const ClassicRetailPawn=root.LifeClassicRetailPawn||(typeof require==='function'?require('./classic-retail-pawn-063.js'):null);
+if(!ClassicRetailPawn)throw Error('Classic DOS retail/pawn evidence adapter unavailable');
 const ClassicEvents=root.LifeClassicEconomicEvents||(typeof require==='function'?require('./classic-economic-events.js'):null);
 if(!ClassicEvents)throw Error('Classic economic events unavailable');
+const RulePresets=root.LifeRulePresets||(typeof require==='function'?require('./rule-presets.js'):null);
+if(!RulePresets)throw Error('Game rule presets unavailable');
 const D = root.LifeData || (typeof require === 'function' ? require('./data.js') : null);
 const Characters = root.LifeCharacters || (typeof require === 'function' ? require('./characters.js') : null);
 // Classic board routes share one authoritative topology with the pawn renderer.
@@ -33,9 +45,11 @@ const pawnRedemption=item=>pawnLoan(item)+Math.max(5,Math.ceil(pawnLoan(item)*.1
 // Documented Jones difficulty offsets. Sierra's exact goal distribution algorithm is
 // unverified; our allocation preserves the budget, 5-point steps and close wealth target.
 const CLASSIC_JONES_DIFFICULTY=Object.freeze({easy:40,fair:0,hard:-40});
-// The secondary gameplay reference mentions ten weekly events. We interpret those
-// as venue actions (not walking); exact DOS counting is unverified.
+// Original DOS clock governs the turn; an extra ten-interaction cap is a
+// *custom* house rule retained for users of older Life Loop builds.
+// The bounded counter remains diagnostic even when the cap is disabled.
 const CLASSIC_WEEKLY_ACTION_LIMIT=10;
+const CLASSIC_WEEKLY_COUNTER_LIMIT=65535;
 const GOAL_MIN=10,GOAL_MAX=100;
 function rivalGoalAllocation(human, difficulty, random){
   const cap=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -70,6 +84,7 @@ class LifeGame {
     const goal = settings.goals || {};
     const mode = ['solo','hotseat','sandbox'].includes(settings.mode) ? settings.mode : 'solo';
     this.settings={mode, ruleset:validRuleset(settings.ruleset), era:validEra(settings.era),
+      rules:RulePresets.normalize(validRuleset(settings.ruleset),settings.rules),
       jonesDifficulty:Object.hasOwn(CLASSIC_JONES_DIFFICULTY,settings.jonesDifficulty)?settings.jonesDifficulty:'fair',
       goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,clamp(Number(goal[k])|| (settings.ruleset==='classic'?50:60),10,100)]))};
     this.seed = Number.isSafeInteger(settings.seed) ? settings.seed : 314159;
@@ -92,9 +107,9 @@ class LifeGame {
   }
   createPlayer(id,name,isAI,color) {
     const initialCash=this.isClassic?200:250,initialBank=this.isClassic?0:100;
-    return {id,name,isAI,color,location:'home',hours:this.rules.hours,cash:initialCash,bank:initialBank,invested:0,debt:0,rentDebt:0,
-      happiness:62,energy:84,classicRelaxation:16,hunger:0,education:0,credits:0,experience:this.isClassic?10:0,dependability:this.rules.dependabilityStart,job:null,wage:0,workSessions:0,classicDegrees:[],classicProgress:{},classicEnrolled:[],classicEnrollmentCredits:0,classicDismissals:0,classicRaises:0,classicUnemployedWeeks:0,classicJobSearchFailures:0,classicRejectedOpenings:{},classicWorkHourCredit:0,classicWageRemainder:0,classicWorkWarningWeek:0,classicChoicesThisWeek:0,classicLastClosedWeek:0,classicLastRentChargeWeek:0,classicPaycheckHistory:[],classicRent:325,classicRentDueWeek:4,classicExtensions:0,classicExtensionAttemptWeek:0,classicEverDebt:false,classicPortfolio:Object.fromEntries(D.classicStocks.map(x=>[x.id,0])),classicLegacyInvestment:0,classicBrokerOpen:false,classicLoanDefaults:0,classicLoanPaidThrough:0,classicFoodPurchasedWeek:0,classicWeekendTicket:null,classicHardshipWeeks:0,classicReliefWeek:0,classicReliefCount:0,
-      classicEquipment:{},classicBurglaryCount:0,home:'studio',groceries:1,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:initialCash,bank:initialBank,invested:0,debt:0,netWorth:initialCash+initialBank}],milestones:[]};
+    return {id,name,isAI,color,location:'home',hours:this.rules.hours,returnTravelDebt:0,cash:initialCash,bank:initialBank,invested:0,debt:0,rentDebt:0,
+      happiness:this.isClassic?0:62,energy:84,classicRelaxation:this.isClassic?25:16,hunger:0,education:0,credits:0,experience:this.isClassic?10:0,dependability:this.rules.dependabilityStart,job:null,wage:0,workSessions:0,classicDegrees:[],classicProgress:{},classicEnrolled:[],classicEnrollmentCredits:0,classicDismissals:0,classicRaises:0,classicUnemployedWeeks:0,classicJobSearchFailures:0,classicRejectedOpenings:{},classicWorkHourCredit:0,classicWageRemainder:0,classicWorkWarningWeek:0,classicChoicesThisWeek:0,classicLastClosedWeek:0,classicLastRentChargeWeek:0,classicPaycheckHistory:[],classicRent:325,classicRentDueWeek:4,classicExtensions:0,classicExtensionAttemptWeek:0,classicEverDebt:false,classicPortfolio:Object.fromEntries(D.classicStocks.map(x=>[x.id,0])),classicLegacyInvestment:0,classicBrokerOpen:false,classicLoanDefaults:0,classicLoanPaidThrough:0,classicFoodPurchasedWeek:0,classicWeekendTicket:null,classicHardshipWeeks:0,classicReliefWeek:0,classicReliefCount:0,
+      classicEquipment:{},classicBurglaryCount:0,home:'studio',groceries:this.isClassic?0:1,classicFoodV2:this.isClassic?ClassicFood.start():null,classicFoodMealBonusWeek:0,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:initialCash,bank:initialBank,invested:0,debt:0,netWorth:initialCash+initialBank}],milestones:[]};
   }
   get rules(){return D.RULESETS[this.settings.ruleset];}
   get isClassic(){return this.settings.ruleset==='classic';}
@@ -186,6 +201,13 @@ class LifeGame {
   classicDegreeAvailable(p,d){return d.requires.every(id=>p.classicDegrees.includes(id));}
   classicWorkCaps(p,job){const r=this.jobRequirement(job),bonus=5*this.degreeCount(p);return {experience:10+r.experience+bonus,dependability:20+r.dependability+bonus};}
   classicFoodCapacity(p){return this.ownsWorking(p,'fridge')?(this.ownsWorking(p,'freezer')?12:6):Infinity;}
+  classicFoodAvailable(p){return p.classicFoodV2
+    ?(p.groceries>0&&this.ownsWorking(p,'fridge')||Object.values(p.classicFoodV2).some(q=>q>0)||p.fed)
+    :(p.groceries>0||p.fed);}
+  classicAIFoodPurchase(p){return p.classicFoodV2&&!this.ownsWorking(p,'fridge')
+    ?{venue:'diner',action:'classicMeal:5',cost:Pass2.goodsPrice(65,this.classicGoodsIndex)}
+    :{venue:'cinema',action:'classicFresh:1',cost:this.classicFoodPrice(1)};}
+
   classicStockValue(p){return D.classicStocks.reduce((n,s)=>n+(p.classicPortfolio[s.id]||0)*this.classicStockPrices[s.id],0)+(p.classicLegacyInvestment||0);}
   syncClassicInvested(p){if(this.isClassic)p.invested=this.classicStockValue(p);}
   classicDiscountPrice(id){
@@ -201,6 +223,7 @@ class LifeGame {
   classicWorkQuote(p,hours=this.classicShiftHours(p)){return ClassicTime.paycheck(p.wage,hours,p.rentDebt);}
   classicWorkStanding(p){const j=this.getJob(p);return j?ClassicTime.workStanding(p.dependability,this.jobRequirement(j).dependability,p.classicWorkWarningWeek===this.week):'ready';}
   classicShiftRemainder(p,hours){return 0;} // Pass 2 pays each partial shift with DOS integer truncation.
+  pawnQuote(item){return this.isClassic?ClassicRetailPawn.pawnQuote(PAWN_VALUES[item],this.classicGoodsIndex):{payout:pawnLoan(item),redemption:pawnRedemption(item)};}
   pawnEligible(p,item){return Object.hasOwn(PAWN_VALUES,item)&&this.ownsWorking(p,item)&&!(item==='fridge'&&p.owned.includes('freezer'));}
   pawnLot(id){return this.classicPawnLots.find(l=>l.id===id);}
   classicLoanLimit(p){const job=this.getJob(p);return job?Math.max(0,Math.floor(((job.wage*32+p.cash+p.bank-p.debt)*0.75)*(0.8**p.classicLoanDefaults)/100)*100):0;}
@@ -311,7 +334,7 @@ class LifeGame {
     // The community reference confirms a relative sometimes rescues a player
     // after a couple of hopeless weeks. $90/2 weeks/8-week cooldown is our
     // explicit, tested approximation pending DOS observations.
-    p.classicHardshipWeeks=this.classicStranded(p)?(p.classicHardshipWeeks||0)+1:0;
+    p.classicHardshipWeeks=this.classicStranded(p)?Math.min(2,(p.classicHardshipWeeks||0)+1):0;
     if(p.classicHardshipWeeks<2||this.week-(p.classicReliefWeek||-100)<8)return;
     const before=this.accounts(p);
     p.cash+=90;p.classicReliefWeek=this.week;p.classicReliefCount=(p.classicReliefCount||0)+1;
@@ -324,12 +347,14 @@ class LifeGame {
   }
   goalTargets(p){return this.isClassic&&p.isAI&&p.classicGoals?p.classicGoals:this.settings.goals;}
   goalPoints(p){return D.GOAL_KEYS.reduce((sum,k)=>sum+this.goalTargets(p)[k],0);}
-  // Printed Quick Reference: Money counts net worth including possessed goods;
-  // Education rises with units of study, not only completed diplomas. Exact
-  // DOS conversion constants and asset valuation remain unverified.
-  classicGoalStats(p){return {wealth:this.wealth(p)/100,
-    happiness:p.happiness,education:1+9*this.degreeCount(p)+this.classicStudyProgress(p),
-    career:this.getJob(p)?1.25*p.dependability:0};}
+  // Source-coded DOS goal stats: viewGoals.sc, university.sc, n108.sc.
+  // Printed Quick Reference describes partial study units, but decompiled
+  // university.sc recomputes the goal stat on completed awards; runtime audit
+  // of partial credits remains open (ADR-0058). Item wealth pricing remains
+  // a separate approximation.
+  classicGoalStats(p){return {wealth:Math.max(0,Math.floor(this.wealth(p)/100)),
+    happiness:p.happiness,education:ClassicGoals.educationStat(this.degreeCount(p)),
+    career:ClassicGoals.careerStat(p.dependability,Boolean(this.getJob(p)))};}
   scores(p) {
     const g=this.goalTargets(p);
     const job=this.getJob(p);
@@ -342,11 +367,15 @@ class LifeGame {
     const out={}; for(const key of D.GOAL_KEYS) out[key]=clamp(Math.floor(actual[key]),0,100);
     return out;
   }
-  progress(p){const scores=this.scores(p);return Math.round(D.GOAL_KEYS.reduce((acc,k)=>acc+scores[k],0)/4);}
+  progress(p){
+    if(this.isClassic)return ClassicGoals.progress(this.classicGoalStats(p),this.goalTargets(p));
+    const scores=this.scores(p);return Math.round(D.GOAL_KEYS.reduce((acc,k)=>acc+scores[k],0)/4);
+  }
   checkWin() {
     if (this.winner) return;
     for(const p of this.players){
-      if(D.GOAL_KEYS.every(k=>this.scores(p)[k]>=100)){
+      if(this.isClassic?ClassicGoals.won(this.classicGoalStats(p),this.goalTargets(p)):
+          D.GOAL_KEYS.every(k=>this.scores(p)[k]>=100)){
         this.winner=p.id; p.won=true;this.log(`${p.name} completed every life goal! What a run!`,'good',p.id);break;
       }
     }
@@ -405,9 +434,15 @@ class LifeGame {
   actions(p=this.player){
     const t=[];const at=p.location;
     const push=(id,title,detail,hours=0,price=0,valid=true,reason='',meta={})=>{
-      const clockOpen=!this.isClassic||p.hours>0;
-      const hasEventSlot=!this.isClassic||(p.classicChoicesThisWeek||0)<CLASSIC_WEEKLY_ACTION_LIMIT;
-      t.push({id,title,detail,hours,price,enabled:clockOpen&&hasEventSlot&&valid&&p.hours>=hours&&p.cash>=price,reason:!clockOpen?'No hours left this week; end your turn.':!hasEventSlot?'Ten Classic actions used this week; end your turn.':!valid?reason:p.hours<hours?'Not enough time':p.cash<price?'Not enough cash':'',...meta});
+      // DOS lets the player transact at zero clock while still inside the
+      // current venue. Nonzero-time actions remain blocked by p.hours>=hours.
+      // Application/raise nominal time is capped to zero only after the clock
+      // has expired; university enrollment remains a current compatibility
+      // exception requiring a live turn even though its quoted cost is zero.
+      const requiresActiveClock=id==='enroll'||id==='raise'||id.startsWith('apply:');
+      const clockOpen=!this.isClassic||p.hours>0||(hours===0&&!requiresActiveClock);
+      const hasEventSlot=!this.isClassic||!this.settings.rules.weeklyActionLimit||(p.classicChoicesThisWeek||0)<CLASSIC_WEEKLY_ACTION_LIMIT;
+      t.push({id,title,detail,hours,price,enabled:clockOpen&&hasEventSlot&&valid&&p.hours>=hours&&p.cash>=price,reason:!clockOpen?'No clock time left for this action.':!hasEventSlot?'Custom ten-action limit reached; end your turn.':!valid?reason:p.hours<hours?'Not enough time':p.cash<price?'Not enough cash':'',...meta});
     };
     if(!this.isClassic&&D.citizens[at])push('chat',`Talk to ${D.citizens[at].name}`,`Meet ${D.citizens[at].title.toLowerCase()}. Discover a little story.`,1,0,p.talkedWeek?.[at]!==this.week,'Already caught up this week');
     if(!this.isClassic&&!p.isAI){
@@ -437,11 +472,11 @@ class LifeGame {
       for(const job of this.jobs){
         const reasons=this.jobReasons(p,job);
         const workplace=this.jobWorkplace(job);
-        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} · ${workplace.label}`:`Apply: ${job.name} · ${workplace.label}`,`${money(this.offeredWage(job))}/hour · Work at ${workplace.boardName}${workplace.department?' ('+workplace.department+')':''}${this.isClassic?' · Original employer: '+workplace.originalName+' · DOS job #'+job.originalJobNum+' (original base '+money(job.originalBasePay)+'/h)':''} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic?(reasons.length?' · Unqualified: '+reasons.join(', '):' · Hiring: '+this.classicHiringChance(p,job)+'%') :''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}`,this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id,workplace:job.place});
+        push('apply:'+job.id,p.job&&p.job!==job.id?`Switch to ${job.name} · ${workplace.label}`:`Apply: ${job.name} · ${workplace.label}`,`${money(this.offeredWage(job))}/hour · Work at ${workplace.boardName}${workplace.department?' ('+workplace.department+')':''}${this.isClassic?' · Original employer: '+workplace.originalName+' · DOS job #'+job.originalJobNum+' (original base '+money(job.originalBasePay)+'/h)':''} · Uniform: ${D.clothing[job.clothes].name}${!this.isClassic&&job.course?' · '+find(D.courses,job.course).name:''}${this.isClassic?(reasons.length?' · Unqualified: '+reasons.join(', '):' · Hiring: '+this.classicHiringChance(p,job)+'%') :''}${p.job&&p.job!==job.id?' · Replaces your current job if accepted':''}${this.isClassic&&p.hours<this.rules.applicationHours?' · Clock caps at '+p.hours+' of '+this.rules.applicationHours+' units':''}`,this.isClassic?ClassicTime.cappedActionCharge(p.hours,this.rules.applicationHours).charged:this.rules.applicationHours,0,(this.isClassic||reasons.length===0)&&p.job!==job.id,this.isClassic?(p.job===job.id?'See the raise action below':''):reasons.join(' · ')||(p.job===job.id?'Already employed in this position':''),{tier:job.tier,req:job,replacesJob:!!p.job&&p.job!==job.id,workplace:job.place});
       }
-      const raiseReq=p.job&&this.isClassic?this.jobRequirement(this.getJob(p)).dependability+5*(p.classicRaises||0):0;
-      const canRaise=p.job&&(this.isClassic?p.dependability>=raiseReq:p.workSessions>=3&&p.raiseWeek<=this.week-4);
-      push('raise','Negotiate a raise',this.isClassic?`4 hours · listed wage ${money(p.job?this.offeredWage(this.getJob(p)):0)}/h · requires ${raiseReq} Dependability. Only awarded if offered rate exceeds current pay.`:`Request a higher wage at your current job.`,this.isClassic?4:2,0,!!canRaise&&(this.isClassic?(p.job&&p.wage<this.offeredWage(this.getJob(p))):(p.wage<Math.round(this.getJob(p).wage*1.5))),!p.job?'Get a job first':this.isClassic?`Need ${raiseReq} reliability and an improved listed wage`:p.workSessions<3?'Work 3 shifts first':p.raiseWeek>this.week-4?'Wait a few weeks before another raise':'Already near this role’s pay ceiling');
+      const raiseReq=p.job&&this.isClassic?this.jobRequirement(this.getJob(p)).dependability+10+5*(p.classicRaises||0):0;
+      const canRaise=p.job&&(this.isClassic?ClassicJones.raiseEligible(p.classicRaises||0,p.dependability,this.jobRequirement(this.getJob(p)).dependability,this.offeredWage(this.getJob(p)),p.wage):p.workSessions>=3&&p.raiseWeek<=this.week-4);
+      push('raise','Negotiate a raise',this.isClassic?`4 units nominal (caps at end of week) · listed wage ${money(p.job?this.offeredWage(this.getJob(p)):0)}/h · requires ${raiseReq} Dependability. Only awarded if offered rate exceeds current pay.`:`Request a higher wage at your current job.`,this.isClassic?ClassicTime.cappedActionCharge(p.hours,4).charged:2,0,!!canRaise&&(this.isClassic?(p.job&&p.wage<this.offeredWage(this.getJob(p))):(p.wage<Math.round(this.getJob(p).wage*1.5))),!p.job?'Get a job first':this.isClassic?`Requires at most two raises, ${raiseReq} reliability and a higher offered wage`:p.workSessions<3?'Work 3 shifts first':p.raiseWeek>this.week-4?'Wait a few weeks before another raise':'Already near this role’s pay ceiling');
     }
     if(at==='market'||this.isClassic&&at==='cinema'){
       if(this.isClassic){
@@ -466,7 +501,10 @@ class LifeGame {
       push('bulkFood','Stock the fridge','Three food portions for less.',1,this.price(59,'food'),p.owned.includes('fridge'),'Requires a refrigerator');
       push('lottery','Try a lucky ticket','A $12 gamble. Drawn at the weekend.',1,12);}
     }
-    if(at==='diner') push('meal','Enjoy a hot meal','Fill up, +7 happiness, +8 energy.',2,this.price(20,'food'),!p.fed,'Already eaten this week');
+    if(at==='diner'&&this.isClassic&&p.classicFoodV2){
+      for(const item of ClassicFood.MEALS)push('classicMeal:'+item.index,`Monolith Burger · ${item.name}`,`${item.name} · original DOS consumable #${item.index}; ${item.index===2?'stored until used':'expires this weekend'} · goods-index price`,0,Pass2.goodsPrice(item.basePrice,this.classicGoodsIndex),p.classicFoodV2[item.index]<10,'Food stock full');
+    }
+    if(at==='diner'&&(!this.isClassic||!p.classicFoodV2)) push('meal','Enjoy a hot meal','Fill up, +7 happiness and +8 energy.',2,this.price(20,'food'),!p.fed,'Already eaten this week');
     if(at==='university') {
       if(this.isClassic){
         push('enroll','Pay university enrollment',`$50 buys one course enrollment; ${p.classicEnrollmentCredits} unused. No time required.`,0,50,true,'');
@@ -495,7 +533,7 @@ class LifeGame {
       if(j&&this.jobWorkplace(j).place===at){
         const shiftHours=this.classicShiftHours(p),quote=this.isClassic?this.classicWorkQuote(p,shiftHours):null,income=quote?quote.gross:this.shiftPay(p);
         const standing=this.isClassic?this.classicWorkStanding(p):'ready';
-        const workNotice=standing==='dismissal'?'CAUTION: attempting to work will cause dismissal for low reliability.':standing==='warning'?'First attempt triggers a reliability warning; no time or wages are spent.':quote?.garnished?`${money(quote.net)} net after ${money(quote.garnished)} toward rent arrears${quote.fee?` and ${money(quote.fee)} fee`:''}. Garnishment formula provisional.`:'';
+        const workNotice=standing==='dismissal'?'CAUTION: attempting to work will cause dismissal for low reliability.':standing==='warning'?'First attempt triggers a reliability warning; no time or wages are spent.':quote?.garnished?`${money(quote.net)} net after ${money(quote.garnished)} toward rent arrears${quote.fee?` and ${money(quote.fee)} fee`:''}. Garnishment provisional; DOS n108 comparator ${money(Math.max(0,ClassicTime.originalGarnishmentReference(p.wage,shiftHours,p.rentDebt).net))} (source may be anomalous on partial shifts).`:'';
         const neededEnergy=this.isClassic?Math.max(2,Math.ceil(12*shiftHours/6)):12;
         push('work',`Work at ${this.jobWorkplace(j).label} · ${money(income)}`,`${j.name} · ${this.isClassic&&shiftHours<6?`Partial shift · ${shiftHours}h remaining · ${money(income)} proportional pay.`:'6 hours on the clock, paid as an 8-hour shift.'} ${workNotice} Requires ${D.clothing[j.clothes].name} or better; current wardrobe is ${this.clothingSummary(p).filter(x=>x.weeks>0).map(x=>x.name+' '+x.weeks+'w').join(', ')||'empty'}.`,shiftHours,0,shiftHours>0&&p.energy>=neededEnergy&&this.isDressedFor(p,j),p.energy<neededEnergy?'Exhausted. Rest first.':`Uniform required: ${D.clothing[j.clothes].name} or better; visit Fresh & Frugal or Thread Theory. All clothing expires by week.`);
       }
@@ -506,7 +544,7 @@ class LifeGame {
         push('withdraw:100','Withdraw $100','Transfers in $100 portions. No action time.',0,0,p.bank>=100,'Insufficient savings');
         const loanLimit=this.classicLoanLimit(p);
         push('classicLoanApply','Apply for a bank loan',`2 hours · Approximate credit limit ${money(loanLimit)}; a poor job or existing debt may prevent approval.`,2,0,loanLimit>=100&&p.debt===0,p.debt>0?'Repay your current loan first':'A paying job and stronger finances are required');
-        if(p.debt>0)push('classicLoanPay','Make a loan payment',`$${Math.min(45,p.debt)} toward principal plus $5 bank interest. Must pay at least once per month.`,0,Math.min(45,p.debt)+5);
+        if(p.debt>0)push('classicLoanPay','Make a loan payment',`$${Math.min(45,p.debt)} toward principal plus $5 bank interest. Monthly check at the end of weeks 4, 8, 12…`,0,Math.min(45,p.debt)+5);
         push('classicBroker','See the investment broker','2 hours to enter. Buy and sell one unit at a time, without extra hours.',2,0,!p.classicBrokerOpen,'Broker already open this visit');
         if(p.classicBrokerOpen){
           for(const stock of D.classicStocks){
@@ -548,7 +586,7 @@ class LifeGame {
       // storage remains for cross-release saves and Looprd snapshots.
         for(const item of Object.keys(PAWN_VALUES))if(p.owned.includes(item)){
           const valid=this.pawnEligible(p,item);
-          push('classicPawn:'+item,`Pawn ${PAWN_NAMES[item]} · receive ${money(pawnLoan(item))}`,`1 hour · redeem for ${money(pawnRedemption(item))} through week ${this.week+2}. Provisional Classic rates.`,1,0,valid,!valid?'Pawn the freezer first to release the refrigerator':'');
+          push('classicPawn:'+item,`Pawn ${PAWN_NAMES[item]} · receive ${money(this.pawnQuote(item).payout)}`,`1 hour · redeem for ${money(this.pawnQuote(item).redemption)} through week ${this.week+2}. Classic: DOS price formula with provisional purchase-price reference and 2-week deadline.`,1,0,valid,!valid?'Pawn the freezer first to release the refrigerator':'');
         }
         for(const lot of this.classicPawnLots){
           if(lot.ownerId===p.id&&this.week<=lot.dueWeek){
@@ -586,7 +624,7 @@ class LifeGame {
     if(!a.enabled)return {ok:false,message:a.reason||'Action is unavailable.'};
     // Count successfully selected venue interactions, including an attempted work
     // shift that immediately ends in dismissal; never count navigation or blocked taps.
-    if(this.isClassic)p.classicChoicesThisWeek=(p.classicChoicesThisWeek||0)+1;
+    if(this.isClassic)p.classicChoicesThisWeek=Math.min(CLASSIC_WEEKLY_COUNTER_LIMIT,(p.classicChoicesThisWeek||0)+1);
     if(id==='work'&&this.isClassic){
       const job=this.getJob(p),req=this.jobRequirement(job);
       const standing=this.classicWorkStanding(p);
@@ -672,6 +710,14 @@ class LifeGame {
         p.groceries+=units;
         if(p.classicFoodPurchasedWeek!==this.week){p.happiness=clamp(p.happiness+units,0,100);p.classicFoodPurchasedWeek=this.week;}
         msg=`Bought ${units} weeks of food. Pantry now has ${p.groceries} portions.`;break;
+      }
+      case 'classicMeal':{
+        if(!this.isClassic||!p.classicFoodV2)throw Error('Classic DOS food items unavailable');
+        const item=ClassicFood.MEALS.find(x=>x.index===Number(arg));
+        if(!item||p.classicFoodV2[item.index]>=10)throw Error('Invalid original food item');
+        p.classicFoodV2[item.index]++;
+        if(p.classicFoodMealBonusWeek!==this.week&&item.happiness){p.happiness=clamp(p.happiness+item.happiness,0,100);p.classicFoodMealBonusWeek=this.week;}
+        msg=`Bought ${item.name}; it will count towards this weekend's food, DOS consumable #${item.index}.`;break;
       }
       case 'classicNewspaper':msg=`Newspaper: ${this.bulletin}`;break;
       case 'classicLottery':p.lottery+=10;msg='Bought ten lottery tickets. The draw takes place next week.';break;
@@ -812,10 +858,12 @@ class LifeGame {
         if(!this.pawnEligible(p,arg)||this.classicPawnLots.length>=64)throw Error('Item cannot be pawned');
         const id='pawn-'+(++this.classicPawnSequence);
         p.owned.splice(p.owned.indexOf(arg),1);delete p.classicEquipment[arg];
-        const payout=pawnLoan(arg);
-        this.classicPawnLots.push({id,ownerId:p.id,item:arg,payout,redemption:pawnRedemption(arg),dueWeek:this.week+2});
+        const quote=this.pawnQuote(arg),payout=quote.payout;
+        const sourceQuote=this.isClassic?'dos-reference-v1':undefined;
+        this.classicPawnLots.push({...{id,ownerId:p.id,item:arg,payout,redemption:quote.redemption,dueWeek:this.week+2},...(sourceQuote?{sourceQuote,referencePaid:quote.referencePaid,goodsIndexAtPawn:quote.goodsIndex}:{})});
         p.cash+=payout;
-        msg=`Pawned ${PAWN_NAMES[arg]} for ${money(payout)}. Redeem for ${money(pawnRedemption(arg))} through week ${this.week+2}.`;
+        if(this.isClassic){p.happiness=clamp(p.happiness-1,0,100);if(arg==='fridge'&&p.groceries>0){p.groceries=0;p.happiness=clamp(p.happiness-1,0,100);}}
+        msg=`Pawned ${PAWN_NAMES[arg]} for ${money(payout)}. Redeem for ${money(quote.redemption)} through week ${this.week+2}.`; 
         break;
       }
       case 'classicRedeem':{
@@ -924,37 +972,8 @@ class LifeGame {
     return {ok:true,message:choice.label};
   }
   encounter(){if(!this.pendingEncounter)return null;const arc=D.storyArcs.find(a=>a.id===this.pendingEncounter.arcId);return arc?this.storyChapter(arc,this.pendingEncounter.chapter):D.encounters[this.pendingEncounter.placeId];}
-  weekend(p) {
+  weekend(p,closedWeek=this.week) {
     const parts=[];
-    const foodBeforeMeal=p.groceries;
-    const hadMeal=p.fed;
-    if(!p.fed){
-      if(p.groceries>0){p.groceries--;if(this.isClassic)p.hunger=Math.max(0,p.hunger-1);parts.push('A pantry meal kept hunger away.');}
-      else {p.hunger=clamp(p.hunger+1,0,4);p.happiness=clamp(p.happiness-8,0,100);parts.push('You went hungry. Next week will be harder.');}
-    }else p.hunger=Math.max(0,p.hunger-1);
-    if(this.isClassic){
-      const shortage=ClassicWeekly.foodShortageTrace(hadMeal,foodBeforeMeal,p.groceries,p.hunger);
-      if(shortage.shortage)this.classicEvent(p,'food-shortage','No meal or pantry portion; hunger increased',shortage);
-      const foodBefore=p.groceries,fridge=this.ownsWorking(p,'fridge'),freezer=this.ownsWorking(p,'freezer');
-      const capacity=this.classicFoodCapacity(p);
-      if(p.groceries>capacity){p.groceries=capacity;parts.push('Extra food spoiled beyond storage capacity.');}
-      if(!fridge&&p.groceries>0){
-        // State 10 confirms a spoilage risk, but the original probability is not
-        // yet recovered. Keep the existing guaranteed-spoilage compatibility rule;
-        // do not charge a medical fee that does not appear in the source evidence.
-        p.groceries=0;
-        parts.push('Unrefrigerated food spoiled (provisional chance).');
-      }
-      const storage=ClassicWeekly.foodStorageTrace(foodBefore,p.groceries,fridge,freezer);
-      if(storage.lost)this.classicEvent(p,'food-storage',`Lost ${storage.lost} food portions during storage check`,storage);
-    }else if(!this.ownsWorking(p,'fridge')&&p.groceries>0){p.groceries=0;parts.push('Unused fresh groceries spoiled without a fridge.');}
-    if(p.classicWeekendTicket&&this.isClassic){
-      const outings={baseball:['You cheered at the baseball game.',5],concert:['Live music made for a memorable weekend.',7],theater:['An evening at the theater lifted your spirits.',6]};
-      const event=outings[p.classicWeekendTicket];
-      if(event){p.happiness=clamp(p.happiness+event[1],0,100);parts.push(event[0]+' Your ticket was used.');}
-      p.classicWeekendTicket=null;
-    }
-    if(p.weekendPass){p.happiness=clamp(p.happiness+13,0,100);parts.push('An amazing weekend adventure lifted your spirits.');p.weekendPass=false;}
     if(p.lottery){
       if(this.isClassic){
         const tickets=p.lottery,roll=Math.floor(this.rand()*501),prize=Pass2.lotteryPrize(tickets,roll);
@@ -975,7 +994,104 @@ class LifeGame {
         this.classicEvent(p,'computer-bonus',`Owned computer earned ${money(bonus.awarded)}`,
           {sourceState:bonus.sourceState,amount:bonus.awarded});}
     }else if(this.ownsWorking(p,'computer')&&this.rand()<.33){p.bank+=40;parts.push('Your tiny digital project earned $40.');}
-    if(p.cash>25){
+    if(this.isClassic){
+      // StartTrn state 6 follows lottery and computer awards.
+      // The original storage-before-consumption split remains provisional in Life,
+      // as no-fridge food purchases are currently recorded as pantry portions.
+      const relaxation=ClassicWeekly.relaxationStep(p.classicRelaxation,false);
+      p.classicRelaxation=relaxation.after;
+      this.classicEvent(p,'relaxation',`Relaxation ${relaxation.before} -> ${relaxation.after}`,relaxation);
+    }
+    if(this.isClassic&&p.classicFoodV2){
+      const closing=ClassicFood.week({fresh:p.groceries,takeout:p.classicFoodV2,
+       hasFridge:this.ownsWorking(p,'fridge'),hasFreezer:this.ownsWorking(p,'freezer'),
+       spoilage:this.settings.rules.foodSpoilage,alreadyFed:p.fed});
+      p.groceries=closing.freshAfter;p.classicFoodV2=closing.foodAfter;
+      if(closing.storagePenalty)p.happiness=clamp(p.happiness+closing.storagePenalty,0,100);
+      if(closing.shortage){p.hunger=clamp(p.hunger+1,0,4);p.happiness=clamp(p.happiness-2,0,100);}
+      else p.hunger=Math.max(0,p.hunger-1);
+      this.classicEvent(p,'food-dos-064',`DOS consumables #${closing.chosen}: storage before consumption, week ${closedWeek}`,
+       {closedWeek,chosen:closing.chosen,storageLoss:closing.storageLoss,storagePenalty:closing.storagePenalty,
+        shortage:closing.shortage,sourceStateOrder:closing.sourceStateOrder});
+      if(closing.storageLoss)parts.push(`Fresh food lost before consumption: ${closing.storageLoss} portions (${closing.storagePenalty} happiness).`);
+      if(closing.discardedTakeout)parts.push('Monolith Burger takeaway expired at the week boundary.');
+      if(closing.shortage)parts.push('No food available: -2 happiness.');
+      const stress=ClassicWeekly.cashStress({shortage:closing.cashStressKind==='shortage',
+       spoiledFresh:closing.cashStressKind==='spoiled',relaxation:p.classicRelaxation,cash:p.cash,random:()=>this.rand()});
+      if(stress.triggered){
+       p.cash-=stress.expense;p.happiness=clamp(p.happiness+stress.happinessDelta,0,100);
+       parts.push(`Food-related emergency spending: ${money(stress.expense)}, -4 happiness.`);
+       this.classicEvent(p,'cash-stress',`DOS state 14: spent ${money(stress.expense)}`,{...stress,closedWeek});
+      }
+    }else{
+    const foodBeforeMeal=p.groceries;
+    const hadMeal=p.fed;
+    if(this.isClassic){
+      // Food events are processed after week increment, but refer to the closed
+      // week; do not move source states 2/4/6 or alter RNG/house-rule settings.
+      const food=Life57.closeWeekFood({closedWeek,purchasedWeek:p.classicFoodPurchasedWeek||0,
+        groceries:p.groceries,fed:p.fed,hunger:p.hunger,happiness:p.happiness,missedHappinessLoss:2});
+      p.groceries=food.groceries;p.hunger=food.hunger;p.happiness=food.happiness;
+      if(food.consumed)parts.push('A pantry meal kept hunger away.');
+      if(food.missed)parts.push('No food this week: -2 happiness (DOS shortage state 12).');
+      this.classicEvent(p,'food-week-close',`Food accounted for week ${closedWeek}`,
+        {closedWeek,purchasedInClosedWeek:food.purchasedInClosedWeek,consumed:food.consumed,missed:food.missed});
+    }else{
+      if(!p.fed){
+        if(p.groceries>0){p.groceries--;parts.push('A pantry meal kept hunger away.');}
+        else{p.hunger=clamp(p.hunger+1,0,4);p.happiness=clamp(p.happiness-8,0,100);parts.push('You went hungry. Next week will be harder.');}
+      }else p.hunger=Math.max(0,p.hunger-1);
+    }
+    if(this.isClassic){
+      const shortage=ClassicWeekly.foodShortageTrace(hadMeal,foodBeforeMeal,p.groceries,p.hunger);
+      if(shortage.shortage)this.classicEvent(p,'food-shortage','DOS shortage state 12: -2 happiness; Life hunger clock penalty still provisional',
+        {...shortage,happinessDelta:-2,closedWeek});
+      // State 10 storage handling still runs AFTER the compatibility pantry meal;
+      // exact DOS consumable IDs 1 and 3-5 need separate inventory support.
+      const foodBefore=p.groceries,fridge=this.ownsWorking(p,'fridge'),freezer=this.ownsWorking(p,'freezer');
+      const capacity=this.classicFoodCapacity(p);
+      if(this.settings.rules.foodSpoilage&&p.groceries>capacity){p.groceries=capacity;parts.push('Extra food spoiled beyond storage capacity.');}
+      if(this.settings.rules.foodSpoilage&&!fridge&&p.groceries>0){
+        // State 10 confirms a spoilage risk, but the original probability is not
+        // yet recovered. Keep the existing guaranteed-spoilage compatibility rule;
+        // do not charge a medical fee that does not appear in the source evidence.
+        p.groceries=0;
+        parts.push('Unrefrigerated food spoiled (provisional chance).');
+      }
+      // The original checks storage BEFORE the consumable step. That ordering
+      // currently starves fridge-less Life players (and the historic AI), so
+      // preserve the compatibility meal order until consumable IDs/AI migrate.
+      // The source-backed spoilage happiness values still apply to leftovers.
+      if(this.settings.rules.foodSpoilage){
+        const storage=ClassicWeekly.foodStorageTrace(foodBefore,p.groceries,fridge,freezer);
+        if(storage.lost){
+          p.happiness=clamp(p.happiness+storage.happinessDelta,0,100);
+          this.classicEvent(p,'food-storage',`Lost ${storage.lost} food portions during storage check`,{...storage,closedWeek,compatibilityOrder:true});
+          parts.push(`Stored food loss: ${storage.happinessDelta} happiness (DOS state 10).`);
+        }
+      }
+    }else if(!this.isClassic&&this.settings.rules.foodSpoilage&&!this.ownsWorking(p,'fridge')&&p.groceries>0){p.groceries=0;parts.push('Unused fresh groceries spoiled without a fridge.');}
+    if(this.isClassic){
+      // startTrn.sc state 14 follows state 12. Life has no exact consumables
+      // 3..5 mapping; run only the verified no-food (local6=0) branch.
+      const stress=ClassicWeekly.cashStress({shortage:!hadMeal&&foodBeforeMeal===0,
+        relaxation:p.classicRelaxation,cash:p.cash,random:()=>this.rand()});
+      if(stress.triggered){
+        p.cash-=stress.expense;p.happiness=clamp(p.happiness+stress.happinessDelta,0,100);
+        parts.push(`Food-related cash stress: -${money(stress.expense)}, -4 happiness.`);
+        this.classicEvent(p,'cash-stress',`DOS state 14: spent ${money(stress.expense)}, lost 4 happiness`,
+          {...stress,closedWeek});
+      }
+    }
+    } // End legacy pantry week-end path (pre-0.5.64 Classic saves and Modern).
+    if(p.classicWeekendTicket&&this.isClassic){
+      const outings={baseball:['You cheered at the baseball game.',5],concert:['Live music made for a memorable weekend.',7],theater:['An evening at the theater lifted your spirits.',6]};
+      const event=outings[p.classicWeekendTicket];
+      if(event){p.happiness=clamp(p.happiness+event[1],0,100);parts.push(event[0]+' Your ticket was used.');}
+      p.classicWeekendTicket=null;
+    }
+    if(p.weekendPass){p.happiness=clamp(p.happiness+13,0,100);parts.push('An amazing weekend adventure lifted your spirits.');p.weekendPass=false;}
+    if(!this.isClassic&&p.cash>25){
       const events=[{text:'A friend invited you for coffee.',cash:12,happy:4},{text:'Your favorite band played downtown.',cash:26,happy:7},
         {text:'You picked up a hobby.',cash:18,happy:5},{text:'A surprise subscription renewed.',cash:15,happy:-2},
         {text:'You found a quiet afternoon in the park.',cash:0,happy:7}];
@@ -1001,8 +1117,9 @@ class LifeGame {
     this.classicTurnEvent('turn-close',p.id,close.decay);
   }
   newWeek() {
+    const closedWeek=this.week; // game clock advances once, living audit retains actual closing week
     this.week++;
-    if(this.isClassic){
+    if(this.isClassic&&this.settings.rules.marketFluctuations){
       // One seeded economy update per whole player cycle. Keep the Pass-2
       // goods-index alias for old saves, price quotes, and scenario tooling.
       this.classicEconomicIndices.readings.goods=this.classicGoodsIndex;
@@ -1039,21 +1156,19 @@ class LifeGame {
     this.classicTurnEvent('economy');
     this.bulletin=D.headlines[(this.week-1)%D.headlines.length];
     if(this.week%4===1){
-      const old=this.economy;if(!this.isClassic)this.economy=clamp(Math.round((old+(this.rand()-.46)*.12)*100)/100,.84,1.24);
+      const old=this.economy;if(!this.isClassic&&this.settings.rules.marketFluctuations)this.economy=clamp(Math.round((old+(this.rand()-.46)*.12)*100)/100,.84,1.24);
       const choices=D.cityEvents.filter(e=>e.id!==this.cityEventId);
       this.cityEventId=choices[Math.floor(this.rand()*choices.length)].id;
       this.cityEventStart=this.week;
       if(!this.isClassic)this.log(`CITY PULSE: ${this.cityEvent.title}. ${this.cityEvent.description}`,'news','system');
-      if(!this.isClassic)this.log(`New month. The local economy is ${this.economy>old?'heating up':this.economy<old?'cooling off':'holding steady'} (${Math.round(this.economy*100)}%).`,'news','system');
+      if(!this.isClassic&&this.settings.rules.marketFluctuations)this.log(`New month. The local economy is ${this.economy>old?'heating up':this.economy<old?'cooling off':'holding steady'} (${Math.round(this.economy*100)}%).`,'news','system');
     }
     for(const p of this.players){
-      if(this.isClassic){
-        const relaxation=ClassicWeekly.relaxationStep(p.classicRelaxation,false);
-        p.classicRelaxation=relaxation.after;
-        // Keep state 6 independently visible without duplicating housing/theft RNG.
-        this.classicEvent(p,'relaxation',`Relaxation ${relaxation.before} -> ${relaxation.after}`,relaxation);
-      }
       if(this.isClassic)p.classicUnemployedWeeks=p.job?0:Math.min(10000,(p.classicUnemployedWeeks||0)+1);
+      const beforeWeekend=this.accounts(p);
+      const joyAtClose=p.happiness,relaxAtClose=p.classicRelaxation,cashAtClose=p.cash;
+      if(this.isClassic)this.syncClassicInvested(p);
+      const notes=this.weekend(p,closedWeek);
       // Original-inspired weekly wardrobe wear; each garment ages regardless of what was worn.
       for(const garment of Object.keys(D.clothing)){
         const old=this.clothingWeeks(p,garment);
@@ -1067,9 +1182,6 @@ class LifeGame {
         if(old>1&&p.clothing[garment]===1)this.log(`${p.name}'s ${D.clothing[garment].name.toLowerCase()} have one week left.`, 'warn',p.id);
         if(old===1)this.log(`${p.name}'s ${D.clothing[garment].name.toLowerCase()} have worn out. Buy a replacement before working.`, 'warn',p.id);
       }
-      const beforeWeekend=this.accounts(p);
-      if(this.isClassic)this.syncClassicInvested(p);
-      const notes=this.weekend(p);
       if(this.isClassic){this.classicEquipmentBreakage(p,notes);this.classicBurglar(p,notes);}
       this.classicTurnEvent('living',p.id);
       this.recordChange(p,beforeWeekend,'Weekend living expenses and windfalls','living');
@@ -1081,17 +1193,24 @@ class LifeGame {
           const beforeRent=this.accounts(p);
           p.rentDebt+=assessment.charge;p.classicRentDueWeek=assessment.nextDueWeek;
           p.classicLastRentChargeWeek=assessment.lastChargedWeek;p.classicEverDebt=true;
-          p.happiness=clamp(p.happiness-7,0,100);
+          if(this.settings.rules.overdueRentPenalty)p.happiness=clamp(p.happiness-7,0,100);
           notes.push(`${money(assessment.charge)} unpaid rent became debt. Future wages may be garnished.`);
           this.recordChange(p,beforeRent,'Unpaid Classic rent','housing');
         }
         this.classicTurnEvent('rent',p.id,assessment.charge);
       }
       if(this.isClassic){
-        const loan=ClassicWeekly.loanDueTrace(this.week,p.classicLoanPaidThrough,p.debt);
+        const loan=ClassicWeekly.loanDueTrace(closedWeek,p.classicLoanPaidThrough,p.debt);
         if(loan.due){
-          if(loan.missed){p.classicLoanDefaults++;p.happiness=clamp(p.happiness-3,0,100);notes.push('Bank loan payment missed: -3 happiness and worse future credit.');}
-          this.classicEvent(p,'loan-due',loan.missed?'Loan payment missed':'Loan schedule covered',loan);
+          if(loan.missed){
+            p.classicLoanDefaults++;
+            // DOS state 20 deducts -1 only when paySched is NEGATIVE, not
+            // for its zero-payment notice. Mapping counter to paySched is
+            // still provisional; do not charge the former invented -3.
+            if(loan.overdueMonths>1){p.happiness=clamp(p.happiness-1,0,100);notes.push('Bank loan behind schedule: -1 happiness (DOS negative-schedule branch, provisional mapping).');}
+            else notes.push('Bank loan monthly payment is due; no source-backed first-warning penalty.');
+          }
+          this.classicEvent(p,'loan-due',loan.missed?'Loan payment outstanding':'Loan schedule covered',loan);
         }
       }
       this.classicTurnEvent('loan',p.id);
@@ -1101,7 +1220,7 @@ class LifeGame {
           const rent=Math.round(D.dwellings[p.home].rent);
           const pay=Math.min(rent,p.cash+p.bank);const cash=Math.min(pay,p.cash);p.cash-=cash;
           const fromBank=pay-cash;p.bank-=fromBank;p.rentDebt+=rent-pay;
-          if(rent-pay>0){p.happiness=clamp(p.happiness-7,0,100);notes.push(`${money(rent-pay)} rent went unpaid.`);}
+          if(rent-pay>0){if(this.settings.rules.overdueRentPenalty)p.happiness=clamp(p.happiness-7,0,100);notes.push(`${money(rent-pay)} rent went unpaid.`);}
           else notes.push(`${money(rent)} monthly rent paid.`);
           this.recordChange(p,beforeRent,'Monthly rent · '+D.dwellings[p.home].name,'housing');
         }
@@ -1110,12 +1229,20 @@ class LifeGame {
         if(!this.isClassic)p.bank+=Math.floor(p.bank*.006);
         this.recordChange(p,beforeMarket,'Investment returns and savings interest','investment');
       }
-      p.hours=clamp(this.rules.hours-(p.hunger>0?p.hunger*3:0),14,this.rules.hours);
+      const budget=this.isClassic?this.rules.hours:clamp(this.rules.hours-(p.hunger>0?p.hunger*3:0),14,this.rules.hours); // DOS does not remove clock units for hunger
+      // Subtract the homeward overdraft AFTER existing starvation/time effects.
+      const returnDebt=p.returnTravelDebt||0;
+      p.hours=Math.max(0,budget-returnDebt);
+      p.returnTravelDebt=Math.max(0,returnDebt-budget); // Guard for future alternative budgets.
+      if(returnDebt)this.log(`${p.name}: ${Math.min(budget,returnDebt)} homeward travel units deducted from this week's clock.`,'travel',p.id);
       p.energy=clamp(p.energy+38-p.hunger*4,0,100);
       p.happiness=clamp(p.happiness-2+D.dwellings[p.home].comfort,0,100);
       if(!this.isClassic)p.dependability=clamp(p.dependability-this.rules.dependabilityDecay,0,100);
       p.fed=false;p.weekActions=0;p.classicChoicesThisWeek=0;
       this.classicTurnEvent('reset',p.id);
+      if(this.isClassic)this.classicEvent(p,'weekly-wellbeing',`Closed week ${closedWeek}: happiness ${joyAtClose} -> ${p.happiness}; relaxation ${relaxAtClose} -> ${p.classicRelaxation}`,
+        {closedWeek,happinessBefore:joyAtClose,happinessAfter:p.happiness,relaxationBefore:relaxAtClose,relaxationAfter:p.classicRelaxation,
+          cashBefore:cashAtClose,cashAfter:p.cash,compatibilityNotes:'Home comfort, rest recovery, and household risk values remain provisional'});
       this.recordHistory(p);
       if(notes.length)this.log(`${p.name}: ${notes.join(' ')}`,p.hunger>0?'warn':'news',p.id);
     }
@@ -1123,10 +1250,26 @@ class LifeGame {
     this.log(`It's week ${this.week}. ${this.rules.hours} possible hours, infinite ways to spend them.`,'good','system');
     this.checkWin();
   }
+  // End-of-week return is mandatory in the original-inspired preset. Unlike a
+  // normal player-initiated visit, travel may exceed the remaining clock; the
+  // shortage is deferred to the NEXT week, never represented as negative hours.
+  closeReturnJourney(p){
+    if(!this.settings.rules.forcedReturnHome||p.location==='home')return {cost:0,debt:0};
+    const from=p.location,cost=this.travelCost(from,'home');
+    if(!Number.isSafeInteger(cost)||cost<0||cost>this.rules.hours)throw Error('Invalid homeward route');
+    const shortage=Math.max(0,cost-p.hours);
+    p.hours=Math.max(0,p.hours-cost);
+    p.returnTravelDebt=this.settings.rules.carryReturnOvertime?shortage:0;
+    p.location='home';p.classicBrokerOpen=false;
+    const travelNote=`${p.name} returned home from ${this.getPlace(from).name} · ${cost} clock units`;
+    this.log(travelNote+(p.returnTravelDebt?`; ${p.returnTravelDebt} owed next week.`:'.'),'travel',p.id);
+    return {cost,debt:p.returnTravelDebt};
+  }
   endTurn(){
     if(this.pendingEncounter)return {ok:false,message:'Finish the conversation before ending your week.'};
     if(this.winner)return {ok:false,message:'The game has ended.'};
     const endingPlayer=this.player,who=endingPlayer.name;
+    const homeward=this.closeReturnJourney(endingPlayer);
     this.classicCloseTurn(endingPlayer);
     this.active++;
     if(this.active>=this.players.length){this.active=0;this.newWeek();}
@@ -1135,10 +1278,10 @@ class LifeGame {
     let guard=0;
     while(this.player.isAI&&!this.winner&&guard++<this.players.length){
       const rival=this.player;
-      this.runAI();this.classicCloseTurn(rival);
+      this.runAI();this.closeReturnJourney(rival);this.classicCloseTurn(rival);
       this.active++;if(this.active>=this.players.length){this.active=0;this.newWeek();}
     }
-    return {ok:true,message:`A new turn begins: ${this.player.name}.`};
+    return {ok:true,message:`${homeward.cost?`Returned home (${homeward.cost} units${homeward.debt?`, ${homeward.debt} carried into next week`:''}). `:''}A new turn begins: ${this.player.name}.`};
   }
   // Classic opponent routing uses the same original marble indices as the human.
   // Evaluate a sequence of stops without mutating the world or spending random numbers.
@@ -1166,8 +1309,8 @@ class LifeGame {
     if(!this.isClassic)throw Error('Classic survival budget unavailable in Modern');
     const job=this.getJob(p);
     const remainingUntilRent=Math.max(0,p.classicRentDueWeek-this.week);
-    const foodNeeded=!p.fed&&p.groceries<=0;
-    const foodReserve=foodNeeded?this.classicFoodPrice(1):0;
+    const foodNeeded=!this.classicFoodAvailable(p);
+    const foodReserve=foodNeeded?this.classicAIFoodPurchase(p).cost:0;
     const rentDue=this.rentServicesOpen(p);
     const rentReserve=rentDue?p.classicRent:Math.min(p.classicRent,Math.ceil(p.classicRent*.1*Math.max(1,4-remainingUntilRent)));
     const outfit=job&&this.clothingSummary(p).filter(x=>D.clothing[x.id].rank>=D.clothing[job.clothes].rank).every(x=>x.weeks<=2)
@@ -1181,7 +1324,7 @@ class LifeGame {
     const immediateBills=foodReserve+rentBill+uniformReserve;
     // Calendar projection: food required on the next two weekends, using at
     // most what is already in the pantry and assuming no new fridge purchase.
-    const storedFood=this.ownsWorking(p,'fridge')?p.groceries:Math.min(1,p.groceries);
+    const storedFood=p.classicFoodV2?(this.ownsWorking(p,'fridge')?p.groceries:0)+Math.min(1,Object.values(p.classicFoodV2).reduce((x,y)=>x+y,0)):(this.ownsWorking(p,'fridge')?p.groceries:Math.min(1,p.groceries));
     const neededFood=Math.max(0,2-storedFood-(p.fed?1:0));
     // Advisory projection only. Source-derived prices; trend drift remains a
     // compatibility model. Do not substitute projected prices for shop quotes.
@@ -1256,9 +1399,10 @@ class LifeGame {
     if(candidates.bestJob)return candidates.bestJob;
     return fallback||null;
   }
-  // Candidate branches from WhereShouldIGo.sc: 28,29,30,32,37,44,46.
-  // Branch IDs/order are source-referenced; spending limits and pace gates are
-  // explicitly provisional decisions for this version's interactive economy.
+  // Source predicates are direct checks of DOS WhereShouldIGo.sc branches
+  // 28, 29, 30, 32, 37, 44 and 46. Playable affordability, work cadence,
+  // actual promotion action, unmodelled global flags and the RNG remain
+  // intentionally adapted; do not call this an exact DOS AI interpreter.
   // Pure, so browser diagnostics never advance the shared seeded simulation.
   classicCareerDecision(p=this.player){
     if(!this.isClassic)throw Error('Classic-only Jones career planner');
@@ -1268,36 +1412,44 @@ class LifeGame {
       (budget.rentDue&&p.cash<p.classicRent);
     if(essentialsShort)return null;
     // Raising a contracted wage only makes sense above the CURRENT rate.
-    if(job&&p.workSessions>=2&&p.raiseWeek<=this.week-4&&
-       p.dependability>=this.jobRequirement(job).dependability+5*(p.classicRaises||0)&&
-       this.offeredWage(job)>p.wage&&p.hours>=4){
+    if(job&&ClassicJones.raiseEligible(p.classicRaises||0,p.dependability,
+       this.jobRequirement(job).dependability,this.offeredWage(job),p.wage)&&p.hours>=4){
       return {id:28,reason:'DOS career #28: negotiate a higher contracted wage',dest:'agency',action:'raise',hours:4};
     }
     // A promotion must beat the current wage AND leave enough for necessities.
     if(job&&remaining>0&&p.hours>=this.rules.applicationHours+1){
       const planned=this.classicAIPlan(p);
       const upgrade=planned.bestJob;
-      if(upgrade&&this.offeredWage(upgrade)>p.wage&&!this.jobReasons(p,upgrade).length){
+      const cap=this.classicWorkCaps(p,job);
+      if(upgrade&&ClassicJones.promotionEligible(p.experience,cap.experience,
+           p.dependability,this.jobRequirement(job).dependability,this.offeredWage(upgrade),p.wage)&&
+         !this.jobReasons(p,upgrade).length){
         const outfit=this.isDressedFor(p,upgrade)?null:this.cheapestClothingOffer(upgrade);
         if(!outfit){return {id:29,reason:'DOS career #29: pursue a qualified better-paying job',dest:'agency',action:`apply:${upgrade.id}`,hours:this.rules.applicationHours};}
       }
     }
     // When the current occupation needs experience or dependability, take
     // productive shifts before committing time and money to optional study.
-    if(job&&this.isDressedFor(p,job)&&p.energy>=30&&p.hours>=6&&
-      (p.workSessions<2||p.dependability<this.jobRequirement(job).dependability+8)){
-      return {id:30,reason:'DOS career #30: build employment experience and reliability',dest:this.jobWorkplace(job).place,action:'work',hours:2};
+    if(job&&this.isDressedFor(p,job)&&p.energy>=30&&p.hours>=6){
+      const cap=this.classicWorkCaps(p,job),minimum=this.jobRequirement(job).dependability;
+      const needsSkill=p.experience<cap.experience||p.dependability<minimum+10;
+      // Preserve the playable two-shift cadence. The source's global493
+      // shortfall is still useful for the AI's decision trace and QA.
+      if(p.workSessions<2||needsSkill&&p.workSessions<4){
+        const target=ClassicJones.reliabilityGap(p.experience,cap.experience,p.dependability,minimum);
+        return {id:30,reason:`DOS career #30: work toward capped stats (${target} source shifts estimated)`,dest:this.jobWorkplace(job).place,action:'work',hours:2};
+      }
     }
-    if((p.energy<=18||p.classicRelaxation<=10)&&p.hours>=6){
-      return {id:32,reason:'DOS needs #32: exhausted; recover at home',dest:'home',action:'relax',hours:6};
-    }
-    if(p.happiness<35&&p.energy<45&&p.hours>=6){
-      return {id:37,reason:'DOS needs #37: rest before further work',dest:'home',action:'relax',hours:6};
+    const rest=ClassicJones.restBranch(p.classicRelaxation);
+    if(rest&&job&&this.isDressedFor(p,job)&&p.hours>=this.rules.restHours&&ClassicHousehold.restQuote(p).needed){
+      return {id:rest,reason:rest===32?'DOS #32: relaxation at its minimum':
+        'DOS #37: relaxation below 17',dest:'home',action:'relax',hours:this.rules.restHours};
     }
     // Prefer finishing an active qualification; otherwise choose a diploma
     // that advances an actual qualified job path. Never consume rent/food cash.
     const course=this.classicCareerPlan(p).recommendedDegree;
-    if(course&&p.energy>=34&&p.hours>=6&&p.workSessions>=2&&
+    if(course&&ClassicJones.educationCandidate(this.degreeCount(p),p.classicEnrolled.length,p.cash)&&
+       p.energy>=34&&p.hours>=6&&p.workSessions>=2&&
        (this.week%2===0||p.classicEnrolled.includes(course.id))&&remaining>250){
       const enrolled=p.classicEnrolled.includes(course.id);
       if(enrolled||p.classicEnrollmentCredits>0||p.cash-budget.reserve>=300){
@@ -1305,8 +1457,7 @@ class LifeGame {
           action:enrolled||p.classicEnrollmentCredits>0?`classicStudy:${course.id}`:'enroll',hours:enrolled||p.classicEnrollmentCredits>0?Math.min(6,p.hours):0};
       }
     }
-    if(job&&this.isDressedFor(p,job)&&p.energy>=4&&p.hours>=2&&
-       (budget.projectedGap>0||p.cash<budget.twoWeekNeeds+300)){
+    if(job&&this.isDressedFor(p,job)&&p.energy>=4&&p.hours>=2){
       return {id:46,reason:'DOS work #46: earn toward a weekly safety reserve',dest:this.jobWorkplace(job).place,action:'work',hours:2};
     }
     return null;
@@ -1316,13 +1467,13 @@ class LifeGame {
   // Pure: a GUI/debugger can inspect a decision without advancing the RNG.
   classicSourceDecision(p=this.player){
     if(!this.isClassic)throw Error('Classic-only DOS decision planner');
-    const job=this.getJob(p),foodMissing=!p.fed&&p.groceries===0;
-    const foodCost=this.classicFoodPrice(1),rentDue=this.rentServicesOpen(p);
+    const job=this.getJob(p),foodMissing=!this.classicFoodAvailable(p);
+    const food=this.classicAIFoodPurchase(p),foodCost=food.cost,rentDue=this.rentServicesOpen(p);
     const clothes=job&&!this.isDressedFor(p,job)?this.cheapestClothingOffer(job):null;
     const collateral=Object.keys(PAWN_VALUES).filter(id=>this.pawnEligible(p,id))
       .sort((a,b)=>pawnLoan(b)-pawnLoan(a))[0];
     const candidate=(id,reason,dest,action,requiredActionHours=0)=>{
-      if((p.classicChoicesThisWeek||0)>=CLASSIC_WEEKLY_ACTION_LIMIT)return null;
+      if(this.settings.rules.weeklyActionLimit&&(p.classicChoicesThisWeek||0)>=CLASSIC_WEEKLY_ACTION_LIMIT)return null;
       // Reserve enough post-arrival clock for the *action*, not only the trip.
       // Free bank transfers really do cost zero; work requires at least one unit.
       const minimumActionHours=action==='work'?1:requiredActionHours;
@@ -1354,7 +1505,7 @@ class LifeGame {
     if(clothes&&p.cash>=this.price(clothes.cost,'retail'))
       return candidate(14,'Replace missing uniform before work',clothes.venue,`clothes:${clothes.id}:${clothes.venue}`);
     if(foodMissing&&p.cash>=foodCost)
-      return candidate(24,'Purchase essential weekly food', 'cinema','classicFresh:1');
+      return candidate(27,'DOS food branch #27: purchase essential weekly food', food.venue,food.action);
     if(foodMissing&&p.cash<foodCost&&job&&this.isDressedFor(p,job)&&p.energy>=4)
       return candidate(21,'Work to fund food before optional errands',this.jobWorkplace(job).place,'work');
     if(rentDue&&p.cash<p.classicRent&&job&&this.isDressedFor(p,job)&&p.energy>=4)
@@ -1390,12 +1541,12 @@ class LifeGame {
   }
   classicAIPlan(p=this.player){
     if(!this.isClassic)throw Error('Classic opponent plan unavailable in Modern');
-    const current=this.getJob(p),foodCost=this.classicFoodPrice(1);
+    const current=this.getJob(p),food=this.classicAIFoodPurchase(p),foodCost=food.cost;
     const budget=this.classicSurvivalBudget(p);
     const {foodNeeded,foodReserve,rentDue,rentReserve,reserve}=budget;
     const urgent=[];
     if(rentDue&&p.cash>=p.classicRent+foodReserve)urgent.push('housing');
-    if(foodNeeded&&p.cash>=foodCost)urgent.push('cinema');
+    if(foodNeeded&&p.cash>=foodCost)urgent.push(food.venue);
     // Resolve urgent errands by the original ring distance, not store grid cells.
     const urgentOrder=this.classicBestItinerary(p.location,urgent,p.hours)?.stops||urgent;
     const jobCandidates=[];
@@ -1405,7 +1556,7 @@ class LifeGame {
       const outfit=this.isDressedFor(p,job)?null:this.cheapestClothingOffer(job);
       const outfitPrice=outfit?this.price(outfit.cost,'retail'):0;
       if(!this.isDressedFor(p,job)&&(!outfit||p.cash<outfitPrice+foodReserve))continue;
-      if(current&&p.cash-outfitPrice<Math.min(budget.liquidity,budget.immediateBills))continue;
+      if(current&&outfitPrice>0&&p.cash-outfitPrice<Math.min(budget.liquidity,budget.immediateBills))continue; // No-cost job switches cannot consume the food/rent reserve.
       const targets=[...(outfit?[outfit.venue]:[]),'agency',workplace];
       const travel= this.classicItinerary(p.location,targets,p.hours);
       const applicationAndShift=this.rules.applicationHours+6;
@@ -1448,7 +1599,7 @@ class LifeGame {
     const usable=job=>job&&this.isDressedFor(p,job);
     let studyCount=0,workCount=0,restCount=0,loops=0;
     while(p.hours>=2&&!this.winner&&loops++<28){
-      if(this.isClassic&&(p.classicChoicesThisWeek||0)>=CLASSIC_WEEKLY_ACTION_LIMIT)break;
+      if(this.isClassic&&this.settings.rules.weeklyActionLimit&&(p.classicChoicesThisWeek||0)>=CLASSIC_WEEKLY_ACTION_LIMIT)break;
       let current=this.getJob(p);
       if(this.isClassic){
         const decision=this.classicSourceDecision(p);
@@ -1470,7 +1621,7 @@ class LifeGame {
       if(this.isClassic){
         const needs=this.classicAIPlan(p);
         if(needs.urgentOrder.length===2){
-          const next=needs.urgentOrder[0],action=next==='housing'?'classicPayRent':'classicFresh:1';
+          const next=needs.urgentOrder[0],action=next==='housing'?'classicPayRent':this.classicAIFoodPurchase(p).action;
           if(p.location!==next){if(moveTo(next,1))continue;}
           else if(perform(action))continue;
         }
@@ -1489,7 +1640,7 @@ class LifeGame {
         else if(perform('classicClearArrears'))continue;
       }
       // In Classic, a conscious trip to the Rent Office is necessary before the deadline.
-      if(this.isClassic&&this.rentServicesOpen(p)&&p.cash>=p.classicRent+(!p.fed&&p.groceries===0?this.classicFoodPrice(1):0)&&p.hours>=4){
+      if(this.isClassic&&this.rentServicesOpen(p)&&p.cash>=p.classicRent+(!p.fed&&p.groceries===0?this.classicAIFoodPurchase(p).cost:0)&&p.hours>=4){
         if(p.location!=='housing'){if(moveTo('housing',1))continue;}
         else if(perform('classicPayRent'))continue;
       }
@@ -1500,7 +1651,7 @@ class LifeGame {
         const uniformRank=D.clothing[current.clothes].rank;
         const wearableWeeks=this.clothingSummary(p).filter(x=>D.clothing[x.id].rank>=uniformRank).reduce((n,x)=>Math.max(n,x.weeks),0);
         const offer=this.cheapestClothingOffer(current);
-        if(offer&&wearableWeeks<=2&&p.cash>=this.price(offer.cost,'retail')+(!p.fed&&p.groceries===0?this.classicFoodPrice(1):0)&&p.clothing[offer.id]<=2){
+        if(offer&&wearableWeeks<=2&&p.cash>=this.price(offer.cost,'retail')+(!p.fed&&p.groceries===0?this.classicAIFoodPurchase(p).cost:0)&&p.clothing[offer.id]<=2){
           if(p.location!==offer.venue){if(moveTo(offer.venue,1))continue;}
           else if(perform(`clothes:${offer.id}:${offer.venue}`))continue;
         }
@@ -1539,9 +1690,10 @@ class LifeGame {
         }
       }
       // Make food a priority, but keep enough for a paycheck or an emergency errand.
-      if(!p.fed&&p.groceries===0&&p.cash>=(this.isClassic?this.classicFoodPrice(1):this.price(24,'food'))&&p.hours>=4){
-        if(p.location!==(this.isClassic?'cinema':'market')){if(moveTo(this.isClassic?'cinema':'market',1))continue;}
-        else if(perform(this.isClassic?'classicFresh:1':'groceries'))continue;
+      if((this.isClassic?!this.classicFoodAvailable(p):!p.fed&&p.groceries===0)&&p.cash>=(this.isClassic?this.classicAIFoodPurchase(p).cost:this.price(24,'food'))&&p.hours>=4){
+        const venue=this.isClassic?this.classicAIFoodPurchase(p).venue:'market';
+        if(p.location!==venue){if(moveTo(venue,1))continue;}
+        else if(perform(this.isClassic?this.classicAIFoodPurchase(p).action:'groceries'))continue;
       }
       // Study at a sustainable pace: maintain a rent buffer and earn in between terms.
       const budget=this.isClassic?this.classicSurvivalBudget(p):null;
@@ -1572,9 +1724,10 @@ class LifeGame {
         if(p.location!=='agency'){if(moveTo('agency',2))continue;}
         else if(perform('raise'))continue;
       }
-      if(p.groceries===0&&p.cash>=(this.isClassic?this.classicFoodPrice(1):24)&&p.hours>=3){
-        if(p.location!==(this.isClassic?'cinema':'market')){if(moveTo(this.isClassic?'cinema':'market',1))continue;}
-        else if(perform(this.isClassic?'classicFresh:1':'groceries'))continue;
+      if((this.isClassic?!this.classicFoodAvailable(p):p.groceries===0)&&p.cash>=(this.isClassic?this.classicAIFoodPurchase(p).cost:24)&&p.hours>=3){
+        const venue=this.isClassic?this.classicAIFoodPurchase(p).venue:'market';
+        if(p.location!==venue){if(moveTo(venue,1))continue;}
+        else if(perform(this.isClassic?this.classicAIFoodPurchase(p).action:'groceries'))continue;
       }
       if(p.cash>=1100&&p.hours>=3){
         if(p.location!=='bank'){if(moveTo('bank',1))continue;}
@@ -1588,10 +1741,11 @@ class LifeGame {
   snapshot(){return JSON.parse(JSON.stringify({classicTurnJournal:this.classicTurnJournal,classicEconomicIndices:this.classicEconomicIndices,classicEconomicPulse:this.classicEconomicPulse,classicGoodsIndex:this.classicGoodsIndex,classicWeekEvents:this.classicWeekEvents,classicDecisionTrace:this.classicDecisionTrace,classicPawnLots:this.classicPawnLots,classicPawnSequence:this.classicPawnSequence,settings:this.settings,seed:this.seed,week:this.week,economy:this.economy,active:this.active,winner:this.winner,sequence:this.sequence,messages:this.messages,players:this.players,pendingEncounter:this.pendingEncounter,bulletin:this.bulletin,cityEventId:this.cityEventId,cityEventStart:this.cityEventStart,cityProjects:this.cityProjects,classicStockPrices:this.classicStockPrices}));}
   static load(obj){
     if(!obj||typeof obj!=='object'||!Array.isArray(obj.players)||!obj.players.length||!obj.settings||!Number.isInteger(obj.week)||obj.week<1||obj.week>10000)throw Error('Invalid save file.');
-    const game=new LifeGame({mode:obj.settings.mode,goals:obj.settings.goals,ruleset:obj.settings.ruleset,era:obj.settings.era,jonesDifficulty:obj.settings.jonesDifficulty,seed:obj.seed});
+    const game=new LifeGame({mode:obj.settings.mode,goals:obj.settings.goals,ruleset:obj.settings.ruleset,era:obj.settings.era,jonesDifficulty:obj.settings.jonesDifficulty,rules:obj.settings.rules,seed:obj.seed});
     if(obj.players.length!==game.players.length)throw Error('Save format has an unexpected number of players.');
     for(let i=0;i<obj.players.length;i++){
       const p=obj.players[i];if(!p||p.id!==game.players[i].id||!D.places.some(l=>l.id===p.location)||!Number.isFinite(p.cash)||!Number.isFinite(p.hours)||p.cash<0||p.bank<0||p.hours<0||p.hours>game.rules.hours||p.owned?.length>50)throw Error('Invalid player state.');
+      if(p.returnTravelDebt!==undefined&&(!Number.isSafeInteger(p.returnTravelDebt)||p.returnTravelDebt<0||p.returnTravelDebt>game.rules.hours))throw Error('Invalid return travel debt');
       if(p.job&&!find(game.jobs,p.job)&&!(game.isClassic&&find(D.jobs,p.job)))throw Error('Invalid job in save.');
       if(!Object.hasOwn(D.dwellings,p.home))throw Error('Invalid housing in save.');
     }
@@ -1602,7 +1756,12 @@ class LifeGame {
       for(const lot of obj.classicPawnLots){
         if(!lot||typeof lot.id!=='string'||!/^pawn-[1-9][0-9]*$/.test(lot.id)||lot.id.length>16||!Number.isSafeInteger(Number(lot.id.slice(5)))||pawnIds.has(lot.id)||
            !obj.players.some(p=>p.id===lot.ownerId)||!Object.hasOwn(PAWN_VALUES,lot.item)||
-           lot.payout!==pawnLoan(lot.item)||lot.redemption!==pawnRedemption(lot.item)||
+           !(lot.sourceQuote==='dos-reference-v1'?
+             Number.isSafeInteger(lot.referencePaid)&&lot.referencePaid===PAWN_VALUES[lot.item]&&
+             Number.isInteger(lot.goodsIndexAtPawn)&&lot.goodsIndexAtPawn>=10&&lot.goodsIndexAtPawn<=190&&
+             lot.payout===ClassicRetailPawn.pawnQuote(lot.referencePaid,lot.goodsIndexAtPawn).payout&&
+             lot.redemption===ClassicRetailPawn.pawnQuote(lot.referencePaid,lot.goodsIndexAtPawn).redemption:
+             lot.sourceQuote===undefined&&lot.payout===pawnLoan(lot.item)&&lot.redemption===pawnRedemption(lot.item))||
            !Number.isInteger(lot.dueWeek)||lot.dueWeek<2||lot.dueWeek>obj.week+2||
            obj.players.find(p=>p.id===lot.ownerId).owned.includes(lot.item))throw Error('Invalid pawn lot.');
         pawnIds.add(lot.id);
@@ -1637,6 +1796,7 @@ class LifeGame {
       // Migrated Classic-only DOS relaxation (separate from energy and happiness).
       if(p.classicRelaxation===undefined)p.classicRelaxation=16;
       if(!Number.isSafeInteger(p.classicRelaxation)||p.classicRelaxation<10||p.classicRelaxation>30)throw Error('Invalid Classic relaxation');
+      p.returnTravelDebt=p.returnTravelDebt??0;
       p.classicWorkHourCredit=0; // v0.5.33: old pooled partial-work credit is retired
       // New fields have safe defaults for historical saved games. Reject invalid
       // values in untrusted multiplayer snapshots instead of allowing forged
@@ -1654,7 +1814,7 @@ class LifeGame {
            !['fullGross','gross','garnished','fee','net','cashBefore','cashAfter','rentDebtBefore','rentDebtAfter'].every(k=>Number.isSafeInteger(e[k])&&e[k]>=0)||
            e.gross!==e.net+e.garnished+e.fee||e.cashAfter!==e.cashBefore+e.net||
            e.rentDebtAfter!==e.rentDebtBefore-e.garnished||e.fullGross<e.gross))throw Error('Invalid Classic paycheck history');
-      for(const [field,max] of [['classicWageRemainder',5],['classicChoicesThisWeek',CLASSIC_WEEKLY_ACTION_LIMIT]]){
+      for(const [field,max] of [['classicWageRemainder',5],['classicChoicesThisWeek',CLASSIC_WEEKLY_COUNTER_LIMIT]]){
         const value=p[field];
         if(value!==undefined&&(!Number.isInteger(value)||value<0||value>max))throw Error('Invalid Classic clock/work state: '+field);
         p[field]=value??0;
@@ -1662,6 +1822,10 @@ class LifeGame {
       p.classicLoanDefaults=clamp(Math.floor(Number(p.classicLoanDefaults)||0),0,10000);
       p.classicLoanPaidThrough=clamp(Math.floor(Number(p.classicLoanPaidThrough)||0),0,10000);
       p.classicFoodPurchasedWeek=clamp(Math.floor(Number(p.classicFoodPurchasedWeek)||0),0,obj.week);
+      if(p.classicFoodV2!==undefined&&p.classicFoodV2!==null)p.classicFoodV2=ClassicFood.validate(p.classicFoodV2);
+      else p.classicFoodV2=null; // Preserve the legacy food model in previous saves.
+      if(p.classicFoodMealBonusWeek!==undefined&&(!Number.isSafeInteger(p.classicFoodMealBonusWeek)||p.classicFoodMealBonusWeek<0||p.classicFoodMealBonusWeek>obj.week))throw Error('Invalid DOS food happiness week');
+      p.classicFoodMealBonusWeek=p.classicFoodMealBonusWeek||0;
       if(p.classicWeekendTicket!==null&&p.classicWeekendTicket!==undefined&&
          (!Object.hasOwn(D.classicDiscountGoods,p.classicWeekendTicket)||D.classicDiscountGoods[p.classicWeekendTicket].kind!=='ticket'))throw Error('Invalid pending Z-Mart ticket');
       p.classicWeekendTicket=p.classicWeekendTicket||null;

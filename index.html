@@ -128,7 +128,7 @@
       <button type="button" data-mobile-tab="city" aria-controls="gameCity" aria-pressed="true"><span aria-hidden="true">▦</span><strong>City</strong></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.52</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.64</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <section id="classicHotseatHandover" class="classic-hotseat-handover" role="dialog" aria-modal="true" aria-labelledby="classicHandoverTitle" hidden>
     <div class="classic-handover-card"><span class="classic-handover-kicker">CLASSIC HOTSEAT · PASS THE DEVICE</span><div class="classic-handover-symbol" aria-hidden="true">⏱</div><h2 id="classicHandoverTitle">Next player's turn</h2><p>The previous player's private information is hidden. Pass the device to the next player before continuing.</p><button type="button" id="classicHandoverContinue">I'm ready — reveal my turn</button><small>This screen does not advance a turn or spend any game time.</small></div>
@@ -136,8 +136,8 @@
   <section id="chatPanel" class="chat-panel" role="region" aria-label="Social and co-op chat" hidden>
     <div class="chat-heading"><strong>💬 Chat</strong><span id="chatHeadingStatus">Social lobby</span><button id="closeChat" type="button" aria-label="Close chat">×</button></div>
     <div class="chat-tabs" role="group" aria-label="Chat channel"><button id="chatSocialTab" type="button" aria-pressed="true">Social lobby</button><button id="chatRoomTab" type="button" aria-pressed="false">Co-op room</button></div>
-    <form id="chatSocialConnectForm" class="chat-social-connect" autocomplete="off"><label>Social server<input id="chatSocialOrigin" type="url" placeholder="https://api.example.org" aria-label="Looprd Social server" required /></label><label>Development token<input id="chatSocialToken" type="password" placeholder="Token (kept only in memory)" aria-label="Looprd Social development token" required autocomplete="off" /></label><button type="submit">Connect</button><small>Use your Looprd Social host, not the game room URL. HTTPS is required outside localhost. Development credentials are not cross-game sign-in.</small></form>
-    <div id="chatSocialConnected" class="chat-social-connected" hidden><span id="chatSocialIdentity"></span><button id="chatSocialRefresh" type="button">Refresh</button><button id="chatSocialDisconnect" type="button">Disconnect</button></div>
+    <form id="chatSocialConnectForm" class="chat-social-connect" autocomplete="on"><label>Social server<input id="chatSocialOrigin" type="url" placeholder="https://api.thebigtree.life" aria-label="Looprd Social server" required /></label><label>Username<input id="chatSocialUsername" type="text" maxlength="24" autocomplete="username" placeholder="Your Social account" required /></label><label>Password<input id="chatSocialPassword" type="password" minlength="12" maxlength="128" autocomplete="current-password" placeholder="12+ characters" required /></label><div class="shared-profile-buttons"><button type="submit">Sign in</button><button type="button" id="chatSocialRegister">Register</button></div><small>Shared account with Tavi/Social on this server. Credentials stay in memory during sign-in. Game and co-op permissions remain separate.</small></form>
+    <div id="chatSocialConnected" class="chat-social-connected" hidden><span id="chatSocialIdentity"></span><button id="chatSocialRefresh" type="button">Refresh</button><button id="chatSocialDisconnect" type="button">Sign out</button></div>
     <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
     <form id="chatForm" class="chat-form"><input id="chatInput" maxlength="320" placeholder="Send a message…" required autocomplete="off" aria-label="Chat message"/><button type="submit" id="chatSend">Send ↗</button></form>
     <div class="chat-status" id="chatStatus">Connect to Looprd Social to see the lobby.</div>
@@ -146,12 +146,16 @@
   <div id="overlay" class="overlay" aria-modal="true" role="dialog"></div>
   <input id="filePicker" type="file" accept=".json,application/json" hidden />
   <script src="src/classic-original.js"></script>
-  <script src="src/classic-pass2-rules.js"></script>
+  <script src="src/classic-goals.js"></script>
+<script src="src/classic-pass2-rules.js"></script>
   <script src="src/classic-time.js"></script>
   <script src="src/classic-turn-sequence.js"></script>
     <script src="src/classic-weekly-events.js"></script>
+    <script src="src/classic-consumables-064.js"></script>
+<script src="src/classic-jones-source.js"></script>
 <script src="src/classic-household.js"></script>
   <script src="src/classic-economy.js"></script>
+    <script src="src/classic-retail-pawn-063.js"></script>
   <script src="src/classic-economic-events.js"></script>
     <script src="src/data.js"></script>
   <script src="src/portrait-assets.js"></script>
@@ -161,9 +165,12 @@
   <script src="src/modular-portrait-kit.js"></script>
   <script src="src/modular-portrait-editor.js"></script>
   <script src="src/looprd-shared-profile.js"></script>
+  <script src="src/looprd-social-sdk-loader.js"></script>
   <script src="src/looprd-social-session.js"></script>
   <script src="src/shared-portrait-ui.js"></script>
+  <script src="src/rule-presets.js"></script>
   <script src="src/setup-preferences.js"></script>
+<script src="src/life-pass-057.js"></script>
   <script src="src/route-graph.js"></script>
   <script src="src/classic-routes.js"></script>
   <script src="src/engine.js"></script>

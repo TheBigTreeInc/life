@@ -61,14 +61,15 @@ test('no rent arrears and partially garnished small debts do not create fictitio
  assert.deepEqual({net:Clock.paycheck(5,6,2).net,fee:Clock.paycheck(5,6,2).fee}, {net:38,fee:0});
  assert.equal(Clock.paycheck(0,1,20).net,0);
 });
-test('Classic source AI reserves post-travel action time and stops at ten action limit',()=>{
+test('Classic source AI reserves post-travel action time and honors optional ten-action house rule',()=>{
  const g=make(),p=g.player;hire(p);p.location='home';p.cash=0;p.bank=0;p.groceries=0;p.fed=false;
  const travel=g.travelCost('home','diner');p.hours=travel;
  assert.ok(!g.classicSourceDecision(p)||g.classicSourceDecision(p).actionCode!=='work');
  p.hours=travel+1;
  const ready=g.classicSourceDecision(p);assert.ok(ready);assert.equal(ready.actionCode,'work');
  assert.equal(ready.requiredActionHours,1);
- p.classicChoicesThisWeek=10;assert.equal(g.classicSourceDecision(p),null);
+ p.classicChoicesThisWeek=10;assert.equal(g.classicSourceDecision(p).actionCode,'work');
+ g.settings.rules.weeklyActionLimit=true;assert.equal(g.classicSourceDecision(p),null);
  const snap=g.snapshot();g.runAI();assert.deepEqual(g.snapshot().players[0],snap.players[0], 'AI at action cap cannot navigate anymore');
 });
 test('Modern work has no Classic warning or rent surcharge behavior',()=>{

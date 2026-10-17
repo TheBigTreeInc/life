@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.workboard-classifications.v1",
-  "release": "0.5.52",
+  "release": "0.5.64",
   "blocked": {
     "LL-014": {
       "reason": "Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build.",
@@ -61,6 +61,10 @@
     "LL-263": {
       "reason": "No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO.",
       "unblock_when": "Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services."
+    },
+    "LL-310": {
+      "reason": "DOS original starting stats and exact fractional university credit semantics have not yet been demonstrated from an executable/runtime trace.",
+      "unblock_when": "Provide a version-matched original DOS capture proving initial Happiness and partial-lesson education stat increments."
     }
   },
   "in_progress": [
@@ -80,6 +84,12 @@
   "todo": [
     "LL-011",
     "LL-086",
-    "LL-098"
+    "LL-098",
+    "LL-301",
+    "LL-302",
+    "LL-306",
+    "LL-307",
+    "LL-308",
+    "LL-309"
   ]
 }

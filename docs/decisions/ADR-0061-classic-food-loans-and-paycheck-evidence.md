@@ -1,0 +1,20 @@
+# ADR-0061 — Classic food storage, monthly obligations and paycheck evidence
+
+**Status:** Accepted as a source-limited implementation candidate; not complete DOS 1.000.060 parity.
+**Release:** 0.5.61 · **Rules:** ECON-001, ECON-002, ECON-003, EVT-001, MOD-001.
+
+## Source references and executable rules
+
+1. [`startTrn.sc` (script 111), state 10](https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/startTrn.sc), lines 347–380. Consumable #1 is fresh food. With no fridge (durable #21), fresh food is discarded and Happiness decreases **2**. With fridge but no freezer (#22), cap is **6**; with freezer cap is **12**; overflowing storage decreases Happiness **1**. This is a deterministic source state, not a speculative spoil probability.
+2. `startTrn.sc`, state 12 (lines 384–400) executes **after** state 10; it clears transient consumable indices #3–#5 and selects an available food item. Our bundled model has `groceries` and `fed`, not individual #1–#5 identities. Applying original ordering directly starved fridge-less players and led to seeded Jones AI rent-debt failures. **Preserve the compatible meal-before-storage order for now.** The newly implemented −2/−1 storage penalties are exact per outcome, but this is **not** full food parity. Do not invent illness or a doctor bill from this script. Custom `foodSpoilage=false` continues to skip the spoilage.
+3. `startTrn.sc` state 14 (lines 405–433) uses `Random(0,1)` for `local6==-1` (spoiled item) rather than no-food's `Random(0,3)`. The pure `cashStress` reducer can represent the extra path, but production only calls the established no-food path until consumable IDs migrate.
+4. `startTrn.sc` state 20 (lines 490–504) checks `global372 % 4 == 0`, a completed four-week boundary, not the following open week. When a loan balance exists, `paySched==0` displays a warning; `paySched<0` gives **−1 Happiness**. `classicLoanPaidThrough` is still a modern month counter, not original `paySched`; map first missing due month to notice and later missed months to provisional late −1. The $45 principal/$5 interest action is unchanged, as are existing credit-limit approximations.
+5. [`n108.sc`, `localproc_0`](https://github.com/sluicebox/sci-scripts/blob/main/jones-dos-1.000.060/src/n108.sc) derives `fullGross=wage*8` and partial `earnedGross=floor(fullGross*units/6)`, but rent debt branches are based on `fullGross/2` rather than `earnedGross`. For example with wage $7, arrears $100 and 1/3/6 shift units, earned gross is **$9/$28/$56** while the unmodified decompiled source produces take-home **$26/$26/$26**, with rent debt reduced by $28. For $10 debt, the one-unit paycheck would net **$46**. These are source-derived surprising outcomes, not recommended default payouts. Live bounded payroll and existing receipts stay unchanged until independent DOSBox trace confirms the original observed arithmetic and invoice interpretation.
+
+## Scope and safeguards
+
+Source-compatible storage penalties and the loan scheduling/notification correction are implemented in Classic. The pure n108 paycheck comparison has no side effects on cash, paychecks, save snapshots or network authority. Classic Custom, Modern Story, manual rent, loan repayments, homeward travel and save schema remain unchanged. Happiness changes clamp to 0…100. Missing original item catalog, doctor/illness paths, rent advance payments, exact `paySched`, and DOS wage overwrite are intentionally **not** claimed implemented. No new Looprd endpoints.
+
+## Verification and operational acceptance
+
+Run `TEST-OBLIGATIONS.bat` then `node tools/verify.mjs`. Check original storage boundary 0/6/12 and happiness −2/−1, week-4 first bank notice, second missed month −1, source-only 1/3/6 paycheck outcomes and anomalies, save roundtrip, Custom no-spoilage, seeded 100-campaign rival test, Modern parity. Use `PLAY.html` for offline operator smoke and compare an actual DOSBox runtime before activating either the original storage ordering or anomalous paycheck rule. Workboard LL-312/313/314 requires operator review; no automatic Git publication.

@@ -43,23 +43,27 @@ test('Switching employer clears saved legacy fractional work credits',()=>{
  assert.equal(p.classicWageRemainder,0);assert.equal(p.classicWorkHourCredit,0);
 });
 
-test('At zero hours all Classic actions are blocked, including zero-cost bank and food actions',()=>{
+test('At zero hours Classic allows zero-time interactions at the current venue but blocks timed actions',()=>{
  const g=classic(),p=g.player;p.location='bank';p.cash=1000;p.bank=200;p.hours=0;
- const clockActions=['deposit:100','withdraw:100'];
- for(const id of clockActions){const a=g.actions().find(a=>a.id===id);assert.equal(a.enabled,false);assert.match(a.reason,/No hours left/);assert.equal(g.act(id).ok,false);}
- p.location='cinema';p.groceries=0;for(const id of ['classicLottery','classicFresh:1']){
-  const a=g.actions().find(a=>a.id===id);assert.equal(a.enabled,false);assert.equal(g.act(id).ok,false);
- }
- assert.equal(p.cash,1000);assert.equal(p.bank,200);
+ for(const id of ['deposit:100','withdraw:100']){const a=g.actions().find(a=>a.id===id);assert.equal(a.enabled,true);good(g,id);}
+ assert.equal(p.cash,1000);assert.equal(p.bank,200);assert.equal(p.hours,0);
+ const loan=g.actions().find(a=>a.id==='classicBroker');assert.equal(loan.enabled,false);assert.equal(g.act('classicBroker').ok,false);
+ p.location='cinema';p.groceries=0;
+ for(const id of ['classicLottery','classicFresh:1']){const a=g.actions().find(a=>a.id===id);assert.equal(a.hours,0);assert.equal(a.enabled,true);good(g,id);}
+ assert.equal(p.hours,0);assert.equal(p.lottery,10);assert.equal(p.groceries,1);
+ assert.equal(g.travel('home').ok,false);
 });
 
-test('A Classic week permits ten decisions but the eleventh is blocked even with hours left',()=>{
- const g=classic(),p=g.player;p.location='bank';p.cash=2000;
- for(let i=0;i<10;i++){good(g,'deposit:100');assert.equal(p.classicChoicesThisWeek,i+1);}
- assert.equal(p.hours,60);assert.equal(p.bank,1000);
- assert.equal(g.actions().find(a=>a.id==='deposit:100').enabled,false);
- assert.match(g.act('deposit:100').message,/Ten Classic actions/);
- assert.equal(p.bank,1000);
+test('Classic default no longer invents a hard ten-event cap; optional house rule restores it',()=>{
+ const g=classic(),p=g.player;p.location='bank';p.cash=3000;
+ for(let i=0;i<11;i++)good(g,'deposit:100');
+ assert.equal(p.classicChoicesThisWeek,11);assert.equal(p.hours,60);assert.equal(p.bank,1100);
+ assert.equal(g.actions().find(a=>a.id==='deposit:100').enabled,true);
+ const custom=new Game({ruleset:'classic',mode:'sandbox',rules:{weeklyActionLimit:true}}),q=custom.player;
+ q.location='bank';q.cash=3000;for(let i=0;i<10;i++)good(custom,'deposit:100');
+ assert.equal(custom.actions().find(a=>a.id==='deposit:100').enabled,false);
+ assert.match(custom.act('deposit:100').message,/Custom ten-action limit/);
+ assert.deepEqual(Game.load(custom.snapshot()).snapshot(),custom.snapshot());
 });
 
 test('Walking and invalid actions do not use a Classic action slot; ending week resets limit',()=>{
@@ -67,16 +71,18 @@ test('Walking and invalid actions do not use a Classic action slot; ending week 
  assert.equal(g.travel('market').ok,true);assert.equal(g.travel('bank').ok,true);
  assert.equal(p.classicChoicesThisWeek,0);
  const refused=g.act('definitely-not-real');assert.equal(refused.ok,false);assert.equal(p.classicChoicesThisWeek,0);
- for(let i=0;i<10;i++)good(g,'deposit:100');assert.equal(p.classicChoicesThisWeek,10);
+ for(let i=0;i<13;i++)good(g,'deposit:100');assert.equal(p.classicChoicesThisWeek,13);
  g.endTurn();assert.equal(g.week,2);assert.equal(p.classicChoicesThisWeek,0);
+ assert.equal(p.location,'home');assert.equal(g.travel('bank').ok,true);
  assert.equal(g.actions().find(a=>a.id==='deposit:100').enabled,true);
 });
 
 test('Saved Classic weekly counters cannot be forged above cap',()=>{
- const g=classic();const bad=g.snapshot();bad.players[0].classicChoicesThisWeek=11;
+ const g=classic();const bad=g.snapshot();bad.players[0].classicChoicesThisWeek=65536;
  assert.throws(()=>Game.load(bad),/Invalid Classic clock\/work state/);
  const broken=g.snapshot();broken.players[0].classicWageRemainder=6;
  assert.throws(()=>Game.load(broken),/Invalid Classic clock\/work state/);
+ const valid=g.snapshot();valid.players[0].classicChoicesThisWeek=25;assert.equal(Game.load(valid).player.classicChoicesThisWeek,25);
  const old=g.snapshot();delete old.players[0].classicChoicesThisWeek;delete old.players[0].classicWageRemainder;
  const migrated=Game.load(old).player;assert.equal(migrated.classicChoicesThisWeek,0);assert.equal(migrated.classicWageRemainder,0);
 });

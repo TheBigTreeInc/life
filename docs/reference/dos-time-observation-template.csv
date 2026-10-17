@@ -1,0 +1,8 @@
+source_version,origin_id,destination_id,origin_route_index,destination_route_index,shortest_waypoint_steps,source_ai_tick_estimate_global475_20,life_loop_provisional_units,original_DOS_clock_start_OBSERVED,original_DOS_clock_end_OBSERVED,original_DOS_global475_OBSERVED,original_DOS_tick_carry_OBSERVED,notes
+1.000.060,home,housing,1,164,7,47,,,,,,
+1.000.060,home,agency,1,99,72,112,,,,,,
+1.000.060,home,market,1,24,23,63,,,,,,
+1.000.060,market,cinema,24,134,60,100,,,,,,
+1.000.060,diner,market,35,24,11,51,,,,,,
+1.000.060,bank,university,120,75,45,85,,,,,,
+1.000.060,agency,home,99,1,72,112,,,,,,
