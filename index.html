@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#142c2b" />
-  <meta name="life-release-version" content="0.5.74" />
+  <meta name="life-release-version" content="0.5.81" />
   <meta name="description" content="The Life Loop, an original turn-based life simulation inspired by classic board-game life sims." />
   <title>The Life Loop — Make a life, not just a living</title>
   <link rel="stylesheet" href="styles.css" />
@@ -38,7 +38,7 @@
             <button type="button" role="menuitem" id="saveBtn">↓ Save game</button>
             <button type="button" role="menuitem" id="loadBtn">↑ Load game</button>
             <button type="button" role="menuitem" id="guideBtn">? How to play</button>
-            <button type="button" role="menuitem" id="aboutLifeBtn">ⓘ About this game · v0.5.74</button>
+            <button type="button" role="menuitem" id="aboutLifeBtn">ⓘ About this game · v0.5.81</button>
           </div>
         </div>
       </div>
@@ -131,11 +131,11 @@
       <button type="button" data-mobile-tab="city" aria-controls="gameCity" aria-pressed="true"><span aria-hidden="true">▦</span><strong>City</strong></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.74</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.81</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <dialog id="aboutLifeDialog" class="life-about" aria-labelledby="aboutLifeTitle">
     <header><h2 id="aboutLifeTitle">The Life Loop</h2><button type="button" id="aboutLifeClose" aria-label="Close about game">×</button></header>
-    <div class="life-about-body"><p class="life-about-version">Version <strong id="aboutLifeVersion">v0.5.74</strong></p><p id="aboutLifeMode">Mode: —</p><p class="life-about-heading">What’s new</p><p>See the installed game version at any time. Easier access to release details and diagnostics without cluttering your phone screen.</p><p class="life-about-note">The version shown here identifies this loaded game bundle, not the last ZipRunner upload.</p></div>
+    <div class="life-about-body"><p class="life-about-version">Version <strong id="aboutLifeVersion">v0.5.81</strong></p><p id="aboutLifeMode">Mode: —</p><p class="life-about-heading">What’s new</p><p>The Classic board now supports metadata-driven curved road geometry and per-building entrance paths.</p><p class="life-about-note">The version shown here identifies this loaded game bundle, not the last ZipRunner upload.</p></div>
     <footer><button type="button" id="aboutLifeCopy">Copy diagnostics</button><button type="button" id="aboutLifeDone">Done</button></footer>
   </dialog>
   <section id="classicHotseatHandover" class="classic-hotseat-handover" role="dialog" aria-modal="true" aria-labelledby="classicHandoverTitle" hidden>

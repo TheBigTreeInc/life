@@ -1,14 +1,14 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.74
+release: 0.5.81
 api:
   version: v1
 auth:
   mode: public
 database:
   backend: sqlite
-  schemaVersion: 2
+  schemaVersion: 3
   migrations:
   - version: 2
     statements:
@@ -53,6 +53,202 @@ models:
         required: true
       touched:
         type: integer
+        required: true
+  GameMatch:
+    fields:
+      id:
+        type: string
+        maxLength: 64
+        primaryKey: true
+      status:
+        type: string
+        maxLength: 24
+        required: true
+      engineRevision:
+        type: string
+        maxLength: 128
+        required: true
+      rulesDigest:
+        type: string
+        maxLength: 128
+        required: true
+      initialSeed:
+        type: integer
+        required: true
+      rngState:
+        type: integer
+        required: true
+      revision:
+        type: integer
+        required: true
+      turnIndex:
+        type: integer
+        required: true
+      activeSeat:
+        type: string
+        maxLength: 32
+      dueAtUtc:
+        type: string
+        maxLength: 40
+      createdAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+      updatedAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+  GameParticipant:
+    fields:
+      id:
+        type: string
+        maxLength: 64
+        primaryKey: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+      seatId:
+        type: string
+        maxLength: 32
+        required: true
+      issuer:
+        type: string
+        maxLength: 256
+        required: true
+      subject:
+        type: string
+        maxLength: 256
+        required: true
+      role:
+        type: string
+        maxLength: 32
+        required: true
+      joinedAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+  GameAction:
+    fields:
+      id:
+        type: string
+        maxLength: 64
+        primaryKey: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+      revisionBefore:
+        type: integer
+        required: true
+      revisionAfter:
+        type: integer
+        required: true
+      turnIndex:
+        type: integer
+        required: true
+      actorIssuer:
+        type: string
+        maxLength: 256
+        required: true
+      actorSubject:
+        type: string
+        maxLength: 256
+        required: true
+      idempotencyKey:
+        type: string
+        maxLength: 128
+        required: true
+      commandDigest:
+        type: string
+        maxLength: 128
+        required: true
+      command:
+        type: json
+        required: true
+      resultDigest:
+        type: string
+        maxLength: 128
+        required: true
+      createdAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+  GameCheckpoint:
+    fields:
+      id:
+        type: string
+        maxLength: 64
+        primaryKey: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+      revision:
+        type: integer
+        required: true
+      turnIndex:
+        type: integer
+        required: true
+      state:
+        type: json
+        required: true
+      stateDigest:
+        type: string
+        maxLength: 128
+        required: true
+      rngState:
+        type: integer
+        required: true
+      createdAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+  GameNotificationOutbox:
+    fields:
+      id:
+        type: string
+        maxLength: 64
+        primaryKey: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+      turnIndex:
+        type: integer
+        required: true
+      recipientIssuer:
+        type: string
+        maxLength: 256
+        required: true
+      recipientSubject:
+        type: string
+        maxLength: 256
+        required: true
+      eventId:
+        type: string
+        maxLength: 128
+        required: true
+      eventType:
+        type: string
+        maxLength: 80
+        required: true
+      status:
+        type: string
+        maxLength: 24
+        required: true
+      attempts:
+        type: integer
+        required: true
+      lastErrorClass:
+        type: string
+        maxLength: 128
+      nextDispatchUtc:
+        type: string
+        maxLength: 40
+      createdAtUtc:
+        type: string
+        maxLength: 40
         required: true
   Pulse:
     fields:

@@ -1,6 +1,18 @@
-## v0.5.74 — Phone End Week button
+## v0.5.81 — Asynchronous game match schema foundation
 
-Artifact: `the-life-loop-0.5.74-ziprunner.zip` — complete source, playable `PLAY.html` and mobile UI tests.
+Artifact: `the-life-loop-0.5.81-ziprunner.zip`. See `docs/decisions/ADR-0081-async-match-persistence-foundation.md` for limits and deployment prerequisites. No change to current host-based `/session`.
+
+## v0.5.81 — Standalone board geometry manifest and authoring overlay
+
+Artifact: `the-life-loop-0.5.81-ziprunner.zip`. Edit `assets/boards/classic/geometry.v1.json` for road control points and building entrance paths; run `node tools/build-offline.mjs` to embed it. Use `?debugGeometry` for a read-only coordinate overlay. DOS travel cost and saves do not change.
+
+## v0.5.78 — Curved road geometry metadata
+
+Artifact: `the-life-loop-0.5.81-ziprunner.zip` — complete source, playable `PLAY.html` and curved-road board metadata.
+
+This pass introduces metadata-driven road geometry for the Classic board. The visual road loop now supports curved multi-point edge paths, and each venue can describe its own doorway approach with normalized points and an entrance coordinate. The pawn still uses the same authoritative travel graph and time costs; only the visual roadway and entrance paths are generalized for future board art.
+
+Artifact: `the-life-loop-0.5.77-ziprunner.zip` — complete source, playable `PLAY.html` and mobile UI tests.
 
 On phones, the city toolbar now puts **End week** at the top beside the Classic Overview/Explore controls, replacing the unused building-search dropdown. The phone button delegates to the existing authoritative End Week handler; the existing desktop control is unchanged. It becomes disabled while a venue is open, during movement/remote turns or after the game finishes. The top control remains reachable in Modern Story. Work still appears beside Done where available. Game turns, return-home travel/debt, hotseat and Looprd remain unchanged.
 

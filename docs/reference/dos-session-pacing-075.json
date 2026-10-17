@@ -1,0 +1,1664 @@
+{
+  "schema": "the-life-loop.dos-session-pacing.v1",
+  "version": "0.5.81",
+  "seed": 557,
+  "status": "baseline-only",
+  "caveat": "No DOSBox trace or measured wall-clock game duration is available. DOS rival AI estimates are NOT observed player travel costs. No movement or action charges were modified.",
+  "evidence": [
+    "room1.sc:1315,1473-1491",
+    "WhereShouldIGo.sc:23-38",
+    "src/classic-time.js",
+    "src/engine.js"
+  ],
+  "coverage": {
+    "venues": 13,
+    "directedJourneys": 156
+  },
+  "travelSummary": {
+    "min": 3,
+    "median": 5,
+    "p90": 6,
+    "max": 8,
+    "mean": 4.5,
+    "outsideDosAiEstimatorBound": 46
+  },
+  "scriptedItineraries": [
+    {
+      "id": "groceries-and-home",
+      "legs": [
+        {
+          "from": "home",
+          "to": "market",
+          "chargedUnits": 3,
+          "steps": 23
+        },
+        {
+          "from": "market",
+          "to": "home",
+          "chargedUnits": 3,
+          "steps": 23
+        }
+      ],
+      "travelUnits": 6,
+      "waypoints": 46,
+      "remainingBeforeActivities": 54,
+      "feasibleBeforeActivities": true
+    },
+    {
+      "id": "employment-and-home",
+      "legs": [
+        {
+          "from": "home",
+          "to": "agency",
+          "chargedUnits": 7,
+          "steps": 72
+        },
+        {
+          "from": "agency",
+          "to": "home",
+          "chargedUnits": 5,
+          "steps": 72
+        }
+      ],
+      "travelUnits": 12,
+      "waypoints": 144,
+      "remainingBeforeActivities": 48,
+      "feasibleBeforeActivities": true
+    },
+    {
+      "id": "job-market-bank-home",
+      "legs": [
+        {
+          "from": "home",
+          "to": "agency",
+          "chargedUnits": 7,
+          "steps": 72
+        },
+        {
+          "from": "agency",
+          "to": "market",
+          "chargedUnits": 6,
+          "steps": 75
+        },
+        {
+          "from": "market",
+          "to": "bank",
+          "chargedUnits": 5,
+          "steps": 74
+        },
+        {
+          "from": "bank",
+          "to": "home",
+          "chargedUnits": 5,
+          "steps": 51
+        }
+      ],
+      "travelUnits": 23,
+      "waypoints": 272,
+      "remainingBeforeActivities": 37,
+      "feasibleBeforeActivities": true
+    }
+  ],
+  "journeys": [
+    {
+      "from": "clinic",
+      "to": "housing",
+      "waypoints": 13,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 41,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "home",
+      "waypoints": 20,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 48,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "pawn",
+      "waypoints": 33,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 61,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "market",
+      "waypoints": 43,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 71,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "diner",
+      "waypoints": 54,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 82,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "boutique",
+      "waypoints": 66,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 94,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "tech",
+      "waypoints": 85,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 113,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "university",
+      "waypoints": 76,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 104,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "agency",
+      "waypoints": 52,
+      "chargedUnits": 7,
+      "estimatedDosAiTicks": 80,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "office",
+      "waypoints": 44,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 72,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "bank",
+      "waypoints": 31,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 59,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "clinic",
+      "to": "cinema",
+      "waypoints": 17,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 45,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "clinic",
+      "waypoints": 13,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 41,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "home",
+      "waypoints": 7,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 35,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "pawn",
+      "waypoints": 20,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 48,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "market",
+      "waypoints": 30,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 58,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "diner",
+      "waypoints": 41,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 69,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "boutique",
+      "waypoints": 53,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 81,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "tech",
+      "waypoints": 72,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 100,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "university",
+      "waypoints": 81,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 109,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "agency",
+      "waypoints": 65,
+      "chargedUnits": 7,
+      "estimatedDosAiTicks": 93,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "office",
+      "waypoints": 57,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 85,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "bank",
+      "waypoints": 44,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 72,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "housing",
+      "to": "cinema",
+      "waypoints": 30,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 58,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "clinic",
+      "waypoints": 20,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 48,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "housing",
+      "waypoints": 7,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 35,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "pawn",
+      "waypoints": 13,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 41,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "market",
+      "waypoints": 23,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 51,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "diner",
+      "waypoints": 34,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 62,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "boutique",
+      "waypoints": 46,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 74,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "tech",
+      "waypoints": 65,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 93,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "university",
+      "waypoints": 74,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 102,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "agency",
+      "waypoints": 72,
+      "chargedUnits": 7,
+      "estimatedDosAiTicks": 100,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "office",
+      "waypoints": 64,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 92,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "bank",
+      "waypoints": 51,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 79,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "home",
+      "to": "cinema",
+      "waypoints": 37,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 65,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "clinic",
+      "waypoints": 33,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 61,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "housing",
+      "waypoints": 20,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 48,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "home",
+      "waypoints": 13,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 41,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "market",
+      "waypoints": 10,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 38,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "diner",
+      "waypoints": 21,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 49,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "boutique",
+      "waypoints": 33,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 61,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "tech",
+      "waypoints": 52,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 80,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "university",
+      "waypoints": 61,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 89,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "agency",
+      "waypoints": 85,
+      "chargedUnits": 8,
+      "estimatedDosAiTicks": 113,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "office",
+      "waypoints": 77,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 105,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "bank",
+      "waypoints": 64,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 92,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "pawn",
+      "to": "cinema",
+      "waypoints": 50,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 78,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "clinic",
+      "waypoints": 43,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 71,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "housing",
+      "waypoints": 30,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 58,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "home",
+      "waypoints": 23,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 51,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "pawn",
+      "waypoints": 10,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 38,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "diner",
+      "waypoints": 11,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 39,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "boutique",
+      "waypoints": 23,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 51,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "tech",
+      "waypoints": 42,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 70,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "university",
+      "waypoints": 51,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 79,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "agency",
+      "waypoints": 75,
+      "chargedUnits": 8,
+      "estimatedDosAiTicks": 103,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "office",
+      "waypoints": 83,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 111,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "bank",
+      "waypoints": 74,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 102,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "market",
+      "to": "cinema",
+      "waypoints": 60,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 88,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "clinic",
+      "waypoints": 54,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 82,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "housing",
+      "waypoints": 41,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 69,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "home",
+      "waypoints": 34,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 62,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "pawn",
+      "waypoints": 21,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 49,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "market",
+      "waypoints": 11,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 39,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "boutique",
+      "waypoints": 12,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 40,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "tech",
+      "waypoints": 31,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 59,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "university",
+      "waypoints": 40,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 68,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "agency",
+      "waypoints": 64,
+      "chargedUnits": 7,
+      "estimatedDosAiTicks": 92,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "office",
+      "waypoints": 72,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 100,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "bank",
+      "waypoints": 85,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 113,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "diner",
+      "to": "cinema",
+      "waypoints": 71,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 99,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "clinic",
+      "waypoints": 66,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 94,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "housing",
+      "waypoints": 53,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 81,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "home",
+      "waypoints": 46,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 74,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "pawn",
+      "waypoints": 33,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 61,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "market",
+      "waypoints": 23,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 51,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "diner",
+      "waypoints": 12,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 40,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "tech",
+      "waypoints": 19,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 47,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "university",
+      "waypoints": 28,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 56,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "agency",
+      "waypoints": 52,
+      "chargedUnits": 7,
+      "estimatedDosAiTicks": 80,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "office",
+      "waypoints": 60,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 88,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "bank",
+      "waypoints": 73,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 101,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "boutique",
+      "to": "cinema",
+      "waypoints": 83,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 111,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "clinic",
+      "waypoints": 85,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 113,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "housing",
+      "waypoints": 72,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 100,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "home",
+      "waypoints": 65,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 93,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "pawn",
+      "waypoints": 52,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 80,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "market",
+      "waypoints": 42,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 70,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "diner",
+      "waypoints": 31,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 59,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "boutique",
+      "waypoints": 19,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 47,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "university",
+      "waypoints": 9,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 37,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "agency",
+      "waypoints": 33,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 61,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "office",
+      "waypoints": 41,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 69,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "bank",
+      "waypoints": 54,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 82,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "tech",
+      "to": "cinema",
+      "waypoints": 68,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 96,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "clinic",
+      "waypoints": 76,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 104,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "housing",
+      "waypoints": 81,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 109,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "home",
+      "waypoints": 74,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 102,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "pawn",
+      "waypoints": 61,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 89,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "market",
+      "waypoints": 51,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 79,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "diner",
+      "waypoints": 40,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 68,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "boutique",
+      "waypoints": 28,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 56,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "tech",
+      "waypoints": 9,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 37,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "agency",
+      "waypoints": 24,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 52,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "office",
+      "waypoints": 32,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 60,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "bank",
+      "waypoints": 45,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 73,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "university",
+      "to": "cinema",
+      "waypoints": 59,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 87,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "clinic",
+      "waypoints": 52,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 80,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "housing",
+      "waypoints": 65,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 93,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "home",
+      "waypoints": 72,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 100,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "pawn",
+      "waypoints": 85,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 113,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "market",
+      "waypoints": 75,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 103,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "diner",
+      "waypoints": 64,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 92,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "boutique",
+      "waypoints": 52,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 80,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "tech",
+      "waypoints": 33,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 61,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "university",
+      "waypoints": 24,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 52,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "office",
+      "waypoints": 8,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 36,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "bank",
+      "waypoints": 21,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 49,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "agency",
+      "to": "cinema",
+      "waypoints": 35,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 63,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "clinic",
+      "waypoints": 44,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 72,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "housing",
+      "waypoints": 57,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 85,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "home",
+      "waypoints": 64,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 92,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "pawn",
+      "waypoints": 77,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 105,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "market",
+      "waypoints": 83,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 111,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "diner",
+      "waypoints": 72,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 100,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "boutique",
+      "waypoints": 60,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 88,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "tech",
+      "waypoints": 41,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 69,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "university",
+      "waypoints": 32,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 60,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "agency",
+      "waypoints": 8,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 36,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "bank",
+      "waypoints": 13,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 41,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "office",
+      "to": "cinema",
+      "waypoints": 27,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 55,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "clinic",
+      "waypoints": 31,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 59,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "housing",
+      "waypoints": 44,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 72,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "home",
+      "waypoints": 51,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 79,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "pawn",
+      "waypoints": 64,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 92,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "market",
+      "waypoints": 74,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 102,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "diner",
+      "waypoints": 85,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 113,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "boutique",
+      "waypoints": 73,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 101,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "tech",
+      "waypoints": 54,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 82,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "university",
+      "waypoints": 45,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 73,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "agency",
+      "waypoints": 21,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 49,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "office",
+      "waypoints": 13,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 41,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "bank",
+      "to": "cinema",
+      "waypoints": 14,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 42,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "clinic",
+      "waypoints": 17,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 45,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "housing",
+      "waypoints": 30,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 58,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "home",
+      "waypoints": 37,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 65,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "pawn",
+      "waypoints": 50,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 78,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "market",
+      "waypoints": 60,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 88,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "diner",
+      "waypoints": 71,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 99,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "boutique",
+      "waypoints": 83,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 111,
+      "dosAiReferenceMin": 7,
+      "dosAiReferenceMax": 8,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "tech",
+      "waypoints": 68,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 96,
+      "dosAiReferenceMin": 6,
+      "dosAiReferenceMax": 7,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "university",
+      "waypoints": 59,
+      "chargedUnits": 5,
+      "estimatedDosAiTicks": 87,
+      "dosAiReferenceMin": 5,
+      "dosAiReferenceMax": 6,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "agency",
+      "waypoints": 35,
+      "chargedUnits": 6,
+      "estimatedDosAiTicks": 63,
+      "dosAiReferenceMin": 4,
+      "dosAiReferenceMax": 5,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "office",
+      "waypoints": 27,
+      "chargedUnits": 4,
+      "estimatedDosAiTicks": 55,
+      "dosAiReferenceMin": 3,
+      "dosAiReferenceMax": 4,
+      "referenceOnly": true
+    },
+    {
+      "from": "cinema",
+      "to": "bank",
+      "waypoints": 14,
+      "chargedUnits": 3,
+      "estimatedDosAiTicks": 42,
+      "dosAiReferenceMin": 2,
+      "dosAiReferenceMax": 3,
+      "referenceOnly": true
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.74",
-  "summary": "v0.5.74: visible in-game About/version, current loaded bundle identity, release notes and copyable diagnostics; mobile controls retained and gameplay unchanged.",
+  "version": "0.5.81",
+  "summary": "v0.5.81 LIFE-ASYNC-02: additive match/participant/action/checkpoint/outbox SQL model foundation; requires DAPI dialect and transaction acceptance before activation.",
   "implemented": [
     {
       "id": "LL-177",
@@ -1220,7 +1220,32 @@
       "title": "Visible running version and About panel",
       "summary": "Expose loaded bundle version and copyable diagnostics in game menu, including on phones. Retain stable top End Week and Work/Done controls.",
       "operator_checks": [
-        "Open Menu \u2192 About on a phone and desktop; confirm v0.5.74, copy diagnostics, close and resume turn."
+        "Open Menu \u2192 About on a phone and desktop; confirm v0.5.75, copy diagnostics, close and resume turn."
+      ]
+    },
+    {
+      "id": "LL-375",
+      "title": "Measured-session pacing audit foundation",
+      "summary": "Add deterministic report, scripted itineraries, DOSBox observation CSV, 14-tick oracle and tests without changing live Classic clock.",
+      "operator_checks": [
+        "Run node tools/dos-session-pacing-075.mjs; capture matched DOSBox and Life Loop sessions before calibrating live walking charges."
+      ]
+    },
+    {
+      "id": "LL-333",
+      "title": "Source-backed Jones route decision estimate",
+      "summary": "Use source original 14-tick clock quantum and two-unit AI route overhead in the source decision trace; preserve game travel costs and source branch order.",
+      "operator_checks": [
+        "Run node --test tests/classic-jones-motion-076.test.cjs",
+        "Confirm source trace never advances seeded RNG, and saved games roundtrip."
+      ]
+    },
+    {
+      "id": "LL-350",
+      "title": "LIFE-ASYNC-01 deterministic load and replay foundation",
+      "summary": "Introduce opt-in pure checkpoint reconstruction and deterministic SHA-256 comparison in Node; retain legacy browser behavior and document remaining authoritative multiplayer gaps.",
+      "operator_checks": [
+        "Run async-replay-080.test.cjs; verify Classic/Modern and legacy saves; review cross-component adoc and keep /play disabled."
       ]
     }
   ],

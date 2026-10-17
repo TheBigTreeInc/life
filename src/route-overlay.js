@@ -7,6 +7,7 @@ const ROLES={player:{color:'#a8f36e',letter:'1'},friend:{color:'#8bdcf5',letter:
 const reduced=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const linear=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
+const rectPoint=(rect,parent,u,v)=>({x:rect.left-parent.left+rect.width*u,y:rect.top-parent.top+rect.height*v});
 function distance(a,b){return Math.hypot(b.x-a.x,b.y-a.y);}
 function pathPointAt(points,t){
  if(!points.length)return null;if(points.length===1)return points[0];
@@ -80,9 +81,10 @@ class RouteOverlay{
  constructor({frame,board,svg,announce,layout,expectedVenues}){
   this.frame=frame;this.board=board;this.svg=svg;this.announce=announce;
   this.router=root.LifeRoutes.compile(layout,expectedVenues);
-  this.layout=layout;this.nodes=new Map();this.doors=new Map();this.projected=false;this.anim=null;this.animationSerial=0;this.previewTarget=null;this.arrivalId=null;this.projectionVersion=0;
+  this.layout=layout;this.nodes=new Map();this.doors=new Map();this.approaches=new Map();this.projected=false;this.anim=null;this.animationSerial=0;this.previewTarget=null;this.arrivalId=null;this.projectionVersion=0;
   this.hint=document.getElementById('routeHint');
   this.debug=new URLSearchParams(location.search).has('debugRoutes');
+  this.geometryDebug=new URLSearchParams(location.search).has('debugGeometry');
   this.sortedPathNodes=this.layout.nodes.slice().sort((a,b)=>(a.pathIndex||0)-(b.pathIndex||0));
   this.resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(()=>{this.projected=false;this.render();}):null;
   this.resizeObserver?.observe(board);this.resizeObserver?.observe(frame);
@@ -148,7 +150,7 @@ class RouteOverlay{
    south:frontageY('agency')
   };
   const byCell=new Map((this.game?.places||[]).map(p=>[p.cell.join(','),p.id]));
-  const centers=new Map(),doors=new Map();
+  const centers=new Map(),doors=new Map(),approaches=new Map();
   for(const [i,node] of this.layout.nodes.entries()){
    const [cx,cy]=node.cell||RING[i];
    const place=byCell.get(`${cx},${cy}`),tile=tiles.get(place);
@@ -173,7 +175,8 @@ class RouteOverlay{
    centers.set(node.id,point);
    // The town road and the front door are two different coordinates. Artwork
    // determines the latter; the historic stop/path index still determines cost.
-   const entrance=this.layout.venues[place]?.artEntrance;
+   const venue=this.layout.venues[place]||{};
+   const entrance=venue.geometry?.entrance||venue.artEntrance;
    if(place&&entrance){
     const img=tile.querySelector('.classic-scene');
     let x=r.left-parent.left+r.width*entrance[0],y=r.top-parent.top+r.height*entrance[1];
@@ -187,7 +190,13 @@ class RouteOverlay{
     const caption=tile.querySelector('.tile-caption')?.getBoundingClientRect();
     // Keep entry rings above the floating label, even on a narrow fitted phone.
     if(caption)y=Math.min(y,caption.top-parent.top-5);
-    doors.set(place,{x,y});
+    const doorway={x,y};
+    doors.set(place,doorway);
+    if(Array.isArray(venue.geometry?.approach)&&venue.geometry.approach.length){
+     const visual=[point,...venue.geometry.approach.map(([u,v])=>rectPoint(r,parent,u,v))];
+     if(distance(visual.at(-1),doorway)>1)visual.push(doorway);
+     approaches.set(place,compactLine(visual));
+    }
    }
   }
   // Defensive interpolation if an optional visual crossing is not attached to
@@ -200,11 +209,19 @@ class RouteOverlay{
   }
   // If screen reflows before tiles have dimensions, keep the last good projection.
   if(centers.size!==this.layout.nodes.length)return false;
-  this.nodes=centers;this.doors=doors;this.width=parent.width;this.height=parent.height;this.firstTile=firstTile;this.gutter=gutter;this.projected=true;this.projectionVersion++;return true;
+  this.nodes=centers;this.doors=doors;this.approaches=approaches;this.width=parent.width;this.height=parent.height;this.firstTile=firstTile;this.gutter=gutter;this.projected=true;this.projectionVersion++;return true;
+ }
+
+ edgeVisualPoints(from,to){
+  const visual=this.layout.visualCurves||{};
+  const forward=visual[`${from}>${to}`],backward=visual[`${to}>${from}`];
+  const points=Array.isArray(forward)?forward:Array.isArray(backward)?backward.slice().reverse():null;
+  return Array.isArray(points)&&points.length>1?points.map(([u,v])=>({x:u*this.width,y:v*this.height})):null;
  }
  edgePolyline(from,to){
   const a=this.nodes.get(from),b=this.nodes.get(to);
   if(!a||!b)return [];
+  const geometry=this.edgeVisualPoints(from,to);if(geometry)return geometry;
   // The northern and southern turns are proper *junctions* on the common
   // gutter centerlines. There is no diagonal road through tree scenery.
   const pair=[from,to].sort().join('/');
@@ -258,6 +275,7 @@ class RouteOverlay{
  doorAnchor(id){return this.doors.get(id)||this.roadAnchor(id);}
  anchor(id){return this.doorAnchor(id);}
  doorWalk(id){
+  const approach=this.approaches.get(id);if(Array.isArray(approach)&&approach.length>1)return approach;
   const road=this.roadAnchor(id),door=this.doorAnchor(id);
   if(!road||!door||distance(road,door)<2)return [road].filter(Boolean);
   const place=this.game?.getPlace(id),[cx,cy]=place?.cell||[];
@@ -321,6 +339,24 @@ class RouteOverlay{
     this.hint.classList.toggle('route-hint-blocked',!quote.ok);this.hint.hidden=false;
    }
   }else if(this.hint)this.hint.hidden=true;
+  if(this.geometryDebug){
+   // Read-only authoring overlay. Access with ?debugGeometry; gameplay UI stays clean.
+   const debugGroup=el('g',{'data-board-geometry-debug':'true'});
+   for(const [edge,points] of Object.entries(this.layout.visualCurves||{})){
+    points.forEach(([u,v],i)=>{
+     const x=u*this.width,y=v*this.height;
+     debugGroup.append(el('circle',{cx:x,cy:y,r:4.2,fill:'#13d6cd',stroke:'#152d36','stroke-width':1.5,'data-edge':edge,'data-point-index':i}));
+     debugGroup.append(el('text',{x:x+6,y:y-6,fill:'#16303b','font-size':10,'font-weight':700},`${edge}:${i}`));
+    });
+   }
+   for(const [venue,geometry] of Object.entries(this.layout.venues)){
+    const point=this.doorAnchor(venue);
+    if(point&&geometry.geometry?.approach){
+     debugGroup.append(el('circle',{cx:point.x,cy:point.y,r:6,fill:'#ffa142',stroke:'#fff','stroke-width':2,'data-geometry-entrance':venue}));
+    }
+   }
+   group.append(debugGroup);
+  }
   if(this.debug){
    for(const n of this.layout.nodes){const p=this.nodes.get(n.id);group.append(el('circle',{cx:p.x,cy:p.y,r:6,class:'route-debug-node'}),el('text',{x:p.x+7,y:p.y-7,class:'route-debug-label'},n.id));}
    for(const [venue,entry] of Object.entries(this.layout.venues)){const p=this.anchor(venue);if(p)group.append(el('text',{x:p.x+7,y:p.y+14,class:'route-debug-label'},`${venue} [place ${entry.placeNum} · path ${entry.routeIndex}]`));}

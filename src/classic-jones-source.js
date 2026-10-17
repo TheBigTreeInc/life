@@ -36,7 +36,7 @@
   // inside this preview predicate.
   return completedDegrees<11&&(activeEnrollments>0||cash>400);
  }
- const source=Object.freeze({script:'WhereShouldIGo.sc',scriptId:300,edition:'DOS 1.000.060',
+ const source=Object.freeze({script:'WhereShouldIGo.sc',scriptId:300,edition:'DOS 1.000.060',motionOverheadTicks:28,activeClockTicksPerUnit:14,
   mapped: Object.freeze({1:'unemployed office',7:'rent payment',9:'rent liquidity',20:'clothing renewal',21:'work for food',22:'food liquidity',23:'food pawn',27:'food purchase',28:'raise',29:'promotion',30:'experience work',32:'rest critical',37:'rest low',44:'education',46:'work'}),
   remaining:'Original 1-49 branch tree, per-branch RNG and travel tick conversion not fully mapped'});
  const api=Object.freeze({schema:'classic-jones-source.v1',raiseEligible,promotionEligible,reliabilityGap,restBranch,educationCandidate,source});

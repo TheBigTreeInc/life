@@ -1,0 +1,68 @@
+= Life / Social / Atrium / DAPI — Critical Architecture Differences and Implementation Handoff
+:revnumber: 0.5.81
+:revdate: 2026-10-18
+:toc: left
+:sectnums:
+
+== Scope and evidence
+
+This gap analysis is based on the supplied `ADJUSTMENT_ASYNC_MULTIPLAYER_API_FIRST.adoc`, `LOOPRD_GAME_PLAY_CONTRACT.adoc`, `END_TO_END_TEST_PLAN.adoc`, and the Life v0.5.79 source ZIP. The three supplied documents are proposed architecture and acceptance requirements, not proof of features deployed in Social, Atrium or DAPI. Only Life source was audited locally for this pass. All cross-repository capabilities require owner verification.
+
+== Most critical differences (ordered)
+
+[cols="1,2,3,3",options="header"]
+|===
+|Priority |Architecture requirement |Current observed Life behavior / gap |Owner and required acceptance
+|P0 |Server-authoritative game without a human host |`src/network.js` still uses the host browser to process guest commands. Existing `server/looprd_handler.py` carries host/guest tokens and a 48-hour room TTL. Neither is an authoritative durable `/play` match. |Life + DAPI. Persist game, seats, commands, checkpoints and revision across all browsers closing and LoopRD restarts.
+|P0 |Verified game-scoped account identity |Existing room capability token and `auth.mode: public` cannot be treated as verified Social issuer/subject identity. Social `game_ticket` is a proposed dependency, not an assumed issuer. |Social + Life. Verify issuer, audience, subject, expiry, nonce, revocation and participant membership before state reads or writes.
+|P0 |Transactional `act` / `end_turn` with CAS and idempotency |No authoritative revision-checked `/play` operation, SQL action journal or atomic turn+outbox commit in provided Life. |Life + DAPI. Concurrent/retried commands apply at most once, stale revisions fail and accepted turn survives restart.
+|P0 |Headless trusted evaluator |`LifeGame` runs in JS, but production server does not independently execute each submitted command; client receipt hashes cannot attest fairness. |Life. Isolated, pinned Node evaluator invoked on demand; real API-only human and OpenClaw tests before `agentPlaySupported=true`.
+|P0 |Deterministic load and versioned state |`LifeGame.load()` previously advanced AI implicitly. `seed` in saves is current PRNG state, not unique initial match seed; engine/rules digests and initialSeed absent. |Life. Explicit AI step; initialSeed/rngState/engineDigest/rulesDigest; canonical JSON with replay fixtures. v0.5.80 adds *opt-in* pure load and checkpoint SHA-256 foundation, not complete deterministic certification.
+|P1 |Deadline distinct from retention |Existing 48-hour room TTL does not implement durable 60-hour turn deadline or unlimited deadlines. |Life + DAPI. Store nullable absolute UTC dueAt; overdue jobs do not delete/forfeit matches by default.
+|P1 |Notification outbox durable before delivery |`ctx.publish` live room events are not the required atomic durable turn event/outbox. |Life + Social + DAPI. Commit next turn and recipient-bound outbox atomically; retry Social delivery idempotently after outage.
+|P1 |Game catalog and resumable launch |Atrium listing or embedded web launch does not establish durable match state or authorized resume. |Atrium + Life. Approved web assets, verified account transfer and resume route; no independent membership DB.
+|P1 |Agent plays with own account |OpenClaw discovery/chat functionality does not constitute the ability to inspect legal actions and commit turns. |Social/Tavi + Life. Separate agent account, machine-readable legal actions, action, end_turn and restart with no browser/host.
+|===
+
+== Delivered in Life v0.5.80 (LIFE-ASYNC-01 partial)
+
+* `LifeGame.load(snapshot, {advanceAI:false})` can restore a checkpoint without implicitly executing a Jones turn; default remains compatible with existing browser load behavior.
+* `src/async-replay.js` provides an initial Node headless checkpoint adapter, deterministic key-order canonical JSON, SHA-256 comparison digest, and explicit RNG-state extraction.
+* `tests/async-replay-080.test.cjs` checks repeatable checkpoint reconstruction and canonical hash equivalence.
+* Existing Classic/Modern/offline gameplay is not migrated to `/play` in this pass.
+
+IMPORTANT: The adapter is *not* yet a pinned rules artifact or a secure player-command evaluator. The canonicalization strategy and complete data schema still require versioned approval; no network endpoint, SQL migration, ticket verifier, deadline service or Social integration is claimed.
+
+== Shared contract actions and dependencies
+
+. Life: publish real OpenAPI `GET /play/info`, `POST /play`, schemas for `create`, `join`, `list_matches`, `get`, `resume`, `legal_actions`, `act`, `end_turn`, `history`, and `status`/`resign` as decided. Until deployed, advertise no agent play support.
+. DAPI: verify SQL transaction isolation, CAS implementation, additive migrations, durable `ctx.emit` and periodic jobs in the actual target runtime; clarify same-runtime `ctx.call` vs authenticated remote HTTPS.
+. Social: implement or verify ticket issuance and introspection/JWKS contract, revocation and scoped account-to-seat grants; design idempotent notification intake.
+. Atrium: discover only reviewed `looprd.game-play/v1` game capabilities, provide account-bound launch/resume, do not infer that metadata allows agent play.
+. All: share interoperability fixtures, simulated faults and owner-signed test evidence. The proposal is not a deployed protocol.
+
+== Blocking decisions requiring owners
+
+* Approved Node evaluator isolation/runtime and old-engine artifact retention.
+* Social issuer / remote trust / grant revocation format.
+* Whether trusted-private client receipt is permitted temporarily, and its limitations.
+* Overdue-turn policy beyond `mark_overdue`/remind.
+* SQL dialect, transaction and durable event semantics in deployed DAPI.
+
+== Acceptance sequence
+
+. LIFE-ASYNC-01: 100+ seeded campaigns; browser and Node replay with explicit AI and no-load side effects. Current v0.5.80 is a partial foundation only.
+. LIFE-ASYNC-02: additive SQL schema, checksums, restarts, snapshots and action journal.
+. LIFE-ASYNC-03: verified identity, membership, CAS, idempotency, bounded actions, migration bridge.
+. LIFE-ASYNC-04: trusted command-only evaluator + agent legal-actions flow.
+. LIFE-ASYNC-05: 60-hour overdue / unlimited deadline, transactional outbox, Social recovery.
+. LIFE-ASYNC-06: Atrium resume + Tavi notification + browser-off OpenClaw acceptance.
+
+Do not remove `/session` or require login for standalone `PLAY.html`. Never replace existing game saves in place, never delete active matches due to elapsed TTL, and do not claim any deployment until verified.
+
+== v0.5.81 implementation delta
+
+* Added five *inert* game-owned LoopRD models under schema version 3: `GameMatch`, `GameParticipant`, `GameAction`, `GameCheckpoint`, `GameNotificationOutbox`.
+* Legacy `Room` storage, `/session` handler and 48-hour legacy room TTL are unchanged; new matches must not use the legacy TTL.
+* The new models are not yet proof of restart-safe lifecycle, verified identity, composite uniqueness constraints, transactional CAS, Social event dispatch or server-evaluated `/play`. Those remain hard P0 blockers for deployment.
+* Migration to a running SQLite/PostgreSQL LoopRD environment requires a backup, dialect/index validation, and a real restart test; none were performed by this source package.

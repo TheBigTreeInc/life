@@ -129,7 +129,7 @@
       "title": "Multi-episode personal stories",
       "summary": "Add three seasonal three-stage NPC arcs, host and partner trust outcomes, time gates, player-specific chapter state, City Pulse synergy and permanent community improvements.",
       "operator_checks": [
-        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2–3 require more weeks and trust.",
+        "Complete an NPC introduction, reach 18 trust and start Chapter 1; chapters 2\u20133 require more weeks and trust.",
         "Finish the community pantry project and verify food prices drop permanently for every player."
       ]
     },
@@ -404,7 +404,7 @@
     {
       "id": "LL-064",
       "title": "Fresh-food refrigerator/freezer storage",
-      "summary": "Black’s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
+      "summary": "Black\u2019s Market $55/$100/$190 bundles; 6 or 12 storage, automatic eating/spoilage.",
       "operator_checks": [
         "Buy 4 portions, test spoilage; acquire fridge/freezer and test capacity."
       ]
@@ -802,7 +802,7 @@
     {
       "id": "LL-117",
       "title": "Classic proportional partial work shifts",
-      "summary": "Allow 1–5 remaining-hour shifts, proportional wages based on six-hour/8h-paid standard, proportional energy/happiness and rent garnishment; no Modern time rule changes.",
+      "summary": "Allow 1\u20135 remaining-hour shifts, proportional wages based on six-hour/8h-paid standard, proportional energy/happiness and rent garnishment; no Modern time rule changes.",
       "operator_checks": [
         "Hire at Monolith Burgers and arrive with 3h left: work exactly 3h, receive half the full-shift gross pay; verify 0h remain.",
         "With one hour left, verify a small paid shift is available; at zero hours no work is permitted."
@@ -985,7 +985,7 @@
       "summary": "All 37 Classic jobs have a verified venue ID and contemporary board business label; preserve original DOS employer identities and qualifications.",
       "operator_checks": [
         "Inspect Classic job at all nine employers: each resolves to one of the 13 board tiles; no unknown workplaces.",
-        "For Z-Mart/Black’s Market, confirm distinct discount and grocery departments at Fresh & Frugal."
+        "For Z-Mart/Black\u2019s Market, confirm distinct discount and grocery departments at Fresh & Frugal."
       ]
     },
     {
@@ -1010,7 +1010,7 @@
     {
       "id": "LL-143",
       "title": "Split Classic shared market into distinct shopping departments",
-      "summary": "Centered Fresh & Frugal interface labels Black’s Market groceries/lottery vs Z-Mart Discount clothing/merchandise separately; preserve 13 shared city destinations.",
+      "summary": "Centered Fresh & Frugal interface labels Black\u2019s Market groceries/lottery vs Z-Mart Discount clothing/merchandise separately; preserve 13 shared city destinations.",
       "operator_checks": [
         "Visit Fresh & Frugal in Classic: confirm separate shop headings and employer references; in Modern confirm ordinary groceries/discount clothing remain."
       ]
@@ -1101,7 +1101,7 @@
     {
       "id": "LL-156",
       "title": "Wild Willy theft and home protection",
-      "summary": "Wallet robberies at Bank and Black’s Market; random low-cost-housing burglary; protected secure apartments.",
+      "summary": "Wallet robberies at Bank and Black\u2019s Market; random low-cost-housing burglary; protected secure apartments.",
       "operator_checks": [
         "Run node tools/verify.mjs and tests/classic-map-risk.test.cjs from this source release.",
         "Review Classic board location names and behavior; confirm Modern Story map stays unchanged."
@@ -1207,7 +1207,7 @@
     {
       "id": "LL-172",
       "title": "DOS employment company binding",
-      "summary": "37 original jobNum records with workplace placeNum + original wage and degree references; Black’s Market distinct from Z-Mart.",
+      "summary": "37 original jobNum records with workplace placeNum + original wage and degree references; Black\u2019s Market distinct from Z-Mart.",
       "operator_checks": [
         "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
       ]
@@ -1226,6 +1226,14 @@
       "summary": "New structural, travel, save and AI tests; reproducible ZipRunner and local checks.",
       "operator_checks": [
         "Check Classic route UI and reference tests; no deployed Looprd check is claimed."
+      ]
+    },
+    {
+      "id": "LL-334",
+      "title": "Jones priority fallback when a source branch is out of time",
+      "summary": "Classic rival planner skips unavailable higher-priority trips and continues to feasible survival/career actions while preserving branch labels and RNG purity.",
+      "operator_checks": [
+        "Verify source priority tests, fresh package build, Classic gameplay and Modern isolation."
       ]
     }
   ]

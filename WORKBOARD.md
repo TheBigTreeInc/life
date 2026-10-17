@@ -1,6 +1,14 @@
-## v0.5.74 — Top-of-screen mobile End Week (LL-332)
+## v0.5.81 — LIFE-ASYNC-02 SQL model foundation
 
-Release `the-life-loop-0.5.74-ziprunner.zip`: remove the building-search dropdown (keep tap-to-focus), place a minimum-44px mobile End Week control in the top city toolbar in Classic and Modern, retain Work beside Done, synchronize enabled/disabled state and forward click to the same validated End Week handler. Operator: verify narrow portrait widths, Dutch toggle, hotseat and a remote guest, Classic compulsory home return and overtime.
+Game-owned additive SQL models defined for matches, participants, actions, checkpoints, and notification outbox. This is a schema-only foundation pending DAPI migration/index verification and Social identity contract. No new public `/play` route.
+
+## v0.5.81 — Geometry editor foundation
+
+Release `the-life-loop-0.5.81-ziprunner.zip`: standalone editable board geometry manifest, validated during build, plus developer-only coordinate overlay (`?debugGeometry`). Visual only, no game cost changes.
+
+## v0.5.78 — Curved board-geometry manifest (LL-333)
+
+Release `the-life-loop-0.5.81-ziprunner.zip`: add metadata-driven visual road curves for the Classic ring road, plus per-venue entrance paths and normalized road start/stop coordinates. Operator: verify curved road rendering, doorway approach alignment, pawn motion on the visible road and no travel-cost or save regressions.
 
 ## v0.5.72 — Mobile player-experience pass (LL-331)
 
@@ -778,3 +786,5 @@ Open: live deployed Social and game-room authorization remain separate. Original
 - **Economic audit:** read-only exact per-index source comparator and `economicIndex.sc` inclusive event draws; live compatibility economy deliberately unchanged.
 - **Outstanding:** original purchase-price provenance, pawn counter six-slot / resale lifecycle, exact economic series/seeded source event integration, DOS game length and 4-player UI.
 - **Acceptance:** run TEST-RETAIL-PAWN.bat, node tools/verify.mjs, clean ZIP extraction; operator verifies Classic and Modern item transactions in browser. No Git push or Looprd API change.
+
+0.5.77 source AI evidence: 28-tick per-leg rival overhead from DOS WhereShouldIGo.sc; tests/classic-jones-motion-076.test.cjs; no live travel adjustment.

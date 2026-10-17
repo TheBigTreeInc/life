@@ -1499,40 +1499,41 @@ class LifeGame {
       if(time+minimumActionHours>p.hours)return null;
       return {ruleId:id,decisionTag:id,reason,placeNum:location.placeNum,requiredActionHours:minimumActionHours,
         destination:dest,actionCode:action,travelSteps:leg.steps,
-        predictedTimeTicks:leg.steps+(p.location===dest?0:40),
+        predictedTimeTicks:leg.steps+(p.location===dest?0:ClassicJones.source.motionOverheadTicks),
         travelHours:time,sourceScript:'WhereShouldIGo.sc',sourceType:'representative-branch'};
     };
+    let selected;
     if(!job){
-      if(p.location!=='agency')return candidate(1,'Unemployed: travel to ACNE (#6) for employment','agency','visit-employment');
+      if(p.location!=='agency'){selected=candidate(1,'Unemployed: travel to ACNE (#6) for employment','agency','visit-employment');if(selected)return selected;}
       // Finish the source's first-priority employment visit BEFORE the food
       // branch sends an unemployed rival back out of the office. Otherwise
       // layoffs can create an infinite agency <-> food-market trip loop.
       const opening=this.classicRecoveryOpening(p);
       if(opening&&p.hours>=this.rules.applicationHours)
-        return candidate(1,`Unemployed ${p.classicUnemployedWeeks||0} weeks: apply for ${opening.name} at ACNE`,'agency',`apply:${opening.id}`,this.rules.applicationHours);
+        {selected=candidate(1,`Unemployed ${p.classicUnemployedWeeks||0} weeks: apply for ${opening.name} at ACNE`,'agency',`apply:${opening.id}`,this.rules.applicationHours);if(selected)return selected;}
     }
     if(rentDue&&p.cash>=p.classicRent+(foodMissing?foodCost:0))
-      return candidate(7,'Monthly rent is affordable', 'housing','classicPayRent');
+      {selected=candidate(7,'Monthly rent is affordable', 'housing','classicPayRent');if(selected)return selected;}
     if(rentDue&&p.cash<p.classicRent&&p.bank>=100)
-      return candidate(9,'Withdraw accessible savings for rent','bank','withdraw:100');
+      {selected=candidate(9,'Withdraw accessible savings for rent','bank','withdraw:100');if(selected)return selected;}
     if(foodMissing&&p.cash<foodCost&&p.bank>=100)
-      return candidate(22,'Withdraw savings before going hungry','bank','withdraw:100');
+      {selected=candidate(22,'Withdraw savings before going hungry','bank','withdraw:100');if(selected)return selected;}
     if(clothes&&p.cash>=this.price(clothes.cost,'retail'))
-      return candidate(14,'Replace missing uniform before work',clothes.venue,`clothes:${clothes.id}:${clothes.venue}`);
+      {selected=candidate(14,'Replace missing uniform before work',clothes.venue,`clothes:${clothes.id}:${clothes.venue}`);if(selected)return selected;}
     if(foodMissing&&p.cash>=foodCost)
-      return candidate(27,'DOS food branch #27: purchase essential weekly food', food.venue,food.action);
+      {selected=candidate(27,'DOS food branch #27: purchase essential weekly food', food.venue,food.action);if(selected)return selected;}
     if(foodMissing&&p.cash<foodCost&&job&&this.isDressedFor(p,job)&&p.energy>=4)
-      return candidate(21,'Work to fund food before optional errands',this.jobWorkplace(job).place,'work');
+      {selected=candidate(21,'Work to fund food before optional errands',this.jobWorkplace(job).place,'work');if(selected)return selected;}
     if(rentDue&&p.cash<p.classicRent&&job&&this.isDressedFor(p,job)&&p.energy>=4)
-      return candidate(8,'Work toward overdue rent',this.jobWorkplace(job).place,'work');
+      {selected=candidate(8,'Work toward overdue rent',this.jobWorkplace(job).place,'work');if(selected)return selected;}
     if(collateral&&foodMissing&&p.cash<foodCost&&!p.bank&&(!job||!this.isDressedFor(p,job)||p.energy<4))
-      return candidate(23,'Pawn a durable asset to prevent hunger','pawn',`classicPawn:${collateral}`);
+      {selected=candidate(23,'Pawn a durable asset to prevent hunger','pawn',`classicPawn:${collateral}`);if(selected)return selected;}
     if(rentDue&&p.cash<p.classicRent&&p.classicExtensionAttemptWeek!==this.week&&!p.classicEverDebt)
-      return candidate(10,'Request one rent extension','housing','classicRentExtension');
+      {selected=candidate(10,'Request one rent extension','housing','classicRentExtension');if(selected)return selected;}
     if(collateral&&rentDue&&p.cash<p.classicRent&&p.bank<100)
-      return candidate(11,'Pawn a durable asset for rent shortfall','pawn',`classicPawn:${collateral}`);
+      {selected=candidate(11,'Pawn a durable asset for rent shortfall','pawn',`classicPawn:${collateral}`);if(selected)return selected;}
     if(job&&!this.isDressedFor(p,job)&&p.bank>=100)
-      return candidate(12,'Withdraw funds for job clothing','bank','withdraw:100');
+      {selected=candidate(12,'Withdraw funds for job clothing','bank','withdraw:100');if(selected)return selected;}
     // A uniform about to expire is a source-family #20 necessity, not a
     // discretionary purchase. Preserve it before enrolling in further courses.
     if(job&&this.isDressedFor(p,job)){
@@ -1541,7 +1542,7 @@ class LifeGame {
       const renewal=this.cheapestClothingOffer(job);
       if(usableWeeks<=2&&renewal&&this.clothingWeeks(p,renewal.id)<=2&&
         p.cash>=this.price(renewal.cost,'retail')+foodCost+(rentDue?p.classicRent:0))
-        return candidate(20,'DOS clothing #20: renew expiring work uniform',renewal.venue,`clothes:${renewal.id}:${renewal.venue}`,1);
+        {selected=candidate(20,'DOS clothing #20: renew expiring work uniform',renewal.venue,`clothes:${renewal.id}:${renewal.venue}`,1);if(selected)return selected;}
     }
     const career=this.classicCareerDecision(p);
     return career?candidate(career.id,career.reason,career.dest,career.action,career.hours):null;
@@ -1754,7 +1755,7 @@ class LifeGame {
   }
 
   snapshot(){return JSON.parse(JSON.stringify({classicTurnJournal:this.classicTurnJournal,classicEconomicIndices:this.classicEconomicIndices,classicEconomicPulse:this.classicEconomicPulse,classicGoodsIndex:this.classicGoodsIndex,classicWeekEvents:this.classicWeekEvents,classicDecisionTrace:this.classicDecisionTrace,classicPawnLots:this.classicPawnLots,classicPawnSequence:this.classicPawnSequence,settings:this.settings,seed:this.seed,week:this.week,economy:this.economy,active:this.active,winner:this.winner,sequence:this.sequence,messages:this.messages,players:this.players,pendingEncounter:this.pendingEncounter,bulletin:this.bulletin,cityEventId:this.cityEventId,cityEventStart:this.cityEventStart,cityProjects:this.cityProjects,classicStockPrices:this.classicStockPrices}));}
-  static load(obj){
+  static load(obj,{advanceAI=true}={}){
     if(!obj||typeof obj!=='object'||!Array.isArray(obj.players)||!obj.players.length||!obj.settings||!Number.isInteger(obj.week)||obj.week<1||obj.week>10000)throw Error('Invalid save file.');
     const game=new LifeGame({mode:obj.settings.mode,goals:obj.settings.goals,ruleset:obj.settings.ruleset,era:obj.settings.era,jonesDifficulty:obj.settings.jonesDifficulty,rules:obj.settings.rules,seed:obj.seed});
     if(obj.players.length!==game.players.length)throw Error('Save format has an unexpected number of players.');
@@ -1923,7 +1924,7 @@ class LifeGame {
     game.winner=typeof obj.winner==='string'?obj.winner:null;
     game.sequence=Number(obj.sequence)||0;game.messages=Array.isArray(obj.messages)?obj.messages.slice(0,70):[];
     if(game.pendingEncounter&&game.player.id!==game.pendingEncounter.playerId)throw Error('Encounter player mismatch.');
-    if(game.player.isAI&&!game.winner)game.endTurn();
+    if(advanceAI&&game.player.isAI&&!game.winner)game.endTurn();
     return game;
   }
 }

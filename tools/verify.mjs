@@ -82,7 +82,7 @@ if(!load('docs/decisions/ADR-0005-classic-banking-and-fresh-food.md').includes('
 if(!manifest.remaining.some(t=>t.id==='LL-039')||!manifest.remaining.some(t=>t.id==='LL-040'))errors.push('Parity implementation backlog missing');
 const routeData=JSON.parse(load('assets/boards/classic/routes.v1.json'));
 const generatedRoute=load('src/classic-routes.js');
-if(!generatedRoute.includes('root.LifeClassicRoutes='+JSON.stringify(routeData)))errors.push('Embedded route graph is stale relative to route JSON');
+if(!generatedRoute.includes('root.LifeClassicRoutes='+JSON.stringify({...routeData,geometrySchema:JSON.parse(load('assets/boards/classic/geometry.v1.json')).schema,visualCurves:JSON.parse(load('assets/boards/classic/geometry.v1.json')).visualCurves,venues:Object.fromEntries(Object.entries(routeData.venues).map(([id,v])=>[id,{...v,geometry:JSON.parse(load('assets/boards/classic/geometry.v1.json')).venues[id]}]))})))errors.push('Embedded route graph/geometry is stale relative to route and geometry JSON');
 if(!load('index.html').includes('id="routeOverlay"')||!load('src/app.js').includes('routeOverlay.animate')||!load('src/route-graph.js').includes('const api={validate,compile}')||!load('src/route-overlay.js').includes('class RouteOverlay'))errors.push('Route graph or pawn integration missing');
 if(!load('PLAY.html').includes('class RouteOverlay')||!load('PLAY.html').includes('the-life-loop.board-route.v1'))errors.push('Offline route implementation not embedded');
 if(!['LL-165','LL-166','LL-167','LL-168'].every(id=>allImplemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-169'))errors.push('Route improvement workboard tasks missing');
@@ -157,7 +157,7 @@ if(!load('docs/decisions/ADR-0009-offline-reusable-character-profiles.md').inclu
 if(!['LL-083','LL-084','LL-085'].every(id=>allImplemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-086'))errors.push('Character creator workboard tasks missing');
 if(!load('docs/decisions/ADR-0010-shared-multiplayer-cosmetics-ephemeral-chat-and-viewport.md').includes('**Status:** Accepted'))errors.push('Multiplayer cosmetics/chat architecture decision missing');
 if(!['LL-087','LL-088','LL-089','LL-090','LL-091'].every(id=>allImplemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-092'))errors.push('v0.5.7 workboard tasks missing');
-if(!load('looprd.yaml').includes('schemaVersion: 2')||!load('looprd.yaml').includes('chatKey:'))errors.push('Looprd v2 private chat key missing');
+if(!(/schemaVersion: (?:2|3)/.test(load('looprd.yaml')))||!load('looprd.yaml').includes('chatKey:'))errors.push('Looprd v2 private chat key missing');
 if(!load('server/looprd_handler.py').includes("if op == 'chat':")||!load('src/network.js').includes('async sendChat(')||!load('index.html').includes('id="chatPanel"'))errors.push('Ephemeral WSS chat implementation missing');
 if(!load('src/app.js').includes('quick-start-form')||!load('src/app.js').includes('characters.all().find(p=>p.id===f.get('))errors.push('Guest profile sharing or quick start missing');
 const artManifest=JSON.parse(load('assets/art/styles/contemporary-default/manifest.json'));

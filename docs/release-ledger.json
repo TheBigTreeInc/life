@@ -78,6 +78,55 @@
       "kind": "player-visible-version-and-mobile-polish",
       "supersedes": "0.5.73",
       "notes": "About panel displays authoritative loaded bundle version, mode, release notes and copyable diagnostics on phones and desktop; no game-state changes."
+    },
+    {
+      "version": "0.5.75",
+      "artifact": "the-life-loop-0.5.75-ziprunner.zip",
+      "kind": "source-timing-pacing-baseline",
+      "supersedes": "0.5.74",
+      "notes": "Deterministic 156-route session pacing baseline, 3 itineraries and DOSBox observation template; no unverified player clock or AI delay changes."
+    },
+    {
+      "version": "0.5.76",
+      "artifact": "the-life-loop-0.5.76-ziprunner.zip",
+      "kind": "DOS-Jones-source-AI-trace",
+      "supersedes": "0.5.75",
+      "notes": "Correct source-Jones AI rival travel estimate to route steps + 28 ticks (2*14), maintain live player-clock charges, trace purity, save compatibility and Modern isolation."
+    },
+    {
+      "version": "0.5.77",
+      "artifact": "the-life-loop-0.5.77-ziprunner.zip",
+      "kind": "DOS-Jones-feasible-priority-fallback",
+      "supersedes": "0.5.76",
+      "notes": "Unreachable higher-priority rival decisions no longer block lower-priority feasible actions; no RNG or save changes."
+    },
+    {
+      "version": "0.5.78",
+      "artifact": "the-life-loop-0.5.78-ziprunner.zip",
+      "kind": "classic-board-geometry-curves",
+      "supersedes": "0.5.77",
+      "notes": "Metadata-driven Classic board visual curves and per-venue doorway approach geometry; authoritative travel graph, time costs and save format unchanged."
+    },
+    {
+      "version": "0.5.79",
+      "artifact": "the-life-loop-0.5.79-ziprunner.zip",
+      "kind": "classic-board-geometry-editor-foundation",
+      "supersedes": "0.5.78",
+      "notes": "Standalone validated road curves and venue approach manifest; developer-only ?debugGeometry overlay; time cost and saves unchanged."
+    },
+    {
+      "version": "0.5.80",
+      "artifact": "the-life-loop-0.5.80-ziprunner.zip",
+      "kind": "asynchronous-game-replay-foundation",
+      "supersedes": "0.5.79",
+      "notes": "Opt-in side-effect-free LifeGame.load, canonical JSON and SHA-256 checkpoint adapter, proposed cross-component critical differences adoc. No /play server deployed."
+    },
+    {
+      "version": "0.5.81",
+      "artifact": "the-life-loop-0.5.81-ziprunner.zip",
+      "kind": "async-match-sql-model-foundation",
+      "supersedes": "0.5.80",
+      "notes": "Additive schemaVersion 3 game-owned match, participant, action, checkpoint and notification-outbox models; no /play endpoint, Social trust or live execution yet."
     }
   ]
 }
