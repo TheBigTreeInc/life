@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.64",
-  "summary": "0.5.64: Source-backed DOS player start (happiness 0, relaxation 25, cash $200, empty pantry), distinct fast-food identity, week states 8/10/12/14/16 storage-before-consumption, and unpenalized 60h Classic week; legacy saves/Modern preserved. Original emulator runtime and AI endurance remain open.",
+  "version": "0.5.69",
+  "summary": "v0.5.69: Fix six ZipRunner merge failures from 0.5.68 source/test contracts. Preserve DOS source food ordering, historical saves and runtime privacy. Add regression tests for translated keys, goal thresholds and typed consumable replay. New release identity.",
   "implemented": [
     {
       "id": "LL-177",
@@ -1119,6 +1119,57 @@
       "operator_checks": [
         "Run TEST-DOS-FOOD.bat, node tools/verify.mjs and a clean extracted source rebuild.",
         "Verify new Classic food turns, save/load migration, 30 seeded Jones campaign benchmark and Looprd unchanged contract in PLAY.html."
+      ]
+    },
+    {
+      "id": "LL-324",
+      "title": "New-version ZipRunner language integration and artifact reproducibility",
+      "summary": "Ship the functional EN/NL toolbar fix in a unique 0.5.65 full-source release; synchronize all version markers; include source-only compatibility tests and verify no stale release identifiers in metadata.",
+      "operator_checks": [
+        "Import the-life-loop-0.5.65-ziprunner.zip through ZipRunner and check 0.5.65 detected/current version.",
+        "Run node tools/verify.mjs against the merged project (including locally retained tests).",
+        "Check languageSelect EN/NL and New Game gameLanguage remain synchronized and persist after reload.",
+        "Check Classic starts with zero happiness and 25 relaxation; existing saves and Looprd API are untouched."
+      ]
+    },
+    {
+      "id": "LL-325",
+      "title": "Versioned shared I18n locale controller",
+      "summary": "Unify the toolbar and New Game locale through a real, testable I18n.set API, preserving EN/NL persistence and client-only gameplay isolation.",
+      "operator_checks": [
+        "Run TEST-LANGUAGE-066.bat and node tools/verify.mjs; in ZipRunner run the locally retained language-campaign.test.cjs; switch both selectors, reload, and confirm the chosen locale and no gameplay reset."
+      ]
+    },
+    {
+      "id": "LL-326",
+      "title": "ZipRunner retained campaign selector integration",
+      "summary": "Provide a functional campaignPreset in Quick Start for Classic Original, Custom Classic and Modern Story; synchronize with existing radio rules and house rules, preserving unrelated preferences and saves.",
+      "operator_checks": [
+        "Run TEST-CAMPAIGNS-067.bat and node tools/verify.mjs on merged Windows project.",
+        "Create Classic, Custom Classic and Modern Story campaigns; verify rule toggles and goals are preserved; exercise existing save loading.",
+        "Check retained local language-campaign.test.cjs without removing or overwriting it."
+      ]
+    },
+    {
+      "id": "LL-327",
+      "title": "ZipRunner goal-preset adapter and merged-tree contract",
+      "summary": "Implement GoalPresets.goals(key) as a real single-source adapter for Quick/Standard/Extended goals, wire New Game selector, include standalone and offline module, and guard retained local ZipRunner contracts with packaged regressions.",
+      "operator_checks": [
+        "Run TEST-MERGED-CONTRACT-068.bat and node tools/verify.mjs in ZipRunner merged Windows project.",
+        "Confirm Quick/Standard/Extended/Custom switches update the four goal sliders and custom values are preserved.",
+        "Run retained local language-campaign.test.cjs; do not remove or replace it.",
+        "Confirm a new complete game loads using both online browser entrypoint and offline PLAY.html."
+      ]
+    },
+    {
+      "id": "LL-328",
+      "title": "Merged-tree localization and campaign/food compatibility",
+      "summary": "Correct retained local test assumptions, stable I18n semantic key API and campaign goal defaults; verify typed DOS food save/replay and document local-only limitations.",
+      "operator_checks": [
+        "Run node tools/verify.mjs from a fresh ZIP extract and from merged Windows ZipRunner project.",
+        "Confirm the retained tests language-campaign.test.cjs and classic-food-inventory.test.cjs pass, or attach their complete source when they still conflict.",
+        "Exercise EN/NL both language selectors; confirm quick/standard/extended choices update all goals and previous saves load unchanged.",
+        "Check new Classic meal storage and one-week takeout expiration; compare against DOS and keep all player config/private files."
       ]
     }
   ],

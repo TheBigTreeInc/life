@@ -1,6 +1,6 @@
 # Classic Original — Mechanical Parity Worklog
 
-**Versioned baseline:** 0.5.64. **Scope:** Original DOS 1.000.060, current Classic mode, with separate Custom Classic/Modern content. A pass is complete only when source changes, tests and operator verification agree; this is *not* a promise of binary parity.
+**Versioned baseline:** 0.5.69. **Scope:** Original DOS 1.000.060, current Classic mode, with separate Custom Classic/Modern content. A pass is complete only when source changes, tests and operator verification agree; this is *not* a promise of binary parity.
 
 | Proposed version | Priority | System | Acceptance / expected evidence | Status |
 |---|---|---|---|---|
@@ -11,7 +11,7 @@
 | 0.5.62 | P1 | Ordered Jones AI and goal-aware strategy | Executable predicates #28/#29/#30/#32/#37/#44/#46, original food branch #27, two-raise cap, seeded replay; rest of 1–49 remains an open source/RNG audit | **Implemented candidate; complete branch order still blocked (LL-308/190)** |
 | 0.5.63 | P1/P2 | Source-market regression, pawn quote and read-only economy/event audit | DOS market/pawn prices, original pawn mood impacts, new lot validation and legacy load; source-only index RNG comparator | **Partial candidate; original paid-price data, live economic migration and four-human rounds remain open** |
 | 0.5.64 | P0 | Original new-game defaults, food identities and state order | room1.sc starts 0 happiness/25 relaxation/$200/empty food; fastFood.sc IDs, storage before food consumption, 60-hour no-hunger-penalty Classic clock; Modern/legacy saves preserved | **Implemented candidate, DOSBox and browser acceptance pending** |
-| 0.5.65–0.5.68 | P0/P1 | DOS runtime clock calibration, complete rival/weekend/economic replay and four-player Classic rounds | DOSBox event/clock traces, real match-length bench, item provenance and Jones AI edge-case survival | Planned |
+| 0.5.65–0.5.69 | P0/P1 | DOS runtime clock calibration, complete rival/weekend/economic replay and four-player Classic rounds | DOSBox event/clock traces, real match-length bench, item provenance and Jones AI edge-case survival | Planned |
 
 ## Persistent evidence gaps
 
@@ -26,3 +26,16 @@
 2. Add deterministic narrow tests, restore old saves and network snapshots, verify Modern isolation and custom house-rule toggles.
 3. Run `node tools/verify.mjs`, regenerate and open `PLAY.html`, and rebuild GitHub Pages from source. Add a bounded, unique workboard item and verification steps.
 4. Provide a flat-root full source ZIP to ZipRunner, preserving local .git/settings/runtime. Operator approves or returns the exact task; **never auto push/deploy**.
+
+## v0.5.65 ZipRunner source-overlay compatibility release
+
+The 0.5.64 same-version repair was superseded by the uniquely versioned 0.5.65 compatibility release; this is not another DOS mechanics pass. The Windows ZipRunner merged-project test suite retained an unshipped `tests/language-campaign.test.cjs` which expected a static `#languageSelect` control. The shipped game only exposed `#gameLanguage` in dynamically created New Game settings. Add an accessible main-toolbar `#languageSelect`, persist/sync EN/NL with the modal through the existing locale helper, and test both index.html and PLAY.html. The original DOS opening conditions, consumed-food rules and saved-game migration remain unchanged. This work does not assert that all local-only tests pass; retest against the real merged project after overlay.
+
+
+## 0.5.65 release discipline
+
+Each corrective source ZIP must increment the numeric version, including package, handoff, Looprd, parity, art and workboard. Release v0.5.65 carries forward the EN/NL toolbar repair previously mislabelled as 0.5.64; this does not close the outstanding travel-time or DOSBox validation gaps.
+
+## v0.5.69 source overlay language repair
+
+The local retained `language-campaign.test.cjs` now expects `I18n.set(...)`. This version adds a shared controller instead of writing only to locale storage. Core DOS time/AI/economy comparisons remain scheduled. No claim of testing the unshipped local test or DOSBox runtime.

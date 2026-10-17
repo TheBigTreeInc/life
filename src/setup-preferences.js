@@ -5,7 +5,7 @@
  'use strict';
  const RulePresets=typeof require==='function'?require('./rule-presets.js'):window.LifeRulePresets;
  const KEY='the-life-loop-setup-preferences-v1';
- const DEFAULTS=Object.freeze({mode:'solo',ruleset:'classic',era:'current',jonesDifficulty:'fair',rules:RulePresets.normalize('classic'),goals:Object.freeze({wealth:50,happiness:50,education:50,career:50})});
+ const DEFAULTS=Object.freeze({mode:'solo',ruleset:'classic',era:'current',jonesDifficulty:'fair',rules:RulePresets.normalize('classic'),goals:Object.freeze({wealth:65,happiness:65,education:65,career:65})});
  const allowedModes=['solo','hotseat','online','sandbox'];
  const allowedRules=['classic','modern'];
  const allowedEras=['historical','current','scifi'];

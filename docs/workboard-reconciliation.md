@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.64
+# Workboard lifecycle reconciliation — v0.5.69
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 280 done (historical claims included); 16 blocked; 12 in progress; 9 to do.
+**Counts:** 285 done (historical claims included); 16 blocked; 12 in progress; 9 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -189,6 +189,11 @@
 - **LL-321:** Original DOS Classic new-game initial statistics
 - **LL-322:** Versioned DOS food items, storage ordering and clock isolation
 - **LL-323:** v0.5.64 source release, parity evidence and replay regression
+- **LL-324:** New-version ZipRunner language integration and artifact reproducibility
+- **LL-325:** Versioned shared I18n locale controller
+- **LL-326:** ZipRunner retained campaign selector integration
+- **LL-327:** ZipRunner goal-preset adapter and merged-tree contract
+- **LL-328:** Merged-tree localization and campaign/food compatibility
 
 ## Importer handoff
 

@@ -1,3 +1,24 @@
+## v0.5.69 — ZipRunner local-language contract repair
+
+Artifact: `the-life-loop-0.5.69-ziprunner.zip` — full-source ZipRunner release, includes playable `PLAY.html`.
+
+- Shared `I18n.set(...)` API in `src/i18n.js`; both toolbar and New Game selectors persist and synchronize EN/NL.
+- Local `language-campaign.test.cjs` was retained by ZipRunner, absent from the source archive, and previously failed on `/I18n\.set\(/`. This version integrates that call and adds a direct regression rather than suppressing the test.
+- Tests, versioned handoff, package/Looprd/art/workboard metadata and release ledger updated to 0.5.69.
+- No gameplay engine or save/Looprd API changes. Import v0.5.69 instead of retrying v0.5.65. Windows merged-project testing remains an operator check.
+
+## v0.5.65 — ZipRunner versioned language compatibility repair
+
+Artifact: `the-life-loop-0.5.65-ziprunner.zip` — full-source ZipRunner release with standalone `PLAY.html`.
+
+- **Release ID:** v0.5.65 supersedes the previously distributed same-version v0.5.64 repair archive; all new patches and corrective distributions MUST advance the version.
+- **Language:** preserves a functional, persistent `languageSelect` toolbar EN/NL control synchronized with the New Game selector.
+- **Build/packaging:** the package builder includes its language compatibility tests; all release, parity, Looprd and asset version markers now agree.
+- **Scope:** compatibility/packaging hotfix. Classic DOS mechanics, Modern Story, saves and Looprd API are unchanged.
+- **Operator:** import the new 0.5.65 ZIP into ZipRunner (not the old 0.5.64 or repair files), and run tests on the actual merged local project. Original runtime DOS travel validation remains planned separately.
+
+---
+
 ## v0.5.64 — Original starting stats and distinct DOS food identity
 
 Artifact: `the-life-loop-0.5.64-ziprunner.zip` — complete ZipRunner source and offline `PLAY.html`.

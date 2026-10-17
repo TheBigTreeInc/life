@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.64
-filename: the-life-loop-0.5.64-ziprunner.zip
+version: 0.5.69
+filename: the-life-loop-0.5.69-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -137,3 +137,7 @@ notes_classic_062: Original source-backed Jones predicates 28/29/30/32/37/44/46,
 notes_classic_063: New DOS pawnShop.sc price math (40% adjusted purchase price offer, 50% purchase-price redemption; item reference price proxy), -1 happiness per pawn and additional fridge food loss, old pawn lots unaffected. Original economicIndex.sc index/headline RNG available as pure non-mutating audit only; live economic model, original pawn pricePaid, resale/deadline semantics and four-human support still open. Full source including PLAY.html; node tools/verify.mjs; TEST-RETAIL-PAWN.bat. No server API changes or automatic git push.
 
 notes_v064: Classic new games use original room1.sc starting zero happiness, 25 relaxation, $200 and no food; takeout indices 2/3/4/5 from fastFood.sc; Black’s Market fresh food index1; original startTrn.sc state ordering storage-before-food consumption; 60 units remain independent of hunger. Existing Classic saves without classicFoodV2 keep prior food path, Modern unchanged. Run TEST-DOS-FOOD.bat, node tools/verify.mjs and a live PLAY.html operator smoke test. DOSBox runtime and original multiweek AI endurance still open; no Git push/deploy performed.
+
+notes_v064_repair: Corrected ZipRunner overlay compatibility with retained local language-campaign.test.cjs. index.html now exposes functional #languageSelect; src/app.js synchronizes it with existing New Game #gameLanguage and saved locale. tests/language-compat-064.test.cjs guards both HTML and offline PLAY.html. v0.5.64 DOS gameplay unchanged. Clean overlay should preserve user local configuration and unshipped tests.
+
+notes_v066: Actual I18n.set API added and wired to toolbar and New Game selectors for ZipRunner retained language-campaign.test.cjs compatibility; static labeled game UI can translate without resetting the game. v0.5.65 failed on missing I18n.set call; no DOS gameplay/Looprd API changes. Offline/Pages builds and test coverage included; unique 0.5.69 release, no push.

@@ -103,6 +103,43 @@ if(play.includes('<script src=')||play.includes('<link rel="stylesheet"'))errors
 if(!load('index.html').includes('src/art.js'))errors.push('Art dependency not declared');
 const pages=load('.github/workflows/pages.yml');
 if(!pages.includes('actions/deploy-pages@v4') || !pages.includes('actions/upload-pages-artifact@v4') || !pages.includes('node tools/verify.mjs'))errors.push('Pages deploy is missing the tested build and deployment actions');
+if(atLeast('0.5.65')) {
+  const ledger=JSON.parse(load('docs/release-ledger.json'));
+  const records=ledger.releases;
+  const compare=(a,b)=>a.split('.').map(Number).reduce((n,v)=>n*1000+v,0)-b.split('.').map(Number).reduce((n,v)=>n*1000+v,0);
+  if(ledger.schema!=='the-life-loop.release-ledger.v1'||ledger.project!==pkg.name||!Array.isArray(records)||records.length<2||
+    records.at(-1)?.version!==pkg.version||records.at(-1)?.artifact!==releaseName||
+    records.some((r,i)=>i>0&&compare(r.version,records[i-1].version)<=0)||
+    records.some((r,i)=>i>0&&r.supersedes!==records[i-1].version)) errors.push('Release ledger/version monotonicity failed: every correction must use a NEW version');
+  if(!load('index.html').includes('id="languageSelect"')||!load('PLAY.html').includes('id="languageSelect"')||
+     !load('src/app.js').includes("$('languageSelect').addEventListener('change'")||
+     !load('tools/package-ziprunner.py').includes("glob('*.test.cjs')")||
+     !['LL-324'].every(id=>manifest.implemented.some(x=>x.id===id)))errors.push('v0.5.65 toolbar repair, manifest task or complete test packaging missing');
+}
+if(atLeast('0.5.66')){
+ if(!load('index.html').includes('src/i18n.js')||!load('PLAY.html').includes('root.LifeI18n=api')||
+    !load('src/app.js').includes('I18n.set(')||
+    !load('src/i18n.js').includes('function set(language,storage)')||
+    !load('TEST-LANGUAGE-066.bat').includes('language-campaign-066.test.cjs')||
+    !manifest.implemented.some(t=>t.id==='LL-325'))errors.push('v0.5.66 shared I18n.set locale contract missing');
+}
+if(atLeast('0.5.68')){
+ if(!load('index.html').includes('src/goal-presets.js')||
+    !load('src/app.js').includes('GoalPresets.goals(key)')||
+    !load('PLAY.html').includes('root.LifeGoalPresets=api')||
+    !load('src/goal-presets.js').includes('function goals(key)')||
+    !load('TEST-MERGED-CONTRACT-068.bat').includes('goal-presets-068.test.cjs')||
+    !manifest.implemented.some(t=>t.id==='LL-327'))
+   errors.push('v0.5.68 GoalPresets.goals contract, browser bundle or regression gate missing');
+}
+if(atLeast('0.5.69')){
+ if(!load('src/i18n.js').includes('translations=Object.freeze')||
+    !load('src/goal-presets.js').includes('quick:50')||
+    !load('tests/campaign-preset-067.test.cjs').includes('local tests may coexist')||
+    !load('tests/ziprunner-merge-069.test.cjs').includes('typed DOS takeout survives save/reload')||
+    !load('docs/v0.5.69-merged-tree-contract-failures.md').includes('six failures')||
+    !manifest.implemented.some(t=>t.id==='LL-328'))errors.push('v0.5.69 merged-tree six-failure compatibility contract missing');
+}
 if(!load('package.json').includes('build:pages'))errors.push('No GitHub Pages build script configured');
 if(!allImplemented.some(t=>t.id==='LL-067')||!allImplemented.some(t=>t.id==='LL-070'))errors.push('Online co-op workboard tasks missing');
 if(!load('looprd.yaml').includes('looprd/v1')||!load('looprd.yaml').includes('the-life-loop')||!load('looprd.yaml').includes('websocket:'))errors.push('Looprd component missing or invalid');

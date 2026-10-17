@@ -8,6 +8,8 @@ const Characters=window.LifeCharacters;
 const ENABLE_CHARACTER_CUSTOMIZATION=false;
 const SetupPrefs=window.LifeSetupPreferences;
 const UX57=window.LifePass057;
+const GoalPresets=window.LifeGoalPresets;
+const I18n=window.LifeI18n;
 const RulePresets=window.LifeRulePresets;
 const SharedPortrait=window.LifeSharedPortraitUI;
 const preferencesStorage=(()=>{try{return window.localStorage;}catch{return null;}})();
@@ -517,6 +519,7 @@ function newGameDialog(isInitial=false){
  <div id="characterPickPreview" class="quick-preview">${profilePreview(selectedProfile)}</div></section>`:''}
  <div class="new-form quick-identity"><label><span class="field-label">YOUR NAME</span><input class="form-input" name="name" maxlength="24" value="${esc(selectedProfile?.name||sharedName)}" required /></label>
  <label><span class="field-label">PLAY MODE</span><select class="form-select" id="gameMode" name="mode">${modeItems.map(([key,label])=>`<option value="${key}" ${selected(pref.mode,key)}>${label}</option>`).join('')}</select></label>
+ <label class="campaign-select-field"><span class="field-label">CAMPAIGN · RULES &amp; EVENTS</span><select class="form-select" id="campaignPreset" name="campaignPreset"><option value="classic" ${selected(pref.ruleset==='classic'&&!RulePresets.customized(pref.ruleset,pref.rules)?'classic':'','classic')}>Classic Original · DOS-inspired</option><option value="custom" ${selected(pref.ruleset==='classic'&&RulePresets.customized(pref.ruleset,pref.rules)?'custom':'','custom')}>Custom Classic · house rules</option><option value="modern" ${selected(pref.ruleset,'modern')}>Modern Story · events and shops</option></select><small>Classic is the DOS-parity base; Custom Classic changes its house rules, not its shop catalogue.</small></label>
  <label id="friendField" style="display:${['hotseat','online'].includes(pref.mode)?'block':'none'};grid-column:1/-1"><span class="field-label">PLAYER 2 NAME</span><input class="form-input" name="friend" maxlength="24" value="Player 2" />${ENABLE_CHARACTER_CUSTOMIZATION?`<span class="field-label">PLAYER 2 LOCAL CHARACTER (OPTIONAL)</span><select class="form-select" id="friendCharacterPick" name="friendCharacterId">${profileOptions('')}</select>`:''}</label>
  <label id="onlineServerField" style="display:${pref.mode==='online'?'block':'none'};grid-column:1/-1"><span class="field-label">LOOPRD SERVER FQDN</span><input class="form-input" name="onlineServer" id="onlineServer" autocomplete="url" value="${esc(window.LifeOnline.suggestedServer())}" placeholder="api.server.country" ${pref.mode==='online'?'required':''}/><small>/looprd/the-life-loop/v1 is automatic. You get a room code after starting.</small></label></div>
  <details class="setup-advanced" id="setupAdvanced"><summary><span>⚙ Game settings <small>Rules · era · goals</small></span><strong id="setupPrefsSummary">${esc(SetupPrefs.summary(pref))}</strong></summary><div class="setup-advanced-body">
@@ -537,7 +540,7 @@ function newGameDialog(isInitial=false){
  <div class="classic-rival-settings" id="classicRivalSettings" style="display:${pref.ruleset==='classic'&&pref.mode!=='sandbox'?'block':'none'}"><label class="character-field"><span class="field-label">JONES DIFFICULTY · COMPUTER OPPONENT</span><select class="form-select" id="jonesDifficulty" name="jonesDifficulty"><option value="easy" ${selected(pref.jonesDifficulty,'easy')}>Take It Easy · Jones +40 goal points</option><option value="fair" ${selected(pref.jonesDifficulty,'fair')}>Play Fair · Equal goal points</option><option value="hard" ${selected(pref.jonesDifficulty,'hard')}>Go For Broke · Jones −40 goal points</option></select></label><small>Jones receives a separately distributed set of goals. More goal points means harder goals for Jones. Exact Sierra allocation is not yet verified.</small></div>
  <div class="new-settings-block" id="paceLanguageSettings"><div class="section-heading"><span id="pacingTitle">${UX57.t(uiLanguage,'Estimated match length')}</span><span id="paceHint" class="muted micro">${UX57.t(uiLanguage,'Longer matches use higher victory goals, not slower turns.')}</span></div>
  <div class="new-form"><label><span class="field-label" id="languageCaption">${UX57.t(uiLanguage,'Language').toUpperCase()}</span><select class="form-select" id="gameLanguage" name="gameLanguage"><option value="en" ${selected(uiLanguage,'en')}>English</option><option value="nl" ${selected(uiLanguage,'nl')}>Nederlands</option></select></label>
- <label><span class="field-label" id="paceCaption">${UX57.t(uiLanguage,'Match length').toUpperCase()}</span><select class="form-select" id="goalPreset" name="goalPreset"><option value="quick" ${selected(UX57.detectPreset(pref.goals),'quick')}>${UX57.t(uiLanguage,'Quick')} · 120</option><option value="standard" ${selected(UX57.detectPreset(pref.goals),'standard')}>${UX57.t(uiLanguage,'Standard')} · 200</option><option value="extended" ${selected(UX57.detectPreset(pref.goals),'extended')}>${UX57.t(uiLanguage,'Extended')} · 300</option><option value="custom" ${selected(UX57.detectPreset(pref.goals),'custom')}>${UX57.t(uiLanguage,'Custom')}</option></select></label></div></div>
+ <label><span class="field-label" id="paceCaption">${UX57.t(uiLanguage,'Match length').toUpperCase()}</span><select class="form-select" id="goalPreset" name="goalPreset"><option value="quick" ${selected(GoalPresets.detect(pref.goals),'quick')}>${UX57.t(uiLanguage,'Quick')} · 200</option><option value="standard" ${selected(GoalPresets.detect(pref.goals),'standard')}>${UX57.t(uiLanguage,'Standard')} · 260</option><option value="extended" ${selected(GoalPresets.detect(pref.goals),'extended')}>${UX57.t(uiLanguage,'Extended')} · 320</option><option value="custom" ${selected(GoalPresets.detect(pref.goals),'custom')}>${UX57.t(uiLanguage,'Custom')}</option></select></label></div></div>
  <div class="goal-settings"><div class="section-heading"><span id="goalsCaption">${UX57.t(uiLanguage,'Your life goals').toUpperCase()}</span><span class="muted micro">TOTAL <strong id="goalBudget">${D.GOAL_KEYS.reduce((n,k)=>n+pref.goals[k],0)}</strong> POINTS</span></div>${D.GOAL_KEYS.map(key=>`<label class="modal-goal"><span data-goal-caption="${key}">${({wealth:'💰',happiness:'☀️',education:'🎓',career:'🚀'}[key]||'')+' '+UX57.t(uiLanguage,({wealth:'Wealth',happiness:'Happiness',education:'Education',career:'Career'})[key])}</span><input type="range" class="range" name="${key}" min="10" max="100" step="5" value="${pref.goals[key]}" aria-label="${key} goal"/><strong data-range-value="${key}">${pref.goals[key]}%</strong></label>`).join('')}</div>
  <div class="setup-preference-footer"><span>Remembered automatically on this browser for future new games.</span><button type="button" id="resetGameSettings">↺ Reset defaults</button></div>
  </div></details></div><div class="quick-start-actions">${saved?`<button class="modal-primary" type="button" id="resumeBtn">▶ Continue game · Week ${Number(saved.week||1)}</button>`:''}<button class="${saved?'modal-secondary':'modal-primary'}" id="startNewGameBtn" type="submit">${saved?'＋ Start another game':'▶ Start new game'} ↗</button></div></form>
@@ -545,17 +548,33 @@ function newGameDialog(isInitial=false){
  const form=$('startForm');
  form.dataset.lastRuleset=pref.ruleset;
  const currentPrefs=()=>SetupPrefs.sanitize({mode:form.elements.mode.value,ruleset:form.querySelector('input[name="ruleset"]:checked')?.value,era:form.querySelector('input[name="era"]:checked')?.value,jonesDifficulty:form.elements.jonesDifficulty.value,rules:Object.fromEntries(RulePresets.KEYS.map(key=>[key,form.elements[key].checked])),goals:Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(form.elements[k].value)]))});
- const updatePreferences=()=>{const value=SetupPrefs.write(preferencesStorage,currentPrefs());$('setupPrefsSummary').textContent=SetupPrefs.summary(value);$('rulePresetLabel').textContent=RulePresets.customized(value.ruleset,value.rules)?'CUSTOM':'DEFAULT';$('goalBudget').textContent=D.GOAL_KEYS.reduce((n,k)=>n+value.goals[k],0);};
+ // Campaign is a user-facing selection of the existing ruleset and house-rule
+ // presets, NOT an extra ruleset persisted in a game save. Keep both controls
+ // synchronized so retained ZipRunner campaigns and the advanced radio inputs
+ // always describe the same game.
+ const syncCampaignPreset=()=>{
+   const selectedRules=form.querySelector('input[name="ruleset"]:checked')?.value||'classic';
+   const flags=Object.fromEntries(RulePresets.KEYS.map(key=>[key,form.elements[key].checked]));
+   const custom=RulePresets.customized(selectedRules,flags);
+   const selector=$('campaignPreset');
+   selector.value=selectedRules==='modern'?'modern':custom||selector.dataset.customRequested==='true'?'custom':'classic';
+   if(selectedRules==='modern')delete selector.dataset.customRequested;
+ };
+
+ const updatePreferences=()=>{const value=SetupPrefs.write(preferencesStorage,currentPrefs());$('setupPrefsSummary').textContent=SetupPrefs.summary(value);$('rulePresetLabel').textContent=RulePresets.customized(value.ruleset,value.rules)?'CUSTOM':'DEFAULT';$('goalBudget').textContent=D.GOAL_KEYS.reduce((n,k)=>n+value.goals[k],0);syncCampaignPreset();};
  // Goal presets only update existing goal sliders, leaving gameplay clock and house rules unchanged.
  $('goalPreset').addEventListener('change',()=>{
    if($('goalPreset').value==='custom')return;
-   const values=UX57.presetGoals($('goalPreset').value);
+   const key=$('goalPreset').value;
+   const values=GoalPresets.goals(key);
    for(const key of D.GOAL_KEYS){form.elements[key].value=values[key];form.querySelector(`[data-range-value="${key}"]`).textContent=values[key]+'%';}
    updatePreferences();
  });
- const updatePresetFromSliders=()=>{$('goalPreset').value=UX57.detectPreset(Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(form.elements[k].value)])));};
+ const updatePresetFromSliders=()=>{$('goalPreset').value=GoalPresets.detect(Object.fromEntries(D.GOAL_KEYS.map(k=>[k,Number(form.elements[k].value)])));};
  const applySetupLanguage=()=>{
-   const language=UX57.saveLocale(preferencesStorage,$('gameLanguage').value);
+   const language=I18n.set($('gameLanguage').value);
+   $('languageSelect').value=language;
+   document.documentElement.lang=language;
    $('languageCaption').textContent=UX57.t(language,'Language').toUpperCase();
    $('paceCaption').textContent=UX57.t(language,'Match length').toUpperCase();
    $('pacingTitle').textContent=UX57.t(language,'Estimated match length');
@@ -565,7 +584,7 @@ function newGameDialog(isInitial=false){
      const goal=form.querySelector(`[data-goal-caption="${id}"]`);
      if(goal)goal.textContent=({wealth:'💰 ',happiness:'☀️ ',education:'🎓 ',career:'🚀 '})[id]+UX57.t(language,caption);
    }
-   for(const [id,caption,points] of [['quick','Quick','120'],['standard','Standard','200'],['extended','Extended','300'],['custom','Custom','']]){
+   for(const [id,caption,points] of [['quick','Quick','200'],['standard','Standard','260'],['extended','Extended','320'],['custom','Custom','']]){
      const option=$('goalPreset').querySelector(`option[value="${id}"]`);
      option.textContent=UX57.t(language,caption)+(points?' · '+points:'');
    }
@@ -578,14 +597,39 @@ function newGameDialog(isInitial=false){
   $('houseRuleMode').textContent=base==='classic'?'Classic':'Modern';
   $('weeklyActionRule').hidden=base!=='classic';
   const mode=$('gameMode').value;$('friendField').style.display=['hotseat','online'].includes(mode)?'block':'none';$('onlineServerField').style.display=mode==='online'?'block':'none';$('onlineServer').required=mode==='online';$('classicRivalSettings').style.display=form.querySelector('input[name="ruleset"]:checked')?.value==='classic'&&mode!=='sandbox'?'block':'none';};
+ // A campaign switch intentionally resets house rules to that mode's base,
+ // while preserving the player's independently selected goals, opponent level,
+ // era, and multiplayer mode. Custom Classic opens the rule editor and keeps
+ // Classic mechanics unless the operator explicitly changes a toggle.
+ $('campaignPreset').addEventListener('change',()=>{
+   const selector=$('campaignPreset');
+   const choice=selector.value;
+   const base=choice==='modern'?'modern':'classic';
+   form.querySelector(`input[name="ruleset"][value="${base}"]`).checked=true;
+   const defaults=RulePresets.normalize(base);
+   for(const key of RulePresets.KEYS)form.elements[key].checked=defaults[key];
+   form.dataset.lastRuleset=base;
+   if(choice==='classic'){
+     // Source-backed Classic Original starts with Sierra's default four 50-point goals.
+     const goals=GoalPresets.goals('quick');
+     for(const key of D.GOAL_KEYS){
+       form.elements[key].value=goals[key];
+       form.querySelector(`[data-range-value="${key}"]`).textContent=goals[key]+'%';
+     }
+     $('goalPreset').value='quick';
+   }
+   if(choice==='custom'){selector.dataset.customRequested='true';$('setupAdvanced').open=true;}
+   else delete selector.dataset.customRequested;
+   updateMode();updatePreferences();
+ });
  if(ENABLE_CHARACTER_CUSTOMIZATION)$('manageCharactersBtn').addEventListener('click',()=>showCharacterLibrary('new'));
  if(ENABLE_CHARACTER_CUSTOMIZATION)$('characterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);$('characterPickPreview').innerHTML=profilePreview(p);if(p)form.elements.name.value=p.name;});
  if(ENABLE_CHARACTER_CUSTOMIZATION)$('friendCharacterPick').addEventListener('change',e=>{const p=characters.all().find(x=>x.id===e.target.value);if(p)form.elements.friend.value=p.name;});
- $('restoreRulePreset').addEventListener('click',()=>{const rules=RulePresets.normalize(form.querySelector('input[name="ruleset"]:checked')?.value);form.elements.forcedReturnHome.checked=rules.forcedReturnHome;form.elements.carryReturnOvertime.checked=rules.carryReturnOvertime;for(const key of RulePresets.KEYS.filter(k=>!['forcedReturnHome','carryReturnOvertime'].includes(k)))form.elements[key].checked=rules[key];updateMode();updatePreferences();});
+ $('restoreRulePreset').addEventListener('click',()=>{const rules=RulePresets.normalize(form.querySelector('input[name="ruleset"]:checked')?.value);delete $('campaignPreset').dataset.customRequested;form.elements.forcedReturnHome.checked=rules.forcedReturnHome;form.elements.carryReturnOvertime.checked=rules.carryReturnOvertime;for(const key of RulePresets.KEYS.filter(k=>!['forcedReturnHome','carryReturnOvertime'].includes(k)))form.elements[key].checked=rules[key];updateMode();updatePreferences();});
  $('gameMode').addEventListener('change',updateMode);
- form.addEventListener('input',e=>{if(e.target.type==='range'){const el=form.querySelector(`[data-range-value="${e.target.name}"]`);if(el)el.textContent=e.target.value+'%';}if(e.target.matches('[name="mode"],[name="ruleset"],[name="era"],[name="jonesDifficulty"],[name="forcedReturnHome"],[name="carryReturnOvertime"],[name="foodSpoilage"],[name="overdueRentPenalty"],[name="marketFluctuations"],[name="weeklyActionLimit"],input[type="range"]')){updateMode();updatePreferences();}});
- form.addEventListener('change',e=>{if(e.target.matches('[name="mode"],[name="ruleset"],[name="era"],[name="jonesDifficulty"],[name="forcedReturnHome"],[name="carryReturnOvertime"],[name="foodSpoilage"],[name="overdueRentPenalty"],[name="marketFluctuations"],[name="weeklyActionLimit"],input[type="range"]')){updateMode();updatePreferences();}});
- $('resetGameSettings').addEventListener('click',()=>{const defaults=SetupPrefs.reset(preferencesStorage);$('goalPreset').value='standard';form.elements.mode.value=defaults.mode;form.elements.jonesDifficulty.value=defaults.jonesDifficulty;form.elements.forcedReturnHome.checked=defaults.rules.forcedReturnHome;form.elements.carryReturnOvertime.checked=defaults.rules.carryReturnOvertime;for(const key of RulePresets.KEYS.filter(k=>!['forcedReturnHome','carryReturnOvertime'].includes(k)))form.elements[key].checked=defaults.rules[key];form.dataset.lastRuleset=defaults.ruleset;form.querySelector(`input[name="ruleset"][value="${defaults.ruleset}"]`).checked=true;form.querySelector(`input[name="era"][value="${defaults.era}"]`).checked=true;for(const k of D.GOAL_KEYS){form.elements[k].value=defaults.goals[k];form.querySelector(`[data-range-value="${k}"]`).textContent=defaults.goals[k]+'%';}updateMode();updatePreferences();});
+ form.addEventListener('input',e=>{if(e.target.name==='ruleset')delete $('campaignPreset').dataset.customRequested;if(e.target.type==='range'){const el=form.querySelector(`[data-range-value="${e.target.name}"]`);if(el)el.textContent=e.target.value+'%';}if(e.target.matches('[name="mode"],[name="ruleset"],[name="era"],[name="jonesDifficulty"],[name="forcedReturnHome"],[name="carryReturnOvertime"],[name="foodSpoilage"],[name="overdueRentPenalty"],[name="marketFluctuations"],[name="weeklyActionLimit"],input[type="range"]')){updateMode();updatePreferences();}});
+ form.addEventListener('change',e=>{if(e.target.name==='ruleset')delete $('campaignPreset').dataset.customRequested;if(e.target.matches('[name="mode"],[name="ruleset"],[name="era"],[name="jonesDifficulty"],[name="forcedReturnHome"],[name="carryReturnOvertime"],[name="foodSpoilage"],[name="overdueRentPenalty"],[name="marketFluctuations"],[name="weeklyActionLimit"],input[type="range"]')){updateMode();updatePreferences();}});
+ $('resetGameSettings').addEventListener('click',()=>{const defaults=SetupPrefs.reset(preferencesStorage);delete $('campaignPreset').dataset.customRequested;$('goalPreset').value=GoalPresets.detect(defaults.goals);form.elements.mode.value=defaults.mode;form.elements.jonesDifficulty.value=defaults.jonesDifficulty;form.elements.forcedReturnHome.checked=defaults.rules.forcedReturnHome;form.elements.carryReturnOvertime.checked=defaults.rules.carryReturnOvertime;for(const key of RulePresets.KEYS.filter(k=>!['forcedReturnHome','carryReturnOvertime'].includes(k)))form.elements[key].checked=defaults.rules[key];form.dataset.lastRuleset=defaults.ruleset;form.querySelector(`input[name="ruleset"][value="${defaults.ruleset}"]`).checked=true;form.querySelector(`input[name="era"][value="${defaults.era}"]`).checked=true;for(const k of D.GOAL_KEYS){form.elements[k].value=defaults.goals[k];form.querySelector(`[data-range-value="${k}"]`).textContent=defaults.goals[k]+'%';}updateMode();updatePreferences();});
  form.addEventListener('submit',async e=>{e.preventDefault();
   if(saved&&!window.confirm('Start a new game? The current autosave will be replaced. You can export it first using Menu → Save game.'))return;
   if(!form.reportValidity())return;
@@ -759,6 +803,17 @@ $('sharedProfileBtn').addEventListener('click',()=>{
 });
 $('financeBtn').addEventListener('click',showFinances);
 $('careerBtn').addEventListener('click',showCareers);
+// Retained main-toolbar language selector: older local campaigns expect this ID.
+// Keep it in sync with the existing New Game selector and v0.5.57 locale key.
+$('languageSelect').value=UX57.savedLocale(preferencesStorage);
+I18n.set($('languageSelect').value);
+$('languageSelect').addEventListener('change',e=>{
+ const language=I18n.set(e.target.value);
+ e.target.value=language;
+ document.documentElement.lang=language;
+ const setupLanguage=$('gameLanguage');
+ if(setupLanguage){setupLanguage.value=language;setupLanguage.dispatchEvent(new Event('change',{bubbles:true}));}
+});
 $('newBtn').addEventListener('click',()=>{setUtilityMenu(false);newGameDialog();});
 $('utilityMenuBtn').addEventListener('click',()=>setUtilityMenu($('utilityMenu').hidden));
 $('saveBtn').addEventListener('click',()=>setUtilityMenu(false));

@@ -1,3 +1,18 @@
+## v0.5.69 — ZipRunner merged-tree locale compatibility
+
+**Artifact:** `the-life-loop-0.5.69-ziprunner.zip` · LL-325 source adapter, offline build, tests and unique workboard release.
+
+**Operator:** Reapply with ZipRunner. Check local `language-campaign.test.cjs`, `TEST-LANGUAGE-066.bat`, toolbar EN/NL toggle and New Game settings, restart and verify persisted language. Preserve local config, .git, and runtime state.
+
+## v0.5.65 — ZipRunner source overlay compatibility + versioning (LL-324)
+
+**Artifact:** `the-life-loop-0.5.65-ziprunner.zip` (complete source, not an in-place reuse of v0.5.64).
+
+- **LL-324:** Ship the original language integration fix with a new version, consistent release/Looprd/art/parity metadata, bundled language tests and a new-version release contract. The old 0.5.64 ZIP and repair ZIP are superseded.
+- **No DOS gameplay or save schema changes.** Next separate gameplay parity pass: v0.5.69, travel-clock calibration and DOS benchmark.
+
+---
+
 ## v0.5.64 — DOS opening state and consumable identity (LL-321…LL-323)
 
 **Artifact:** `the-life-loop-0.5.64-ziprunner.zip` · **Status:** source-verified implementation candidate, pending operator DOSBox/browser acceptance.

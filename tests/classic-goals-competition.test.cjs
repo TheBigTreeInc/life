@@ -49,7 +49,7 @@ test('Game snapshots reject forged rival goal points',()=>{
 });
 test('Quick Start includes Jones difficulty and employer-first filtering while allowing future jobs',()=>{
  const app=fs.readFileSync('src/app.js','utf8'),setup=prefs.read(null);
- assert.equal(setup.jonesDifficulty,'fair');assert.equal(Object.values(setup.goals).reduce((a,b)=>a+b,0),200);
+ assert.equal(setup.jonesDifficulty,'fair');assert.equal(Object.values(setup.goals).reduce((a,b)=>a+b,0),260);
  for(const token of ['id="jonesDifficulty"','id="classicEmployerFilter"','Choose an employer','id="careerShowAll"','jonesDifficulty:String(f.get(\'jonesDifficulty\')','game.goalPoints(p)'])assert.ok(app.includes(token),token);
  const classic=new Game({...base,mode:'sandbox'});classic.player.location='agency';
  const all=classic.actions().filter(a=>a.id.startsWith('apply:'));

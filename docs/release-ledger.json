@@ -1,0 +1,48 @@
+{
+  "schema": "the-life-loop.release-ledger.v1",
+  "project": "the-life-loop",
+  "policy": "Each changed release artifact must advance the numeric version; never issue a different ZIP under a prior release number.",
+  "releases": [
+    {
+      "version": "0.5.64",
+      "artifact": "the-life-loop-0.5.64-ziprunner.zip",
+      "kind": "DOS-core",
+      "notes": "Original DOS opening stats and food-item model. Subsequent same-version repair was invalid release practice."
+    },
+    {
+      "version": "0.5.65",
+      "artifact": "the-life-loop-0.5.65-ziprunner.zip",
+      "kind": "versioned-compatibility-hotfix",
+      "supersedes": "0.5.64",
+      "notes": "EN/NL toolbar repair, new version metadata, reproducible packaging and regression tests. No DOS game mechanics changes."
+    },
+    {
+      "version": "0.5.66",
+      "artifact": "the-life-loop-0.5.66-ziprunner.zip",
+      "kind": "versioned-compatibility-hotfix",
+      "supersedes": "0.5.65",
+      "notes": "Shared I18n.set API for retained ZipRunner language campaign test. Both dropdowns update locale and marked UI. No DOS rules changes."
+    },
+    {
+      "version": "0.5.67",
+      "artifact": "the-life-loop-0.5.67-ziprunner.zip",
+      "kind": "versioned-compatibility-hotfix",
+      "supersedes": "0.5.66",
+      "notes": "Retained ZipRunner campaignPreset contract integrated with Classic Original, Custom Classic and Modern Story via existing rulesets and house rules. No DOS parity mechanics changed."
+    },
+    {
+      "version": "0.5.68",
+      "artifact": "the-life-loop-0.5.68-ziprunner.zip",
+      "kind": "versioned-ZipRunner-merged-tree-contract-repair",
+      "supersedes": "0.5.67",
+      "notes": "Provide a working GoalPresets.goals(key) API matching retained local test, using the same single source-of-truth goals as UX57. New module packaged in both browser and offline builds. No game-engine or DOS rules changes."
+    },
+    {
+      "version": "0.5.69",
+      "artifact": "the-life-loop-0.5.69-ziprunner.zip",
+      "kind": "merged-tree-compatibility",
+      "supersedes": "0.5.68",
+      "notes": "Remove local-test exclusion assertion, restore key-based public EN/NL localization, separate campaign goals from v057 legacy pacing, and add food serialization/expiration regression. Keep save formats and DOS food ordering unchanged."
+    }
+  ]
+}

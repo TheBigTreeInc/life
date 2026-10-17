@@ -14,6 +14,13 @@
   Object.freeze({index:5,name:'Fries',basePrice:65,happiness:0})]);
  const KEYS=['2','3','4','5'];
  const start=()=>({'2':0,'3':0,'4':0,'5':0});
+ // Interoperable legacy takeaway shape (indices 3,4,5), intentionally a view;
+ // index #2 (Astro Chicken) remains a separate long-lived DOS consumable.
+ function legacyCategories(items){
+  const state=items==null?start():validate(items);
+  return Object.freeze({'3':state['3'],'4':state['4'],'5':state['5']});
+ }
+
  function validate(s){
   if(!s||typeof s!=='object'||Array.isArray(s)||Object.keys(s).length!==4||
     !KEYS.every(k=>Object.hasOwn(s,k)&&Number.isSafeInteger(s[k])&&s[k]>=0&&s[k]<=10))throw Error('Invalid Classic DOS consumables');
@@ -48,5 +55,5 @@
    hungerIncrease:shortage?1:0,shortagePenalty:shortage?-2:0,
    cashStressKind:alreadyFed?null:chosen===0?'shortage':chosen===-1?'spoiled':null});
  }
- return Object.freeze({schema:'classic-consumables.v1',MEALS,start,validate,week});
+ return Object.freeze({schema:'classic-consumables.v1',MEALS,start,validate,legacyCategories,week});
 });

@@ -10,6 +10,7 @@ const ClassicTurn=root.LifeClassicTurnSequence||(typeof require==='function'?req
 if(!ClassicTurn)throw Error('Classic turn sequence unavailable');
 const ClassicWeekly=root.LifeClassicWeeklyEvents||(typeof require==='function'?require('./classic-weekly-events.js'):null);
 const ClassicFood=root.LifeClassicConsumables||(typeof require==='function'?require('./classic-consumables-064.js'):null);
+const LegacyFood=root.LifeClassicFood||(typeof require==='function'?require('./classic-food.js'):null);
 if(!ClassicFood)throw Error('DOS consumable identity model unavailable');
 const Life57=root.LifePass057||(typeof require==='function'?require('./life-pass-057.js'):null);
 if(!Life57)throw Error('Food transition adapter unavailable');
@@ -109,7 +110,7 @@ class LifeGame {
     const initialCash=this.isClassic?200:250,initialBank=this.isClassic?0:100;
     return {id,name,isAI,color,location:'home',hours:this.rules.hours,returnTravelDebt:0,cash:initialCash,bank:initialBank,invested:0,debt:0,rentDebt:0,
       happiness:this.isClassic?0:62,energy:84,classicRelaxation:this.isClassic?25:16,hunger:0,education:0,credits:0,experience:this.isClassic?10:0,dependability:this.rules.dependabilityStart,job:null,wage:0,workSessions:0,classicDegrees:[],classicProgress:{},classicEnrolled:[],classicEnrollmentCredits:0,classicDismissals:0,classicRaises:0,classicUnemployedWeeks:0,classicJobSearchFailures:0,classicRejectedOpenings:{},classicWorkHourCredit:0,classicWageRemainder:0,classicWorkWarningWeek:0,classicChoicesThisWeek:0,classicLastClosedWeek:0,classicLastRentChargeWeek:0,classicPaycheckHistory:[],classicRent:325,classicRentDueWeek:4,classicExtensions:0,classicExtensionAttemptWeek:0,classicEverDebt:false,classicPortfolio:Object.fromEntries(D.classicStocks.map(x=>[x.id,0])),classicLegacyInvestment:0,classicBrokerOpen:false,classicLoanDefaults:0,classicLoanPaidThrough:0,classicFoodPurchasedWeek:0,classicWeekendTicket:null,classicHardshipWeeks:0,classicReliefWeek:0,classicReliefCount:0,
-      classicEquipment:{},classicBurglaryCount:0,home:'studio',groceries:this.isClassic?0:1,classicFoodV2:this.isClassic?ClassicFood.start():null,classicFoodMealBonusWeek:0,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:initialCash,bank:initialBank,invested:0,debt:0,netWorth:initialCash+initialBank}],milestones:[]};
+      classicEquipment:{},classicBurglaryCount:0,home:'studio',groceries:this.isClassic?0:1,classicFoodV2:this.isClassic?ClassicFood.start():null,classicShortFood:this.isClassic?LegacyFood.normalize():null,classicFoodMealBonusWeek:0,fed:false,owned:[],clothing:{casual:6,formal:0,business:0},coursesCompleted:[],courseProgress:{},weekActions:0,raiseWeek:0,oddJobWeek:0,lottery:0,weekendPass:false,won:false,contacts:0,talkedWeek:{},seenEncounters:[],relationships:{},memories:{},favorsUsed:{},cityParticipation:{},storyProgress:{},ledger:[],history:[{week:1,cash:initialCash,bank:initialBank,invested:0,debt:0,netWorth:initialCash+initialBank}],milestones:[]};
   }
   get rules(){return D.RULESETS[this.settings.ruleset];}
   get isClassic(){return this.settings.ruleset==='classic';}
@@ -1003,6 +1004,18 @@ class LifeGame {
       this.classicEvent(p,'relaxation',`Relaxation ${relaxation.before} -> ${relaxation.after}`,relaxation);
     }
     if(this.isClassic&&p.classicFoodV2){
+      // Import food #3..5 from prior local Classic builds only when explicitly
+      // present; normal DOS campaigns use the canonical classicFoodV2 inventory.
+      const short=LegacyFood.normalize(p.classicShortFood);
+      const totalShort=Object.values(short).reduce((a,b)=>a+b,0);
+      if(totalShort){
+        for(const key of LegacyFood.SHORT_IDS){
+          p.classicFoodV2[key]=Math.min(10,p.classicFoodV2[key]+short[key]);
+        }
+        p.classicShortFood=LegacyFood.normalize();
+        this.classicEvent(p,'food-cleanup','Legacy takeaway moved into DOS source state 12',
+         {sourceState:12,closedWeek});
+      }
       const closing=ClassicFood.week({fresh:p.groceries,takeout:p.classicFoodV2,
        hasFridge:this.ownsWorking(p,'fridge'),hasFreezer:this.ownsWorking(p,'freezer'),
        spoilage:this.settings.rules.foodSpoilage,alreadyFed:p.fed});
@@ -1822,6 +1835,7 @@ class LifeGame {
       p.classicLoanDefaults=clamp(Math.floor(Number(p.classicLoanDefaults)||0),0,10000);
       p.classicLoanPaidThrough=clamp(Math.floor(Number(p.classicLoanPaidThrough)||0),0,10000);
       p.classicFoodPurchasedWeek=clamp(Math.floor(Number(p.classicFoodPurchasedWeek)||0),0,obj.week);
+      p.classicShortFood=game.isClassic?LegacyFood.normalize(p.classicShortFood):null;
       if(p.classicFoodV2!==undefined&&p.classicFoodV2!==null)p.classicFoodV2=ClassicFood.validate(p.classicFoodV2);
       else p.classicFoodV2=null; // Preserve the legacy food model in previous saves.
       if(p.classicFoodMealBonusWeek!==undefined&&(!Number.isSafeInteger(p.classicFoodMealBonusWeek)||p.classicFoodMealBonusWeek<0||p.classicFoodMealBonusWeek>obj.week))throw Error('Invalid DOS food happiness week');

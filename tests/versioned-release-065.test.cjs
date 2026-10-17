@@ -1,0 +1,35 @@
+'use strict';
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const read=f=>fs.readFileSync(path.join(root,f),'utf8');
+const json=f=>JSON.parse(read(f));
+test('v0.5.65 release identity never reuses the earlier broken 0.5.64 ZIP',()=>{
+ const version=json('package.json').version;
+ assert.ok(/^0\.5\.(?:6[5-9]|[7-9]\d|\d{3,})$/.test(version));
+ const ledger=json('docs/release-ledger.json').releases;
+ assert.ok(ledger.some(record=>record.version==='0.5.65'));
+ const legacy=ledger.find(record=>record.version==='0.5.65');
+ assert.equal(legacy?.supersedes,'0.5.64');
+ assert.equal(ledger.at(-1).version,version);
+ assert.equal(ledger.at(-1).supersedes,ledger.at(-2).version);
+ assert.notEqual(ledger.at(-1).artifact,ledger.at(-2).artifact);
+ assert.equal(ledger.at(-1).artifact,`the-life-loop-${version}-ziprunner.zip`);
+ assert.equal(json('.ziprunner-workboard-update.json').version,version);
+ assert.equal(json('docs/parity-contract.json').release,version);
+ assert.equal(json('docs/workboard-classifications.json').release,version);
+ for (const f of ['assets/art/styles/contemporary-default/manifest.json','assets/portraits/default/manifest.json'])assert.equal(json(f).version,version);
+ assert.equal(json('assets/art/styles/classic-modern/manifest.json').release,version);
+ assert.match(read('looprd.yaml'),new RegExp('^release: '+version.replace(/\./g,'\\.')+'$', 'm'));
+ assert.ok(read('ZIPRUNNER_HANDOFF.txt').includes('filename: the-life-loop-'+version+'-ziprunner.zip'));
+ assert.ok(read('index.html').includes('ORIGINAL DEMO · V'+version.toUpperCase()));
+});
+test('future full-source builds include ALL JS tests and the locale fix',()=>{
+ const script=read('tools/package-ziprunner.py');
+ assert.match(script,/glob\('\*\.test\.cjs'\)/);
+ assert.match(read('index.html'),/id="languageSelect"/);
+ assert.match(read('PLAY.html'),/id="languageSelect"/);
+ assert.match(read('src/app.js'),/\$\('languageSelect'\)\.addEventListener\('change'/);
+});
