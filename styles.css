@@ -849,12 +849,10 @@ body[data-ruleset="classic"] .board-tile.travel-unavailable:not(.selected){filte
 .classic-board-toolbar{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:3px 6px 7px;min-width:0;color:#345b46}
 .classic-board-toolbar[hidden]{display:none!important}
 .classic-board-caption{font-weight:900;letter-spacing:.09em;font-size:10px;white-space:nowrap;margin-right:auto}
-.classic-board-jump-label{font-size:10px;font-weight:800;white-space:nowrap}
-#classicBoardJump{max-width:170px;min-width:100px;padding:5px 7px;border:1px solid #a9bba6;border-radius:8px;background:#fffdf7;color:#274d37;font-size:11px;font-weight:750}
 .classic-board-modes{display:flex;gap:3px;background:#dee9dc;border:1px solid #c3d0bf;border-radius:9px;padding:3px;white-space:nowrap}
 .classic-board-modes button{border:0;border-radius:7px;background:transparent;color:#305442;padding:5px 9px;font-size:11px;font-weight:800;cursor:pointer;min-height:29px}
 .classic-board-modes button[aria-pressed="true"]{background:#204c37;color:#fff;box-shadow:0 2px 6px #28443422}
-.classic-board-modes button:focus-visible,#classicBoardJump:focus-visible{outline:3px solid #b0df71;outline-offset:2px}
+ .classic-board-modes button:focus-visible{outline:3px solid #b0df71;outline-offset:2px}
 .board-viewport{position:relative;flex:1;min-width:0;min-height:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:contain}
 .board-stage{position:relative;isolation:isolate;width:100%;height:100%;min-height:0}
 .board-stage>.board-grid{width:100%;height:100%;min-height:0}
@@ -894,8 +892,6 @@ body[data-ruleset="classic"] .route-overlay .route-road{stroke:#905d31;stroke-wi
 @media(max-width:720px){
  .classic-board-toolbar{padding:3px 1px 5px;gap:5px;flex-wrap:wrap}
  .classic-board-caption{font-size:9px;flex:1 1 100%;margin:0}
- .classic-board-jump-label{display:none}
- #classicBoardJump{flex:1 1 95px;min-width:0;max-width:100%;height:34px}
  .classic-board-modes{flex:0 0 auto}
  .classic-board-modes button{padding:4px 7px;font-size:10px;min-height:27px}
  body[data-ruleset="classic"] .board-frame{padding:3px;min-height:0}
@@ -1217,4 +1213,33 @@ body[data-ruleset="classic"] .board-grid>.board-tile[data-camera-focus="true"]{o
  .venue-window-footer #venueFeedback{font-size:10px}
  .venue-done{min-height:40px;min-width:76px}
  .classic-board-selection:not([hidden]){order:3;flex:1 1 100%;text-align:center}
+}
+
+/* v0.5.73 — replace the unused location picker with a reliable phone End Week
+ * action at the top of the board. The desktop button remains the sole handler. */
+.mobile-end-turn{display:none}
+@media(max-width:1024px){
+ .classic-board-toolbar{position:relative;z-index:9;min-height:48px;flex-wrap:nowrap;gap:8px;padding:3px 6px 6px}
+ .classic-board-caption{display:none}
+ .classic-board-modes{min-width:0;flex:1 1 auto;justify-content:flex-start;gap:3px}
+ .classic-board-modes button{min-height:38px;padding:6px 9px;font-size:11px}
+ .mobile-end-turn:not([hidden]){display:inline-flex;flex:0 0 auto;justify-content:center;align-items:center;gap:3px;min-height:44px;min-width:112px;padding:8px 13px;border-radius:11px;border:1px solid #2a6344;background:#1d6044;color:#fff;font-size:13px;font-weight:900;box-shadow:0 2px 8px #15392733;white-space:nowrap;cursor:pointer}
+ .mobile-end-turn:disabled{opacity:.52;box-shadow:none;cursor:not-allowed}
+ .mobile-end-turn:focus-visible{outline:3px solid #f7c964;outline-offset:2px}
+ .status-ticker #endTurnBtn{display:none}
+ body:not([data-ruleset="classic"]) .classic-board-modes,
+ body:not([data-ruleset="classic"]) #classicBoardSelection{display:none!important}
+ body:not([data-ruleset="classic"]) .classic-board-toolbar{justify-content:flex-end}
+}
+@media(max-width:720px){
+ .classic-board-toolbar{flex-wrap:nowrap;padding:3px 2px 6px;gap:5px}
+ .classic-board-modes{flex:1 1 auto;white-space:normal}
+ .classic-board-modes button{font-size:10px;padding:5px 6px;min-height:44px}
+ .mobile-end-turn:not([hidden]){min-width:103px;padding:7px 9px;min-height:44px;font-size:12px}
+}
+@media(max-width:365px){
+ .classic-board-modes button{font-size:9px;padding:4px 5px}
+ #classicBoardLocate{font-size:0}
+ #classicBoardLocate:before{content:'◎';font-size:16px}
+ .mobile-end-turn:not([hidden]){min-width:92px;padding:6px 7px;font-size:11px}
 }

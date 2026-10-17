@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.72",
-  "summary": "v0.5.72: mobile overview on launch and after leaving venues, select building to focus before travel; fixed Work action next to Done; simplify player career and finance copy. Core mechanics, multiplayer authority and save formats unchanged.",
+  "version": "0.5.73",
+  "summary": "v0.5.73: phone End Week is prominently available at top instead of building search; Classic and Modern both supported; Work stays beside Done. One end-turn command path, preserved engine, save and Looprd behavior.",
   "implemented": [
     {
       "id": "LL-177",
@@ -1201,6 +1201,18 @@
         "Tap a building: camera zooms and highlights it without travel spend; tap again to travel; Done returns to overview.",
         "At your workplace, Work is beside Done at the bottom even if actions require scrolling; work eligibility, cost and disabled state match the activity card.",
         "At other buildings Work is absent. Switch EN/NL, play on mobile, and verify older saves and Modern Story remain unaffected."
+      ]
+    },
+    {
+      "id": "LL-332",
+      "title": "Phone top-bar End Week and removal of building picker",
+      "summary": "Replace unused Classic building dropdown with a consistently reachable top-of-city End Week button for both Classic and Modern phones; delegate to the existing authoritative turn handler, match disabled state for travel/open venues/remote ownership, preserve existing Work beside Done and Overview-first board.",
+      "operator_checks": [
+        "On Android/iPhone portrait, open Classic and Modern: End Week appears above board without scrolling, dropdown is absent, Work remains beside Done.",
+        "While visiting a building or while travel is playing, End Week is disabled; after Done it is enabled for the owning player.",
+        "End Week triggers mandatory home travel and overtime exactly once; test a local hotseat turn and Looprd guest ownership.",
+        "Switch Dutch/English; verify button label and disabled states; check narrow 320px viewport, safe areas and existing saves.",
+        "Run node tools/verify.mjs in a clean extraction and in ZipRunner merged source."
       ]
     }
   ],

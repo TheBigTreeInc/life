@@ -64,6 +64,13 @@
       "kind": "mobile-player-experience",
       "supersedes": "0.5.71",
       "notes": "Overview-first mobile Classic map, focused two-tap building navigation, fixed Work beside Done using one authoritative action, polished career and finance presentation without developer diagnostics. No economic, save, or network changes."
+    },
+    {
+      "version": "0.5.73",
+      "artifact": "the-life-loop-0.5.73-ziprunner.zip",
+      "kind": "mobile-turn-controls",
+      "supersedes": "0.5.72",
+      "notes": "Mobile End Week is available at top of board in Classic and Modern; remove building dropdown; use existing authoritative endTurn handler and disabled gating. Work by Done, mandatory return home, offline/Looprd and saves unchanged."
     }
   ]
 }

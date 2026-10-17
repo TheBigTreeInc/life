@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.72
-filename: the-life-loop-0.5.72-ziprunner.zip
+version: 0.5.73
+filename: the-life-loop-0.5.73-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -19,6 +19,7 @@ server_components: server/looprd_handler.py, server/sources.local.yaml
 websocket_route: /looprd/the-life-loop/v1/events
 http_session_route: /looprd/the-life-loop/v1/session
 notes_multiplayer: Needs a running Looprd instance with LOOPRD_ALLOW_PYTHON=true and configured CORS origins; no container or secrets bundled. GitHub Pages remains static. Invite code creates one remote guest, host applies actions and broadcasts snapshots. Host migration and fully server-side validation remain backlog.
+notes_mobile_073: v0.5.73 phone top End Week (Classic and Modern) replaces building picker; guarded proxy to existing ticker action, Work beside Done remains; no gameplay, save or server change.
 notes_mobile: v0.5.72 starts Classic phone board in full Overview, uses first tap to zoom/focus and second to travel, and offers Work next to Done at the workplace. Source-backed game mechanics, save format and Looprd authority unchanged.
 server_field: Enter the base FQDN only (api.server.country); component route /looprd/the-life-loop/v1 is implicit.
 workboard_hotfix: Normalize LL-072 priority from P1 to high (ZipRunner v1 enum) and validate manifest priority values during node tools/verify.mjs. No game logic changes.

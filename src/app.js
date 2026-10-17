@@ -114,7 +114,10 @@ function hideClassicHandover(){
 }
 function classicBoardSync(){
  const classic=game.isClassic;
- $('classicBoardToolbar').hidden=!classic;
+ // On a phone this same top strip also carries the primary End Week action,
+ // including Modern Story where Classic map controls are not applicable.
+ $('classicBoardToolbar').hidden=!classic&&!mobileBreakpoint.matches;
+ $('mobileEndTurnBtn').hidden=!mobileBreakpoint.matches;
  if(!classic)$('classicJourneyStatus').hidden=true;
  const view=compactClassicBoard()?classicBoardView:'fit';
  document.body.dataset.classicBoardView=view;
@@ -124,8 +127,7 @@ function classicBoardSync(){
  for(const tile of $('board').querySelectorAll('[data-travel]'))tile.dataset.cameraFocus=String(view==='explore'&&tile.dataset.travel===classicBoardFocusTarget);
  const hint=$('classicBoardSelection');
  if(hint){hint.hidden=!(compactClassicBoard()&&view==='explore'&&classicBoardFocusTarget);if(!hint.hidden)hint.textContent=`${placeLabel(classicBoardFocusTarget)} · ${I18n.get()==='nl'?'Tik nogmaals om te bezoeken':'Tap again to visit'}`;}
- const jump=$('classicBoardJump');
- if(jump.options.length!==game.places.length+1){jump.innerHTML='<option value="">Find building…</option>'+game.places.map(loc=>`<option value="${esc(loc.id)}">${esc(placeLabel(loc.id))}</option>`).join('');}
+
 }
 function classicBoardFind(id,behavior='smooth'){
  const viewport=$('boardViewport'),tile=$('board').querySelector(`[data-travel="${id}"]`);
@@ -339,6 +341,12 @@ function render(){
  refreshBadges();
  $('endTurnBtn').disabled=routeTravelBusy||venueInteraction.open||!!game.winner||(!!net?.role&&!net.ownTurn())||!!net?.busy||venueInteraction.pending;
  $('endTurnBtn').querySelector('span:first-child').textContent=game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'End week';
+ // Keep phone/desktop turn affordances consistent during travel, remote turns,
+ // open venues, encounters and asynchronous submissions.
+ $('mobileEndTurnBtn').disabled=$('endTurnBtn').disabled;
+ $('mobileEndTurnBtn').querySelector('span:first-child').textContent=I18n.uiText(game.winner?'Game complete':net?.role&&!net.ownTurn()?'Waiting for friend':'End week');
+ $('mobileEndTurnBtn').title=I18n.uiText($('mobileEndTurnBtn').disabled?'Finish the current action before ending the week':'End this week');
+ $('mobileEndTurnBtn').setAttribute('aria-label',$('mobileEndTurnBtn').title);
  if(game.winner&&!didShowWin){closeVenue({restoreFocus:false});didShowWin=true;showWinner();}
  if(game.pendingEncounter&&(!net?.role||net.ownTurn())&&$('overlay').dataset.kind!=='encounter')showEncounter();
  chatRender();
@@ -716,7 +724,12 @@ $('classicTravelSkip').addEventListener('click',()=>routeOverlay?.finishAnimatio
 $('classicBoardFit').addEventListener('click',()=>classicBoardSetView('fit'));
 $('classicBoardExplore').addEventListener('click',()=>classicBoardSetView('explore'));
 $('classicBoardLocate').addEventListener('click',()=>{boardManualPan=false;if(compactClassicBoard()&&classicBoardView==='fit')classicBoardSetView('explore',{focusId:game.player.location});else classicBoardFind(game.player.location);});
-$('classicBoardJump').addEventListener('change',e=>{if(e.target.value){if(compactClassicBoard())classicBoardSetView('explore',{focusId:e.target.value});else classicBoardFind(e.target.value);}e.target.value='';});
+// Phone End Week is a presentation-only proxy. All turn logic (including
+// mandatory home travel, carry-over debt, hotseat and Looprd authorization)
+// continues through the existing desktop endTurnBtn listener.
+$('mobileEndTurnBtn').addEventListener('click',()=>{
+ if(!$('mobileEndTurnBtn').disabled&&!$('endTurnBtn').disabled)$('endTurnBtn').click();
+});
 $('boardViewport').addEventListener('pointerdown',e=>{
  boardPanOrigin=routeTravelBusy?{x:e.clientX,y:e.clientY,pointerId:e.pointerId}:null;
 },{passive:true});
@@ -813,7 +826,7 @@ $('endTurnBtn').addEventListener('click',async()=>{
  }catch(error){toast('Could not end week: '+error.message,true);}
  finally{setClassicJourney('idle','');routeTravelBusy=false;render();}
 });
-$('classicHandoverContinue').addEventListener('click',()=>{hideClassicHandover();$('endTurnBtn').focus();});
+$('classicHandoverContinue').addEventListener('click',()=>{hideClassicHandover();(mobileBreakpoint.matches?$('mobileEndTurnBtn'):$('endTurnBtn')).focus();});
 $('guideBtn').addEventListener('click',()=>{setUtilityMenu(false);guide();});
 $('charactersBtn').hidden=!ENABLE_CHARACTER_CUSTOMIZATION;
 if(ENABLE_CHARACTER_CUSTOMIZATION)$('charactersBtn').addEventListener('click',()=>{setUtilityMenu(false);showCharacterLibrary('new');});
@@ -845,7 +858,7 @@ document.querySelectorAll('[data-close-drawer]').forEach(b=>b.addEventListener('
 document.addEventListener('click',e=>{if(!e.target.closest('.utility-holder')){setUtilityMenu(false);setCoopMenu(false);}});
 $('turnConnection').addEventListener('click',onlineDialog);
 $('mobileNav').addEventListener('click',e=>{const tab=e.target.closest('[data-mobile-tab]');if(tab)setMobileView(tab.dataset.mobileTab);});
-mobileBreakpoint.addEventListener('change',updateLayout);wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);window.matchMedia('(max-width:720px)').addEventListener('change',()=>{boardManualPan=false;classicBoardSync();$('boardViewport').scrollLeft=0;routeOverlay?.invalidate?.();});
+mobileBreakpoint.addEventListener('change',updateLayout);mobileBreakpoint.addEventListener('change',()=>{classicBoardSync();render();});wideScreen.addEventListener('change',updateLayout);drawerScreen.addEventListener('change',updateLayout);window.matchMedia('(max-width:720px)').addEventListener('change',()=>{boardManualPan=false;classicBoardSync();$('boardViewport').scrollLeft=0;routeOverlay?.invalidate?.();});
 setMobileView('city',{scroll:false});
 $('onlineBtn').addEventListener('click',()=>setCoopMenu($('coopMenu').hidden));
 $('coopOpenDetails').addEventListener('click',()=>{setCoopMenu(false);onlineDialog();});

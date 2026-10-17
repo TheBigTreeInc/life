@@ -11,7 +11,7 @@ test('Classic board has its own scrollable stage and route SVG; menu stays outsi
  const html=read('index.html'),before=html.indexOf('id="boardStage"'),road=html.indexOf('id="routeOverlay"'),end=html.indexOf('id="boardViewport"');
  assert.ok(end<before&&before<road);
  assert.ok(html.indexOf('id="venueLayer"')>html.indexOf('</div>',road));
- assert.ok(html.includes('id="classicBoardExplore"')&&html.includes('id="classicBoardFit"')&&html.includes('id="classicBoardJump"'));
+ assert.ok(html.includes('id="classicBoardExplore"')&&html.includes('id="classicBoardFit"'));
  assert.match(read('src/app.js'),/frame:\$\('boardStage'\)/);
 });
 test('Classic geography is a 5x4 route and does not become a 3x5 mobile serpentine',()=>{
