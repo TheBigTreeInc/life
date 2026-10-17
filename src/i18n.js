@@ -10,7 +10,7 @@
   'use strict';
   if(!UX)throw Error('Load life-pass-057 before the shared I18n controller');
   const labels=Object.freeze({
-    'Careers':'Carrières','Finances':'Financiën','Profile':'Profiel',
+    'Careers':'Carrières','Finances':'Financiën','Profile':'Profiel','Work':'Werken',
     'Chat':'Chat','Co-op':'Samen spelen','Menu':'Menu','New game':'Nieuw spel','End week':'Week beëindigen',
     'Save game':'Spel opslaan','Load game':'Spel laden','How to play':'Speluitleg',
     'Your Story':'Jouw verhaal','Life goals':'Levensdoelen',

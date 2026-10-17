@@ -63,9 +63,9 @@ test('University last-unit lessons and partial working shifts retain their exist
 });
 
 test('DOS implicit frame tick is > global475, with carry and 60-unit cap',()=>{
- assert.deepEqual(Clock.dosClockFrames(0,0,20),{elapsed:0,carry:20,advancedUnits:0,quantum:20});
- assert.deepEqual(Clock.dosClockFrames(0,20,1),{elapsed:1,carry:0,advancedUnits:1,quantum:20});
- assert.deepEqual(Clock.dosClockFrames(59,0,100),{elapsed:60,carry:16,advancedUnits:1,quantum:20});
+ assert.deepEqual(Clock.dosClockFrames(0,0,14),{elapsed:0,carry:14,advancedUnits:0,quantum:14});
+ assert.deepEqual(Clock.dosClockFrames(0,14,1),{elapsed:1,carry:0,advancedUnits:1,quantum:14});
+ assert.deepEqual(Clock.dosClockFrames(59,0,100),{elapsed:60,carry:10,advancedUnits:1,quantum:14});
  assert.deepEqual(Clock.dosClockFrames(0,3,60,5),{elapsed:10,carry:3,advancedUnits:10,quantum:5});
  assert.throws(()=>Clock.dosClockFrames(0,0,3,0),/Invalid/);
  assert.throws(()=>Clock.dosClockFrames(0,21,2,20),/Invalid/);

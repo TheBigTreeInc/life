@@ -1,6 +1,10 @@
+## v0.5.72 — Mobile player-experience pass (LL-331)
+
+**Artifact:** `the-life-loop-0.5.72-ziprunner.zip` · Overview-first camera, tap-to-focus, reachable Work, polished career/finance copy. Test on a real phone and verify save/multiplayer behavior.
+
 ## v0.5.69 — ZipRunner merged-tree locale compatibility
 
-**Artifact:** `the-life-loop-0.5.70-ziprunner.zip` · LL-325 source adapter, offline build, tests and unique workboard release.
+**Artifact:** `the-life-loop-0.5.72-ziprunner.zip` · LL-330 DOS source motion-quantum, 156-route comparison, offline build and unique workboard release.
 
 **Operator:** Reapply with ZipRunner. Check local `language-campaign.test.cjs`, `TEST-LANGUAGE-066.bat`, toolbar EN/NL toggle and New Game settings, restart and verify persisted language. Preserve local config, .git, and runtime state.
 

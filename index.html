@@ -74,6 +74,7 @@
           <span class="classic-board-caption">CLASSIC CITY <span aria-hidden="true">·</span> ORIGINAL 13-PLACE ROUTE</span>
           <label class="classic-board-jump-label" for="classicBoardJump">Find building</label>
           <select id="classicBoardJump" aria-label="Find a building on the Classic board"><option value="">Find building…</option></select>
+          <span id="classicBoardSelection" class="classic-board-selection" role="status" hidden></span>
           <div class="classic-board-modes" role="group" aria-label="Phone board view">
             <button id="classicBoardFit" type="button" aria-pressed="false" data-i18n="Overview">Overview</button>
             <button id="classicBoardExplore" type="button" aria-pressed="false" data-i18n="Explore">Explore</button>
@@ -109,7 +110,7 @@
             <div class="venue-window" tabindex="-1">
               <header class="venue-window-header"><div class="venue-heading"><span class="eyebrow dark">VISITING</span><h2 id="venueTitle" tabindex="-1">Location</h2><p id="venueDescription"></p></div><div class="venue-head-actions"><div class="venue-clock" id="venueClock" role="progressbar" aria-label="Classic weekly time remaining" aria-valuemin="0" aria-valuemax="60" aria-valuenow="60" hidden><span class="venue-clock-ring" aria-hidden="true"><strong id="venueClockValue">60</strong></span><span class="venue-clock-caption"><b id="venueClockWeek">WEEK 1</b><span id="venueClockRemaining">60 / 60 units</span></span></div><button type="button" id="venueClose" class="venue-close" aria-label="Close building actions">×</button></div></header>
               <div class="venue-window-body"><div id="venueSummary" class="venue-summary"></div><div class="venue-menu"><div class="action-panel-heading"><span>What would you like to do?</span><span id="actionsCount" class="muted micro"></span></div><div class="actions-scroller" id="venueActions"></div></div></div>
-              <footer class="venue-window-footer"><span id="venueFeedback" role="status" aria-live="polite"></span><button id="venueDone" type="button" class="venue-done">Done ↗</button></footer>
+              <footer class="venue-window-footer"><span id="venueFeedback" role="status" aria-live="polite"></span><button id="venueWork" type="button" class="venue-work" hidden data-i18n="Work">⚒ Work</button><button id="venueDone" type="button" class="venue-done">Done ↗</button></footer>
             </div>
           </section>
         </div>
@@ -129,7 +130,7 @@
       <button type="button" data-mobile-tab="city" aria-controls="gameCity" aria-pressed="true"><span aria-hidden="true">▦</span><strong>City</strong></button>
       <button type="button" data-mobile-tab="life" aria-controls="gameLife" aria-pressed="false"><span aria-hidden="true">♥</span><strong>My life</strong><span id="mobileStoryBadge" class="notification-circle" hidden>1</span></button>
     </nav>
-    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.70</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
+    <footer class="site-footer" hidden><span>THE LIFE LOOP — ORIGINAL DEMO · V0.5.72</span><span>INSPIRED BY THE SPIRIT OF 90s LIFE SIMULATORS · NOT AFFILIATED WITH SIERRA</span></footer>
   </div>
   <section id="classicHotseatHandover" class="classic-hotseat-handover" role="dialog" aria-modal="true" aria-labelledby="classicHandoverTitle" hidden>
     <div class="classic-handover-card"><span class="classic-handover-kicker">CLASSIC HOTSEAT · PASS THE DEVICE</span><div class="classic-handover-symbol" aria-hidden="true">⏱</div><h2 id="classicHandoverTitle">Next player's turn</h2><p>The previous player's private information is hidden. Pass the device to the next player before continuing.</p><button type="button" id="classicHandoverContinue">I'm ready — reveal my turn</button><small>This screen does not advance a turn or spend any game time.</small></div>

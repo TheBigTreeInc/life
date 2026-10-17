@@ -53,7 +53,7 @@ test('computer bonus does not modify Modern computer income and does not affect 
 
 test('phone Overview first tap inspects rather than spending travel time; Explore is actionable',()=>{
  const code=read('src/app.js');
- assert.match(code,/game\.isClassic&&compactClassicBoard\(\)&&classicBoardView==='fit'/);
+ assert.match(code,/game\.isClassic&&compactClassicBoard\(\)&&\(classicBoardView==='fit'\|\|classicBoardFocusTarget!==target\)/);
  assert.match(code,/classicBoardSetView\('explore',\{focusId:target\}\);\s*return;/);
  assert.match(code,/routeTravelBusy=true;boardManualPan=false/);
  assert.match(code,/onStep:point=>\{if\(game\.player\.id===actorId\)classicBoardFollowPawn\(point\);\}/);

@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.70",
-  "summary": "v0.5.70: Dutch gameplay presentation now updates on each render and language switch. Translate Classic/Modern location descriptions, menus, action buttons, goal/clock panels and modal labels without mutating game state. Original DOS rules and saved games unchanged; prose localization remains LL-301.",
+  "version": "0.5.72",
+  "summary": "v0.5.72: mobile overview on launch and after leaving venues, select building to focus before travel; fixed Work action next to Done; simplify player career and finance copy. Core mechanics, multiplayer authority and save formats unchanged.",
   "implemented": [
     {
       "id": "LL-177",
@@ -1181,6 +1181,27 @@
         "Open New Game, Finance/Career dialogs and multiplayer/chat; confirm controls are localized without translating messages typed by people.",
         "Run node tools/verify.mjs and then import the full source ZIP into ZipRunner, retaining local state and configuration."
       ]
+    },
+    {
+      "id": "LL-330",
+      "title": "Source-correct DOS active motion quantum and 156-route audit",
+      "summary": "Correct active source global475 to 14 from room1.sc; audit all 13x12 directed source-AI route tick comparisons without incorrectly changing unobserved player clock charges.",
+      "operator_checks": [
+        "Verify node --test tests/classic-dos-motion-071.test.cjs and node tools/verify.mjs locally.",
+        "Run node tools/dos-time-audit.mjs --json; 156 directed legs, 46 source-AI timing comparison differences, no in-game spend change.",
+        "Inspect Classic travel, forced homeward debt, Modern isolation and existing save restoration; collect DOSBox frame/arrival traces before further live clock changes."
+      ]
+    },
+    {
+      "id": "LL-331",
+      "title": "Mobile overview-first exploration and game-first venue UI",
+      "summary": "Always start phones in the full map overview; first building tap zooms and highlights without spending travel time, second visits. Add fixed mobile Work shortcut using existing validated work action, remove simulation/debug text from finance/career screens, retain it in source docs. No rules changes.",
+      "operator_checks": [
+        "On phone open a new or saved Classic game and confirm the whole city is shown (no persisted explore camera).",
+        "Tap a building: camera zooms and highlights it without travel spend; tap again to travel; Done returns to overview.",
+        "At your workplace, Work is beside Done at the bottom even if actions require scrolling; work eligibility, cost and disabled state match the activity card.",
+        "At other buildings Work is absent. Switch EN/NL, play on mobile, and verify older saves and Modern Story remain unaffected."
+      ]
     }
   ],
   "remaining": [
@@ -1350,7 +1371,7 @@
     {
       "id": "LL-175",
       "title": "DOS travel-hour calibration",
-      "summary": "Measure original DOS hours on representative route distances and migrate provisional Classic cost formula.",
+      "summary": "Observed DOSBox player travel clock conversion remains unverified. v0.5.71 corrects source ACTIVE global475=14 and supplies a 156-leg AI estimator comparison; record actual DOS frame/arrival clock deltas before live travelCost migration.",
       "priority": "high",
       "operator_checks": [
         "Capture DOS observation traces; compare to our source-derived reference."

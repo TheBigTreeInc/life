@@ -1203,3 +1203,18 @@ body[data-ruleset="classic"] .classic-board-clock{top:84.8%}
 .house-rule-toggle span{display:grid;gap:3px}.house-rule-toggle b{font-size:14px}.house-rule-toggle small{font-size:12px;color:#52675f;line-height:1.45}
 .house-rule-toggle:has(input:disabled){opacity:.48;cursor:not-allowed}
 .rule-default-button{border:1px solid #8fa89c;background:#f3f8f4;color:#315a46;border-radius:7px;padding:8px 12px;margin-top:6px;cursor:pointer;font-weight:600}
+
+/* v0.5.72 — mobile overview-first, focus-on-selection and reachable Work. */
+.classic-board-selection[hidden],.venue-work[hidden]{display:none!important}
+.classic-board-selection{color:#315a45;background:#eef5e9;border-radius:8px;padding:6px 9px;font-size:11px;font-weight:800;flex:1 0 auto}
+body[data-ruleset="classic"] .board-grid>.board-tile[data-camera-focus="true"]{outline:3px solid #f8d765;outline-offset:-3px;box-shadow:0 0 0 3px #375b46bb;z-index:9}
+.venue-work{display:none;border:0;background:#d59a3d;color:#212f26;border-radius:10px;font-weight:900;min-height:42px;padding:9px 20px;flex:none;cursor:pointer}
+.venue-work:disabled{opacity:.55;cursor:not-allowed}
+.venue-work:focus-visible{outline:3px solid #255a40;outline-offset:2px}
+@media(max-width:720px){
+ .venue-work:not([hidden]){display:block;min-width:82px;min-height:40px}
+ .venue-window-footer{position:relative;z-index:3;gap:7px;padding-bottom:max(7px,env(safe-area-inset-bottom))}
+ .venue-window-footer #venueFeedback{font-size:10px}
+ .venue-done{min-height:40px;min-width:76px}
+ .classic-board-selection:not([hidden]){order:3;flex:1 1 100%;text-align:center}
+}

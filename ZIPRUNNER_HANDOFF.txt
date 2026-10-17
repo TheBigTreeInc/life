@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.70
-filename: the-life-loop-0.5.70-ziprunner.zip
+version: 0.5.72
+filename: the-life-loop-0.5.72-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -19,7 +19,7 @@ server_components: server/looprd_handler.py, server/sources.local.yaml
 websocket_route: /looprd/the-life-loop/v1/events
 http_session_route: /looprd/the-life-loop/v1/session
 notes_multiplayer: Needs a running Looprd instance with LOOPRD_ALLOW_PYTHON=true and configured CORS origins; no container or secrets bundled. GitHub Pages remains static. Invite code creates one remote guest, host applies actions and broadcasts snapshots. Host migration and fully server-side validation remain backlog.
-notes_mobile: Responsive City / Activities / My life panels with touch-friendly illustrated board and mobile online lobby; no game mechanics changed.
+notes_mobile: v0.5.72 starts Classic phone board in full Overview, uses first tap to zoom/focus and second to travel, and offers Work next to Done at the workplace. Source-backed game mechanics, save format and Looprd authority unchanged.
 server_field: Enter the base FQDN only (api.server.country); component route /looprd/the-life-loop/v1 is implicit.
 workboard_hotfix: Normalize LL-072 priority from P1 to high (ZipRunner v1 enum) and validate manifest priority values during node tools/verify.mjs. No game logic changes.
 release_revision: v0.5.4 correct version bump for CI/workboard sync; no gameplay changes; commit the manifest with package.json.
@@ -143,3 +143,5 @@ notes_v064_repair: Corrected ZipRunner overlay compatibility with retained local
 notes_v066: Actual I18n.set API added and wired to toolbar and New Game selectors for ZipRunner retained language-campaign.test.cjs compatibility; static labeled game UI can translate without resetting the game. v0.5.65 failed on missing I18n.set call; no DOS gameplay/Looprd API changes. Offline/Pages builds and test coverage included; unique 0.5.69 release, no push.
 
 notes_v070: Dutch now translates actual rendered game UI, venue actions, Classic/Modern scene descriptions, status indicators, New Game, chat controls and dialogs. I18n.apply after render/showModal, safe locale switch without changing saves/game mechanics. Remaining prose/story translation tracked as LL-301. No Looprd schema change.
+
+notes_motion_071: DOS room1.sc active clock quantum is moveSpeed * 14, whereas Main.sc startup 20 is overwritten at the start of a player turn. New 156-leg read-only original AI tick audit; Classic playable travel charges unchanged and real DOSBox movement trace still required. Run TEST-DOS-MOTION-071.bat.

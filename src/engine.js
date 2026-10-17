@@ -401,6 +401,8 @@ class LifeGame {
     const timing=route?ClassicTime.travelBreakdown(route.steps,this.rules.entryHours,to==='agency'):null;
     return {ok:cost<=hours,reason:cost<=hours?'':`Need ${cost} hours; ${hours} available`,hours:cost,
       walkingHours:timing?.walkingUnits??cost,entryHours:timing?.serviceUnits??0,estimatedTicks:timing?.estimatedTicks??null,
+      sourceClockReference:timing?Object.freeze({minimum:timing.referenceMinimumUnits,
+        maximum:timing.referenceMaximumUnits,comparisonOnly:true,observedMovement:false}):null,
       steps:route?route.steps:0,stops:route?route.ids.slice():[],waypointIndices:route?route.waypointIndices.slice():[],direction:route?.direction||null,from,to};
   }
   travel(target) {

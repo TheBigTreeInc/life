@@ -4,16 +4,16 @@ const assert=require('node:assert/strict');
 const Game=require('../src/engine.js');
 const Clock=require('../src/classic-time.js');
 const make=()=>new Game({ruleset:'classic',mode:'sandbox',seed:713});
-test('Original AI 170-point ring uses 20-tick quantum and 40-tick travel overhead per nonempty leg',()=>{
- assert.equal(Clock.TURN_UNITS,60);assert.equal(Clock.ROUTE_QUANTUM,20);
- assert.equal(Clock.originalTravelTicks(0),0);assert.equal(Clock.originalTravelTicks(7),47);
- assert.equal(Clock.originalTravelTicks(85),125);
+test('Original AI 170-point ring uses source-backed 14-tick quantum and 28-tick travel overhead per nonempty leg',()=>{
+ assert.equal(Clock.TURN_UNITS,60);assert.equal(Clock.ROUTE_QUANTUM,14);
+ assert.equal(Clock.originalTravelTicks(0),0);assert.equal(Clock.originalTravelTicks(7),35);
+ assert.equal(Clock.originalTravelTicks(85),113);
  assert.throws(()=>Clock.originalTravelTicks(-1),/Invalid/);
 });
 test('Travel quotes distinguish original AI ticks from provisional spending units; agency entry is charged once',()=>{
  const g=make(),p=g.player;
  const agency=g.travelQuote('home','agency');
- assert.equal(agency.estimatedTicks,agency.steps+40);
+ assert.equal(agency.estimatedTicks,agency.steps+28);
  assert.equal(agency.entryHours,2);
  assert.equal(agency.hours,agency.walkingHours+2);
  const food=g.travelQuote('home','cinema');assert.equal(food.entryHours,0);
@@ -32,7 +32,7 @@ test('Not enough units for Employment entry makes travel atomic, including actio
 test('Three-leg Classic itineraries sum source estimates per leg and choose lower source-tick route',()=>{
  const g=make();const stops=['housing','pawn','bank'];
  const best=g.classicBestItinerary('home',stops,60);
- assert.ok(best);assert.equal(best.estimatedTicks,best.steps+40*3);
+ assert.ok(best);assert.equal(best.estimatedTicks,best.steps+28*3);
  const candidates=stops.flatMap(a=>stops.filter(b=>b!==a).flatMap(b=>stops.filter(c=>c!==a&&c!==b).map(c=>g.classicItinerary('home',[a,b,c])))).filter(x=>x.feasible);
  assert.equal(best.estimatedTicks,Math.min(...candidates.map(x=>x.estimatedTicks)));
  assert.deepEqual(g.classicBestItinerary('home',stops,60),best);

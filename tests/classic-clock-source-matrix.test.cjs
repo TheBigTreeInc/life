@@ -28,7 +28,7 @@ test('Seven source-identified journeys have a traceable shortest 170-waypoint pa
 test('Original TIMEKEEP frame threshold and carry are deterministic, independent of game charge',()=>{
  for(const steps of [0,1,7,21,50,85]){
   const estimate=Clock.routeClockScenario(steps,{quantum:20,carry:5,elapsed:53});
-  const expected=Clock.dosClockFrames(53,5,Clock.originalTravelTicks(steps),20);
+  const expected=Clock.dosClockFrames(53,5,Clock.originalTravelTicks(steps,20),20);
   assert.equal(estimate.elapsed,expected.elapsed);
   assert.equal(estimate.carry,expected.carry);
   assert.ok(estimate.elapsed<=60);

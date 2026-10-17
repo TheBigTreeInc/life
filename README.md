@@ -1,6 +1,12 @@
+## v0.5.72 — Mobile gameplay experience
+
+On phones the Classic city always opens in Overview. Tap a building to zoom and highlight it, then tap again to travel. A fixed Work button sits beside Done at valid workplaces and uses the same activity rules. Career and money panels prioritize gameplay information over developer diagnostics. No game-economy or save-format changes.
+
 ## v0.5.69 — ZipRunner local-language contract repair
 
-Artifact: `the-life-loop-0.5.70-ziprunner.zip` — full-source ZipRunner release, includes playable `PLAY.html`.
+Artifact: `the-life-loop-0.5.72-ziprunner.zip` — full-source ZipRunner release, includes playable `PLAY.html`.
+
+**v0.5.72 DOS timing audit:** corrected `global475` active source quantum to 14 from `room1.sc`; all 156 directed Classic legs have source-AI estimator frame bounds in `docs/reference/dos-route-clock-071.json`. **Playable travel costs are intentionally unchanged** until a DOSBox recording establishes original player clock conversion; no measured match-length parity is asserted.
 
 - Shared `I18n.set(...)` API in `src/i18n.js`; both toolbar and New Game selectors persist and synchronize EN/NL.
 - Local `language-campaign.test.cjs` was retained by ZipRunner, absent from the source archive, and previously failed on `/I18n\.set\(/`. This version integrates that call and adds a direct regression rather than suppressing the test.

@@ -1,6 +1,6 @@
 # Classic Original — Mechanical Parity Worklog
 
-**Versioned baseline:** 0.5.69. **Scope:** Original DOS 1.000.060, current Classic mode, with separate Custom Classic/Modern content. A pass is complete only when source changes, tests and operator verification agree; this is *not* a promise of binary parity.
+**Versioned baseline:** 0.5.71. **Scope:** Original DOS 1.000.060, current Classic mode, with separate Custom Classic/Modern content. A pass is complete only when source changes, tests and operator verification agree; this is *not* a promise of binary parity.
 
 | Proposed version | Priority | System | Acceptance / expected evidence | Status |
 |---|---|---|---|---|
@@ -11,7 +11,8 @@
 | 0.5.62 | P1 | Ordered Jones AI and goal-aware strategy | Executable predicates #28/#29/#30/#32/#37/#44/#46, original food branch #27, two-raise cap, seeded replay; rest of 1–49 remains an open source/RNG audit | **Implemented candidate; complete branch order still blocked (LL-308/190)** |
 | 0.5.63 | P1/P2 | Source-market regression, pawn quote and read-only economy/event audit | DOS market/pawn prices, original pawn mood impacts, new lot validation and legacy load; source-only index RNG comparator | **Partial candidate; original paid-price data, live economic migration and four-human rounds remain open** |
 | 0.5.64 | P0 | Original new-game defaults, food identities and state order | room1.sc starts 0 happiness/25 relaxation/$200/empty food; fastFood.sc IDs, storage before food consumption, 60-hour no-hunger-penalty Classic clock; Modern/legacy saves preserved | **Implemented candidate, DOSBox and browser acceptance pending** |
-| 0.5.65–0.5.69 | P0/P1 | DOS runtime clock calibration, complete rival/weekend/economic replay and four-player Classic rounds | DOSBox event/clock traces, real match-length bench, item provenance and Jones AI edge-case survival | Planned |
+| 0.5.71 | P0 | DOS frame quantum and 13-place route/time audit | Active moveSpeed=1 yields global475=14, not prior provisional 20; 156 directed legs with read-only reference bounds, no unverified live movement cost change | **Source correction implemented; DOSBox runtime calibration still blocked** |
+| 0.5.72+ | P0/P1 | DOSBox observed timing, match length, rival/weekend/economy and four-human rounds | Controlled DOS vs Life replay, item provenance, AI survival | Planned |
 
 ## Persistent evidence gaps
 
@@ -43,3 +44,10 @@ The local retained `language-campaign.test.cjs` now expects `I18n.set(...)`. Thi
 ## v0.5.70 — Dutch presentation repair (DOS parity unaffected)
 
 A stored NL language preference previously translated only some static markers while the active game still displayed English. The renderer now calls localization on generated gameplay UI and restores English on toggling. This does not close DOS movement-clock, AI or simulation parity work. See ADR-0070; LL-301 remains for comprehensive story/event translation.
+
+## v0.5.71 movement evidence
+
+- `room1.sc` marble `moveSpeed 1` at line 1066 and active turn `global475 = moveSpeed * 14` at 1315; `Main.sc` initial global475=20 is overwritten.
+- `timeKeep.doit` adds a unit when `++global324 > global475` (strict), making the active source threshold 15 for moveSpeed 1.
+- `WhereShouldIGo.sc` AI route budget accumulates 170-point shortest distance and `2*global475` per leg. **This is an AI estimator, not a measured human travel duration.**
+- The audit checks all 13*12 directed legs, ranges for all possible frame carries and reports differences from current playable travel charges. Actual travel charges, 60-unit weekly clock, saves and homeward debt remain unchanged until original runtime recordings can validate conversion.

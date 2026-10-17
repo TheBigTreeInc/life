@@ -50,6 +50,20 @@
       "kind": "Dutch-gameplay-rendering-fix",
       "supersedes": "0.5.69",
       "notes": "Translate dynamically generated Classic/Modern gameplay UI and dialogs in EN/NL, restoring English on switch without game-state/save mutation. DOS travel timing remains next parity work."
+    },
+    {
+      "version": "0.5.71",
+      "artifact": "the-life-loop-0.5.71-ziprunner.zip",
+      "kind": "DOS-source-motion-timing-audit",
+      "supersedes": "0.5.70",
+      "notes": "Correct source turn quantum from provisional 20 to explicit 14 from room1.sc, audit all directed ring routes against source AI tick estimates with uncertainty bounds; no unproven live charge changes."
+    },
+    {
+      "version": "0.5.72",
+      "artifact": "the-life-loop-0.5.72-ziprunner.zip",
+      "kind": "mobile-player-experience",
+      "supersedes": "0.5.71",
+      "notes": "Overview-first mobile Classic map, focused two-tap building navigation, fixed Work beside Done using one authoritative action, polished career and finance presentation without developer diagnostics. No economic, save, or network changes."
     }
   ]
 }

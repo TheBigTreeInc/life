@@ -5,7 +5,9 @@
  */
 (function(root){'use strict';
  const TURN_UNITS=60;
- const ROUTE_QUANTUM=20;
+ // room1.sc:1315: global475 = marble.moveSpeed * 14; marble.moveSpeed=1 at 1066.
+ // Main.sc defaults global475 to 20 before the active-turn override.
+ const ROUTE_QUANTUM=14;
  const EMPLOYMENT_ENTRY_UNITS=2;
  function whole(value,label){if(!Number.isSafeInteger(value)||value<0)throw Error('Invalid '+label);return value;}
  function originalTravelTicks(steps,quantum=ROUTE_QUANTUM){
@@ -13,13 +15,39 @@
    if(!quantum)throw Error('Invalid route quantum');
    return steps===0?0:steps+2*quantum;
  }
+ // Convert the original rival's itinerary tick *estimate* into an interval of
+ // potential TIMEKEEP advances for every legal initial tick carry. The real
+ // marble animation update cadence has not been measured in DOSBox. Therefore
+ // this is an audit bound on the AI estimator, NOT a proven movement charge.
+ function sourceMotionQuantum(moveSpeed=1){
+   whole(moveSpeed,'marble move speed');
+   if(moveSpeed<1||moveSpeed>100)throw Error('Invalid marble move speed');
+   return 14*moveSpeed;
+ }
+ function routeClockBounds(steps,{moveSpeed=1,elapsed=0}={}){
+   whole(steps,'waypoint steps');whole(elapsed,'clock elapsed');
+   if(elapsed>TURN_UNITS)throw Error('Clock exceeds weekly limit');
+   const quantum=sourceMotionQuantum(moveSpeed);
+   const ticks=originalTravelTicks(steps,quantum);
+   const earliest=dosClockFrames(elapsed,0,ticks,quantum);
+   const latest=dosClockFrames(elapsed,quantum,ticks,quantum);
+   return Object.freeze({steps,marbleMoveSpeed:moveSpeed,quantumTicks:quantum,
+     aiEstimateTicks:ticks,minimumAdvances:earliest.advancedUnits,
+     maximumAdvances:latest.advancedUnits,
+     initialCarryRange:Object.freeze([0,quantum]),
+     comparisonOnly:true,observedMovement:false,
+     source:'room1.sc:1066,1315,1473-1491 + WhereShouldIGo.sc:23-38'});
+ }
  function travelBreakdown(steps,entryBase=1,enterEmployment=false){
    whole(steps,'waypoint steps');whole(entryBase,'entry base');
    const walkingUnits=steps===0?0:entryBase+1+Math.floor(steps/25);
    const serviceUnits=steps>0&&enterEmployment?EMPLOYMENT_ENTRY_UNITS:0;
+   const reference=routeClockBounds(steps);
    return Object.freeze({walkingUnits,serviceUnits,units:walkingUnits+serviceUnits,
-     estimatedTicks:originalTravelTicks(steps),quantumTicks:ROUTE_QUANTUM,
-     clockLimit:TURN_UNITS,conversion:'provisional-v0.5.33'});
+     estimatedTicks:reference.aiEstimateTicks,quantumTicks:ROUTE_QUANTUM,
+     referenceMinimumUnits:reference.minimumAdvances,referenceMaximumUnits:reference.maximumAdvances,
+     referenceComparisonOnly:true,
+     clockLimit:TURN_UNITS,conversion:'provisional-live-v0.5.33; source comparison v0.5.71'});
  }
  // room1.sc timeKeep.doit: an explicit time charge adds its full nominal cost,
  // then caps global323 at 60. Actions are allowed while global323 is below 60.
@@ -106,7 +134,7 @@
  }
 
  const api=Object.freeze({schema:'classic-time.v1',TURN_UNITS,ROUTE_QUANTUM,EMPLOYMENT_ENTRY_UNITS,
-   originalTravelTicks,travelBreakdown,cappedActionCharge,dosClockFrames,routeClockScenario,workProgress,workStanding,originalGarnishmentReference,paycheck,settlePaycheck});
+   originalTravelTicks,sourceMotionQuantum,routeClockBounds,travelBreakdown,cappedActionCharge,dosClockFrames,routeClockScenario,workProgress,workStanding,originalGarnishmentReference,paycheck,settlePaycheck});
  root.LifeClassicTime=api;
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

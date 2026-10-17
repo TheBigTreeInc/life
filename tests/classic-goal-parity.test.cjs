@@ -64,5 +64,5 @@ test('Modern and Custom Classic house rules remain independent of formula implem
 test('Board source and offline packager wire the same source goal module',()=>{
  const source=readFileSync('index.html','utf8'),builder=readFileSync('tools/build-offline.mjs','utf8');
  assert.match(source,/src\/classic-goals\.js/);assert.match(builder,/'classic-goals'/);
- assert.match(readFileSync('src/app.js','utf8'),/WEIGHTED \$\{game\.progress\(p\)\}%/);
+ assert.match(readFileSync('src/app.js','utf8'),/game\.progress\(p\)/);
 });
