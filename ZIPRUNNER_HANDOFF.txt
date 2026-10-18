@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.90
-filename: the-life-loop-0.5.90-ziprunner.zip
+version: 0.5.91
+filename: the-life-loop-0.5.91-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -156,4 +156,4 @@ notes_async_082: Internal repository added; /play remains gated. Run python -m u
 multiplayer_next_priority: shared Life–Social–Atrium–DAPI; ignore unrelated ZipRunner ordering until accepted end-to-end
 public_play_enabled: false
 
-v0.5.90: Internal match lifecycle create/invite/join/resume; 27 async Python unit tests; no public /play registration. Production Social issuer, DAPI concurrent schema upgrade, Atrium integration, and GitHub CI/operator acceptance remain open. No push/deploy.
+v0.5.91: Internal match lifecycle create/invite/join/resume; 27 async Python unit tests; no public /play registration. Production Social issuer, DAPI concurrent schema upgrade, Atrium integration, and GitHub CI/operator acceptance remain open. No push/deploy.

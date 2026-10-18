@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.classic-board-art.v1",
-  "release": "0.5.90",
+  "release": "0.5.91",
   "style": "classic-modern",
   "description": "Production Classic board: 13 matched exteriors/interiors and per-venue illustrated doorway offsets; route distance/time and game authority remain unchanged.",
   "layout": {

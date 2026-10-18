@@ -183,6 +183,13 @@
       "kind": "looprd-schema-validation-repair",
       "supersedes": "0.5.88",
       "notes": "Ordered migration v3 and generated integer PKs on six new async models, preserving unique application string ids. Live LoopRD reload and model provisioning pending."
+    },
+    {
+      "version": "0.5.91",
+      "artifact": "the-life-loop-0.5.91-ziprunner.zip",
+      "kind": "internal-atrium-life-launch-contract",
+      "supersedes": "0.5.90",
+      "notes": "Private authenticated launch adapter for Atrium create/invite/join/list/resume; reauthorizes match projections, no credentials in URLs or routes. Live Atrium and Social integration not implemented."
     }
   ]
 }

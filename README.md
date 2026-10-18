@@ -1,36 +1,40 @@
-## v0.5.90 — Internal /play foundation and multiplayer P0 handoff
+## v0.5.91 — Internal Atrium launch contract
+
+Artifact: `the-life-loop-0.5.91-ziprunner.zip` — full source with private create/invite/join/list/resume adapter and contract tests. No public `/play` routes, production issuer, or Atrium deployment. See ADR-0091.
+
+## v0.5.89 — Internal /play foundation and multiplayer P0 handoff
 
 See `docs/decisions/ADR-0086-internal-play-contract-and-priority.md` and `docs/multiplayer-priority-handoff.json`. No public /play route is active. Full local operator workboard snapshot preserved separately; no operator ticket has been marked Done.
 
-## v0.5.90 — Social identity boundary
+## v0.5.89 — Social identity boundary
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip` — complete source and playable `PLAY.html`.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip` — complete source and playable `PLAY.html`.
 
 Trusted Social issuer/audience/subject validation is now an explicit internal boundary before command service seat authorization. No public /play interface is enabled and no Social verifier credentials are bundled.
 
-## v0.5.90 — Internal authoritative async command processor
+## v0.5.89 — Internal authoritative async command processor
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip`. New `server/async_command_service.py` joins stored checkpoints, trusted headless evaluation and revision/idempotency-guarded persistence. This is an internal foundation; `/play` remains disabled.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip`. New `server/async_command_service.py` joins stored checkpoints, trusted headless evaluation and revision/idempotency-guarded persistence. This is an internal foundation; `/play` remains disabled.
 
-## v0.5.90 — Internal trusted headless evaluator
+## v0.5.89 — Internal trusted headless evaluator
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip`. Adds `src/async-evaluator.js` and `server/async_evaluator_cli.cjs` for deterministic game-rule evaluation of persisted snapshots. No public `/play` API, authentication or untrusted-code sandbox yet.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip`. Adds `src/async-evaluator.js` and `server/async_evaluator_cli.cjs` for deterministic game-rule evaluation of persisted snapshots. No public `/play` API, authentication or untrusted-code sandbox yet.
 
-## v0.5.90 — Internal transactional match repository
+## v0.5.89 — Internal transactional match repository
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip`. Adds internal server/async_match_repository.py and SQLite regression tests; no public game API, no trusted action evaluator yet.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip`. Adds internal server/async_match_repository.py and SQLite regression tests; no public game API, no trusted action evaluator yet.
 
-## v0.5.90 — Asynchronous game match schema foundation
+## v0.5.89 — Asynchronous game match schema foundation
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip`. See `docs/decisions/ADR-0081-async-match-persistence-foundation.md` for limits and deployment prerequisites. No change to current host-based `/session`.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip`. See `docs/decisions/ADR-0081-async-match-persistence-foundation.md` for limits and deployment prerequisites. No change to current host-based `/session`.
 
-## v0.5.90 — Standalone board geometry manifest and authoring overlay
+## v0.5.89 — Standalone board geometry manifest and authoring overlay
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip`. Edit `assets/boards/classic/geometry.v1.json` for road control points and building entrance paths; run `node tools/build-offline.mjs` to embed it. Use `?debugGeometry` for a read-only coordinate overlay. DOS travel cost and saves do not change.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip`. Edit `assets/boards/classic/geometry.v1.json` for road control points and building entrance paths; run `node tools/build-offline.mjs` to embed it. Use `?debugGeometry` for a read-only coordinate overlay. DOS travel cost and saves do not change.
 
 ## v0.5.78 — Curved road geometry metadata
 
-Artifact: `the-life-loop-0.5.90-ziprunner.zip` — complete source, playable `PLAY.html` and curved-road board metadata.
+Artifact: `the-life-loop-0.5.89-ziprunner.zip` — complete source, playable `PLAY.html` and curved-road board metadata.
 
 This pass introduces metadata-driven road geometry for the Classic board. The visual road loop now supports curved multi-point edge paths, and each venue can describe its own doorway approach with normalized points and an entrance coordinate. The pawn still uses the same authoritative travel graph and time costs; only the visual roadway and entrance paths are generalized for future board art.
 
@@ -589,6 +593,6 @@ Artifact: `the-life-loop-0.5.55-ziprunner.zip`
 
 Classic games now return every player home at turn end, even with insufficient clock time. Excess travel is deducted from the player's next week. New Game → Game Settings → House Rules can disable the homeward return, forgive overtime or opt Modern into this mechanic. Default Modern keeps its own shops, events and free-end movement. Presets, overrides and per-player travel debt persist in save and multiplayer snapshots. No Looprd or Social schema changes. Exact DOS waypoint-to-clock equivalence is still provisional (ADR-0055).
 
-### v0.5.90 multiplayer foundation
+### v0.5.89 multiplayer foundation
 
 `server/async_participants.py` is an internal trusted GameParticipant roster, not a public join endpoint. See `docs/decisions/ADR-0087-durable-verified-match-seats.md`.

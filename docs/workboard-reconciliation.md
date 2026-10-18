@@ -1,4 +1,4 @@
-# Workboard lifecycle reconciliation — v0.5.90
+# Workboard lifecycle reconciliation — v0.5.91
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 

@@ -2,7 +2,7 @@
   "schema": "the-life-loop.priority-handoff.v1",
   "project": "the-life-loop",
   "canonical_project_id": "35c5ca70-fe10-4334-8725-bf4a07d7b3ac",
-  "release": "0.5.90",
+  "release": "0.5.91",
   "policy": "Model development focus remains multiplayer and Atrium regardless of unrelated ZipRunner priority recommendations; local operator workboard tickets remain unchanged.",
   "p0_sequence": [
     "LL-072",
@@ -48,7 +48,7 @@
   "component_dependencies": {
     "Life": "Internal create/invite/join/resume lifecycle implemented; needs live issuer, production transactions, concurrency uniqueness, game-owned snapshot factory and public routes after E2E",
     "Social/Tavi": "Provision real scoped issuer, key rotation, account bindings and persistent notification contract",
-    "Atrium": "Authorized registry listing, game create/join/resume launch context and no duplicated match authority",
+    "Atrium": "Life internal launch adapter implemented; Atrium integration, live verifier, secure invitation delivery and public route configuration pending",
     "DAPI": "Production SQL migration, atomicity, uniqueness, task scheduling and cross-runtime trust"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.parity-contract.v1",
   "architecture_revision": "2.0",
-  "release": "0.5.90",
+  "release": "0.5.91",
   "implementation_baseline": "0.5.1",
   "policy": "Original core mechanics are authoritative; modern presentation must not change economic outcomes; modern gameplay additions must be opt-in.",
   "mechanics": [
@@ -226,7 +226,7 @@
       "acceptance": "Classic ruleset suppresses non-original mechanical bonuses while keeping dialog optional."
     }
   ],
-  "version": "0.5.90",
+  "version": "0.5.91",
   "notes_v0539": "Presentation-only journey and original weekly source-state 12/34 journal. No claim that 34 payout/cooldown or original event order is accurately emulated.",
   "notes_v0553": "Classic Employment explicit 4-unit action charges cap at remaining 1–3 as in room1.sc timeKeep; source AI route ticks are NOT a calibrated player clock conversion. Modern unchanged."
 }
