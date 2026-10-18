@@ -2,7 +2,7 @@
   "schema": "the-life-loop.priority-handoff.v1",
   "project": "the-life-loop",
   "canonical_project_id": "35c5ca70-fe10-4334-8725-bf4a07d7b3ac",
-  "release": "0.5.88",
+  "release": "0.5.89",
   "policy": "Model development focus remains multiplayer and Atrium regardless of unrelated ZipRunner priority recommendations; local operator workboard tickets remain unchanged.",
   "p0_sequence": [
     "LL-072",

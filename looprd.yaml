@@ -1,7 +1,7 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.88
+release: 0.5.89
 api:
   version: v1
 auth:
@@ -13,6 +13,35 @@ database:
   - version: 2
     statements:
     - ALTER TABLE "Room" ADD COLUMN "chatKey" VARCHAR(64)
+  - version: 3
+    statements:
+    - CREATE TABLE IF NOT EXISTS "GameMatch" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64) NOT
+      NULL UNIQUE, "status" VARCHAR(24) NOT NULL, "engineRevision" VARCHAR(128) NOT NULL, "rulesDigest" VARCHAR(128)
+      NOT NULL, "initialSeed" INTEGER NOT NULL, "rngState" INTEGER NOT NULL, "revision" INTEGER NOT NULL, "turnIndex"
+      INTEGER NOT NULL, "activeSeat" VARCHAR(32), "dueAtUtc" VARCHAR(40), "createdAtUtc" VARCHAR(40) NOT NULL, "updatedAtUtc"
+      VARCHAR(40) NOT NULL)
+    - CREATE TABLE IF NOT EXISTS "GameParticipant" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64)
+      NOT NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL, "seatId" VARCHAR(32) NOT NULL, "issuer" VARCHAR(256) NOT
+      NULL, "subject" VARCHAR(256) NOT NULL, "role" VARCHAR(32) NOT NULL, "joinedAtUtc" VARCHAR(40) NOT NULL)
+    - CREATE TABLE IF NOT EXISTS "GameInvitation" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64)
+      NOT NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL, "seatId" VARCHAR(32) NOT NULL, "tokenDigest" VARCHAR(64)
+      NOT NULL UNIQUE, "createdByIssuer" VARCHAR(256) NOT NULL, "createdBySubject" VARCHAR(256) NOT NULL, "expiresAtUtc"
+      VARCHAR(40) NOT NULL, "redeemedByIssuer" VARCHAR(256), "redeemedBySubject" VARCHAR(256), "redeemedAtUtc" VARCHAR(40),
+      "createdAtUtc" VARCHAR(40) NOT NULL)
+    - CREATE TABLE IF NOT EXISTS "GameAction" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64) NOT
+      NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL, "revisionBefore" INTEGER NOT NULL, "revisionAfter" INTEGER NOT
+      NULL, "turnIndex" INTEGER NOT NULL, "actorIssuer" VARCHAR(256) NOT NULL, "actorSubject" VARCHAR(256) NOT NULL,
+      "idempotencyKey" VARCHAR(128) NOT NULL, "commandDigest" VARCHAR(128) NOT NULL, "command" JSON NOT NULL, "resultDigest"
+      VARCHAR(128) NOT NULL, "createdAtUtc" VARCHAR(40) NOT NULL)
+    - CREATE TABLE IF NOT EXISTS "GameCheckpoint" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64)
+      NOT NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL, "revision" INTEGER NOT NULL, "turnIndex" INTEGER NOT NULL,
+      "state" JSON NOT NULL, "stateDigest" VARCHAR(128) NOT NULL, "rngState" INTEGER NOT NULL, "createdAtUtc" VARCHAR(40)
+      NOT NULL)
+    - CREATE TABLE IF NOT EXISTS "GameNotificationOutbox" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64)
+      NOT NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL, "turnIndex" INTEGER NOT NULL, "recipientIssuer" VARCHAR(256)
+      NOT NULL, "recipientSubject" VARCHAR(256) NOT NULL, "eventId" VARCHAR(128) NOT NULL, "eventType" VARCHAR(80)
+      NOT NULL, "status" VARCHAR(24) NOT NULL, "attempts" INTEGER NOT NULL, "lastErrorClass" VARCHAR(128), "nextDispatchUtc"
+      VARCHAR(40), "createdAtUtc" VARCHAR(40) NOT NULL)
 models:
   Room:
     fields:
@@ -56,10 +85,15 @@ models:
         required: true
   GameMatch:
     fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
       id:
         type: string
         maxLength: 64
-        primaryKey: true
+        required: true
+        unique: true
       status:
         type: string
         maxLength: 24
@@ -100,10 +134,15 @@ models:
         required: true
   GameParticipant:
     fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
       id:
         type: string
         maxLength: 64
-        primaryKey: true
+        required: true
+        unique: true
       matchId:
         type: string
         maxLength: 64
@@ -130,10 +169,15 @@ models:
         required: true
   GameInvitation:
     fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
       id:
         type: string
         maxLength: 64
-        primaryKey: true
+        required: true
+        unique: true
       matchId:
         type: string
         maxLength: 64
@@ -174,10 +218,15 @@ models:
         required: true
   GameAction:
     fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
       id:
         type: string
         maxLength: 64
-        primaryKey: true
+        required: true
+        unique: true
       matchId:
         type: string
         maxLength: 64
@@ -220,10 +269,15 @@ models:
         required: true
   GameCheckpoint:
     fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
       id:
         type: string
         maxLength: 64
-        primaryKey: true
+        required: true
+        unique: true
       matchId:
         type: string
         maxLength: 64
@@ -250,10 +304,15 @@ models:
         required: true
   GameNotificationOutbox:
     fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
       id:
         type: string
         maxLength: 64
-        primaryKey: true
+        required: true
+        unique: true
       matchId:
         type: string
         maxLength: 64
