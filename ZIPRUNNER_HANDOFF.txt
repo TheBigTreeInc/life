@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.81
-filename: the-life-loop-0.5.81-ziprunner.zip
+version: 0.5.85
+filename: the-life-loop-0.5.85-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -18,6 +18,7 @@ looprd_contract: looprd/v1
 server_components: server/looprd_handler.py, server/sources.local.yaml
 websocket_route: /looprd/the-life-loop/v1/events
 http_session_route: /looprd/the-life-loop/v1/session
+notes_async_084: Internal command service only; /play disabled; Social ticket verification, real DAPI transaction and notification outbox worker not implemented.
 notes_multiplayer: Needs a running Looprd instance with LOOPRD_ALLOW_PYTHON=true and configured CORS origins; no container or secrets bundled. GitHub Pages remains static. Invite code creates one remote guest, host applies actions and broadcasts snapshots. Host migration and fully server-side validation remain backlog.
 notes_board_078: v0.5.78 adds metadata-driven curved road geometry (`visualCurves`) and per-building entrance approach paths (`venues.*.geometry`) for the Classic board. Visual only; authoritative travel graph, save format and clock costs unchanged.
 notes_mobile_073: v0.5.77 phone top End Week (Classic and Modern) replaces building picker; guarded proxy to existing ticker action, Work beside Done remains; no gameplay, save or server change.
@@ -149,3 +150,5 @@ notes_v070: Dutch now translates actual rendered game UI, venue actions, Classic
 notes_motion_071: DOS room1.sc active clock quantum is moveSpeed * 14, whereas Main.sc startup 20 is overwritten at the start of a player turn. New 156-leg read-only original AI tick audit; Classic playable travel charges unchanged and real DOSBox movement trace still required. Run TEST-DOS-MOTION-071.bat.
 
 0.5.77 source AI evidence: 28-tick per-leg rival overhead from DOS WhereShouldIGo.sc; tests/classic-jones-motion-076.test.cjs; no live travel adjustment.
+
+notes_async_082: Internal repository added; /play remains gated. Run python -m unittest discover -s tests -p test_async_repository.py; production requires verified DAPI migration, uniqueness and identity.

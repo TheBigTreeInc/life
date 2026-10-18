@@ -127,6 +127,34 @@
       "kind": "async-match-sql-model-foundation",
       "supersedes": "0.5.80",
       "notes": "Additive schemaVersion 3 game-owned match, participant, action, checkpoint and notification-outbox models; no /play endpoint, Social trust or live execution yet."
+    },
+    {
+      "version": "0.5.82",
+      "artifact": "the-life-loop-0.5.82-ziprunner.zip",
+      "kind": "internal-async-match-repository",
+      "supersedes": "0.5.81",
+      "notes": "Internal SQLAlchemy repository for atomic match checkpoints, revision CAS, command idempotency and durable notification intent; legacy /session untouched; /play gated."
+    },
+    {
+      "version": "0.5.83",
+      "artifact": "the-life-loop-0.5.83-ziprunner.zip",
+      "kind": "trusted-headless-evaluator-foundation",
+      "supersedes": "0.5.82",
+      "notes": "Internal Node CLI restores authoritative checkpoint, verifies digest and legal game command, returns deterministic evaluated state. No /play or Social authentication yet."
+    },
+    {
+      "version": "0.5.84",
+      "artifact": "the-life-loop-0.5.84-ziprunner.zip",
+      "kind": "internal-async-command-service",
+      "supersedes": "0.5.83",
+      "notes": "Trusted internal service connects stored checkpoints, seat resolver, legal Node evaluation and transactional commit; no public /play endpoint."
+    },
+    {
+      "version": "0.5.85",
+      "artifact": "the-life-loop-0.5.85-ziprunner.zip",
+      "kind": "social-identity-trust-adapter",
+      "supersedes": "0.5.84",
+      "notes": "Internal trusted Social claim verifier boundary; issuer/audience/subject required before match seat delegation; /play disabled."
     }
   ]
 }

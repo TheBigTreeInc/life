@@ -1,17 +1,9 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.81",
-  "summary": "v0.5.81 LIFE-ASYNC-02: additive match/participant/action/checkpoint/outbox SQL model foundation; requires DAPI dialect and transaction acceptance before activation.",
+  "version": "0.5.85",
+  "summary": "v0.5.85: verified Social identity adapter and fail-closed account claims for internal seat-authorized game commands; public /play remains disabled.",
   "implemented": [
-    {
-      "id": "LL-177",
-      "title": "Numeric original diploma identities",
-      "summary": "Bind all 11 DOS degree numbers and prerequisite IDs to existing save-stable degree keys; validate job degree references.",
-      "operator_checks": [
-        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
-      ]
-    },
     {
       "id": "LL-178",
       "title": "DOS-qualified employment and reproducible hiring",
@@ -1246,6 +1238,14 @@
       "summary": "Introduce opt-in pure checkpoint reconstruction and deterministic SHA-256 comparison in Node; retain legacy browser behavior and document remaining authoritative multiplayer gaps.",
       "operator_checks": [
         "Run async-replay-080.test.cjs; verify Classic/Modern and legacy saves; review cross-component adoc and keep /play disabled."
+      ]
+    },
+    {
+      "id": "LL-345",
+      "title": "Social identity trust adapter",
+      "summary": "Require externally verified scoped issuer, audience and subject before allowing internal persistent-match commands; unverified clients fail closed.",
+      "operator_checks": [
+        "Verify trusted Social verifier integration and player-seat ownership on staging, confirm /play remains gated."
       ]
     }
   ],

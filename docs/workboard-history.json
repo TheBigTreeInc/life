@@ -1235,6 +1235,14 @@
       "operator_checks": [
         "Verify source priority tests, fresh package build, Classic gameplay and Modern isolation."
       ]
+    },
+    {
+      "id": "LL-177",
+      "title": "Numeric original diploma identities",
+      "summary": "Bind all 11 DOS degree numbers and prerequisite IDs to existing save-stable degree keys; validate job degree references.",
+      "operator_checks": [
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+      ]
     }
   ]
 }

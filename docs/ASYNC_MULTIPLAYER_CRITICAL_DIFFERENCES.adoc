@@ -66,3 +66,10 @@ Do not remove `/session` or require login for standalone `PLAY.html`. Never repl
 * Legacy `Room` storage, `/session` handler and 48-hour legacy room TTL are unchanged; new matches must not use the legacy TTL.
 * The new models are not yet proof of restart-safe lifecycle, verified identity, composite uniqueness constraints, transactional CAS, Social event dispatch or server-evaluated `/play`. Those remain hard P0 blockers for deployment.
 * Migration to a running SQLite/PostgreSQL LoopRD environment requires a backup, dialect/index validation, and a real restart test; none were performed by this source package.
+
+== v0.5.83 implementation delta
+
+* Internal `server/async_match_repository.py` supports match/checkpoint creation and guarded revision compare-and-swap with SQL history and notification outbox in one transaction.
+* SQLite tests validate successful commits, replay/idempotency, and stale revision rejection.
+* P0 remains: Social-authenticated actor grants; trusted headless JS evaluator and legal-action verification; DAPI runtime migrations and database uniqueness constraints; remote-runtime transaction guarantees.
+* `/play` intentionally remains disabled and legacy `/session` unchanged.
