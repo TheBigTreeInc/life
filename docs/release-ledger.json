@@ -197,6 +197,13 @@
       "kind": "atriumd-sidecar-discovery",
       "supersedes": "0.5.91",
       "notes": "Adds root Atrium portable sidecar; deployment relay and live launch remain pending."
+    },
+    {
+      "version": "0.5.93",
+      "artifact": "the-life-loop-0.5.93-ziprunner.zip",
+      "kind": "authenticated-asgi-play-adapter-candidate",
+      "supersedes": "0.5.92",
+      "notes": "Fail-closed bearer-only ASGI transport adapter for existing Life match lifecycle and authoritative evaluator, isolated HTTP contract tests; awaiting real Social verifier, DAPI handler mounting and live persistent two-seat acceptance."
     }
   ]
 }

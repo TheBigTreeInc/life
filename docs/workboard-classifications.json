@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.workboard-classifications.v1",
-  "release": "0.5.92",
+  "release": "0.5.93",
   "blocked": {
     "LL-014": {
       "reason": "Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build.",
@@ -91,6 +91,7 @@
     "LL-307",
     "LL-308",
     "LL-309",
-    "LL-346"
+    "LL-346",
+    "LL-347"
   ]
 }

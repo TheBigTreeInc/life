@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.dos-clock-audit.v2",
-  "version": "0.5.92",
+  "version": "0.5.93",
   "source": "Jones DOS 1.000.060 room1.sc timeKeep + employment.sc; WhereShouldIGo.sc AI estimate",
   "note": "Source AI route estimate and frame bounds are NOT verified player clock conversion. No browser animation frames are used for gameplay. Actual DOSBox traces are still required.",
   "evidence": {

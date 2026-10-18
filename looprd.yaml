@@ -1,7 +1,7 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.92
+release: 0.5.93
 api:
   version: v1
 auth:

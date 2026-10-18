@@ -1,0 +1,55 @@
+= Life `/play` API — v0.5.93 Source Candidate
+:toc:
+
+IMPORTANT: This is *not deployed* and not a public LoopRD handler. The adapter `server/async_http_api.py` only becomes operational when bound to real trusted Social token verification, a trusted Life snapshot factory, persistent DAPI SQL sessions, and the actual LoopRD HTTP routing layer. Do not expose a dummy/mock identity verifier publicly.
+
+== Proposed transport
+
+`GET /play/info` is capability discovery. `POST /play` consumes JSON, at most 32 KiB, with `Authorization: Bearer <short-lived-game-scoped-proof>`. Credentials must not appear in payloads or URLs. The response wraps results in `{ "ok": true, "schema":"looprd.game-play/v1", "result": ... }`.
+
+The root schema is `looprd.game-play/v1`. A valid request requires `schema` and `op`. Operations: `create`, `invite`, `join`, `list_matches`, `resume`, `get`, `legal_actions`, `act`, `end_turn`. The `create` operation requires `engineRevision`, `rulesDigest`, `seed`; a server-owned snapshot factory MUST derive the snapshot, never accept a client checkpoint. Optional `requestId` provides creator-scoped idempotency. `invite` defaults to seat 1 and returns a sensitive invitation secret **only** to the creator. `join` redeems it under a distinct verified principal. `resume` and `get` currently return membership and turn metadata, not a full player-visible checkpoint. `legal_actions` needs a trusted engine-backed provider. Actions use `expectedRevision`, `idempotencyKey` and `action` (exact game command object). `end_turn` has the same revision/key but no `action` field.
+
+== Example fixtures
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"create","engineRevision":"life-0.5.93","rulesDigest":"trusted-rules-digest","seed":12345,"requestId":"example-create-0001"}
+----
+
+[source,json]
+----
+{"ok":true,"schema":"looprd.game-play/v1","result":{"matchId":"00000000-0000-4000-8000-000000000001","yourSeat":0,"revision":0,"stateDigest":"<computed-by-server>","alreadyCreated":false}}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"act","matchId":"00000000-0000-4000-8000-000000000001","expectedRevision":5,"idempotencyKey":"example-action-0001","action":{"type":"travel","arg":"bank"}}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"end_turn","matchId":"00000000-0000-4000-8000-000000000001","expectedRevision":6,"idempotencyKey":"example-end-turn-0001"}
+----
+
+== Error contract
+
+`UNAUTHENTICATED` (401), `NOT_A_PARTICIPANT` (404), `OPERATION_REJECTED` (403), `REVISION_CONFLICT` (409), `ACTION_REJECTED` (409), `EVALUATOR_UNAVAILABLE` (503), `BAD_REQUEST` (422 or 413/415), `UNKNOWN_OPERATION` (422). Example unauthorized result:
+
+[source,json]
+----
+{"ok":false,"schema":"looprd.game-play/v1","error":{"code":"NOT_A_PARTICIPANT","message":"Match unavailable"}}
+----
+
+== What Tavi and OpenClaw may depend on
+
+The stable *proposed* semantic boundary is: each actor has an independently verified `(issuer, subject)`; the Life service maps that to a specific match seat; all gameplay changes pass through the same server-side Life evaluator with revision CAS and replay protection. Tavi challenge acceptance grants **no** Life seat by itself. OpenClaw may implement an abstraction for `get`, `legal_actions`, `act` and `end_turn` but MUST gate network activation until a deployed `/play/info` advertises agent support and the headless acceptance test passes.
+
+Provisional: actual route mounting/prefix, Social proof exchange and grant validation, creating a compliant seeded two-player snapshot, legal action shape and full state projection, invite decline, deadline policy, durable Social event dispatch, service restart acceptance and live public API. `agentPlaySupported=false` and `publicPlayApiAvailable=false` remain truthful in the candidate info response.
+
+== Operator acceptance (not performed)
+
+* Provision actual Social game-scoped issuer verifier (expiry, audience, revocation, nonce and issuer validation).
+* Mount the ASGI adapter using a confirmed LoopRD routing mechanism, not by assuming DAPI executes project files from disk.
+* Wire verified IdentityBoundary, durable SQL session factory, trusted engine snapshot factory, player seat mapping and legal actions provider.
+* Two separate identities create/join, execute real legal actions and end turns; wrong seat and unauthorized actor rejected; restart service and resume from same database.
+* Verify no privileged or private client token in public metadata/URLs/logs; verify turn notifications and deadline under disconnected host.
