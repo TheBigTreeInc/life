@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.91
-filename: the-life-loop-0.5.91-ziprunner.zip
+version: 0.5.92
+filename: the-life-loop-0.5.92-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html

@@ -1,6 +1,10 @@
-## v0.5.91 — Internal Atrium launch contract
+## v0.5.92 — Atrium discovery sidecar
 
-Artifact: `the-life-loop-0.5.91-ziprunner.zip` — full source with private create/invite/join/list/resume adapter and contract tests. No public `/play` routes, production issuer, or Atrium deployment. See ADR-0091.
+Artifact: `the-life-loop-0.5.92-ziprunner.zip` — ships portable root `atriumd.yaml` metadata; no automatic registration/public play endpoint or live deployment. See ADR-0092.
+
+## v0.5.92 — Internal Atrium launch contract
+
+Artifact: `the-life-loop-0.5.92-ziprunner.zip` — full source with private create/invite/join/list/resume adapter and contract tests. No public `/play` routes, production issuer, or Atrium deployment. See ADR-0091.
 
 ## v0.5.89 — Internal /play foundation and multiplayer P0 handoff
 

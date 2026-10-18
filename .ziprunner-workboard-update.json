@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.91",
-  "summary": "v0.5.91: internal authenticated Atrium/Life create/invite/join/list/resume launch adapter; no public /play endpoint, live issuer, or production acceptance.",
+  "version": "0.5.92",
+  "summary": "Portable atriumd/v1 sidecar for Life discovery; no URLs or credentials, runtime relay and launch binding remain pending.",
   "implemented": [
     {
       "id": "LL-178",
@@ -1525,6 +1525,15 @@
       "priority": "medium",
       "operator_checks": [
         "Provide edition-matched DOS runtime capture and compare with equal-seed Classic scenario before accepting parity."
+      ]
+    },
+    {
+      "id": "LL-346",
+      "title": "Verify deployed Atrium sidecar discovery and trusted launch binding",
+      "summary": "Sidecar added locally in v0.5.92; verify DAPI observes matching source revision, Atrium receives a trusted pending candidate, game-web resolves from deployment configuration and two-browser resume passes without exposing secrets.",
+      "priority": "high",
+      "operator_checks": [
+        "Enable DAPI discovery in staging and confirm pending Atrium intake, approval gate, deployment launch binding and two-browser resumption."
       ]
     }
   ]

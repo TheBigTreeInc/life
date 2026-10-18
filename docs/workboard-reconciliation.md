@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.91
+# Workboard lifecycle reconciliation — v0.5.92
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 295 done (historical claims included); 16 blocked; 12 in progress; 9 to do.
+**Counts:** 295 done (historical claims included); 16 blocked; 12 in progress; 10 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -49,6 +49,7 @@
 - **LL-307:** Classic economic obligations
 - **LL-308:** DOS rival AI branch fidelity
 - **LL-309:** Classic catalog and RNG parity
+- **LL-346:** Verify deployed Atrium sidecar discovery and trusted launch binding
 
 ## Done (current ZipRunner update)
 

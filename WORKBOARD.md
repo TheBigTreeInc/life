@@ -1,6 +1,10 @@
-## v0.5.91 — Atrium private launch adapter (operator review)
+## v0.5.92 — Atrium sidecar (operator review)
 
-Release `the-life-loop-0.5.91-ziprunner.zip` adds private verified create/invite/join/list/resume launch projections. Does not claim live Atrium consumption, working `/play`, or production Social verification. Existing operator workboard decisions retained; related LL-072, LL-082, LL-263 remain open.
+Release `the-life-loop-0.5.92-ziprunner.zip` declares the game with portable Atrium metadata. DAPI relay, trusted launch origin binding and live 2-browser tests remain open.
+
+## v0.5.92 — Atrium private launch adapter (operator review)
+
+Release `the-life-loop-0.5.92-ziprunner.zip` adds private verified create/invite/join/list/resume launch projections. Does not claim live Atrium consumption, working `/play`, or production Social verification. Existing operator workboard decisions retained; related LL-072, LL-082, LL-263 remain open.
 
 ## v0.5.89 — Durable multiplayer participant roster (candidate)
 

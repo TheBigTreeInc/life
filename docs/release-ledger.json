@@ -190,6 +190,13 @@
       "kind": "internal-atrium-life-launch-contract",
       "supersedes": "0.5.90",
       "notes": "Private authenticated launch adapter for Atrium create/invite/join/list/resume; reauthorizes match projections, no credentials in URLs or routes. Live Atrium and Social integration not implemented."
+    },
+    {
+      "version": "0.5.92",
+      "artifact": "the-life-loop-0.5.92-ziprunner.zip",
+      "kind": "atriumd-sidecar-discovery",
+      "supersedes": "0.5.91",
+      "notes": "Adds root Atrium portable sidecar; deployment relay and live launch remain pending."
     }
   ]
 }
