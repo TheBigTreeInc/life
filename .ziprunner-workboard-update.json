@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.86",
-  "summary": "v0.5.86: internal authenticated /play facade and P0 multiplayer/Atrium/Social/DAPI schedule; operator workboard snapshot preserved; public /play remains disabled and CI evidence remains unverified.",
+  "version": "0.5.87",
+  "summary": "v0.5.87: SQL-backed trusted participant roster and seat uniqueness checks; Social issuer still external, no public /play endpoints; operator workboard untouched and multiplayer remains top model development priority.",
   "implemented": [
     {
       "id": "LL-178",
@@ -1243,7 +1243,7 @@
     {
       "id": "LL-345",
       "title": "Social identity trust adapter",
-      "summary": "Require externally verified scoped issuer, audience and subject before allowing internal persistent-match commands; unverified clients fail closed. Reviewed again in v0.5.86; still pending operator acceptance.",
+      "summary": "Require externally verified scoped issuer, audience and subject before allowing internal persistent-match commands; unverified clients fail closed. Reviewed again in v0.5.87; still pending operator acceptance.",
       "operator_checks": [
         "Verify trusted Social verifier integration and player-seat ownership on staging, confirm /play remains gated."
       ]

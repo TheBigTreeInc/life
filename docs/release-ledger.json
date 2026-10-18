@@ -162,6 +162,13 @@
       "kind": "internal-play-contract-multiplayer-p0-handoff",
       "supersedes": "0.5.85",
       "notes": "Internal fail-closed play facade; scheduled P0 multiplayer priority handoff retaining local operator workboard; no live /play route or release approval."
+    },
+    {
+      "version": "0.5.87",
+      "artifact": "the-life-loop-0.5.87-ziprunner.zip",
+      "kind": "trusted-durable-participant-roster",
+      "supersedes": "0.5.86",
+      "notes": "Internal SQL-backed verified match-seats, duplicate account/seat prevention and replay-safe membership lookups. No public join or signed Social issuance."
     }
   ]
 }
