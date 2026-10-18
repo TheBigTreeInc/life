@@ -1,0 +1,54 @@
+{
+  "schema": "the-life-loop.priority-handoff.v1",
+  "project": "the-life-loop",
+  "canonical_project_id": "35c5ca70-fe10-4334-8725-bf4a07d7b3ac",
+  "release": "0.5.86",
+  "policy": "Proposed priority order only; do not overwrite operator status, review or acceptance. Reconcile priorities by ID after operator approval.",
+  "p0_sequence": [
+    "LL-072",
+    "LL-263",
+    "LL-092",
+    "LL-082"
+  ],
+  "promotions": [
+    {
+      "id": "LL-072",
+      "from": "high",
+      "to": "critical",
+      "status": "planned",
+      "operator_approval": "pending"
+    },
+    {
+      "id": "LL-082",
+      "from": "high",
+      "to": "critical",
+      "status": "planned",
+      "operator_approval": "pending"
+    },
+    {
+      "id": "LL-092",
+      "from": "high",
+      "to": "critical",
+      "status": "planned",
+      "operator_approval": "pending"
+    },
+    {
+      "id": "LL-263",
+      "from": "high",
+      "to": "critical",
+      "status": "planned",
+      "operator_approval": "pending"
+    }
+  ],
+  "existing_critical_preserved": [
+    "LL-039",
+    "LL-040"
+  ],
+  "current_gate": "Exact-commit GitHub push CI and operator acceptance are still unverified.",
+  "component_dependencies": {
+    "Life": "Authorized internal /play facade, match persistence and signed Social ticket verification",
+    "Social/Tavi": "Provision real scoped issuer, key rotation, account bindings and persistent notification contract",
+    "Atrium": "Authorized registry listing, game create/join/resume launch context and no duplicated match authority",
+    "DAPI": "Production SQL migration, atomicity, uniqueness, task scheduling and cross-runtime trust"
+  }
+}

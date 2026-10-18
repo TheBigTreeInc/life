@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.85",
-  "summary": "v0.5.85: verified Social identity adapter and fail-closed account claims for internal seat-authorized game commands; public /play remains disabled.",
+  "version": "0.5.86",
+  "summary": "v0.5.86: internal authenticated /play facade and P0 multiplayer/Atrium/Social/DAPI schedule; operator workboard snapshot preserved; public /play remains disabled and CI evidence remains unverified.",
   "implemented": [
     {
       "id": "LL-178",
@@ -1243,7 +1243,7 @@
     {
       "id": "LL-345",
       "title": "Social identity trust adapter",
-      "summary": "Require externally verified scoped issuer, audience and subject before allowing internal persistent-match commands; unverified clients fail closed.",
+      "summary": "Require externally verified scoped issuer, audience and subject before allowing internal persistent-match commands; unverified clients fail closed. Reviewed again in v0.5.86; still pending operator acceptance.",
       "operator_checks": [
         "Verify trusted Social verifier integration and player-seat ownership on staging, confirm /play remains gated."
       ]
@@ -1311,13 +1311,13 @@
       "id": "LL-072",
       "title": "Native server-authoritative simulation and multi-device resilience",
       "summary": "Migrate simulation validation into a trusted server-side engine for hostile-client resistance and add multi-room expiration/observability, host migration, spectator support, and real deployment acceptance.",
-      "priority": "high"
+      "priority": "critical"
     },
     {
       "id": "LL-082",
       "title": "Production Looprd two-browser acceptance",
       "summary": "Deploy actual server, verify registration, independent turn ownership, WebSocket/fallback, reconnections, invalid command rejection and host-disconnect handling",
-      "priority": "high"
+      "priority": "critical"
     },
     {
       "id": "LL-086",
@@ -1329,7 +1329,7 @@
       "id": "LL-092",
       "title": "Live Looprd schema migration and multiplayer field test",
       "summary": "Apply Room schema version 2 to existing Looprd server database with backup; verify real HTTPS/WSS chat deliveries, origin restrictions, two-player join, reconnection and service restart.",
-      "priority": "high"
+      "priority": "critical"
     },
     {
       "id": "LL-098",
@@ -1462,7 +1462,7 @@
       "id": "LL-263",
       "title": "Cross-game single sign-on and social deployment",
       "summary": "Implement production OIDC browser login, trusted issuer, short-lived game-scoped tokens, game server validation and remote two-client social deployment.",
-      "priority": "high"
+      "priority": "critical"
     },
     {
       "id": "LL-301",

@@ -1,30 +1,30 @@
-## v0.5.85 — Social verification boundary
+## v0.5.86 — Social verification boundary
 
 `LL-345`: fail-closed verified Social identity adapter for internal Life match commands. Still requires live token verifier, seat roster, DAPI and isolated execution; `/play` remains disabled.
 
-## v0.5.85 — LIFE-ASYNC-03 command processing
+## v0.5.86 — LIFE-ASYNC-03 command processing
 
-Release `the-life-loop-0.5.85-ziprunner.zip`: internal service validates seat, state digest and expected revision before invoking the headless evaluator, then commits the computed checkpoint and action. No public API, Social grant verification or production DAPI validation yet.
+Release `the-life-loop-0.5.86-ziprunner.zip`: internal service validates seat, state digest and expected revision before invoking the headless evaluator, then commits the computed checkpoint and action. No public API, Social grant verification or production DAPI validation yet.
 
-## v0.5.85 — Trusted headless evaluator foundation
+## v0.5.86 — Trusted headless evaluator foundation
 
-Release `the-life-loop-0.5.85-ziprunner.zip`: typed internal command evaluation, digest integrity check, deterministic snapshots and subprocess CLI. Next: wire repository with Social identity and match-seat authority; isolate evaluation resources before production use.
+Release `the-life-loop-0.5.86-ziprunner.zip`: typed internal command evaluation, digest integrity check, deterministic snapshots and subprocess CLI. Next: wire repository with Social identity and match-seat authority; isolate evaluation resources before production use.
 
-## v0.5.85 — LIFE-ASYNC-02 repository transactions
+## v0.5.86 — LIFE-ASYNC-02 repository transactions
 
-`the-life-loop-0.5.85-ziprunner.zip`: checkpoint creation, guarded revision update, idempotent command history, turn-notification outbox writes. Requires real DAPI database verification, issuer verification, trusted evaluator and database uniqueness constraints before production use.
+`the-life-loop-0.5.86-ziprunner.zip`: checkpoint creation, guarded revision update, idempotent command history, turn-notification outbox writes. Requires real DAPI database verification, issuer verification, trusted evaluator and database uniqueness constraints before production use.
 
-## v0.5.85 — LIFE-ASYNC-02 SQL model foundation
+## v0.5.86 — LIFE-ASYNC-02 SQL model foundation
 
 Game-owned additive SQL models defined for matches, participants, actions, checkpoints, and notification outbox. This is a schema-only foundation pending DAPI migration/index verification and Social identity contract. No new public `/play` route.
 
-## v0.5.85 — Geometry editor foundation
+## v0.5.86 — Geometry editor foundation
 
-Release `the-life-loop-0.5.85-ziprunner.zip`: standalone editable board geometry manifest, validated during build, plus developer-only coordinate overlay (`?debugGeometry`). Visual only, no game cost changes.
+Release `the-life-loop-0.5.86-ziprunner.zip`: standalone editable board geometry manifest, validated during build, plus developer-only coordinate overlay (`?debugGeometry`). Visual only, no game cost changes.
 
 ## v0.5.78 — Curved board-geometry manifest (LL-333)
 
-Release `the-life-loop-0.5.85-ziprunner.zip`: add metadata-driven visual road curves for the Classic ring road, plus per-venue entrance paths and normalized road start/stop coordinates. Operator: verify curved road rendering, doorway approach alignment, pawn motion on the visible road and no travel-cost or save regressions.
+Release `the-life-loop-0.5.86-ziprunner.zip`: add metadata-driven visual road curves for the Classic ring road, plus per-venue entrance paths and normalized road start/stop coordinates. Operator: verify curved road rendering, doorway approach alignment, pawn motion on the visible road and no travel-cost or save regressions.
 
 ## v0.5.72 — Mobile player-experience pass (LL-331)
 

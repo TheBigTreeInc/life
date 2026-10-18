@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.workboard-lifecycle.v1",
   "project": "the-life-loop",
-  "release": "0.5.85",
+  "release": "0.5.86",
   "importer_contract": "ziprunner.workboard-update.v1",
   "importer_limitation": "ZipRunner v1 implemented/remaining fields do not transport explicit blocked or in_progress transitions. This local ledger is authoritative for source planning, not proof that the ZipRunner UI applied statuses.",
   "counts": {
@@ -1981,7 +1981,7 @@
       "id": "LL-178",
       "title": "DOS-qualified employment and reproducible hiring",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -1993,7 +1993,7 @@
       "id": "LL-179",
       "title": "Two-week Classic survival budget",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2005,7 +2005,7 @@
       "id": "LL-180",
       "title": "Rival career pathway and multi-payday job choices",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2017,7 +2017,7 @@
       "id": "LL-181",
       "title": "Original career and survival regressions",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2029,7 +2029,7 @@
       "id": "LL-183",
       "title": "Original DOS dynamic goods pricing",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2041,7 +2041,7 @@
       "id": "LL-184",
       "title": "Lottery and rent extension parity",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2053,7 +2053,7 @@
       "id": "LL-185",
       "title": "Original partial wage truncation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2065,7 +2065,7 @@
       "id": "LL-186",
       "title": "Ordered priority Jones core branches",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2077,7 +2077,7 @@
       "id": "LL-187",
       "title": "Classic economics and AI diagnostics",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2089,7 +2089,7 @@
       "id": "LL-188",
       "title": "DOS Pass-2 source reference and regression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2101,7 +2101,7 @@
       "id": "LL-191",
       "title": "Eight original economic index identities",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2113,7 +2113,7 @@
       "id": "LL-192",
       "title": "Unified Classic wages and market bindings",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2125,7 +2125,7 @@
       "id": "LL-193",
       "title": "Contract-aware rival planning and pawn emergencies",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2137,7 +2137,7 @@
       "id": "LL-194",
       "title": "Economic diagnostics and save migration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2149,7 +2149,7 @@
       "id": "LL-195",
       "title": "Economic regression and ZipRunner delivery",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2161,7 +2161,7 @@
       "id": "LL-196",
       "title": "Source-derived DOS scandal result engine",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2173,7 +2173,7 @@
       "id": "LL-197",
       "title": "Saved economic event phase and per-week processing",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2185,7 +2185,7 @@
       "id": "LL-198",
       "title": "Rival layoff recovery and essentials protection",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2197,7 +2197,7 @@
       "id": "LL-199",
       "title": "Economic crisis ledger and diagnostics",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2209,7 +2209,7 @@
       "id": "LL-200",
       "title": "Expanded crisis migration QA and full ZipRunner release",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2221,7 +2221,7 @@
       "id": "LL-201",
       "title": "Ordered source-linked Jones career decisions",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2233,7 +2233,7 @@
       "id": "LL-202",
       "title": "Prevent workwear expiry feedback loop",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2245,7 +2245,7 @@
       "id": "LL-203",
       "title": "Employment search persistence and legitimate recovery",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2257,7 +2257,7 @@
       "id": "LL-204",
       "title": "Course and contract-sensitive AI",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2269,7 +2269,7 @@
       "id": "LL-205",
       "title": "Career replay/QA and ZipRunner source synchronization",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2281,7 +2281,7 @@
       "id": "LL-206",
       "title": "Original waypoint tick estimator",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2293,7 +2293,7 @@
       "id": "LL-207",
       "title": "Source-based Employment entry timing",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2305,7 +2305,7 @@
       "id": "LL-208",
       "title": "Per-action DOS work progression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2317,7 +2317,7 @@
       "id": "LL-209",
       "title": "Classic route UI and itinerary diagnostics",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2329,7 +2329,7 @@
       "id": "LL-210",
       "title": "Timing tests, backward-compatible saves and full ZIP",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2341,7 +2341,7 @@
       "id": "LL-211",
       "title": "DOS reliability warning and work dismissal",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2353,7 +2353,7 @@
       "id": "LL-212",
       "title": "Paycheck preview and rent garnishment audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2365,7 +2365,7 @@
       "id": "LL-213",
       "title": "AI post-travel action reservation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2377,7 +2377,7 @@
       "id": "LL-214",
       "title": "Durable migration and Classic/Modern isolation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2389,7 +2389,7 @@
       "id": "LL-215",
       "title": "Source regression and ZipRunner delivery",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2401,7 +2401,7 @@
       "id": "LL-216",
       "title": "Classic auditable paycheck reconciliation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2413,7 +2413,7 @@
       "id": "LL-217",
       "title": "Bounded payroll ledger and migration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2425,7 +2425,7 @@
       "id": "LL-218",
       "title": "Net-aware rival survival forecasting",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2437,7 +2437,7 @@
       "id": "LL-219",
       "title": "Essentials-first debt payoff",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2449,7 +2449,7 @@
       "id": "LL-220",
       "title": "Regression, parity and ZipRunner release",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2461,7 +2461,7 @@
       "id": "LL-221",
       "title": "Source-backed per-player Classic turn closure",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2473,7 +2473,7 @@
       "id": "LL-222",
       "title": "Single-assessment Classic rent",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2485,7 +2485,7 @@
       "id": "LL-223",
       "title": "Replayable Classic turn timeline",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2497,7 +2497,7 @@
       "id": "LL-224",
       "title": "Legacy import and Modern isolation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2509,7 +2509,7 @@
       "id": "LL-225",
       "title": "Turn-sequence regression and ZipRunner packaging",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2521,7 +2521,7 @@
       "id": "LL-226",
       "title": "Stable Classic 13-location board",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2533,7 +2533,7 @@
       "id": "LL-227",
       "title": "Readable phone Explore and Overview",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2545,7 +2545,7 @@
       "id": "LL-228",
       "title": "Board-relative routing and centered venue continuity",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2557,7 +2557,7 @@
       "id": "LL-229",
       "title": "DOS weekly computer bonus state 4",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2569,7 +2569,7 @@
       "id": "LL-230",
       "title": "Classic board/weekly regression and ZipRunner handoff",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2581,7 +2581,7 @@
       "id": "LL-231",
       "title": "Safe phone overview inspection",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2593,7 +2593,7 @@
       "id": "LL-232",
       "title": "Pawn-follow mobile camera",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2605,7 +2605,7 @@
       "id": "LL-233",
       "title": "DOS food storage trace",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2617,7 +2617,7 @@
       "id": "LL-234",
       "title": "DOS clothing warning trace",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2629,7 +2629,7 @@
       "id": "LL-235",
       "title": "Classic board and weekly release QA",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2641,7 +2641,7 @@
       "id": "LL-236",
       "title": "Journey stage & Classic arrival cue",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2653,7 +2653,7 @@
       "id": "LL-237",
       "title": "Touch-pan intent threshold",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2665,7 +2665,7 @@
       "id": "LL-238",
       "title": "DOS state 12 food shortage trace",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2677,7 +2677,7 @@
       "id": "LL-239",
       "title": "DOS state 34 clothing assistance trace",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2689,7 +2689,7 @@
       "id": "LL-240",
       "title": "Regression tests and verified ZipRunner handoff",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2701,7 +2701,7 @@
       "id": "LL-241",
       "title": "Accessible Classic pawn animation skip",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2713,7 +2713,7 @@
       "id": "LL-242",
       "title": "Separate source-linked Classic relaxation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2725,7 +2725,7 @@
       "id": "LL-243",
       "title": "Source state 20 loan schedule audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2737,7 +2737,7 @@
       "id": "LL-244",
       "title": "Classic journey and relaxation regression coverage",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2749,7 +2749,7 @@
       "id": "LL-245",
       "title": "Complete ZipRunner v0.5.40 release handoff",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2761,7 +2761,7 @@
       "id": "LL-246",
       "title": "Route-owned visible entrance marker",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2773,7 +2773,7 @@
       "id": "LL-247",
       "title": "Working-appliance household adapter",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2785,7 +2785,7 @@
       "id": "LL-248",
       "title": "Relaxation-only Classic rest",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2797,7 +2797,7 @@
       "id": "LL-249",
       "title": "Production-ready 13-place designer contract",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2809,7 +2809,7 @@
       "id": "LL-250",
       "title": "Mandatory regression and ZipRunner release",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2821,7 +2821,7 @@
       "id": "LL-251",
       "title": "Reconcile workboard by stable ID with explicit lifecycle evidence",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2833,7 +2833,7 @@
       "id": "LL-252",
       "title": "Enforce source workboard lifecycle in ZipRunner release verifier",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2845,7 +2845,7 @@
       "id": "LL-253",
       "title": "Needs-aware Classic appliance maintenance and regression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2857,7 +2857,7 @@
       "id": "LL-254",
       "title": "Install production Classic exterior and interior artwork",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2869,7 +2869,7 @@
       "id": "LL-255",
       "title": "Keep original DOS geography independent of display size",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2881,7 +2881,7 @@
       "id": "LL-256",
       "title": "Active player portrait and centered turn presentation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2893,7 +2893,7 @@
       "id": "LL-257",
       "title": "Original-inspired Classic weekly clock",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2905,7 +2905,7 @@
       "id": "LL-258",
       "title": "Classic production board acceptance and release tests",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2917,7 +2917,7 @@
       "id": "LL-259",
       "title": "Modular Portrait Kit integration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2929,7 +2929,7 @@
       "id": "LL-260",
       "title": "Shared cross-game appearance identity",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2941,7 +2941,7 @@
       "id": "LL-261",
       "title": "Optional Looprd Social integration contract",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2953,7 +2953,7 @@
       "id": "LL-262",
       "title": "Portrait integration release gate",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2965,7 +2965,7 @@
       "id": "LL-264",
       "title": "Expose shared Social lobby in game Chat",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2977,7 +2977,7 @@
       "id": "LL-265",
       "title": "Native Looprd Social client and unified profile session",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -2989,7 +2989,7 @@
       "id": "LL-266",
       "title": "Chat resilience, security and viewport tests",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3001,7 +3001,7 @@
       "id": "LL-267",
       "title": "Carry forward Looprd game schema migration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3013,7 +3013,7 @@
       "id": "LL-013",
       "title": "Classic local hotseat privacy handover",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3025,7 +3025,7 @@
       "id": "LL-268",
       "title": "Preserve Classic scenic road and garden on mobile",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3037,7 +3037,7 @@
       "id": "LL-269",
       "title": "Hotseat and mobile board regression release",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3049,7 +3049,7 @@
       "id": "LL-270",
       "title": "Place Classic action clock on Public Garden",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3061,7 +3061,7 @@
       "id": "LL-271",
       "title": "Limit Explore/Overview camera toggle to phones",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3073,7 +3073,7 @@
       "id": "LL-272",
       "title": "Correct south-row visual route projection",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3085,7 +3085,7 @@
       "id": "LL-273",
       "title": "Door-aligned Classic storefront arrival",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3097,7 +3097,7 @@
       "id": "LL-274",
       "title": "In-venue Classic action clock",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3109,7 +3109,7 @@
       "id": "LL-275",
       "title": "Entrance and venue time regression coverage",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3121,7 +3121,7 @@
       "id": "LL-276",
       "title": "Continuous Classic street centerline",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3133,7 +3133,7 @@
       "id": "LL-277",
       "title": "Separate road preview from storefront art",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3145,7 +3145,7 @@
       "id": "LL-278",
       "title": "Road and door arrival regression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3157,7 +3157,7 @@
       "id": "LL-279",
       "title": "Smooth Classic pawn entry and departure",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3170,7 +3170,7 @@
       "id": "LL-280",
       "title": "Responsive arrival and route conservation tests",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3182,7 +3182,7 @@
       "id": "LL-281",
       "title": "Street tracks visible illustrated storefronts",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3194,7 +3194,7 @@
       "id": "LL-282",
       "title": "Visible doorway sidewalks and continuous pawn journey",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3206,7 +3206,7 @@
       "id": "LL-283",
       "title": "Storefront and garden clock browser regression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3218,7 +3218,7 @@
       "id": "LL-284",
       "title": "DOS Employment end-of-week time cap",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3230,7 +3230,7 @@
       "id": "LL-285",
       "title": "Executable original clock reference and timing audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3242,7 +3242,7 @@
       "id": "LL-286",
       "title": "Late-week timing parity regression and release",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3254,7 +3254,7 @@
       "id": "LL-287",
       "title": "DOS weekly state-order and invented-event cleanup",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3266,7 +3266,7 @@
       "id": "LL-288",
       "title": "Pinned canonical Social JavaScript SDK integration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3278,7 +3278,7 @@
       "id": "LL-289",
       "title": "Shared Social account login and registration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3290,7 +3290,7 @@
       "id": "LL-290",
       "title": "Weekly/Social integrated regression and source handoff",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3302,7 +3302,7 @@
       "id": "LL-291",
       "title": "Classic end-of-turn home return and clock overdraft",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3314,7 +3314,7 @@
       "id": "LL-292",
       "title": "Game-family presets and custom house rules",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3326,7 +3326,7 @@
       "id": "LL-293",
       "title": "Homeward turn debt serialization and regression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3338,7 +3338,7 @@
       "id": "LL-294",
       "title": "Animated mandatory Classic journey home",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3350,7 +3350,7 @@
       "id": "LL-295",
       "title": "Expanded per-game house rules",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3362,7 +3362,7 @@
       "id": "LL-296",
       "title": "v0.5.56 delivery, source tests and release diagnostics",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3374,7 +3374,7 @@
       "id": "LL-297",
       "title": "Closing-week Classic food audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3386,7 +3386,7 @@
       "id": "LL-298",
       "title": "Selectable match goal presets",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3398,7 +3398,7 @@
       "id": "LL-299",
       "title": "English/Dutch setup localization foundation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3410,7 +3410,7 @@
       "id": "LL-300",
       "title": "v0.5.57 regression, package and operator handoff",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3422,7 +3422,7 @@
       "id": "LL-303",
       "title": "Classic source goal scores and victory",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3435,7 +3435,7 @@
       "id": "LL-304",
       "title": "Goal parity regression and portable build",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3448,7 +3448,7 @@
       "id": "LL-305",
       "title": "Clock-end venue actions and Classic 10-action rule separation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3462,7 +3462,7 @@
       "id": "LL-311",
       "title": "Classic happiness and source-state food-stress audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3475,7 +3475,7 @@
       "id": "LL-312",
       "title": "Source food-storage happiness penalties",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3487,7 +3487,7 @@
       "id": "LL-313",
       "title": "Fourth-week loan notices and bounded penalties",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3499,7 +3499,7 @@
       "id": "LL-314",
       "title": "Original n108 source payroll comparator",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3511,7 +3511,7 @@
       "id": "LL-315",
       "title": "Original Jones raise/promotion and rest priority gates",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3524,7 +3524,7 @@
       "id": "LL-316",
       "title": "Rival survival and branch decision audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3537,7 +3537,7 @@
       "id": "LL-317",
       "title": "Source predicate adapter and reproducible release tests",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3550,7 +3550,7 @@
       "id": "LL-318",
       "title": "Original DOS pawn price formula and happiness impacts",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3563,7 +3563,7 @@
       "id": "LL-319",
       "title": "Original Black’s Market price tests and DOS economy RNG comparators",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3576,7 +3576,7 @@
       "id": "LL-320",
       "title": "v0.5.63 source/ZipRunner release and compatibility verification",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3589,7 +3589,7 @@
       "id": "LL-321",
       "title": "Original DOS Classic new-game initial statistics",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3602,7 +3602,7 @@
       "id": "LL-322",
       "title": "Versioned DOS food items, storage ordering and clock isolation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3615,7 +3615,7 @@
       "id": "LL-323",
       "title": "v0.5.64 source release, parity evidence and replay regression",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3628,7 +3628,7 @@
       "id": "LL-324",
       "title": "New-version ZipRunner language integration and artifact reproducibility",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3643,7 +3643,7 @@
       "id": "LL-325",
       "title": "Versioned shared I18n locale controller",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3655,7 +3655,7 @@
       "id": "LL-326",
       "title": "ZipRunner retained campaign selector integration",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3669,7 +3669,7 @@
       "id": "LL-327",
       "title": "ZipRunner goal-preset adapter and merged-tree contract",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3684,7 +3684,7 @@
       "id": "LL-328",
       "title": "Merged-tree localization and campaign/food compatibility",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3699,7 +3699,7 @@
       "id": "LL-329",
       "title": "Rendered Dutch gameplay and live language switching",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3713,7 +3713,7 @@
       "id": "LL-330",
       "title": "Source-correct DOS active motion quantum and 156-route audit",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3727,7 +3727,7 @@
       "id": "LL-331",
       "title": "Mobile overview-first exploration and game-first venue UI",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3742,7 +3742,7 @@
       "id": "LL-332",
       "title": "Phone top-bar End Week and removal of building picker",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3758,7 +3758,7 @@
       "id": "LL-074-VERSION",
       "title": "Visible running version and About panel",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3770,7 +3770,7 @@
       "id": "LL-375",
       "title": "Measured-session pacing audit foundation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3782,7 +3782,7 @@
       "id": "LL-333",
       "title": "Source-backed Jones route decision estimate",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3795,7 +3795,7 @@
       "id": "LL-350",
       "title": "LIFE-ASYNC-01 deterministic load and replay foundation",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [
@@ -3807,7 +3807,7 @@
       "id": "LL-345",
       "title": "Social identity trust adapter",
       "status": "done",
-      "verified_in": "0.5.85",
+      "verified_in": "0.5.86",
       "evidence": {
         "source": ".ziprunner-workboard-update.json",
         "operator_checks": [

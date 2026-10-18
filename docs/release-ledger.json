@@ -155,6 +155,13 @@
       "kind": "social-identity-trust-adapter",
       "supersedes": "0.5.84",
       "notes": "Internal trusted Social claim verifier boundary; issuer/audience/subject required before match seat delegation; /play disabled."
+    },
+    {
+      "version": "0.5.86",
+      "artifact": "the-life-loop-0.5.86-ziprunner.zip",
+      "kind": "internal-play-contract-multiplayer-p0-handoff",
+      "supersedes": "0.5.85",
+      "notes": "Internal fail-closed play facade; scheduled P0 multiplayer priority handoff retaining local operator workboard; no live /play route or release approval."
     }
   ]
 }
