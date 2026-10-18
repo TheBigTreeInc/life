@@ -1,7 +1,7 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.87
+release: 0.5.88
 api:
   version: v1
 auth:
@@ -125,6 +125,50 @@ models:
         maxLength: 32
         required: true
       joinedAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+  GameInvitation:
+    fields:
+      id:
+        type: string
+        maxLength: 64
+        primaryKey: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+      seatId:
+        type: string
+        maxLength: 32
+        required: true
+      tokenDigest:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      createdByIssuer:
+        type: string
+        maxLength: 256
+        required: true
+      createdBySubject:
+        type: string
+        maxLength: 256
+        required: true
+      expiresAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+      redeemedByIssuer:
+        type: string
+        maxLength: 256
+      redeemedBySubject:
+        type: string
+        maxLength: 256
+      redeemedAtUtc:
+        type: string
+        maxLength: 40
+      createdAtUtc:
         type: string
         maxLength: 40
         required: true

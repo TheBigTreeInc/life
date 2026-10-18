@@ -44,6 +44,18 @@ spec={
    'subject':{'type':'string','maxLength':256,'required':True},
    'role':{'type':'string','maxLength':32,'required':True},
    'joinedAtUtc':{'type':'string','maxLength':40,'required':True}}},
+  'GameInvitation':{'fields':{
+   'id':{'type':'string','maxLength':64,'primaryKey':True},
+   'matchId':{'type':'string','maxLength':64,'required':True},
+   'seatId':{'type':'string','maxLength':32,'required':True},
+   'tokenDigest':{'type':'string','maxLength':64,'required':True,'unique':True},
+   'createdByIssuer':{'type':'string','maxLength':256,'required':True},
+   'createdBySubject':{'type':'string','maxLength':256,'required':True},
+   'expiresAtUtc':{'type':'string','maxLength':40,'required':True},
+   'redeemedByIssuer':{'type':'string','maxLength':256},
+   'redeemedBySubject':{'type':'string','maxLength':256},
+   'redeemedAtUtc':{'type':'string','maxLength':40},
+   'createdAtUtc':{'type':'string','maxLength':40,'required':True}}},
   'GameAction':{'fields':{
    'id':{'type':'string','maxLength':64,'primaryKey':True},
    'matchId':{'type':'string','maxLength':64,'required':True},
