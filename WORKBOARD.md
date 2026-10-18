@@ -1,34 +1,34 @@
-## v0.5.89 — Durable multiplayer participant roster (candidate)
+## v0.5.90 — Durable multiplayer participant roster (candidate)
 
 `LL-072` shared multiplayer P0: SQL-backed match membership and identity-to-seat lookup, guarded enroll and duplicate protection. Local tests only. Public join/create and production Social/DAPI/Atrium remain disabled or unintegrated; preserve operator statuses.
 
-## v0.5.89 — Social verification boundary
+## v0.5.90 — Social verification boundary
 
 `LL-345`: fail-closed verified Social identity adapter for internal Life match commands. Still requires live token verifier, seat roster, DAPI and isolated execution; `/play` remains disabled.
 
-## v0.5.89 — LIFE-ASYNC-03 command processing
+## v0.5.90 — LIFE-ASYNC-03 command processing
 
-Release `the-life-loop-0.5.89-ziprunner.zip`: internal service validates seat, state digest and expected revision before invoking the headless evaluator, then commits the computed checkpoint and action. No public API, Social grant verification or production DAPI validation yet.
+Release `the-life-loop-0.5.90-ziprunner.zip`: internal service validates seat, state digest and expected revision before invoking the headless evaluator, then commits the computed checkpoint and action. No public API, Social grant verification or production DAPI validation yet.
 
-## v0.5.89 — Trusted headless evaluator foundation
+## v0.5.90 — Trusted headless evaluator foundation
 
-Release `the-life-loop-0.5.89-ziprunner.zip`: typed internal command evaluation, digest integrity check, deterministic snapshots and subprocess CLI. Next: wire repository with Social identity and match-seat authority; isolate evaluation resources before production use.
+Release `the-life-loop-0.5.90-ziprunner.zip`: typed internal command evaluation, digest integrity check, deterministic snapshots and subprocess CLI. Next: wire repository with Social identity and match-seat authority; isolate evaluation resources before production use.
 
-## v0.5.89 — LIFE-ASYNC-02 repository transactions
+## v0.5.90 — LIFE-ASYNC-02 repository transactions
 
-`the-life-loop-0.5.89-ziprunner.zip`: checkpoint creation, guarded revision update, idempotent command history, turn-notification outbox writes. Requires real DAPI database verification, issuer verification, trusted evaluator and database uniqueness constraints before production use.
+`the-life-loop-0.5.90-ziprunner.zip`: checkpoint creation, guarded revision update, idempotent command history, turn-notification outbox writes. Requires real DAPI database verification, issuer verification, trusted evaluator and database uniqueness constraints before production use.
 
-## v0.5.89 — LIFE-ASYNC-02 SQL model foundation
+## v0.5.90 — LIFE-ASYNC-02 SQL model foundation
 
 Game-owned additive SQL models defined for matches, participants, actions, checkpoints, and notification outbox. This is a schema-only foundation pending DAPI migration/index verification and Social identity contract. No new public `/play` route.
 
-## v0.5.89 — Geometry editor foundation
+## v0.5.90 — Geometry editor foundation
 
-Release `the-life-loop-0.5.89-ziprunner.zip`: standalone editable board geometry manifest, validated during build, plus developer-only coordinate overlay (`?debugGeometry`). Visual only, no game cost changes.
+Release `the-life-loop-0.5.90-ziprunner.zip`: standalone editable board geometry manifest, validated during build, plus developer-only coordinate overlay (`?debugGeometry`). Visual only, no game cost changes.
 
 ## v0.5.78 — Curved board-geometry manifest (LL-333)
 
-Release `the-life-loop-0.5.89-ziprunner.zip`: add metadata-driven visual road curves for the Classic ring road, plus per-venue entrance paths and normalized road start/stop coordinates. Operator: verify curved road rendering, doorway approach alignment, pawn motion on the visible road and no travel-cost or save regressions.
+Release `the-life-loop-0.5.90-ziprunner.zip`: add metadata-driven visual road curves for the Classic ring road, plus per-venue entrance paths and normalized road start/stop coordinates. Operator: verify curved road rendering, doorway approach alignment, pawn motion on the visible road and no travel-cost or save regressions.
 
 ## v0.5.72 — Mobile player-experience pass (LL-331)
 
@@ -809,5 +809,5 @@ Open: live deployed Social and game-room authorization remain separate. Original
 
 0.5.77 source AI evidence: 28-tick per-leg rival overhead from DOS WhereShouldIGo.sc; tests/classic-jones-motion-076.test.cjs; no live travel adjustment.
 
-### v0.5.89 shared multiplayer lifecycle (candidate review)
+### v0.5.90 shared multiplayer lifecycle (candidate review)
 Internal server-created match state and creator seat, hashed match-bound invitations, authenticated join/rejoin and resume discovery. No operator tickets closed; priority remains the user-directed multiplayer initiative until production E2E. Public `/play` disabled. See ADR-0088.

@@ -1,7 +1,7 @@
 {
   "schema": "the-life-loop.portrait-pack.v1",
   "id": "default",
-  "version": "0.5.89",
+  "version": "0.5.90",
   "portraits": {
     "illustrated-01": {
       "image": "assets/portraits/default/illustrated-01.webp",

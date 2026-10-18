@@ -27,8 +27,10 @@ class MatchLifecycle:
         self.identity=identity_boundary
         self.snapshot_factory=snapshot_factory
 
-    def create(self, *, token, engine_revision, rules_digest, seed, settings=None):
+    def create(self, *, token, engine_revision, rules_digest, seed, settings=None, request_id=None):
         actor=self.identity.authenticate(token)
+        if request_id is not None and (not isinstance(request_id,str) or not 8<=len(request_id)<=128):
+            raise LifecycleRejected('Invalid create request ID')
         if not isinstance(engine_revision,str) or not engine_revision or not isinstance(rules_digest,str) or not rules_digest:
             raise LifecycleRejected('Pinned rules metadata required')
         if type(seed) is not int or seed<0 or seed>2**32-1: raise LifecycleRejected('Invalid seed')
@@ -39,7 +41,21 @@ class MatchLifecycle:
             raise LifecycleRejected('Invalid trusted initial state')
         state=initial['snapshot']; rng=initial.get('rngState')
         if type(rng) is not int: raise LifecycleRejected('Invalid trusted RNG state')
-        match_id=str(uuid.uuid4()); now=timestamp()
+        # A caller-scoped request ID makes creation retryable across process restarts.
+        # Never accept an unverified account identifier from the caller.
+        match_id=(str(uuid.uuid5(uuid.NAMESPACE_URL, 'life-create:'+actor.issuer+':'+actor.subject+':'+request_id))
+                  if request_id is not None else str(uuid.uuid4()))
+        if request_id is not None:
+            with self.session_factory() as db:
+                old=db.execute(sa.select(Match).where(Match.c.id==match_id)).mappings().first()
+                if old is not None:
+                    member=db.execute(sa.select(Participant.c.id).where((Participant.c.matchId==match_id)&
+                        (Participant.c.seatId=='0')&(Participant.c.issuer==actor.issuer)&
+                        (Participant.c.subject==actor.subject))).first()
+                    if member is None or old['engineRevision']!=engine_revision or old['rulesDigest']!=rules_digest or old['initialSeed']!=seed:
+                        raise MatchConflict('Create request ID reused with different parameters')
+                    return {'matchId':match_id,'yourSeat':0,'revision':old['revision'],'alreadyCreated':True}
+        now=timestamp()
         with self.session_factory.begin() as db:
             db.execute(sa.insert(Match).values(id=match_id,status='active',engineRevision=engine_revision,
                 rulesDigest=rules_digest,initialSeed=seed,rngState=rng,revision=0,
@@ -48,7 +64,7 @@ class MatchLifecycle:
                 revision=0,turnIndex=0,state=state,stateDigest=digest(state),rngState=rng,createdAtUtc=now))
             db.execute(sa.insert(Participant).values(id=str(uuid.uuid4()),matchId=match_id,
                 seatId='0',issuer=actor.issuer,subject=actor.subject,role='player',joinedAtUtc=now))
-        return {'matchId':match_id,'yourSeat':0,'revision':0,'stateDigest':digest(state)}
+        return {'matchId':match_id,'yourSeat':0,'revision':0,'stateDigest':digest(state),'alreadyCreated':False}
 
     def issue_invitation(self, *, token, match_id, seat=1, expires_in_seconds=86400):
         actor=self.identity.authenticate(token)
@@ -59,8 +75,9 @@ class MatchLifecycle:
         token_hash=hashlib.sha256(raw.encode('ascii')).hexdigest()
         expiry=(datetime.now(timezone.utc)+timedelta(seconds=expires_in_seconds)).isoformat()
         with self.session_factory.begin() as db:
-            if db.execute(sa.select(Match.c.id).where(Match.c.id==match_id)).first() is None:
-                raise MatchNotFound(match_id)
+            live_match=db.execute(sa.select(Match.c.status).where(Match.c.id==match_id)).first()
+            if live_match is None: raise MatchNotFound(match_id)
+            if live_match[0]!='active': raise LifecycleRejected('Match not active')
             owner=db.execute(sa.select(Participant.c.id).where((Participant.c.matchId==match_id)&
                 (Participant.c.seatId=='0')&(Participant.c.issuer==actor.issuer)&
                 (Participant.c.subject==actor.subject)&(Participant.c.role=='player'))).first()
@@ -85,6 +102,8 @@ class MatchLifecycle:
                 (Invitation.c.tokenDigest==token_hash))).mappings().first()
             if row is None or not hmac.compare_digest(row['tokenDigest'],token_hash):
                 raise LifecycleRejected('Invitation rejected')
+            live_match=db.execute(sa.select(Match.c.status).where(Match.c.id==match_id)).first()
+            if live_match is None or live_match[0]!='active': raise LifecycleRejected('Match not active')
             if row['redeemedAtUtc'] is not None:
                 if row['redeemedByIssuer']==actor.issuer and row['redeemedBySubject']==actor.subject:
                     return {'matchId':match_id,'yourSeat':int(row['seatId']),'alreadyJoined':True}
@@ -97,13 +116,16 @@ class MatchLifecycle:
                 if member['issuer']==actor.issuer and member['subject']==actor.subject:
                     raise MatchConflict('Account already in match')
             now=timestamp()
-            db.execute(sa.insert(Participant).values(id=str(uuid.uuid4()),matchId=match_id,
-                seatId=row['seatId'],issuer=actor.issuer,subject=actor.subject,
-                role='player',joinedAtUtc=now))
+            # Claim first. For supported SQL databases this guarded UPDATE serializes
+            # competing redeemers of the same invitation. Any later insert failure
+            # rolls back the claim in the same transaction.
             changed=db.execute(sa.update(Invitation).where((Invitation.c.id==row['id'])&
                 (Invitation.c.redeemedAtUtc.is_(None))).values(redeemedByIssuer=actor.issuer,
                 redeemedBySubject=actor.subject,redeemedAtUtc=now))
             if changed.rowcount!=1: raise MatchConflict('Concurrent invitation redemption')
+            db.execute(sa.insert(Participant).values(id=str(uuid.uuid4()),matchId=match_id,
+                seatId=row['seatId'],issuer=actor.issuer,subject=actor.subject,
+                role='player',joinedAtUtc=now))
         return {'matchId':match_id,'yourSeat':int(row['seatId']),'alreadyJoined':False}
 
     def resume(self, *, token):

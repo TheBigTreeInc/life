@@ -178,8 +178,8 @@
       "notes": "Server-authorized initial checkpoint and creator seat transaction; hashed invitation redemption and authenticated resumable seat discovery. No public routes; actual Social verifier, DAPI migration/uniqueness and Atrium integration pending."
     },
     {
-      "version": "0.5.89",
-      "artifact": "the-life-loop-0.5.89-ziprunner.zip",
+      "version": "0.5.90",
+      "artifact": "the-life-loop-0.5.90-ziprunner.zip",
       "kind": "looprd-schema-validation-repair",
       "supersedes": "0.5.88",
       "notes": "Ordered migration v3 and generated integer PKs on six new async models, preserving unique application string ids. Live LoopRD reload and model provisioning pending."
