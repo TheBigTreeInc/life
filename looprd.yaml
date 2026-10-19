@@ -1,7 +1,7 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.94
+release: 0.5.95
 api:
   version: v1
 auth:
@@ -471,6 +471,100 @@ handlers:
     \ event\n        return fail('Unknown operation'), None\n\nasync def handle(ctx):\n    outcome, event = await\
     \ run_in_threadpool(execute, ctx.body, ctx.session_factory)\n    if event is not None:\n        ctx.publish(event)\
     \   # after successful transaction commit\n    return outcome\n"
+- path: /play/info
+  method: GET
+  kind: python
+  source: "\"\"\"LoopRD inline /play gateway. Generated verbatim into the component descriptor.\n\nOnly operator-supplied\
+    \ HTTPS or a shared Unix socket can be used. The upstream\nperforms its own Social verification and all game/seat\
+    \ authorization. This\ntransport does not derive an identity from HTTP headers or account UUIDs.\n\"\"\"\nimport\
+    \ hashlib\nimport hmac\nimport json\nimport re\nimport time\nfrom urllib.parse import urlsplit\n\nimport httpx\n\
+    from starlette.exceptions import HTTPException\n\nSCHEMA = 'looprd.game-play/v1'\nSECRET_ORIGIN = 'life/play-backend'\n\
+    SECRET_KEY = 'life/play-gateway-key'\n\n\ndef _endpoint(value):\n    if not isinstance(value, str) or not value\
+    \ or len(value) > 512:\n        raise ValueError('Missing trusted Life backend')\n    if value.startswith('unix:'):\n\
+    \        path = value[5:]\n        if not path.startswith('/') or '..' in path.split('/') or '?' in path or\
+    \ '#' in path or '\\\\' in path:\n            raise ValueError('Unsafe Life socket location')\n        return\
+    \ 'http://life.local', httpx.AsyncHTTPTransport(uds=path, retries=0)\n    origin = urlsplit(value)\n    if (origin.scheme\
+    \ != 'https' or not origin.hostname or origin.username or origin.password or\n            origin.path not in\
+    \ ('', '/') or origin.query or origin.fragment or value.rstrip('/') !=\n            f'https://{origin.netloc}'):\n\
+    \        raise ValueError('Life backend must be operator-configured HTTPS origin or Unix socket')\n    return\
+    \ value.rstrip('/'), httpx.AsyncHTTPTransport(retries=0, trust_env=False)\n\n\ndef _signature(key, timestamp,\
+    \ method, path, data):\n    canonical = f'{timestamp}\\n{method}\\n{path}\\n{hashlib.sha256(data).hexdigest()}'\n\
+    \    return hmac.new(key.encode('utf-8'), canonical.encode('ascii'), hashlib.sha256).hexdigest()\n\n\nasync\
+    \ def handle(ctx):\n    method = ctx.request.method\n    path = ctx.request.url.path\n    # LoopRD's authenticated\
+    \ outer dispatch selected this handler. No user\n    # input may choose a different backend path or component.\n\
+    \    suffix = '/play/info' if method == 'GET' else '/play'\n    if not path.endswith(suffix) or method not in\
+    \ ('GET', 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw =\
+    \ b'' if method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
+    \ 'Life request too large')\n        if method == 'POST':\n            if ctx.request.headers.get('content-type',\
+    \ '').split(';', 1)[0] != 'application/json':\n                raise HTTPException(415, 'JSON required')\n \
+    \           envelope = json.loads(raw)\n            if not isinstance(envelope, dict) or envelope.get('schema')\
+    \ != SCHEMA:\n                raise HTTPException(422, 'Invalid Life envelope')\n        origin, transport =\
+    \ _endpoint(ctx.secret(SECRET_ORIGIN))\n        key = ctx.secret(SECRET_KEY)\n        if not isinstance(key,\
+    \ str) or len(key.encode()) < 32:\n            raise ValueError('Life gateway credential missing')\n    except\
+    \ HTTPException:\n        raise\n    except Exception:\n        raise HTTPException(503, 'Life play gateway\
+    \ not configured') from None\n\n    timestamp = str(int(time.time()))\n    headers = {'X-Life-Timestamp': timestamp,\
+    \ 'X-Life-Signature': _signature(key, timestamp, method, suffix, raw)}\n    if method == 'POST':\n        headers['Content-Type']\
+    \ = 'application/json'\n    authorization = ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n\
+    \        if not authorization.startswith('Bearer ') or len(authorization) > 8192:\n            raise HTTPException(401,\
+    \ 'Game-scoped bearer required')\n        headers['Authorization'] = authorization\n    try:\n        async\
+    \ with httpx.AsyncClient(transport=transport, timeout=8, follow_redirects=False, trust_env=False) as client:\n\
+    \            response = await client.request(method, origin + suffix, content=raw, headers=headers)\n      \
+    \  if response.status_code in (301, 302, 303, 307, 308):\n            raise HTTPException(502, 'Life backend\
+    \ redirect refused')\n        if len(response.content) > 1024 * 1024:\n            raise HTTPException(502,\
+    \ 'Life backend response exceeds limit')\n        result = response.json()\n        if not isinstance(result,\
+    \ dict) or result.get('schema' if method == 'POST' else 'protocol') != SCHEMA:\n            raise HTTPException(502,\
+    \ 'Invalid Life backend response')\n        if response.status_code >= 400:\n            # DAPI handler contracts\
+    \ return a fixed HTTP status. Use a native\n            # HTTPException to preserve the negative transport status;\
+    \ clients\n            # should normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
+    \ result)\n        return result\n    except HTTPException:\n        raise\n    except (httpx.HTTPError, ValueError,\
+    \ json.JSONDecodeError):\n        raise HTTPException(503, 'Life backend unavailable') from None\n"
+- path: /play
+  method: POST
+  kind: python
+  source: "\"\"\"LoopRD inline /play gateway. Generated verbatim into the component descriptor.\n\nOnly operator-supplied\
+    \ HTTPS or a shared Unix socket can be used. The upstream\nperforms its own Social verification and all game/seat\
+    \ authorization. This\ntransport does not derive an identity from HTTP headers or account UUIDs.\n\"\"\"\nimport\
+    \ hashlib\nimport hmac\nimport json\nimport re\nimport time\nfrom urllib.parse import urlsplit\n\nimport httpx\n\
+    from starlette.exceptions import HTTPException\n\nSCHEMA = 'looprd.game-play/v1'\nSECRET_ORIGIN = 'life/play-backend'\n\
+    SECRET_KEY = 'life/play-gateway-key'\n\n\ndef _endpoint(value):\n    if not isinstance(value, str) or not value\
+    \ or len(value) > 512:\n        raise ValueError('Missing trusted Life backend')\n    if value.startswith('unix:'):\n\
+    \        path = value[5:]\n        if not path.startswith('/') or '..' in path.split('/') or '?' in path or\
+    \ '#' in path or '\\\\' in path:\n            raise ValueError('Unsafe Life socket location')\n        return\
+    \ 'http://life.local', httpx.AsyncHTTPTransport(uds=path, retries=0)\n    origin = urlsplit(value)\n    if (origin.scheme\
+    \ != 'https' or not origin.hostname or origin.username or origin.password or\n            origin.path not in\
+    \ ('', '/') or origin.query or origin.fragment or value.rstrip('/') !=\n            f'https://{origin.netloc}'):\n\
+    \        raise ValueError('Life backend must be operator-configured HTTPS origin or Unix socket')\n    return\
+    \ value.rstrip('/'), httpx.AsyncHTTPTransport(retries=0, trust_env=False)\n\n\ndef _signature(key, timestamp,\
+    \ method, path, data):\n    canonical = f'{timestamp}\\n{method}\\n{path}\\n{hashlib.sha256(data).hexdigest()}'\n\
+    \    return hmac.new(key.encode('utf-8'), canonical.encode('ascii'), hashlib.sha256).hexdigest()\n\n\nasync\
+    \ def handle(ctx):\n    method = ctx.request.method\n    path = ctx.request.url.path\n    # LoopRD's authenticated\
+    \ outer dispatch selected this handler. No user\n    # input may choose a different backend path or component.\n\
+    \    suffix = '/play/info' if method == 'GET' else '/play'\n    if not path.endswith(suffix) or method not in\
+    \ ('GET', 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw =\
+    \ b'' if method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
+    \ 'Life request too large')\n        if method == 'POST':\n            if ctx.request.headers.get('content-type',\
+    \ '').split(';', 1)[0] != 'application/json':\n                raise HTTPException(415, 'JSON required')\n \
+    \           envelope = json.loads(raw)\n            if not isinstance(envelope, dict) or envelope.get('schema')\
+    \ != SCHEMA:\n                raise HTTPException(422, 'Invalid Life envelope')\n        origin, transport =\
+    \ _endpoint(ctx.secret(SECRET_ORIGIN))\n        key = ctx.secret(SECRET_KEY)\n        if not isinstance(key,\
+    \ str) or len(key.encode()) < 32:\n            raise ValueError('Life gateway credential missing')\n    except\
+    \ HTTPException:\n        raise\n    except Exception:\n        raise HTTPException(503, 'Life play gateway\
+    \ not configured') from None\n\n    timestamp = str(int(time.time()))\n    headers = {'X-Life-Timestamp': timestamp,\
+    \ 'X-Life-Signature': _signature(key, timestamp, method, suffix, raw)}\n    if method == 'POST':\n        headers['Content-Type']\
+    \ = 'application/json'\n    authorization = ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n\
+    \        if not authorization.startswith('Bearer ') or len(authorization) > 8192:\n            raise HTTPException(401,\
+    \ 'Game-scoped bearer required')\n        headers['Authorization'] = authorization\n    try:\n        async\
+    \ with httpx.AsyncClient(transport=transport, timeout=8, follow_redirects=False, trust_env=False) as client:\n\
+    \            response = await client.request(method, origin + suffix, content=raw, headers=headers)\n      \
+    \  if response.status_code in (301, 302, 303, 307, 308):\n            raise HTTPException(502, 'Life backend\
+    \ redirect refused')\n        if len(response.content) > 1024 * 1024:\n            raise HTTPException(502,\
+    \ 'Life backend response exceeds limit')\n        result = response.json()\n        if not isinstance(result,\
+    \ dict) or result.get('schema' if method == 'POST' else 'protocol') != SCHEMA:\n            raise HTTPException(502,\
+    \ 'Invalid Life backend response')\n        if response.status_code >= 400:\n            # DAPI handler contracts\
+    \ return a fixed HTTP status. Use a native\n            # HTTPException to preserve the negative transport status;\
+    \ clients\n            # should normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
+    \ result)\n        return result\n    except HTTPException:\n        raise\n    except (httpx.HTTPError, ValueError,\
+    \ json.JSONDecodeError):\n        raise HTTPException(503, 'Life backend unavailable') from None\n"
 - path: /info
   kind: response
   response:

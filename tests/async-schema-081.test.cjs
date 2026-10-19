@@ -16,10 +16,13 @@ test('inert async-match persistence models are generated additively',()=>{
   }
   for(const field of ['initialSeed','rngState','rulesDigest','dueAtUtc','issuer','subject','idempotencyKey','revisionBefore','revisionAfter','stateDigest','nextDispatchUtc'])assert.ok(spec.includes(field+':'),field);
 });
-test('legacy session and v2 migration preserved; /play gated until verified identity',()=>{
+test('legacy session and v2 migration preserved; /play uses signed private upstream',()=>{
   assert.match(spec,/ALTER TABLE \"Room\" ADD COLUMN \"chatKey\"/);
   assert.match(spec,/path: \/session/);
   assert.match(spec,/method: POST/);
-  assert.ok(!/path: \/play(?:\/|\n)/.test(spec));
+  assert.match(spec,/path: \/play\/info/);
+  assert.match(spec,/path: \/play\n/);
+  assert.match(spec,/life\/play-gateway-key/);
+  assert.match(spec,/life\/play-backend/);
   assert.match(handler,/TTL = 48 \* 3600/);
 });

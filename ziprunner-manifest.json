@@ -3,20 +3,20 @@
   "spec_version": "1.0.0",
   "project": {
     "key": "the-life-loop",
-    "version": "0.5.94",
-    "base_version": "0.5.93"
+    "version": "0.5.95",
+    "base_version": "0.5.94"
   },
   "update": {
-    "id": "LIFE-20261019-094-01",
+    "id": "LIFE-20261019-095-01",
     "kind": "source_update",
-    "created_at": "2026-10-19T00:00:00Z",
-    "summary": "Local true LifeGame two-seat replay and resume testing; Social proof and LoopRD runtime remain unconnected."
+    "created_at": "2026-10-19T01:00:00Z",
+    "summary": "Private signed LoopRD /play transport to Life headless Node/SQL engine, server-chosen deterministic create seeds, generic Atrium lobby projection; local tests only."
   },
   "planned_work": [
     {
-      "id": "LL-348",
-      "title": "Headless two-seat match rehearsal",
-      "acceptance_criteria": "Real engine snapshots, legal actions, two independent authorized seats, wrong-seat and intruder rejection, SQLite service restart and original game invariants",
+      "id": "LL-349",
+      "title": "Signed LoopRD gateway and Atrium match projection",
+      "acceptance_criteria": "DAPI generated /play/info + /play handlers, secure transport to real Life evaluator, durable seat-safe 2-player local tests and strict game-play/v1 projection",
       "priority": "high"
     },
     {
@@ -28,18 +28,18 @@
   ],
   "done_work": [
     {
-      "id": "LL-348",
-      "summary": "Source implementation and local tests complete; operator acceptance still pending",
+      "id": "LL-349",
+      "summary": "Author-side gateway and headless source/tests completed; target installation and operator verification pending",
       "evidence": [
         {
           "kind": "test",
-          "ref": "tests/test_async_end_to_end_094.py",
-          "description": "Runs human/agent/third identity, real Node evaluator, persistent SQLite restart"
+          "ref": "tests/test_async_looprd_gateway_095.py",
+          "description": "Signed DAPI-like transport over private Unix socket, live local Node evaluator, two seats, actual local ASGI restart and SQLite replay/resume"
         },
         {
-          "kind": "log",
-          "ref": "docs/evidence/life094-persistent-match-test.log",
-          "description": "Observed local test run, not live Social"
+          "kind": "documentation",
+          "ref": "docs/LIFE_LOOPRD_GATEWAY_095.adoc",
+          "description": "Actual mounted handler surface, missing production verifier and private deployment requirements"
         }
       ]
     }
@@ -48,11 +48,11 @@
     {
       "id": "LL-347",
       "status": "blocked",
-      "next_action": "Implement authenticated grant/session validation inside an approved LoopRD hosted runtime with actual Life Node source installed; run live two-account OpenClaw and recovery test",
+      "next_action": "Provision actual Social session/proof verifier and private backend/socket/key on approved runtime; replace Atrium mock calls using requestId; perform live Tavi/OpenClaw 60h and process-restart acceptance",
       "blockers": [
-        "No verified Social grant redemption/session bearer configured for Life on target runtime",
-        "LoopRD inline handler does not automatically package the Node LifeGame runtime; no public play route mounted",
-        "Real Tavi notification delivery and 60h deadline worker remain pending"
+        "Social current game grant is one-use and match-bound, not a reusable per-request bearer verifier",
+        "Life source ZIP is not a backend installation or signed gateway secret provisioning",
+        "Real Pi LoopRD runtime route, Atrium 0.5.21, Tavi/OpenClaw end-to-end, timed reminders remain unverified"
       ]
     }
   ],
@@ -60,60 +60,74 @@
     "model_reported": "partial",
     "checks": [
       {
-        "id": "LIFE094-PY",
+        "id": "LIFE095-GW",
         "status": "passed",
-        "description": "Local full Python unittest suite",
-        "command": "python -m unittest discover -s tests -p test_*.py -v",
-        "environment": "local Linux Python 3.13",
-        "evidence_ref": "docs/evidence/life094-python-tests.log"
+        "description": "Signed two-seat LoopRD-style transport local integration",
+        "command": "python -m unittest tests.test_async_looprd_gateway_095 -v",
+        "environment": "local Linux Python 3.13; actual Node game evaluator + local Unix ASGI socket",
+        "evidence_ref": "docs/evidence/life095-gateway-tests.log"
       },
       {
-        "id": "LIFE094-JS",
+        "id": "LIFE095-PY",
         "status": "passed",
-        "description": "Full source verifier and JS game tests",
+        "description": "Complete Python source unittest suite",
+        "command": "python -m unittest discover -s tests -p test_*.py -q",
+        "environment": "local Python 3.13",
+        "evidence_ref": "docs/evidence/life095-python-tests.log"
+      },
+      {
+        "id": "LIFE095-JS",
+        "status": "passed",
+        "description": "Full JS verifier and original Life game tests",
         "command": "node tools/verify.mjs",
-        "environment": "local Linux Node 22",
-        "evidence_ref": "docs/evidence/life094-js-verifier.log"
+        "environment": "local Node 22",
+        "evidence_ref": "docs/evidence/life095-js-verifier.log"
       },
       {
-        "id": "LIFE094-LIVE",
+        "id": "LIFE095-LIVE",
         "status": "not_run",
-        "description": "Production LoopRD two-seat Social grant and OpenClaw acceptance",
-        "reason": "Runtime route and trusted live verifier unavailable"
+        "description": "Real LoopRD Pi / Social session verification / Atrium / OpenClaw test",
+        "reason": "Production credentials and operator approval unavailable"
       }
     ]
   },
   "handover": {
-    "next_pass": "Implement DAPI LoopRD mounted Life evaluator and Social identity proof redemption, followed by live two-seat OpenClaw/Tavi recovery and turn notification acceptance",
+    "next_pass": "Install Life headless backend and signed LoopRD gateway on target Pi after providing real Social bearer verifier and persistent data volume, then update Atrium 0.5.21 to use requestId; test full OpenClaw match and durable Tavi notifications",
     "risks": [
-      "Do not enable the test stub issuer on a public endpoint",
-      "State snapshots and game engine source must remain in sync",
-      "One-process state restart is local, not proof of Pi/DAPI multi-process deployment"
+      "Public backend must never accept a UUID or unsigned JWT as identity",
+      "The gateway maps upstream negative HTTP responses into DAPI HTTPException detail; Atrium must normalize errors",
+      "Node backend must run matching game source and have operator-controlled private socket and database"
     ],
     "blockers": [
-      "Missing runtime mount and live Social issuer",
-      "No authenticated public game play endpoint"
+      "Real Social proof or game-scoped session token contract not yet available",
+      "No approved backend install/configured secrets",
+      "Live Pi/LoopRD end-to-end not executed"
     ],
     "notes": [
-      "Workboard LL-072, LL-263, LL-092 and LL-082 remain unchanged and open",
-      "ZipRunner build acceptance is separate from model tests"
+      "Preserve LL-072, LL-263, LL-092, LL-082, LL-347 operator statuses; LL-349 awaits verification",
+      "No publishing, pushing, releasing, tagging or deployment authorized"
     ]
   },
   "operator_actions": [
     {
-      "id": "LIFE094-OP1",
-      "description": "Run target ZipRunner verifier and review package/workboard without assigning Done",
+      "id": "LIFE095-OP1",
+      "description": "Import full-source ZipRunner package and verify local regression evidence, without promoting operator statuses",
       "status": "required"
     },
     {
-      "id": "LIFE094-OP2",
-      "description": "Authorize any subsequent remote LoopRD deployment/push only after implementing the real Social/Node runtime bridge",
+      "id": "LIFE095-OP2",
+      "description": "Coordinate real issuer/verifier contract with Social/Tavi and Life service secrets before authorizing Pi deployment",
+      "status": "required"
+    },
+    {
+      "id": "LIFE095-OP3",
+      "description": "Verify real Atrium/Tavi/OpenClaw acceptance and 60h timer before enabling agentPlaySupported",
       "status": "required"
     }
   ],
   "release": {
     "requested": false,
     "requires_operator_approval": true,
-    "notes": "No push, deploy, publish, tagging or production credentials included"
+    "notes": "No remote modification; source-only candidate"
   }
 }

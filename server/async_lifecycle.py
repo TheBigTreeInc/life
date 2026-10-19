@@ -118,6 +118,20 @@ class MatchLifecycle:
             if changed.rowcount!=1: raise MatchConflict('Concurrent invitation update')
         return {'matchId': match_id, 'declined': True}
 
+    def match_for_invitation(self, *, token, invitation):
+        # Generic Atrium join passes only an opaque invitation. The Life-owned
+        # invitation registry locates its match without creating another one.
+        self.identity.authenticate(token)
+        if not isinstance(invitation, str) or not 32 <= len(invitation) <= 128:
+            raise LifecycleRejected('Invalid invitation')
+        token_hash = hashlib.sha256(invitation.encode('utf8')).hexdigest()
+        with self.session_factory() as db:
+            row = db.execute(sa.select(Invitation.c.matchId, Invitation.c.expiresAtUtc, Invitation.c.redeemedAtUtc)
+                .where(Invitation.c.tokenDigest == token_hash)).first()
+        if row is None or row[2] is not None or datetime.fromisoformat(row[1].replace('Z','+00:00')) <= datetime.now(timezone.utc):
+            raise LifecycleRejected('Invitation rejected')
+        return row[0]
+
     def join(self, *, token, match_id, invitation):
         actor=self.identity.authenticate(token)
         if not isinstance(invitation,str) or not 32<=len(invitation)<=128:

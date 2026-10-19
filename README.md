@@ -1,10 +1,14 @@
-## v0.5.94 — Atrium discovery sidecar
+## v0.5.95 — Private LoopRD play gateway and headless two-seat game
 
-Artifact: `the-life-loop-0.5.94-ziprunner.zip` — ships portable root `atriumd.yaml` metadata; no automatic registration/public play endpoint or live deployment. See ADR-0092.
+Artifact: `the-life-loop-0.5.95-ziprunner.zip` — **complete source package**, including `/play/info` and `/play` LoopRD Python handlers, HMAC-signed private gateway, Life-owned headless Node/SQL backend, deterministic request-ID match creation and generic Atrium lobby projection. Local signed-socket two-seat/restart tests use TEST credentials. **Not live on LoopRD, no production Social proof verifier, no automatic Atrium/Tavi match, no OpenClaw real agent acceptance.** See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`. Public hosting is blocked until an operator provisions the trusted backend, verifier, socket/key, and independently verifies deployment.
 
-## v0.5.94 — Internal Atrium launch contract
+## v0.5.92 — Atrium discovery sidecar
 
-Artifact: `the-life-loop-0.5.94-ziprunner.zip` — full source with private create/invite/join/list/resume adapter and contract tests. No public `/play` routes, production issuer, or Atrium deployment. See ADR-0091.
+Artifact: `the-life-loop-0.5.92-ziprunner.zip` — ships portable root `atriumd.yaml` metadata; no automatic registration/public play endpoint or live deployment. See ADR-0092.
+
+## v0.5.91 — Internal Atrium launch contract
+
+Artifact: `the-life-loop-0.5.91-ziprunner.zip` — full source with private create/invite/join/list/resume adapter and contract tests. No public `/play` routes, production issuer, or Atrium deployment. See ADR-0091.
 
 ## v0.5.89 — Internal /play foundation and multiplayer P0 handoff
 

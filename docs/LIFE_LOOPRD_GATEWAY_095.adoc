@@ -1,0 +1,86 @@
+= Life v0.5.95 — LoopRD-mounted game-play gateway and Atrium lobby contract
+:revnumber: 0.5.95
+:toc: left
+
+== Scope and observed evidence
+
+The Life descriptor now declares `GET /play/info` and `POST /play` as Python handlers. LoopRD prepends `/looprd/the-life-loop/v1` to both paths. A private backend runs the *existing* Life Node game engine and durable Game* SQL tables. It is **not** a second, simplified simulation.
+
+The gateway sends signed requests to an operator-configured HTTPS origin or Unix domain socket. No backend URL is in `atriumd.yaml`. Neither deployment is automatically enabled by a source ZIP; the backend must be installed and started on an approved host with real verifier credentials and a persistent database.
+
+== Ownership and flow
+
+. Tavi sends a game-agnostic challenge to Atrium. This challenge is NOT a match.
+. Atrium locates the approved Life component through LoopRD discovery, then calls its documented game-play endpoints using the actor's independently verified game credential.
+. Life creates exactly one match ID, verifies issuer and subject, and owns seats, invitations, checkpoints, actions and notifications.
+. Human browser and OpenClaw both submit actions directly to the Life `game-play/v1` endpoint after joining; Atrium does not simulate actions.
+. Returning Tavi/Atrium users reuse the existing Life match ID. A deterministic `requestId` is required on creation to prevent duplicate matches after retries.
+
+== LoopRD producer handler surface
+
+From `looprd.yaml`:
+
+* `GET /looprd/the-life-loop/v1/play/info` — authenticated *gateway-to-backend* transport, public capability discovery; returns exactly the current Atrium `game_play_contract.py` info envelope.
+* `POST /looprd/the-life-loop/v1/play` — game-scoped bearer credentials required. All game commands pass through a signed gateway request and the Life verifier and seat policy.
+
+The normal LoopRD component's `auth.mode: public` is kept to avoid breaking legacy `/session` clients. This does not authorize `/play`: its handler enforces bearer input and the Life backend independently authenticates it. A misconfigured/absent backend returns 503, never a mock lobby.
+
+The backend is configured by two *operator-held runtime secrets*, not by component metadata:
+
+* `life/play-backend`: `unix:/absolute/shared/private/life.sock` OR approved `https://life-backend.example` origin. The socket must be mounted into both the LoopRD container and the Life backend container. HTTP remote origins are deliberately rejected.
+* `life/play-gateway-key`: random shared secret of at least 32 bytes. The backend receives the same value through its secret manager (environment variable `LIFE_PLAY_GATEWAY_KEY`). Never place it in the ZIP, `atriumd.yaml`, game URLs or logs.
+
+The target LoopRD operator must allow trusted inline Python for the Life component; the source ZIP does not change LoopRD global security settings. DAPI already has `httpx` and Starlette in the handler environment. Do not interpret the source existence as a live route.
+
+== Headless backend installation dependency
+
+The backend process needs this exact version of the Life source (including `src/*.js`, board route data and `server/async_*`), Python Starlette/SQLAlchemy/httpx/PyYAML/uvicorn, and a `node` executable. It uses its own operator-persisted SQLite/PostgreSQL database; files under an active data directory must survive version updates. No private database or secrets are packaged by ZipRunner.
+
+Its entrypoint is `python server/run_headless.py`. The process refuses startup unless all these operator-supplied values exist:
+
+* `LIFE_PLAY_DATABASE_URL` — persisted SQLAlchemy database URL, provisioned privately
+* `LIFE_SOCIAL_ISSUER` — actual stable Social issuer identity
+* `LIFE_SOCIAL_VERIFIER_MODULE` — operator-reviewed Python module exporting `verify_game_credential(token)`; must perform real expiry, audience, issuer, session and revocation checks
+* `LIFE_PLAY_GATEWAY_KEY` — same secret used by the LoopRD gateway
+* `LIFE_PLAY_UNIX_SOCKET` — absolute private shared socket location
+
+An operator must provide a concrete secure verifier module. **There is deliberately no built-in test verifier, unsigned JWT fallback, UUID-as-auth mode or automatic local developer key.** The upstream Social `game_grant_issue`/`tavi-game-grant-redeem/v1` is single-use and match-bound; it is not itself a reusable per-request bearer verifier. A production session/proof exchange contract is still needed between the Tavi/Social and Life sessions. Do not enable external play until that dependency is settled.
+
+== Atrium game-play/v1 examples
+
+Capability response, with a real computed engine digest rather than this placeholder:
+
+[source,json]
+----
+{"protocol":"looprd.game-play/v1","gameId":"life.loop","component":"the-life-loop","engine":{"version":"0.5.95","digest":"<64-hex-sha256>"},"operations":["create","invite","join","list_matches","resume","get","legal_actions","act","end_turn"],"capabilities":{"asyncTurns":true,"agentPlaySupported":false}}
+----
+
+Create, using a stable *Atrium/Tavi challenge-derived* request ID (no credentials in JSON):
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"create","requestId":"challenge-0001-create","settings":{"mode":"private-async","deadlineHours":60,"ruleset":"classic"}}
+----
+
+Successful response includes both Life-owned `result` and the game-neutral lobby `match` projection:
+
+[source,json]
+----
+{"ok":true,"schema":"looprd.game-play/v1","result":{"matchId":"<opaque-Life-match-id>","yourSeat":0,"revision":0,"stateDigest":"<digest>","alreadyCreated":false},"match":{"matchId":"<opaque-Life-match-id>","revision":0,"status":"active","yourTurn":true,"deadline":null}}
+----
+
+`invite`: `{ "schema":"looprd.game-play/v1","op":"invite","matchId":"<id>" }` returns top-level `invitation` (secret, deliver only to approved recipient). `join`: `{ "schema":"looprd.game-play/v1","op":"join","invitation":"<secret>" }` resolves the Life match **without creating a second match**. `resume`: `{ "schema":"looprd.game-play/v1","op":"resume","matchId":"<id>" }`. `list_matches` provides only the authenticated player's matches.
+
+OpenClaw's headless sequence uses the exact same authoritative endpoint: `get` -> `legal_actions` -> `act` or `end_turn`. Actions require `expectedRevision` and `idempotencyKey`; replaying the same key and action returns the original commit; stale changes and wrong seat fail. The game returns player-visible state under `result.state` and never accepts state snapshots in requests.
+
+== Compatibility for Atrium 0.5.21 and Tavi
+
+The discovered information envelope, `match`/`matches` projections and opaque invite support are aligned with the existing Atrium `GameLobbyClient` and `game_play_contract` structural validators, subject to live transport verification. Atrium's existing mock `create(settings)` call **must add a stable `requestId`** when switching to Life. It must supply a real game-scoped bearer credential through its approved transport and handle error status 401/403/404/409/422/503. The current LoopRD handler maps backend error JSON to Starlette HTTPException `detail`: normalize `detail` as the game error, not as a successful response.
+
+Tavi communicates with Atrium for challenges/lobby/launch. It should not import the Life engine or hardcode Life-specific deployment locations. OpenClaw must not interpret a Tavi challenge acceptance as a Life seat. The producer does not claim that Atrium 0.5.20 has been changed or that the Tavi challenge is now wired to a match.
+
+== Verified locally vs not yet verified
+
+Source tests exercise a private Unix gateway and running headless Life ASGI server, a real Node LifeGame evaluator, a persisted SQLite match, two independent TEST principals, wrong-seat/third-account denial, unsigned-gateway rejection, replay, and a restarted local ASGI socket and reopened backend database. These tests are not production Social proof, live LoopRD request dispatch, native OpenClaw/Tavi acceptance, actual LoopRD 0.2.0 deployment, or a server process restart test on the Raspberry Pi.
+
+**Operator gates (all open):** provision/verify real Social credential exchange and revocation, install signed backend+socket/HTTPS and grant trust on the Pi, verify DAPI route response status semantics in the actual LoopRD 0.2.0 runtime, connect Atrium 0.5.21 to the real lobby, integrate Tavi challenge acceptance to exactly one Life match ID, run OpenClaw AI move/turn and 60-hour timeout notification + full process restart acceptance. Do not mark LL-072, LL-263, LL-092, LL-082, LL-347 as Done on local source results.

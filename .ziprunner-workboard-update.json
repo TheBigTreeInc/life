@@ -1,17 +1,9 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.94",
-  "summary": "Life multiplayer v0.5.94: real game-engine initial state/legal actions, two distinct authenticated TEST identities executing via existing Node evaluator, persisted SQLite restart, wrong-seat/third-account rejection, replay-safe turn commits, invitation decline and transactionally durable notification intent. Live Social verification and LoopRD handler mounting remain unavailable; no operator acceptance.",
+  "version": "0.5.95",
+  "summary": "Life multiplayer 0.5.95: generated LoopRD /play and /play/info handlers, private signed gateway to real headless Life Node/SQL runtime, Atrium strict info/lobby projections, server-pinned deterministic idempotent creation, authorization/restart local gateway tests. Operator Social verifier/proof exchange, target runtime deployment, Atrium 0.5.21 and Tavi/OpenClaw acceptance remain pending.",
   "implemented": [
-    {
-      "id": "LL-179",
-      "title": "Two-week Classic survival budget",
-      "summary": "Pure cash/bank accessible liquidity forecast for rent, food and replacement uniform; show in career view.",
-      "operator_checks": [
-        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
-      ]
-    },
     {
       "id": "LL-180",
       "title": "Rival career pathway and multi-payday job choices",
@@ -1249,6 +1241,16 @@
         "Inspect code for the trusted Social boundary and confirm no mock verifier is enabled or injected in production or game metadata.",
         "Run complete project verifier and verify full-source ZIP with unchanged local operator workboard statuses."
       ]
+    },
+    {
+      "id": "LL-349",
+      "title": "Signed LoopRD gateway to authoritative Life headless API",
+      "summary": "Mounted descriptor handlers and real Life headless SQL+Node backend source; HMAC-gated private transport, generic Atrium projections, stable create request ID, test-only two-seat gateway rehearsal. Operator-provided real Social verifier/credential exchange and deployment are still missing.",
+      "operator_checks": [
+        "Run python -m unittest discover -s tests -p test_async_looprd_gateway_095.py -v; verify signed and unsigned route behavior, genuine Node evaluator, 2 seats, unauthorized third account, SQLite resumption.",
+        "Confirm actual LoopRD 0.2.0 handler dispatch, private gateway key/socket and production Social verifier on the target Pi before allowing external traffic.",
+        "Verify Tavi/Atrium challenge-to-one-match, real OpenClaw actions, notification and timeout acceptance separately; do not promote open LL-347 to Done."
+      ]
     }
   ],
   "remaining": [
@@ -1532,7 +1534,7 @@
     {
       "id": "LL-346",
       "title": "Verify deployed Atrium sidecar discovery and trusted launch binding",
-      "summary": "Sidecar added locally in v0.5.94; verify DAPI observes matching source revision, Atrium receives a trusted pending candidate, game-web resolves from deployment configuration and two-browser resume passes without exposing secrets.",
+      "summary": "Sidecar added locally in v0.5.95; verify DAPI observes matching source revision, Atrium receives a trusted pending candidate, game-web resolves from deployment configuration and two-browser resume passes without exposing secrets.",
       "priority": "high",
       "operator_checks": [
         "Enable DAPI discovery in staging and confirm pending Atrium intake, approval gate, deployment launch binding and two-browser resumption."
@@ -1541,7 +1543,7 @@
     {
       "id": "LL-347",
       "title": "Mount authenticated persistent Life /play and validate human-agent match",
-      "summary": "HTTP transport adapter was added as an isolated source candidate in v0.5.94. Implement real Social audience/nonce/expiry verification, Life-owned seeded snapshot/legal-actions projection, mounted LoopRD handler, decline, two-seat deadline and notification, then prove a two-actor persistent restart acceptance. Preserve LL-072/263/092/082 operator status.",
+      "summary": "HTTP transport adapter was added as an isolated source candidate in v0.5.95. Implement real Social audience/nonce/expiry verification, Life-owned seeded snapshot/legal-actions projection, mounted LoopRD handler, decline, two-seat deadline and notification, then prove a two-actor persistent restart acceptance. Preserve LL-072/263/092/082 operator status.",
       "priority": "high",
       "operator_checks": [
         "Verify deployed token issuer and game-scoped proof; create, invite, join, decline, resume with distinct identities.",

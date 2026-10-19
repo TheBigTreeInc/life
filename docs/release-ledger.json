@@ -211,6 +211,13 @@
       "kind": "two-seat-headless-evaluator-restart-acceptance-candidate",
       "supersedes": "0.5.93",
       "notes": "Real JS-engine starting state and legal moves, string/number seat ownership fix, idempotent start settings guard, invitation decline, durable turn notification intent; local SQLite two-seat unauthorized/replay/restart test passes under TEST-ONLY identity verifier. No live Social verifier, DAPI handler or production OpenClaw deployment."
+    },
+    {
+      "version": "0.5.95",
+      "artifact": "the-life-loop-0.5.95-ziprunner.zip",
+      "kind": "signed-looprd-headless-gateway-candidate",
+      "supersedes": "0.5.94",
+      "notes": "Source-only LoopRD /play gateway and Life Node/SQL Unix-socket backend; generic Atrium lobby response + deterministic creation, test-only real-engine multi-seat gateway exercise. No live Social verifier/proof redemption, Atrium client update or deployment."
     }
   ]
 }

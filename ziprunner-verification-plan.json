@@ -1,25 +1,26 @@
 {
   "schema": "ziprunner.verification-plan/v1",
   "project": "the-life-loop",
-  "version": "0.5.94",
+  "version": "0.5.95",
   "tasks": [
     {
-      "id": "LL-348",
+      "id": "LL-349",
       "criteria": [
         {
-          "id": "LL-348-AC-1",
-          "description": "Real LifeGame two-seat actions, stale and unauthorized rejection, SQLite restart",
+          "id": "LL-349-AC-1",
+          "description": "Private signed gateway denies unsigned and stale HMAC requests",
           "mode": "automated",
           "checks": [
-            "LIFE094-TEST-1"
+            "LIFE095-TEST-1"
           ]
         },
         {
-          "id": "LL-348-AC-2",
-          "description": "Check workboard metadata consistency and full source package",
+          "id": "LL-349-AC-2",
+          "description": "Two-seat actual Node engine persistent local match via LoopRD-like transport",
           "mode": "automated",
           "checks": [
-            "LIFE094-TEST-2"
+            "LIFE095-TEST-1",
+            "LIFE095-TEST-2"
           ]
         }
       ]
@@ -29,10 +30,10 @@
       "criteria": [
         {
           "id": "LL-347-AC-1",
-          "description": "WITNESS live Social proof, LoopRD route, Tavi OpenClaw and persisted match after target reboot",
+          "description": "Production DAPI/Social/Atrium/OpenClaw complete match with service restart",
           "mode": "manual",
           "checks": [
-            "LIFE094-LIVE-1"
+            "LIFE095-LIVE-1"
           ]
         }
       ]
@@ -40,38 +41,37 @@
   ],
   "checks": [
     {
-      "id": "LIFE094-TEST-1",
+      "id": "LIFE095-TEST-1",
       "kind": "automated",
       "stage": "functional",
-      "description": "Source backed two-seat persistent match with true JS evaluator",
-      "runner_ref": "life-headless-two-seat",
+      "description": "Signed Unix transport two player local integration",
+      "runner_ref": "life-signed-gateway-tests",
       "assertions": [
-        "Correct seat owns turn",
-        "Real Life engine accepts allowed move",
-        "Replays return original revision",
-        "Unauthorized third account cannot inspect or act",
-        "Restart from same file database preserves match"
+        "Unsigned bypass denied",
+        "Wrong-seat and third actor denied",
+        "Real engine turn and deterministic create retry",
+        "Persisted match survives reopen"
       ],
-      "test_ref": "tests/test_async_end_to_end_094.py"
+      "test_ref": "tests/test_async_looprd_gateway_095.py"
     },
     {
-      "id": "LIFE094-TEST-2",
+      "id": "LIFE095-TEST-2",
       "kind": "automated",
       "stage": "build",
-      "description": "All game and packaging verification",
-      "runner_ref": "life-project-verifier",
+      "description": "Complete game tests and workboard version checks",
+      "runner_ref": "life-game-verifier",
       "assertions": [
-        "544 Node gameplay tests pass",
-        "Version and workboard consistent"
+        "All Node tests pass",
+        "ZipRunner contract matches version"
       ],
       "test_ref": "tools/verify.mjs"
     },
     {
-      "id": "LIFE094-LIVE-1",
+      "id": "LIFE095-LIVE-1",
       "kind": "manual",
       "stage": "acceptance",
-      "description": "Target runtime complete Social + agent match acceptance",
-      "instructions": "On approved LoopRD service redeem real Social proof with two different Tavi accounts, create/execute two game turns, reject third account, restart service and resume same match; verify Tavi turn notification and 60h timeout. DO NOT mark Done on source tests."
+      "description": "External two-account Tavi/OpenClaw acceptance",
+      "instructions": "Operator installs verified Social issuer/proof exchange, runs private signed Life backend with target LoopRD 0.2.0, tests Atrium-discovered Create/Join/Resume, OpenClaw legal move and human seat, unauthorized third actor, real process restart and Tavi 60-hour notification. Do not mark complete on local test only."
     }
   ]
 }

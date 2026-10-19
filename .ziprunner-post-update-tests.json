@@ -1,11 +1,11 @@
 {
   "schema": "ziprunner.post-update-tests.v1",
-  "version": "0.5.94",
+  "version": "0.5.95",
   "tests": [
     {
       "kind": "command",
       "semantic_id": "life-complete-game-verifier",
-      "definition_revision": "094",
+      "definition_revision": "095",
       "rerun_policy": "every_update",
       "command": "node tools/verify.mjs",
       "attention_on_failure": true,
@@ -13,10 +13,10 @@
     },
     {
       "kind": "command",
-      "semantic_id": "life-headless-persisted-match",
-      "definition_revision": "094",
+      "semantic_id": "life-headless-gateway",
+      "definition_revision": "095",
       "rerun_policy": "every_update",
-      "command": "python -m unittest tests.test_async_end_to_end_094 -v",
+      "command": "python -m unittest tests.test_async_looprd_gateway_095 -v",
       "attention_on_failure": true,
       "gating": false
     }

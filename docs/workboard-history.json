@@ -1251,6 +1251,14 @@
       "operator_checks": [
         "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]
+    },
+    {
+      "id": "LL-179",
+      "title": "Two-week Classic survival budget",
+      "summary": "Pure cash/bank accessible liquidity forecast for rent, food and replacement uniform; show in career view.",
+      "operator_checks": [
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+      ]
     }
   ]
 }
