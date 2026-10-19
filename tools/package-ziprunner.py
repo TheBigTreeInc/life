@@ -71,6 +71,14 @@ files += ['docs/decisions/ADR-0076-jones-source-motion-estimate.md','docs/decisi
 # Ship all asset files, including the optional detached-house art reference and manifest.
 files += [p.relative_to(root).as_posix() for p in sorted((root/'assets/art/styles/contemporary-default').glob('*')) if p.is_file()]
 files += [p.relative_to(root).as_posix() for p in sorted((root/'assets/portraits/default').glob('*')) if p.is_file()]
+# v0.5.96 deterministic atomic turn + offline queued protocol migration.
+files += ['src/async-turn-bundle.js','src/async-turn-outbox.js',
+          'server/async_turn_bundle_cli.cjs','server/async_turn_bundle.py',
+          'tests/test_async_turn_bundle_096.py','tests/test_looprd_compat_096.py',
+          'docs/LIFE_SEEDED_TURN_LOOPRD_MIGRATION_096.adoc',
+          'docs/LIFE_LOOPRD_TURN_WORKER_HANDOFF_096.adoc',
+          'docs/evidence/life096-python-tests.log','docs/evidence/life096-js-verifier.log',
+          'docs/evidence/life096-turn-tests.log']
 with ZipFile(output,'w',compression=ZIP_DEFLATED,compresslevel=6) as z:
     for name in files:
         path=root/name

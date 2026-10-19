@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.workboard-classifications.v1",
-  "release": "0.5.95",
+  "release": "0.5.96",
   "blocked": {
     "LL-014": {
       "reason": "Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build.",
@@ -65,6 +65,10 @@
     "LL-310": {
       "reason": "DOS original starting stats and exact fractional university credit semantics have not yet been demonstrated from an executable/runtime trace.",
       "unblock_when": "Provide a version-matched original DOS capture proving initial Happiness and partial-lesson education stat increments."
+    },
+    "LL-352": {
+      "reason": "LoopRD does not yet provide a trusted version-pinned on-demand JavaScript rules worker; real Social game principal verification and operator admission remain unproven.",
+      "unblock_when": "DAPI owner ships isolated worker capability, Social operator verifies issuer/audience/seat, and live LoopRD operator authorizes enablement."
     }
   },
   "in_progress": [
@@ -92,6 +96,7 @@
     "LL-308",
     "LL-309",
     "LL-346",
-    "LL-347"
+    "LL-347",
+    "LL-353"
   ]
 }

@@ -285,5 +285,6 @@ execFileSync(process.execPath,[resolve(root,'tools/build-pages.mjs')],{cwd:root,
 // Keep the release gate comprehensive as new regression files are added.
 // A static hand-maintained list silently skipped recent house-rule tests.
 const regressionFiles=readdirSync(resolve(root,'tests')).filter(name=>name.endsWith('.test.cjs')).sort().map(name=>'tests/'+name);
-execFileSync(process.execPath,['--test',...regressionFiles],{cwd:root,stdio:'inherit'});
+// Bound worker fan-out so full-source ZipRunner verification remains reliable on small hosts.
+execFileSync(process.execPath,['--test','--test-concurrency=4',...regressionFiles],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');

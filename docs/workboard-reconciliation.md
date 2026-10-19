@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.95
+# Workboard lifecycle reconciliation — v0.5.96
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 297 done (historical claims included); 16 blocked; 12 in progress; 11 to do.
+**Counts:** 298 done (historical claims included); 17 blocked; 12 in progress; 12 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -22,6 +22,7 @@
 - **LL-190 — Exhaustive ordered opponent SCI branches and event order:** The complete SCI decision branch ordering is not yet recovered. **Unblock:** Map and verify the outstanding WhereShouldIGo.sc branches from source/runtime traces.
 - **LL-263 — Cross-game single sign-on and social deployment:** No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO. **Unblock:** Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services.
 - **LL-310 — Original DOS starting happiness audit:** DOS original starting stats and exact fractional university credit semantics have not yet been demonstrated from an executable/runtime trace. **Unblock:** Provide a version-matched original DOS capture proving initial Happiness and partial-lesson education stat increments.
+- **LL-352 — Direct LoopRD on-demand JS turn worker and authenticated commit_turn handler:** LoopRD does not yet provide a trusted version-pinned on-demand JavaScript rules worker; real Social game principal verification and operator admission remain unproven. **Unblock:** DAPI owner ships isolated worker capability, Social operator verifies issuer/audience/seat, and live LoopRD operator authorizes enablement.
 
 ## In progress
 
@@ -51,10 +52,10 @@
 - **LL-309:** Classic catalog and RNG parity
 - **LL-346:** Verify deployed Atrium sidecar discovery and trusted launch binding
 - **LL-347:** Mount authenticated persistent Life /play and validate human-agent match
+- **LL-353:** Wire offline UI and OpenClaw turn submission through Atrium-resolved Life match
 
 ## Done (current ZipRunner update)
 
-- **LL-180:** Rival career pathway and multi-payday job choices
 - **LL-181:** Original career and survival regressions
 - **LL-183:** Original DOS dynamic goods pricing
 - **LL-184:** Lottery and rent extension parity
@@ -204,6 +205,7 @@
 - **LL-345:** Social identity trust adapter
 - **LL-348:** Headless two-seat authoritative match rehearsal
 - **LL-349:** Signed LoopRD gateway to authoritative Life headless API
+- **LL-351:** Deterministic atomic turn bundle and credential-free offline queue
 
 ## Importer handoff
 

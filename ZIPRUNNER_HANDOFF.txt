@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.95
-filename: the-life-loop-0.5.95-ziprunner.zip
+version: 0.5.96
+filename: the-life-loop-0.5.96-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -158,4 +158,6 @@ public_play_enabled: false
 
 v0.5.91: Internal match lifecycle create/invite/join/resume; 27 async Python unit tests; no public /play registration. Production Social issuer, DAPI concurrent schema upgrade, Atrium integration, and GitHub CI/operator acceptance remain open. No push/deploy.
 
-notes_gateway_095: Complete-source v0.5.95 has two new generated LoopRD handlers: GET /play/info and POST /play, proxy to separately deployed Life Node+SQL backend over operator-provisioned signed Unix socket or TLS. No real Social verifier or installed Pi backend is bundled. Operator must configure trusted Social credential exchange and install server/run_headless.py before external use. See docs/LIFE_LOOPRD_GATEWAY_095.adoc. Do not push/tag/release/deploy automatically.
+notes_gateway_095: Complete-source v0.5.96 has two new generated LoopRD handlers: GET /play/info and POST /play, proxy to separately deployed Life Node+SQL backend over operator-provisioned signed Unix socket or TLS. No real Social verifier or installed Pi backend is bundled. Operator must configure trusted Social credential exchange and install server/run_headless.py before external use. See docs/LIFE_LOOPRD_GATEWAY_095.adoc. Do not push/tag/release/deploy automatically.
+
+notes_async_096: Bounded source-only seeded complete-turn replay + offline durable outbox. Existing /play gateway and Atrium discovery untouched. Direct LoopRD on-demand JS worker and Social authentication are required BEFORE commit_turn is exposed. Do not install a separate backend; no public turn-bundle endpoint in v0.5.96.

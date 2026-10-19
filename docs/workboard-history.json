@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.workboard-history.v1",
-  "through_release": "0.5.27",
+  "through_release": "0.5.95",
   "description": "Historical completed workboard entries are retained in Git for release verifier checks. This is not a ZipRunner workboard update; ship only deltas in .ziprunner-workboard-update.json.",
   "implemented": [
     {
@@ -1256,6 +1256,14 @@
       "id": "LL-179",
       "title": "Two-week Classic survival budget",
       "summary": "Pure cash/bank accessible liquidity forecast for rent, food and replacement uniform; show in career view.",
+      "operator_checks": [
+        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
+      ]
+    },
+    {
+      "id": "LL-180",
+      "title": "Rival career pathway and multi-payday job choices",
+      "summary": "Advance via source-linked diploma recommendations, better long-range promotion valuation and partial Classic work shifts.",
       "operator_checks": [
         "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
       ]

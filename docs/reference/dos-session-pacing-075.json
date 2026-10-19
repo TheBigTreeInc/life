@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.dos-session-pacing.v1",
-  "version": "0.5.95",
+  "version": "0.5.96",
   "seed": 557,
   "status": "baseline-only",
   "caveat": "No DOSBox trace or measured wall-clock game duration is available. DOS rival AI estimates are NOT observed player travel costs. No movement or action charges were modified.",

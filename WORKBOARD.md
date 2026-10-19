@@ -1,10 +1,10 @@
-## v0.5.95 — Atrium sidecar (operator review)
+## v0.5.96 — Atrium sidecar (operator review)
 
-Release `the-life-loop-0.5.95-ziprunner.zip` declares the game with portable Atrium metadata. DAPI relay, trusted launch origin binding and live 2-browser tests remain open.
+Release `the-life-loop-0.5.96-ziprunner.zip` declares the game with portable Atrium metadata. DAPI relay, trusted launch origin binding and live 2-browser tests remain open.
 
-## v0.5.95 — Atrium private launch adapter (operator review)
+## v0.5.96 — Atrium private launch adapter (operator review)
 
-Release `the-life-loop-0.5.95-ziprunner.zip` adds private verified create/invite/join/list/resume launch projections. Does not claim live Atrium consumption, working `/play`, or production Social verification. Existing operator workboard decisions retained; related LL-072, LL-082, LL-263 remain open.
+Release `the-life-loop-0.5.96-ziprunner.zip` adds private verified create/invite/join/list/resume launch projections. Does not claim live Atrium consumption, working `/play`, or production Social verification. Existing operator workboard decisions retained; related LL-072, LL-082, LL-263 remain open.
 
 ## v0.5.89 — Durable multiplayer participant roster (candidate)
 
@@ -820,6 +820,10 @@ Open: live deployed Social and game-room authorization remain separate. Original
 ### v0.5.89 shared multiplayer lifecycle (candidate review)
 Internal server-created match state and creator seat, hashed match-bound invitations, authenticated join/rejoin and resume discovery. No operator tickets closed; priority remains the user-directed multiplayer initiative until production E2E. Public `/play` disabled. See ADR-0088.
 
-## v0.5.95 — LL-349 signed LoopRD gateway candidate
+## v0.5.96 — LL-349 signed LoopRD gateway candidate
 
-The full-source `the-life-loop-0.5.95-ziprunner.zip` carries mounted descriptor handlers and tested private gateway/Node engine runtime. LL-347 and LL-072/263/092/082 retain their current operator-controlled status; target Pi deployment, actual Social proof redemption, Atrium/Tavi binding and live two-seat OpenClaw acceptance remain open. See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`.
+The full-source `the-life-loop-0.5.96-ziprunner.zip` carries mounted descriptor handlers and tested private gateway/Node engine runtime. LL-347 and LL-072/263/092/082 retain their current operator-controlled status; target Pi deployment, actual Social proof redemption, Atrium/Tavi binding and live two-seat OpenClaw acceptance remain open. See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`.
+
+## v0.5.96 — Life atomic offline turn migration
+
+LL-351 source foundation implemented/tested, operator QA pending. LL-352 on-demand LoopRD JS worker and LL-353 browser/agent submission remain open. LL-072, LL-263, LL-092, LL-082 and LL-347 retain their earlier acceptance criteria and operator decisions. See `docs/LIFE_SEEDED_TURN_LOOPRD_MIGRATION_096.adoc`.

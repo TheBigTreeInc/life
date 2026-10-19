@@ -1,0 +1,12 @@
+= DAPI / LoopRD session handoff — optional seeded turn execution
+:revnumber: 0.5.96
+
+Life is migrating away from an unnecessary always-on private backend. Please plan an *optional*, trusted, bounded one-shot JavaScript rules worker within LoopRD's existing component lifecycle. **Do not change existing LoopRD 0.2.0 components, authentication policies or API contracts automatically.**
+
+Need: when an authenticated Life turn arrives, read LoopRD's GameMatch/GameCheckpoint rows; invoke source-pinned Life JS rules against the stored checkpoint and ordered actions; CAS new revision and persist GameAction + GameNotificationOutbox atomically using the existing LoopRD SQL storage. No continuously running Node service, duplicate HTTP gateway, independent Life database, or hard-coded origin is needed.
+
+The Life source package includes `src/async-turn-bundle.js`, `server/async_turn_bundle_cli.cjs` and `server/async_turn_bundle.py` with source-only tests. Treat them as testable semantics, not as LoopRD handler execution code yet. The LoopRD transport and Python handler model cannot automatically access arbitrary sibling source files or Node processes; propose a secure, allowlisted component asset/bundle mechanism with immutable engine digest, trusted operator enabling, resource limits, test-only isolation and explicit fail-closed status. Do not expose shell commands or filesystem paths chosen by API callers.
+
+Maintain `GET /play/info`, `POST /play`, current `looprd.game-play/v1` lobby and authorization contracts during migration. `commit_turn` is additive and **provisional** until actual LoopRD and Social identity tests pass. Route errors must distinguish unauthenticated, unseated, stale, conflicting, illegal and transient evaluator-unavailable outcomes without revealing another user's match.
+
+Proof required: two real authenticated identities, one stored match, both turns committed after offline replay, 3rd identity denied, reconnect replay idempotent, LoopRD process restart/persistence, no effect on the 14 other containers, Tavi event outbox retry, saved Classic offline gameplay intact. Installation must remain an ordinary versioned ZipRunner source change for Life and separate DAPI owner deployment work; no hand editing by the operator.

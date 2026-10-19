@@ -1,17 +1,9 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.95",
-  "summary": "Life multiplayer 0.5.95: generated LoopRD /play and /play/info handlers, private signed gateway to real headless Life Node/SQL runtime, Atrium strict info/lobby projections, server-pinned deterministic idempotent creation, authorization/restart local gateway tests. Operator Social verifier/proof exchange, target runtime deployment, Atrium 0.5.21 and Tavi/OpenClaw acceptance remain pending.",
+  "version": "0.5.96",
+  "summary": "0.5.96: additive seeded-turn migration foundation; replay a full turn through the exact Life JS engine and persist one SQL revision/outbox intent, with a credential-free durable offline retry queue. Existing LoopRD /play, Atrium lobby, Social/Tavi identity, hotseat and offline PLAY.html are unchanged; commit_turn is NOT mounted or advertised.",
   "implemented": [
-    {
-      "id": "LL-180",
-      "title": "Rival career pathway and multi-payday job choices",
-      "summary": "Advance via source-linked diploma recommendations, better long-range promotion valuation and partial Classic work shifts.",
-      "operator_checks": [
-        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
-      ]
-    },
     {
       "id": "LL-181",
       "title": "Original career and survival regressions",
@@ -1251,6 +1243,16 @@
         "Confirm actual LoopRD 0.2.0 handler dispatch, private gateway key/socket and production Social verifier on the target Pi before allowing external traffic.",
         "Verify Tavi/Atrium challenge-to-one-match, real OpenClaw actions, notification and timeout acceptance separately; do not promote open LL-347 to Done."
       ]
+    },
+    {
+      "id": "LL-351",
+      "title": "Deterministic atomic turn bundle and credential-free offline queue",
+      "summary": "Source-only, guarded one-shot JS Life engine replay, one-transaction SQL commit with idempotency and notification intent, bounded durable browser-side outbox adapter, local SQLite two-seat restart tests. Does not mount or activate public LoopRD handler.",
+      "operator_checks": [
+        "Run tests/test_async_turn_bundle_096.py and tests/async-turn-{bundle,outbox}.test.cjs against full Life source.",
+        "Check existing LoopRD /play and /play/info plus Atrium sidecar byte-for-byte compatibility except version release; do not activate commit_turn before Social verifier and LoopRD worker acceptance.",
+        "Check standalone PLAY.html, Classic/Modern hotseat, and all saved games without network."
+      ]
     }
   ],
   "remaining": [
@@ -1549,6 +1551,28 @@
         "Verify deployed token issuer and game-scoped proof; create, invite, join, decline, resume with distinct identities.",
         "Execute legal turns from a graphical human and headless OpenClaw against identical server evaluator; reject unauthorized, stale, replay and wrong-seat actions.",
         "Restart LoopRD and verify same match, checkpoint and pending notifications remain; operator approves only after witnessed evidence."
+      ]
+    },
+    {
+      "id": "LL-352",
+      "title": "Direct LoopRD on-demand JS turn worker and authenticated commit_turn handler",
+      "summary": "DAPI owner must provide approved pinned source-bundle one-shot JS rule execution within existing LoopRD runtime; Life must mount optional commit_turn using existing LoopRD SQL/CAS, real Social identity and durable notification dispatcher, with no second permanent backend.",
+      "priority": "critical",
+      "operator_checks": [
+        "DAPI resource-limited JS worker exists and is restricted to operator-installed signed Life rules bundle.",
+        "Verify two real Tavi identities and denied third identity, stale revisions, idempotent retries and persistence across LoopRD restart.",
+        "Keep existing /play/info six-field envelope and Atrium create/invite/join/resume compatible; operator approves activation."
+      ]
+    },
+    {
+      "id": "LL-353",
+      "title": "Wire offline UI and OpenClaw turn submission through Atrium-resolved Life match",
+      "summary": "Integrate durable browser outbox and agent client commit-turn transport after LL-352 verified; one Life match ID via Atrium and verified Tavi proof, conflict review, eventual Tavi turn_ready delivery and 60-hour deadline. Offline single player/hotseat unchanged.",
+      "priority": "high",
+      "operator_checks": [
+        "Disconnect during a human action sequence, end turn offline, reconnect and submit the identical sealed bundle once.",
+        "Receive OpenClaw turn via the same deterministic rules, close clients, restart LoopRD and resume both seats through Atrium.",
+        "Ensure no Life-specific Tavi routing or duplicate match/session creation; keep legacy client behavior as rollback."
       ]
     }
   ]

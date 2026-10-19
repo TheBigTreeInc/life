@@ -218,6 +218,13 @@
       "kind": "signed-looprd-headless-gateway-candidate",
       "supersedes": "0.5.94",
       "notes": "Source-only LoopRD /play gateway and Life Node/SQL Unix-socket backend; generic Atrium lobby response + deterministic creation, test-only real-engine multi-seat gateway exercise. No live Social verifier/proof redemption, Atrium client update or deployment."
+    },
+    {
+      "version": "0.5.96",
+      "artifact": "the-life-loop-0.5.96-ziprunner.zip",
+      "kind": "seeded-offline-turn-foundation",
+      "supersedes": "0.5.95",
+      "notes": "Atomic full turn replay against existing deterministic engine, SQLite idempotent commit and credential-free offline queued submissions; additive source only, old public LoopRD/Atrium routes unaffected. Direct LoopRD worker and public commit_turn remain pending."
     }
   ]
 }

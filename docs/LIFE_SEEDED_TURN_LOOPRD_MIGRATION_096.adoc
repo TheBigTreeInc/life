@@ -1,0 +1,73 @@
+= Life v0.5.96 — Seeded, offline-first turn sync on LoopRD (compatibility migration)
+:revnumber: 0.5.96
+:revdate: 2026-10-19
+:toc: left
+:sectnums:
+
+== Decision and non-negotiable boundaries
+
+*Life does not require a continuously running private game backend.* LoopRD is the service for durable match state, authorized seats, revision compare-and-swap, service identity, jobs and Tavi notifications. The browser and OpenClaw run the same deterministic Life rules, seeded and pinned by engine revision. They exchange checkpoints and ordered end-of-turn commands, not live engine sessions.
+
+This is a *phased migration*. Do not turn off, weaken or reroute the installed `/play`, `/play/info`, legacy `/session`, or Atrium's existing game-play/v1 adapter during this source pass. Keep the v0.5.95 signed gateway as a *disabled/legacy fallback* until a LoopRD-owned replacement passes production acceptance. Its appearance in this ZIP does not mandate installing a new process. No new LoopRD service is started and no live configuration is changed by a source ZIP.
+
+Identity remains owned by Social/Tavi; it must be independently verified before Life binds issuer+subject to an authorized Life match seat. Tavi handles chat/challenge notifications, Atrium discovers approved games and resolves Create/Invite/Join/Continue, and Life owns game rule evaluation/turn ownership. Neither Atrium nor Tavi shall validate monetary/time commands or maintain a second match.
+
+== Sequence to implement (gated)
+
+[cols="1,2,3,1",options="header"]
+|===
+|Phase |Owner |Acceptance |Status
+|A — Atomic turn foundation |Life |Replay complete actions with identical Life engine, reject wrong seat/stale/tampered/idempotency, persist one checkpoint, one action and outbox intent per turn, restart DB |Locally tested in v0.5.96
+|B — Offline client integration |Life browser/OpenClaw adapter |Record only accepted local actions to a credential-free persisted outbox, finalize at End Turn, retry same idempotency key when connected; never silently rebase a conflicting turn |Outbox module tested, UI/headless adapter not wired
+|C — On-demand deterministic execution |LoopRD/DAPI |Trusted game asset/evaluator bundle pinned to engine digest, invoked on submitted turns without a separate HTTP service; bounded worker CPU/memory/time, no arbitrary subprocess path, no user-written code |Not implemented; cross-repository dependency
+|D — Direct LoopRD `/play` commit_turn |Life on LoopRD |Real verified Social principal, SQL tables owned by existing LoopRD component, atomic CAS + replay + durable events, existing create/invite/join/resume unaffected; 401/403/404/409/503 semantics |Not mounted or deployed
+|E — Atrium/Tavi/OpenClaw acceptance |Atrium/Social/Life |Atrium uses unchanged game-play/v1 lobby; Tavi game-agnostic challenge yields one Life match; browser and OpenClaw resume after disconnect and server restart; third account rejected |Not performed
+|F — Retire legacy gateway |Life/operator |Only after replay parity and rollback/restore signed gateway configuration; never delete private saves, secrets or legacy Room rows |Not authorized
+|===
+
+== Small versioned internal turn envelope
+
+`looprd.game-play/v1` is preserved. The new optional `commit_turn` operation is *not currently advertised or mounted*. Its proposed envelope is shown below. Do not implement a Tavi-specific route. A future `/play/info` extension must be agreed with Atrium before advertising `commit_turn`; the existing strict Atrium 0.5.20/0.5.21 validator must keep receiving its current exact six fields.
+
+[source,json]
+----
+{
+  "schema":"looprd.game-play/v1",
+  "op":"commit_turn",
+  "matchId":"<opaque-match-id>",
+  "expectedRevision":12,
+  "expectedDigest":"<SHA-256-of-server-checkpoint>",
+  "idempotencyKey":"<stable-unique-per-turn-id>",
+  "commands":[{"type":"travel","arg":"bank"},{"type":"end_turn"}]
+}
+----
+
+No client snapshot, JWT, token, issuer, subject, seat or arbitrary computed monetary results appear in the request. The caller provides its bearer credential on the approved LoopRD transport when online, *not in the offline outbox*. The source outbox stores only match locator, pinned engine revision, base revision/digest, bounded ordered actions and a stable idempotency key. Each game should have a separate outbox storage key. Offline saves continue normally, without any new server requirement.
+
+Turn replay is deterministic with `src/async-turn-bundle.js` calling the already existing `src/async-evaluator.js` and `src/engine.js`. `server/async_turn_bundle_cli.cjs` is an on-demand local *test evaluator*, not a daemon. `server/async_turn_bundle.py` applies membership, engine revision pin, checkpoint hash and sequence validation, then calls the existing `MatchRepository.commit()` exactly once. SQL persists checkpoint + `GameAction` carrying the ordered command list + Tavi notification *intent* in one transaction. No client-supplied final checkpoint is stored. The client's optional result checksum is an integrity cross-check, never authority.
+
+Successful response shape (internal/proposed):
+
+[source,json]
+----
+{"ok":true,"schema":"looprd.game-play/v1","result":{"matchId":"<opaque>","revision":13,"resultDigest":"<SHA-256>","replayed":false}}
+----
+
+Repeated identical `(match, issuer, subject, idempotencyKey, commands)` returns the recorded revision with `replayed:true`; contradictory reuses and stale checkpoints are rejected. An unseated or wrong-turn caller is rejected *before* evaluation. On conflict, the client must keep the local queued turn for explicit review; do not auto-replay it against a different seed, state or economic week. A `503` or offline connection is retryable with the exact same key and payload.
+
+=== State size and replay limits
+
+Snapshots may be more than a few KiB depending on journal/content; do not promise a fixed bandwidth until real data is measured. Bundle maximum: 128 commands; input/output 750 KiB; one-shot validator subprocess deadline defaults to 10 seconds in local test. Actual LoopRD worker limits must be set per operator resource policy. Pin RNG algorithm, game build digest, ruleset, engine revision and snapshot schema; never apply v0.5.96 rules to an older live match silently. Existing per-action `act` and `end_turn` commits must not be intermixed with atomic bundle commits for a match unless a verified migration mode flags their semantics.
+
+== Preserved compatibility
+
+* All previously installed LoopRD public handler paths, schema v3 and Room/`Game*` rows remain unchanged in v0.5.96.
+* Atrium strict `/play/info` shape, hosted game discovery, `atriumd.yaml`, response lobby projection and Tavi launch/challenge flows remain unchanged.
+* Both Classic and Modern offline single-player and local hotseat continue to run from `PLAY.html`; no network connection is required. The new outbox is an opt-in source adapter and is not yet connected to the browser UI.
+* `docs/workboard-history.json` and existing local workboard IDs and operator statuses must be preserved. Source-reported tests do not close operator approval criteria.
+
+== Evidence and outstanding acceptance
+
+Run: `node --test tests/async-turn-bundle.test.cjs tests/async-turn-outbox.test.cjs`, `python -m unittest discover -s tests -p 'test_async_turn_bundle_096.py'`, then `node tools/verify.mjs` and full Python suite. `tests/test_async_turn_bundle_096.py` replays real Life engine turns from two test principals against SQLite, denies a third principal, handles replay/stale/conflicting versions and restarts SQL services. It does **not** execute inside the actual LoopRD Pi or redeem a real Social grant.
+
+Next required external collaboration: DAPI/LoopRD owner implements *optional* pinned JS replay worker invoked only for installed Life turn operations, without adding a daemon and without granting arbitrary user-requested process execution. Preserve per-component runtime isolation and security. Life owner then generates the direct LoopRD handler and wires browser/agent `commit_turn`, retaining legacy API as rollback. Atrium owner only needs to know when a real activated `commit_turn` capability is advertised; no mock lobby or Life-specific Tavi code should be added.
