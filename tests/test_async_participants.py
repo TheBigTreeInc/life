@@ -57,7 +57,7 @@ class RosterTests(unittest.TestCase):
         self.assertIsNone(self.roster.participant_seat('another','https://social.example','alice'))
 
     def test_reject_invalid_seats(self):
-        for seat in (-1,True,16,'0'):
+        for seat in (-1,True,2,16,'0'):
             with self.assertRaises(MembershipRejected):self.join(seat=seat)
 
     def test_internal_api_uses_durable_roster(self):

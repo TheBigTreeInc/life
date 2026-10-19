@@ -204,6 +204,13 @@
       "kind": "authenticated-asgi-play-adapter-candidate",
       "supersedes": "0.5.92",
       "notes": "Fail-closed bearer-only ASGI transport adapter for existing Life match lifecycle and authoritative evaluator, isolated HTTP contract tests; awaiting real Social verifier, DAPI handler mounting and live persistent two-seat acceptance."
+    },
+    {
+      "version": "0.5.94",
+      "artifact": "the-life-loop-0.5.94-ziprunner.zip",
+      "kind": "two-seat-headless-evaluator-restart-acceptance-candidate",
+      "supersedes": "0.5.93",
+      "notes": "Real JS-engine starting state and legal moves, string/number seat ownership fix, idempotent start settings guard, invitation decline, durable turn notification intent; local SQLite two-seat unauthorized/replay/restart test passes under TEST-ONLY identity verifier. No live Social verifier, DAPI handler or production OpenClaw deployment."
     }
   ]
 }

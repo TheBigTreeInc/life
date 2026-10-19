@@ -25,7 +25,7 @@ class InternalPlayAPI:
             raise PlayAPIRejected('Invalid match identifier')
         principal = self.identity_boundary.authenticate(token)
         seat = self.participant_seat(match_id, principal.issuer, principal.subject)
-        if not isinstance(seat, int) or isinstance(seat, bool) or seat < 0:
+        if not isinstance(seat, int) or isinstance(seat, bool) or not 0 <= seat <= 1:
             raise PlayAPIRejected('Match membership required')
         return principal, seat
 
@@ -34,8 +34,17 @@ class InternalPlayAPI:
         match = self.repository.read(match_id)['match']
         return {'matchId': match_id, 'revision': match['revision'],
                 'status': match['status'], 'turnIndex': match['turnIndex'],
-                'activeSeat': match['activeSeat'], 'yourSeat': seat,
-                'dueAtUtc': match['dueAtUtc'], 'engineRevision': match['engineRevision']}
+                'activeSeat': int(match['activeSeat']) if match['activeSeat'] is not None else None, 'yourSeat': seat,
+                'dueAtUtc': match['dueAtUtc'], 'engineRevision': match['engineRevision'],
+                'state': self._player_view(self.repository.read(match_id)['checkpoint']['state'])}
+
+    def _player_view(self, state):
+        # Game snapshots are authored by the server's LifeGame, never received
+        # from clients. Return the engine state needed to render the same rules;
+        # refuse unexpected non-game authentication fields rather than leaking.
+        if not isinstance(state, dict) or any(k in state for k in ('token', 'password', 'authorization', 'secret')):
+            raise PlayAPIRejected('Invalid player state')
+        return state
 
     def legal_actions(self, *, token, match_id):
         _, seat = self._member(token, match_id)
@@ -43,7 +52,7 @@ class InternalPlayAPI:
         match = record['match']
         if not self.legal_action_provider:
             raise PlayAPIRejected('Trusted legal action provider not configured')
-        if match['status'] != 'active' or match['activeSeat'] != seat:
+        if match['status'] != 'active' or str(match['activeSeat']) != str(seat):
             return {'matchId': match_id, 'revision': match['revision'], 'actions': []}
         actions = self.legal_action_provider(record['checkpoint']['state'], seat)
         if not isinstance(actions, list):

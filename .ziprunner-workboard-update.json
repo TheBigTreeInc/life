@@ -1,17 +1,9 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.93",
-  "summary": "Life server-side authenticated ASGI /play contract, strictly gated on externally provisioned trusted Social verifier and actual match snapshot provider. No public LoopRD handler enabled and no live headless acceptance claimed.",
+  "version": "0.5.94",
+  "summary": "Life multiplayer v0.5.94: real game-engine initial state/legal actions, two distinct authenticated TEST identities executing via existing Node evaluator, persisted SQLite restart, wrong-seat/third-account rejection, replay-safe turn commits, invitation decline and transactionally durable notification intent. Live Social verification and LoopRD handler mounting remain unavailable; no operator acceptance.",
   "implemented": [
-    {
-      "id": "LL-178",
-      "title": "DOS-qualified employment and reproducible hiring",
-      "summary": "Correct four job experience thresholds and model original integer hiring roll / guaranteed cook after qualification.",
-      "operator_checks": [
-        "Verify corresponding tests, local Classic Career Roadmap and no Modern/Looprd regressions."
-      ]
-    },
     {
       "id": "LL-179",
       "title": "Two-week Classic survival budget",
@@ -1247,6 +1239,16 @@
       "operator_checks": [
         "Verify trusted Social verifier integration and player-seat ownership on staging, confirm /play remains gated."
       ]
+    },
+    {
+      "id": "LL-348",
+      "title": "Headless two-seat authoritative match rehearsal",
+      "summary": "Use source-controlled LifeGame as the sole initial-state, legal-action and mutation evaluator. Preserve SQLite state, invitations, idempotent actions and next-turn outbox across a simulated process restart. The authentication issuer is TEST-ONLY; no live LoopRD or Social deployment is claimed.",
+      "operator_checks": [
+        "Run python -m unittest tests.test_async_end_to_end_094 -v with Node installed and review authorized human/agent, forbidden intruder, idempotency, seat sequence and SQLite restart.",
+        "Inspect code for the trusted Social boundary and confirm no mock verifier is enabled or injected in production or game metadata.",
+        "Run complete project verifier and verify full-source ZIP with unchanged local operator workboard statuses."
+      ]
     }
   ],
   "remaining": [
@@ -1530,7 +1532,7 @@
     {
       "id": "LL-346",
       "title": "Verify deployed Atrium sidecar discovery and trusted launch binding",
-      "summary": "Sidecar added locally in v0.5.93; verify DAPI observes matching source revision, Atrium receives a trusted pending candidate, game-web resolves from deployment configuration and two-browser resume passes without exposing secrets.",
+      "summary": "Sidecar added locally in v0.5.94; verify DAPI observes matching source revision, Atrium receives a trusted pending candidate, game-web resolves from deployment configuration and two-browser resume passes without exposing secrets.",
       "priority": "high",
       "operator_checks": [
         "Enable DAPI discovery in staging and confirm pending Atrium intake, approval gate, deployment launch binding and two-browser resumption."
@@ -1539,7 +1541,7 @@
     {
       "id": "LL-347",
       "title": "Mount authenticated persistent Life /play and validate human-agent match",
-      "summary": "HTTP transport adapter was added as an isolated source candidate in v0.5.93. Implement real Social audience/nonce/expiry verification, Life-owned seeded snapshot/legal-actions projection, mounted LoopRD handler, decline, two-seat deadline and notification, then prove a two-actor persistent restart acceptance. Preserve LL-072/263/092/082 operator status.",
+      "summary": "HTTP transport adapter was added as an isolated source candidate in v0.5.94. Implement real Social audience/nonce/expiry verification, Life-owned seeded snapshot/legal-actions projection, mounted LoopRD handler, decline, two-seat deadline and notification, then prove a two-actor persistent restart acceptance. Preserve LL-072/263/092/082 operator status.",
       "priority": "high",
       "operator_checks": [
         "Verify deployed token issuer and game-scoped proof; create, invite, join, decline, resume with distinct identities.",

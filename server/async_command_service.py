@@ -47,10 +47,11 @@ class HeadlessEvaluator:
             raise EvaluatorUnavailable('Invalid evaluator result') from exc
 
 class AsyncCommandService:
-    def __init__(self, repository, participant_seat, evaluator=None):
+    def __init__(self, repository, participant_seat, evaluator=None, participant_players=None):
         self.repository=repository
         self.participant_seat=participant_seat
         self.evaluator=evaluator or HeadlessEvaluator()
+        self.participant_players=participant_players
 
     def process(self, *, match_id, expected_revision, issuer, subject,
                 idempotency_key, command):
@@ -69,7 +70,7 @@ class AsyncCommandService:
         replay=self.repository.replay_if_exists(match_id=match_id, issuer=issuer,subject=subject,
             idempotency_key=idempotency_key,command=command)
         if replay is not None:return replay
-        if seat != match['activeSeat']:
+        if str(seat) != str(match['activeSeat']):
             raise CommandRejected('Actor does not own active seat')
         if match['status']!='active':
             raise CommandRejected('Match not active')
@@ -80,11 +81,18 @@ class AsyncCommandService:
         calculated=self.evaluator.evaluate(checkpoint['state'],command,checkpoint['stateDigest'])
         state=calculated['checkpoint']['state']
         active=calculated['activeSeat']
-        # This first pass cannot safely assign deadline and notification ownership:
-        # those depend on the verified participant roster and scheduler contract.
+        # Persist notification INTENT in the same transaction as the turn.
+        # Actual Tavi dispatch, retries and 60h deadlines are separate runtime jobs.
+        notifications=[]
+        if command['type']=='end_turn' and self.participant_players is not None:
+            for participant in self.participant_players(match_id):
+                if str(participant['seat']) == str(active):
+                    notifications.append({'issuer':participant['issuer'],'subject':participant['subject'],
+                        'eventId':f'{match_id}:turn:{calculated["turnIndex"]}:revision:{expected_revision+1}',
+                        'eventType':'turn_ready'})
         return self.repository.commit(match_id=match_id,expected_revision=expected_revision,
             issuer=issuer,subject=subject,idempotency_key=idempotency_key,
             command=command,resulting_snapshot=state,
             rng_state=calculated['checkpoint']['rngState'],
             turn_index=calculated['turnIndex'],active_seat=active,
-            due_at=None,outbox=[])
+            due_at=None,outbox=notifications)

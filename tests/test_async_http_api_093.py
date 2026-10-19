@@ -14,6 +14,7 @@ class Lifecycle:
  def create(self, **kw): self.invocations+=1;return {'matchId':'one','yourSeat':0,'revision':0}
  def resume(self,**kw): return [{'matchId':'one','yourSeat':0,'revision':1}]
  def issue_invitation(self,**kw): return {'matchId':'one','invitation':'secret'}
+ def decline(self,**kw): return {'declined': True}
  def join(self,**kw): return {'matchId':'one','yourSeat':1}
 
 async def request(app, body, token='alice', content_type='application/json', path='/play'):

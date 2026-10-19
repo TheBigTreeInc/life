@@ -54,6 +54,10 @@ class MatchLifecycle:
                         (Participant.c.subject==actor.subject))).first()
                     if member is None or old['engineRevision']!=engine_revision or old['rulesDigest']!=rules_digest or old['initialSeed']!=seed:
                         raise MatchConflict('Create request ID reused with different parameters')
+                    original=db.execute(sa.select(Checkpoint.c.stateDigest).where(
+                        (Checkpoint.c.matchId==match_id)&(Checkpoint.c.revision==0))).first()
+                    if original is None or original[0] != digest(state):
+                        raise MatchConflict('Create request ID reused with different settings')
                     return {'matchId':match_id,'yourSeat':0,'revision':old['revision'],'alreadyCreated':True}
         now=timestamp()
         with self.session_factory.begin() as db:
@@ -68,7 +72,7 @@ class MatchLifecycle:
 
     def issue_invitation(self, *, token, match_id, seat=1, expires_in_seconds=86400):
         actor=self.identity.authenticate(token)
-        if type(seat) is not int or not 1<=seat<=15: raise LifecycleRejected('Invalid invited seat')
+        if type(seat) is not int or seat!=1: raise LifecycleRejected('Invalid invited seat')
         if type(expires_in_seconds) is not int or not 60<=expires_in_seconds<=604800:
             raise LifecycleRejected('Invalid invitation lifetime')
         raw=secrets.token_urlsafe(32)
@@ -91,6 +95,29 @@ class MatchLifecycle:
                 redeemedBySubject=None,redeemedAtUtc=None,createdAtUtc=timestamp()))
         return {'matchId':match_id,'seat':seat,'invitation':raw,'expiresAtUtc':expiry}
 
+    def decline(self, *, token, match_id, invitation):
+        # A declined invitation is revoked, but no seat is created and no
+        # account identity is inferred from the secret. Social/Tavi still owns
+        # its separate challenge response and recipient consent.
+        self.identity.authenticate(token)
+        if not isinstance(invitation, str) or not 32 <= len(invitation) <= 128:
+            raise LifecycleRejected('Invalid invitation')
+        token_hash=hashlib.sha256(invitation.encode('utf-8')).hexdigest()
+        with self.session_factory.begin() as db:
+            row=db.execute(sa.select(Invitation).where(
+                (Invitation.c.matchId==match_id)&(Invitation.c.tokenDigest==token_hash))).mappings().first()
+            if row is None or not hmac.compare_digest(row['tokenDigest'],token_hash):
+                raise LifecycleRejected('Invitation rejected')
+            if row['redeemedAtUtc'] is not None:
+                raise LifecycleRejected('Invitation already redeemed')
+            # Retain the private row for audit; expiry is an existing field.
+            # Do not reissue the same secret, disclose its presence or grant a seat.
+            changed=db.execute(sa.update(Invitation).where(
+                (Invitation.c.id==row['id'])&(Invitation.c.redeemedAtUtc.is_(None))&
+                (Invitation.c.expiresAtUtc==row['expiresAtUtc'])).values(expiresAtUtc=timestamp()))
+            if changed.rowcount!=1: raise MatchConflict('Concurrent invitation update')
+        return {'matchId': match_id, 'declined': True}
+
     def join(self, *, token, match_id, invitation):
         actor=self.identity.authenticate(token)
         if not isinstance(invitation,str) or not 32<=len(invitation)<=128:
@@ -104,6 +131,7 @@ class MatchLifecycle:
                 raise LifecycleRejected('Invitation rejected')
             live_match=db.execute(sa.select(Match.c.status).where(Match.c.id==match_id)).first()
             if live_match is None or live_match[0]!='active': raise LifecycleRejected('Match not active')
+            if row['seatId'] != '1': raise LifecycleRejected('Invitation targets unsupported seat')
             if row['redeemedAtUtc'] is not None:
                 if row['redeemedByIssuer']==actor.issuer and row['redeemedBySubject']==actor.subject:
                     return {'matchId':match_id,'yourSeat':int(row['seatId']),'alreadyJoined':True}

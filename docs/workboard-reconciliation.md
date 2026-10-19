@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.93
+# Workboard lifecycle reconciliation — v0.5.94
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 295 done (historical claims included); 16 blocked; 12 in progress; 11 to do.
+**Counts:** 296 done (historical claims included); 16 blocked; 12 in progress; 11 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -54,7 +54,6 @@
 
 ## Done (current ZipRunner update)
 
-- **LL-178:** DOS-qualified employment and reproducible hiring
 - **LL-179:** Two-week Classic survival budget
 - **LL-180:** Rival career pathway and multi-payday job choices
 - **LL-181:** Original career and survival regressions
@@ -204,6 +203,7 @@
 - **LL-333:** Source-backed Jones route decision estimate
 - **LL-350:** LIFE-ASYNC-01 deterministic load and replay foundation
 - **LL-345:** Social identity trust adapter
+- **LL-348:** Headless two-seat authoritative match rehearsal
 
 ## Importer handoff
 

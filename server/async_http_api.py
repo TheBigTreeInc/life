@@ -12,6 +12,7 @@ from async_identity import IdentityRejected
 from async_lifecycle import LifecycleRejected
 from async_play_api import PlayAPIRejected
 from async_match_repository import MatchConflict, MatchNotFound
+from async_state_bridge import StateEngineUnavailable
 from async_command_service import CommandRejected, EvaluatorUnavailable
 
 SCHEMA = 'looprd.game-play/v1'
@@ -34,7 +35,7 @@ def create_app(lifecycle, play_api, *, game_id='life.loop'):
 
     async def info(request):
         return JSONResponse({'schema': SCHEMA, 'gameId': game_id, 'component': 'the-life-loop',
-            'operations': ['create', 'invite', 'join', 'list_matches', 'resume', 'get', 'legal_actions', 'act', 'end_turn'],
+            'operations': ['create', 'invite', 'join', 'decline', 'list_matches', 'resume', 'get', 'legal_actions', 'act', 'end_turn'],
             'modes': ['private-async'], 'actionExecution': 'server-evaluated',
             'agentPlaySupported': False, 'publicPlayApiAvailable': False,
             'identityRequired': True})
@@ -71,6 +72,9 @@ def create_app(lifecycle, play_api, *, game_id='life.loop'):
             elif op == 'join':
                 if set(params) != {'matchId', 'invitation'}: raise ValueError('Invalid join fields')
                 result = lifecycle.join(token=token, match_id=params['matchId'], invitation=params['invitation'])
+            elif op == 'decline':
+                if set(params) != {'matchId', 'invitation'}: raise ValueError('Invalid decline fields')
+                result = lifecycle.decline(token=token, match_id=params['matchId'], invitation=params['invitation'])
             elif op == 'list_matches':
                 if params: raise ValueError('Unexpected list fields')
                 result = {'matches': lifecycle.resume(token=token)}
@@ -107,7 +111,7 @@ def create_app(lifecycle, play_api, *, game_id='life.loop'):
             return failure('ACTION_REJECTED', 'Action or seat rejected', 409)
         except MatchConflict:
             return failure('REVISION_CONFLICT', 'Match revision or operation conflict', 409)
-        except EvaluatorUnavailable:
+        except (EvaluatorUnavailable, StateEngineUnavailable):
             return failure('EVALUATOR_UNAVAILABLE', 'Game evaluator unavailable', 503)
         except (ValueError, TypeError, KeyError, __import__('json').JSONDecodeError):
             return failure('BAD_REQUEST', 'Invalid request fields', 422)

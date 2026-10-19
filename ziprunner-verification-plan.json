@@ -1,0 +1,77 @@
+{
+  "schema": "ziprunner.verification-plan/v1",
+  "project": "the-life-loop",
+  "version": "0.5.94",
+  "tasks": [
+    {
+      "id": "LL-348",
+      "criteria": [
+        {
+          "id": "LL-348-AC-1",
+          "description": "Real LifeGame two-seat actions, stale and unauthorized rejection, SQLite restart",
+          "mode": "automated",
+          "checks": [
+            "LIFE094-TEST-1"
+          ]
+        },
+        {
+          "id": "LL-348-AC-2",
+          "description": "Check workboard metadata consistency and full source package",
+          "mode": "automated",
+          "checks": [
+            "LIFE094-TEST-2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LL-347",
+      "criteria": [
+        {
+          "id": "LL-347-AC-1",
+          "description": "WITNESS live Social proof, LoopRD route, Tavi OpenClaw and persisted match after target reboot",
+          "mode": "manual",
+          "checks": [
+            "LIFE094-LIVE-1"
+          ]
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "LIFE094-TEST-1",
+      "kind": "automated",
+      "stage": "functional",
+      "description": "Source backed two-seat persistent match with true JS evaluator",
+      "runner_ref": "life-headless-two-seat",
+      "assertions": [
+        "Correct seat owns turn",
+        "Real Life engine accepts allowed move",
+        "Replays return original revision",
+        "Unauthorized third account cannot inspect or act",
+        "Restart from same file database preserves match"
+      ],
+      "test_ref": "tests/test_async_end_to_end_094.py"
+    },
+    {
+      "id": "LIFE094-TEST-2",
+      "kind": "automated",
+      "stage": "build",
+      "description": "All game and packaging verification",
+      "runner_ref": "life-project-verifier",
+      "assertions": [
+        "544 Node gameplay tests pass",
+        "Version and workboard consistent"
+      ],
+      "test_ref": "tools/verify.mjs"
+    },
+    {
+      "id": "LIFE094-LIVE-1",
+      "kind": "manual",
+      "stage": "acceptance",
+      "description": "Target runtime complete Social + agent match acceptance",
+      "instructions": "On approved LoopRD service redeem real Social proof with two different Tavi accounts, create/execute two game turns, reject third account, restart service and resume same match; verify Tavi turn notification and 60h timeout. DO NOT mark Done on source tests."
+    }
+  ]
+}

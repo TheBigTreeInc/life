@@ -1,0 +1,119 @@
+{
+  "schema": "ziprunner.update-manifest/v1",
+  "spec_version": "1.0.0",
+  "project": {
+    "key": "the-life-loop",
+    "version": "0.5.94",
+    "base_version": "0.5.93"
+  },
+  "update": {
+    "id": "LIFE-20261019-094-01",
+    "kind": "source_update",
+    "created_at": "2026-10-19T00:00:00Z",
+    "summary": "Local true LifeGame two-seat replay and resume testing; Social proof and LoopRD runtime remain unconnected."
+  },
+  "planned_work": [
+    {
+      "id": "LL-348",
+      "title": "Headless two-seat match rehearsal",
+      "acceptance_criteria": "Real engine snapshots, legal actions, two independent authorized seats, wrong-seat and intruder rejection, SQLite service restart and original game invariants",
+      "priority": "high"
+    },
+    {
+      "id": "LL-347",
+      "title": "Mount authenticated Life public play and prove remote agent match",
+      "acceptance_criteria": "Trusted deployed Social credential redemption and LoopRD route, fully persistent live human/OpenClaw match with 60h turn handling and verified Tavi notification",
+      "priority": "high"
+    }
+  ],
+  "done_work": [
+    {
+      "id": "LL-348",
+      "summary": "Source implementation and local tests complete; operator acceptance still pending",
+      "evidence": [
+        {
+          "kind": "test",
+          "ref": "tests/test_async_end_to_end_094.py",
+          "description": "Runs human/agent/third identity, real Node evaluator, persistent SQLite restart"
+        },
+        {
+          "kind": "log",
+          "ref": "docs/evidence/life094-persistent-match-test.log",
+          "description": "Observed local test run, not live Social"
+        }
+      ]
+    }
+  ],
+  "todo_work": [
+    {
+      "id": "LL-347",
+      "status": "blocked",
+      "next_action": "Implement authenticated grant/session validation inside an approved LoopRD hosted runtime with actual Life Node source installed; run live two-account OpenClaw and recovery test",
+      "blockers": [
+        "No verified Social grant redemption/session bearer configured for Life on target runtime",
+        "LoopRD inline handler does not automatically package the Node LifeGame runtime; no public play route mounted",
+        "Real Tavi notification delivery and 60h deadline worker remain pending"
+      ]
+    }
+  ],
+  "validation": {
+    "model_reported": "partial",
+    "checks": [
+      {
+        "id": "LIFE094-PY",
+        "status": "passed",
+        "description": "Local full Python unittest suite",
+        "command": "python -m unittest discover -s tests -p test_*.py -v",
+        "environment": "local Linux Python 3.13",
+        "evidence_ref": "docs/evidence/life094-python-tests.log"
+      },
+      {
+        "id": "LIFE094-JS",
+        "status": "passed",
+        "description": "Full source verifier and JS game tests",
+        "command": "node tools/verify.mjs",
+        "environment": "local Linux Node 22",
+        "evidence_ref": "docs/evidence/life094-js-verifier.log"
+      },
+      {
+        "id": "LIFE094-LIVE",
+        "status": "not_run",
+        "description": "Production LoopRD two-seat Social grant and OpenClaw acceptance",
+        "reason": "Runtime route and trusted live verifier unavailable"
+      }
+    ]
+  },
+  "handover": {
+    "next_pass": "Implement DAPI LoopRD mounted Life evaluator and Social identity proof redemption, followed by live two-seat OpenClaw/Tavi recovery and turn notification acceptance",
+    "risks": [
+      "Do not enable the test stub issuer on a public endpoint",
+      "State snapshots and game engine source must remain in sync",
+      "One-process state restart is local, not proof of Pi/DAPI multi-process deployment"
+    ],
+    "blockers": [
+      "Missing runtime mount and live Social issuer",
+      "No authenticated public game play endpoint"
+    ],
+    "notes": [
+      "Workboard LL-072, LL-263, LL-092 and LL-082 remain unchanged and open",
+      "ZipRunner build acceptance is separate from model tests"
+    ]
+  },
+  "operator_actions": [
+    {
+      "id": "LIFE094-OP1",
+      "description": "Run target ZipRunner verifier and review package/workboard without assigning Done",
+      "status": "required"
+    },
+    {
+      "id": "LIFE094-OP2",
+      "description": "Authorize any subsequent remote LoopRD deployment/push only after implementing the real Social/Node runtime bridge",
+      "status": "required"
+    }
+  ],
+  "release": {
+    "requested": false,
+    "requires_operator_approval": true,
+    "notes": "No push, deploy, publish, tagging or production credentials included"
+  }
+}

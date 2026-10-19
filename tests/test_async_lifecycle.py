@@ -56,8 +56,7 @@ class LifecycleTests(unittest.TestCase):
         invite=self.service.issue_invitation(token='alice',match_id=self.match)
         self.service.join(token='bob',match_id=self.match,invitation=invite['invitation'])
         with self.assertRaises(MatchConflict):self.service.issue_invitation(token='alice',match_id=self.match,seat=1)
-        second=self.service.issue_invitation(token='alice',match_id=self.match,seat=2)
-        with self.assertRaises(MatchConflict):self.service.join(token='bob',match_id=self.match,invitation=second['invitation'])
+        with self.assertRaises(LifecycleRejected):self.service.issue_invitation(token='alice',match_id=self.match,seat=2)
         with self.assertRaises(LifecycleRejected):self.service.issue_invitation(token='alice',match_id=self.match,expires_in_seconds=1)
 
 if __name__=='__main__':unittest.main()

@@ -21,9 +21,7 @@ class HardenedLifecycleTests(LifecycleTests):
     def test_redeem_transaction_rollback_on_membership_failure(self):
         invite=self.service.issue_invitation(token='alice',match_id=self.match)
         self.service.join(token='bob',match_id=self.match,invitation=invite['invitation'])
-        other=self.service.issue_invitation(token='alice',match_id=self.match,seat=2)
-        with self.assertRaises(MatchConflict):self.service.join(token='bob',match_id=self.match,invitation=other['invitation'])
-        joined=self.service.join(token='charlie',match_id=self.match,invitation=other['invitation'])
-        self.assertEqual(joined['yourSeat'],2)
+        with self.assertRaises(LifecycleRejected):self.service.issue_invitation(token='alice',match_id=self.match,seat=2)
+        with self.assertRaises(LifecycleRejected):self.service.join(token='charlie',match_id=self.match,invitation=invite['invitation'])
 
 if __name__=='__main__': unittest.main()

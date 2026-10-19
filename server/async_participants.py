@@ -26,7 +26,7 @@ class ParticipantRoster:
         """
         if not isinstance(match_id,str) or not match_id.strip():
             raise MembershipRejected('Match ID required')
-        if type(seat) is not int or seat < 0 or seat > 15:
+        if type(seat) is not int or seat < 0 or seat > 1:
             raise MembershipRejected('Invalid seat')
         if not all(isinstance(s,str) and s.strip() for s in (issuer,subject)):
             raise MembershipRejected('Verified identity required')
@@ -60,7 +60,7 @@ class ParticipantRoster:
                 return None
             try:
                 seat=int(rows[0]['seatId'])
-                return seat if str(seat)==rows[0]['seatId'] and 0<=seat<=15 else None
+                return seat if str(seat)==rows[0]['seatId'] and 0<=seat<=1 else None
             except (ValueError,TypeError):
                 return None
 

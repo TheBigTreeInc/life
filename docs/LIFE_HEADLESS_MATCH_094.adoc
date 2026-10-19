@@ -1,0 +1,95 @@
+= Life v0.5.94 — Headless authoritative match, contracts and deployment gates
+:toc:
+
+== Scope and proof level
+
+This is a *complete-source ZipRunner release candidate*, not a deployed LoopRD game service. The end-to-end rehearsal uses a real LifeGame-backed Node evaluator, SQLite match/checkpoint/action/invitation/notification tables and a private test-only SocialIdentityBoundary stub. It verifies no public network issuer, existing Tavi account, reverse proxy, production grant redemption or genuine OpenClaw agent process. Nothing is pushed/deployed.
+
+The exact same `src/engine.js` game class drives both browser Life and `server/async_state_cli.cjs`/`server/async_evaluator_cli.cjs`. No alternate AI or simplified multiplayer rules engine is introduced. Classic mode starts with two human-controlled seats (0 and 1), plus the original Jones computer player handled by the engine. OpenClaw occupies seat 1 as an ordinary authorized player.
+
+== Routes (candidate, NOT deployed)
+
+`GET /play/info` returns versioned capability declarations. `POST /play` expects `Content-Type: application/json`, bearer-only authorization and the `looprd.game-play/v1` object body. The Life-owned ASGI adapter is located in `server/async_http_api.py` and requires a production trusted Social verifier, a persisted database, the real snapshot bridge, and a confirmed LoopRD transport/hosting mechanism. Neither the adapter nor this ZIP turns LoopRD's inline Python component into an executable Node game runtime automatically.
+
+No actor-provided UUID, seat number or snapshot may be treated as proof of permission. Signed-in Social/Tavi grant redemption requires a separately provisioned, approved runtime path; the grant is an *identity proof*, not a seat credential. Same-runtime `ctx.call` is not a remote REST call. DAPI's component `auth: public` is insufficient to authorize `/play` on its own.
+
+== Stable internal API semantics (Tavi, Atrium and OpenClaw)
+
+The protocol envelope identifier is `looprd.game-play/v1`; the public request path and deployed prefix are *provisional*. Immutable `matchId` belongs only to Life. Clients never construct a second game identity. The game owns revision CAS, game clock, legal-actions, seat membership, invitation redemption and state. Social owns authenticated identity and notifications; Tavi owns chat/challenge presentation; Atrium owns storefront/launch.
+
+* `create(engineRevision,rulesDigest,seed,settings,requestId?)` — one Life-owned match; exact creator-scoped retry after restart. Match settings must be reviewed as production-pinned before enabling public create.
+* `invite(matchId,seat=1,expiresInSeconds?)` — creator only; seat 1 is the sole invitable seat (the original Jones AI is never an authorized account seat); invitation is a sensitive bearer capability sent securely to intended peer; no token in URL or public catalog.
+* `join(matchId,invitation)` — independently verified identity, one-time admission to the unoccupied seat; duplicates for the same identity are safe.
+* `decline(matchId,invitation)` — logged-in recipient revokes a private invitation by secret without creating a seat; Tavi challenge decline remains separate.
+* `list_matches`, `resume`, `get` — only own matches and own member view. `get` now includes the authoritative persisted game snapshot in `result.state`, including player-visible state. No credentials are stored in this snapshot.
+* `legal_actions(matchId)` — for the active authorized human seat, uses `LifeGame.actions()` plus travel and end-turn commands; empty for inactive seat. The authoritative evaluator still checks each submitted action.
+* `act(matchId,expectedRevision,idempotencyKey,action)` — engine-evaluated move; no client state accepted.
+* `end_turn(matchId,expectedRevision,idempotencyKey)` — same underlying evaluator command `{type:"end_turn"}`, returning current revision and new active seat on subsequent `get`.
+
+Actions from `legal_actions` may be `{type:"action",arg:"relax"}`, `{type:"travel",arg:"market"}` or `{type:"end_turn"}`; actual enabled actions depend on game state and Classic rules. Reused `(actor, match, idempotencyKey, command)` returns the original revision without replaying gameplay, including after restart. Reusing the same key for another command is rejected. `act` and `end_turn` both require fresh `expectedRevision` for new commands. Any 401/403/404/409 must cause clients to resynchronize rather than assume a turn occurred.
+
+== Fixtures (test-only token labels, never production credentials)
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"create","engineRevision":"life-0.5.94","rulesDigest":"classic","seed":1100,"settings":{"ruleset":"classic"},"requestId":"two-seats-test-001"}
+----
+
+[source,json]
+----
+{"ok":true,"schema":"looprd.game-play/v1","result":{"matchId":"<life-generated-uuid>","yourSeat":0,"revision":0,"stateDigest":"<server-digest>","alreadyCreated":false}}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"invite","matchId":"<uuid>","seat":1}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"join","matchId":"<uuid>","invitation":"<private-secret>"}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"legal_actions","matchId":"<uuid>"}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"act","matchId":"<uuid>","expectedRevision":0,"idempotencyKey":"human-action-001","action":{"type":"action","arg":"relax"}}
+----
+
+[source,json]
+----
+{"schema":"looprd.game-play/v1","op":"end_turn","matchId":"<uuid>","expectedRevision":1,"idempotencyKey":"human-end-001"}
+----
+
+[source,json]
+----
+{"ok":false,"schema":"looprd.game-play/v1","error":{"code":"NOT_A_PARTICIPANT","message":"Match unavailable"}}
+----
+
+Error codes (route adapter): `UNAUTHENTICATED` (401), `NOT_A_PARTICIPANT` (404), `OPERATION_REJECTED` (403), `REVISION_CONFLICT` (409), `ACTION_REJECTED` (409), `EVALUATOR_UNAVAILABLE` (503), `BAD_REQUEST` (422, 413, 415), `UNKNOWN_OPERATION` (422). These meanings are stable *within source*, not yet a deployed interoperability commitment. A request targeting wrong active seat is rejected. Revoked invitations cannot later admit an attacker.
+
+== Acceptance evidence and unfinished scope
+
+. `python -m unittest tests.test_async_end_to_end_094 -v`: two test identities plus unauthorized third identity; real Node engine actions, invitation decline, revision conflict, idempotent replay and SQLite service restart. *Local test only*.
+. `python -m unittest discover -s tests -p 'test_*.py' -q`: existing and updated Python tests.
+. `node tools/verify.mjs`: complete game/ZipRunner consistency and JS tests, including generated offline `PLAY.html` and Pages payload.
+. Existing game room `/session` stays available, unchanged. New `/play` is **not** mounted; no remote agent service has been authenticated.
+. Commit creates a durable `GameNotificationOutbox` row when the next human/agent seat becomes active. Background Tavi delivery, retries, expiry, game deadline (60h), and cross-service access grant are NOT implemented. Do not advertise completed Social notifications.
+. Before public activation require real verified Social issuer, audience, expiry, revocation and replay-bound proof; server-held trusted game token/session strategy; explicit operator-backed origin binding; working Node evaluator bundle reachable from deployed service; LoopRD schema/migration test; and witnessed external two-account plus unauthorized-agent and post-restart test.
+. Keep `agentPlaySupported=false` and `publicPlayApiAvailable=false` until the mounted endpoint is successfully exercised on the real service.
+
+=== Tavi session handoff
+
+The reliable design boundary is `matchId`, `invite`/`join` semantics and Social `(issuer,subject)` -> Life seat authorization. Do not treat `game.challenge.response` as a match or issue a second Life match on acceptance. Await the mounted `looprd.game-play/v1` endpoint and approved Social grant issuer before implementing runtime calls. Tavi may build UI against these fixtures and should keep gameplay integration feature-gated.
+
+=== OpenClaw session handoff
+
+Prepare a headless client interface `get -> legal_actions -> act / end_turn -> get` using an independently verified account credential, single match ID, monotonic revision and idempotency keys. Never use a Life-engine fork, assume action names, or enable network agent mode from a `false` capability report. Actual Tavi native-channel authentication and proof redemption remain a dependency.
+
+=== Atrium session handoff
+
+Replace mock lobby only after production Life exposes real `/play/info` and authenticated `/play` and publishes appropriate capability truth. The Atrium deployment resolver owns trusted origin selection and candidate approval; no game URL in `atriumd.yaml`.
