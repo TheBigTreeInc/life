@@ -1,7 +1,7 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.96
+release: 0.5.97
 api:
   version: v1
 auth:
@@ -372,6 +372,12 @@ websocket:
   path: /events
   resources:
   - pulses
+dependencies:
+- component: looprd-social
+  contract: tavi-game-grant-redeem
+  version: 1
+  credentialSecret: tavi/services/the-life-loop
+  optional: true
 handlers:
 - path: /session
   method: POST
@@ -565,6 +571,136 @@ handlers:
     \ clients\n            # should normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
     \ result)\n        return result\n    except HTTPException:\n        raise\n    except (httpx.HTTPError, ValueError,\
     \ json.JSONDecodeError):\n        raise HTTPException(503, 'Life backend unavailable') from None\n"
+- path: /cloud
+  method: POST
+  kind: python
+  source: "\"\"\"Direct LoopRD cloud-save v1, TRUSTED-CLIENT game turns.\n\nGenerated verbatim into LoopRD's /cloud\
+    \ handler. No JavaScript worker, no\nadditional web backend, and no client-authorized identity fields.\n\nThis\
+    \ service deliberately operates ONLY on existing Life matches. Initial match\ncreation and Tavi invitation consent\
+    \ still use the established game lifecycle;\nTavi's one-use proof is exchangeable only after game subscription\
+    \ exists.\n\"\"\"\nimport base64\nimport binascii\nimport hashlib\nimport hmac\nimport json\nimport re\nimport\
+    \ secrets\nimport time\nimport uuid\nfrom datetime import datetime, timezone\nimport sqlalchemy as sa\nfrom\
+    \ starlette.exceptions import HTTPException\n\nSCHEMA = 'life.cloud-save/v1'\nGAME_ID = 'life.loop'\nMATCH =\
+    \ re.compile(r'^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$')\nKEY = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{7,127}$')\n\
+    SESSION_TTL = 900\nMAX_SNAPSHOT_BYTES = 360_000\nSESSION_REF = 'life/cloud-session-key'\n\n\ndef _bad(status,\
+    \ message):\n    raise HTTPException(status_code=status, detail=message)\n\n\ndef _canonical(value):\n    return\
+    \ json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)\n\n\ndef _digest(value):\n\
+    \    return hashlib.sha256(_canonical(value).encode('utf-8')).hexdigest()\n\n\ndef _encoded(value):\n    return\
+    \ base64.urlsafe_b64encode(value).rstrip(b'=').decode('ascii')\n\n\ndef _decode(value):\n    return base64.urlsafe_b64decode(value\
+    \ + '=' * (-len(value) % 4))\n\n\ndef _key(ctx):\n    try:\n        key = ctx.secret(SESSION_REF)\n        if\
+    \ not isinstance(key, str) or len(key.encode('utf-8')) < 32:\n            raise ValueError('Short key')\n  \
+    \      return key.encode('utf-8')\n    except (ValueError, OSError, AttributeError, KeyError):\n        _bad(503,\
+    \ 'Cloud-save identity exchange not configured')\n\n\ndef _session_token(key, identity):\n    raw = _encoded(_canonical(identity).encode('utf-8'))\n\
+    \    sig = hmac.new(key, ('life-cloud-v1.' + raw).encode('ascii'), hashlib.sha256).hexdigest()\n    return 'lcs1.'\
+    \ + raw + '.' + sig\n\n\ndef _identity(ctx, key, match_id):\n    auth = ctx.request.headers.get('authorization',\
+    \ '')\n    if not isinstance(auth, str) or not auth.startswith('Bearer ') or len(auth) > 8192:\n        _bad(401,\
+    \ 'Match-scoped bearer required')\n    token = auth[7:]\n    parts = token.split('.')\n    if len(parts) !=\
+    \ 3 or parts[0] != 'lcs1' or not re.fullmatch(r'[A-Za-z0-9_-]{20,1500}', parts[1]) or not re.fullmatch(r'[0-9a-f]{64}',\
+    \ parts[2]):\n        _bad(401, 'Invalid match session')\n    want = hmac.new(key, ('life-cloud-v1.' + parts[1]).encode('ascii'),\
+    \ hashlib.sha256).hexdigest()\n    if not hmac.compare_digest(want, parts[2]):\n        _bad(401, 'Invalid match\
+    \ session')\n    try:\n        data = json.loads(_decode(parts[1]))\n        if (type(data) is not dict or set(data)\
+    \ != {'version', 'matchId', 'issuer', 'subject', 'expires', 'nonce'} or\n                data['version'] !=\
+    \ 1 or data['matchId'] != match_id or\n                type(data['expires']) is not int or data['expires'] <=\
+    \ int(time.time()) or\n                data['expires'] > int(time.time()) + SESSION_TTL + 30 or\n          \
+    \      not all(type(data[k]) is str and 1 <= len(data[k]) <= 256 for k in ('issuer', 'subject', 'nonce'))):\n\
+    \            raise ValueError('Invalid claims')\n    except (ValueError, TypeError, KeyError, UnicodeError,\
+    \ binascii.Error, json.JSONDecodeError):\n        _bad(401, 'Invalid or expired match session')\n    return\
+    \ data\n\n\ndef _member(db, match_id, issuer, subject):\n    row = db.execute(sa.text('SELECT \"seatId\" FROM\
+    \ \"GameParticipant\" WHERE \"matchId\"=:m AND \"issuer\"=:i '\n        'AND \"subject\"=:s AND \"role\"=\\\
+    'player\\' LIMIT 2'), {'m': match_id, 'i': issuer, 's': subject}).all()\n    if len(row) != 1 or row[0][0] not\
+    \ in ('0', '1'):\n        _bad(404, 'Match unavailable')\n    return int(row[0][0])\n\n\ndef _record(db, match_id):\n\
+    \    match = db.execute(sa.text('SELECT * FROM \"GameMatch\" WHERE \"id\"=:m'), {'m': match_id}).mappings().first()\n\
+    \    if match is None:\n        _bad(404, 'Match unavailable')\n    point = db.execute(sa.text('SELECT * FROM\
+    \ \"GameCheckpoint\" WHERE \"matchId\"=:m '\n        'ORDER BY \"revision\" DESC LIMIT 1'), {'m': match_id}).mappings().first()\n\
+    \    if point is None or point['revision'] != match['revision']:\n        _bad(409, 'Persisted revision inconsistent')\n\
+    \    state = point['state'] if isinstance(point['state'], dict) else json.loads(point['state'])\n    if _digest(state)\
+    \ != point['stateDigest']:\n        _bad(409, 'Persisted save checksum incorrect')\n    return match, point,\
+    \ state\n\n\ndef _validate_snapshot(state, next_seat):\n    try:\n        if (type(state) is not dict or type(state.get('players'))\
+    \ is not list or\n                len(state['players']) != 3 or\n                [x.get('id') if type(x) is\
+    \ dict else None for x in state['players']] != ['player','friend','jones'] or\n                type(state.get('settings'))\
+    \ is not dict or state['settings'].get('mode') != 'hotseat' or\n                type(state.get('active')) is\
+    \ not int or state['active'] != next_seat or\n                type(state.get('seed')) is not int or not 0 <=\
+    \ state['seed'] <= 2**53-1):\n            _bad(422, 'Invalid completed-turn save shape')\n        raw = _canonical(state).encode('utf-8')\n\
+    \        if len(raw) > MAX_SNAPSHOT_BYTES:\n            _bad(413, 'Save exceeds cloud limit')\n        return\
+    \ raw\n    except (ValueError, TypeError, OverflowError):\n        _bad(422, 'Invalid save JSON')\n\n\ndef _snapshot(db,\
+    \ match_id, identity):\n    seat = _member(db, match_id, identity['issuer'], identity['subject'])\n    match,\
+    \ point, state = _record(db, match_id)\n    return {'schema': SCHEMA, 'ok': True, 'match': {\n        'matchId':match_id,\
+    \ 'revision':match['revision'], 'stateDigest':point['stateDigest'],\n        'engineRevision':match['engineRevision'],\
+    \ 'rulesDigest':match['rulesDigest'],\n        'seed':match['initialSeed'], 'turnOwner': int(match['activeSeat'])\
+    \ if match['activeSeat'] is not None else None,\n        'yourSeat': seat, 'turnIndex': match['turnIndex'],\
+    \ 'status':match['status'],\n        'state':state}}\n\n\nasync def handle(ctx):\n    body = ctx.body\n    if\
+    \ (type(body) is not dict or body.get('schema') != SCHEMA or\n            type(body.get('op')) is not str):\n\
+    \        _bad(422, 'Cloud-save protocol required')\n    op = body['op']\n    match_id = body.get('matchId')\n\
+    \    if type(match_id) is not str or not MATCH.fullmatch(match_id):\n        _bad(422, 'Invalid match locator')\n\
+    \    try:\n        if len(_canonical(body).encode('utf-8')) > MAX_SNAPSHOT_BYTES + 8192:\n            _bad(413,\
+    \ 'Cloud request too large')\n    except (ValueError, TypeError):\n        _bad(422, 'Malformed JSON')\n   \
+    \ key = _key(ctx)  # Fail closed if the private issuer key is absent.\n    if op == 'exchange':\n        if\
+    \ set(body) != {'schema', 'op', 'matchId', 'grant'} or not isinstance(body['grant'], str) or not re.fullmatch(r'[A-Za-z0-9_-]{42,128}',\
+    \ body['grant']):\n            _bad(422, 'One-use Tavi grant required')\n        try:\n            proof = await\
+    \ ctx.call('looprd-social', 'tavi-game-grant-redeem', {\n                'grant': body['grant'], 'gameId': GAME_ID,\
+    \ 'matchId': match_id})\n        except Exception:\n            _bad(503, 'Tavi identity service unavailable')\n\
+    \        if (type(proof) is not dict or proof.get('accepted') is not True or\n                proof.get('scope')\
+    \ != 'game:identify' or proof.get('gameId') != GAME_ID or\n                proof.get('matchId') != match_id\
+    \ or\n                not isinstance(proof.get('issuer'), str) or not proof['issuer'] or\n                not\
+    \ isinstance(proof.get('subject'), str) or not proof['subject']):\n            _bad(403, 'Tavi identity proof\
+    \ refused')\n        with ctx.session_factory() as db:\n            seat = _member(db, match_id, proof['issuer'],\
+    \ proof['subject'])\n            _record(db, match_id)\n        token = _session_token(key, {'version': 1, 'matchId':match_id,\n\
+    \             'issuer':proof['issuer'], 'subject':proof['subject'],\n             'expires':int(time.time())\
+    \ + SESSION_TTL, 'nonce':secrets.token_hex(12)})\n        return {'ok': True, 'schema':SCHEMA, 'matchId':match_id,\
+    \ 'yourSeat':seat,\n                'session':token, 'expiresInSeconds':SESSION_TTL}\n    identity = _identity(ctx,\
+    \ key, match_id)\n    if op == 'get':\n        if set(body) != {'schema', 'op', 'matchId'}:\n            _bad(422,\
+    \ 'Unexpected state-read fields')\n        with ctx.session_factory() as db:\n            return _snapshot(db,\
+    \ match_id, identity)\n    if op != 'commit':\n        _bad(422, 'Unknown cloud-save operation')\n    if set(body)\
+    \ != {'schema', 'op', 'matchId', 'expectedRevision', 'expectedDigest', 'engineRevision', 'idempotencyKey', 'state'}:\n\
+    \        _bad(422, 'Unexpected turn fields')\n    revision, idem, state = body['expectedRevision'], body['idempotencyKey'],\
+    \ body['state']\n    if type(body['expectedDigest']) is not str or not re.fullmatch(r'[a-f0-9]{64}', body['expectedDigest']):\n\
+    \        _bad(422, 'Expected checkpoint digest required')\n    if type(body['engineRevision']) is not str or\
+    \ not 1 <= len(body['engineRevision']) <= 128:\n        _bad(422, 'Pinned engine revision required')\n    if\
+    \ type(revision) is not int or revision < 0 or type(idem) is not str or not KEY.fullmatch(idem):\n        _bad(422,\
+    \ 'Invalid revision or retry key')\n    # Snapshot is already played on the client. Trust its economics, never\
+    \ its\n    # identity or turn ownership. Only its next-seat metadata is constrained.\n    try:\n        new_hash\
+    \ = _digest(state)\n    except (ValueError, TypeError, OverflowError):\n        _bad(422, 'Invalid save JSON')\n\
+    \    command = {'type':'cloud_save_turn', 'baseRevision':revision,\n               'baseDigest':body['expectedDigest'],\
+    \ 'engineRevision':body['engineRevision'],\n               'stateDigest':new_hash}\n    command_hash = _digest(command)\n\
+    \    now = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')\n    with ctx.session_factory.begin()\
+    \ as db:\n        seat = _member(db, match_id, identity['issuer'], identity['subject'])\n        match, point,\
+    \ previous_state = _record(db, match_id)\n        # Replays must be checked before ownership/revision, because\
+    \ a correct\n        # retry can arrive after the opponent's turn begins.\n        old = db.execute(sa.text('SELECT\
+    \ \"revisionAfter\", \"resultDigest\", \"commandDigest\" FROM \"GameAction\" '\n            'WHERE \"matchId\"\
+    =:m AND \"actorIssuer\"=:i AND \"actorSubject\"=:s AND \"idempotencyKey\"=:k'),\n            {'m':match_id,\
+    \ 'i':identity['issuer'], 's':identity['subject'], 'k':idem}).mappings().first()\n        if old:\n        \
+    \    if old['commandDigest'] != command_hash:\n                _bad(409, 'Retry key reused for different save')\n\
+    \            return {'ok':True, 'schema':SCHEMA, 'matchId':match_id, 'revision':old['revisionAfter'],\n    \
+    \                'stateDigest':old['resultDigest'], 'replayed':True}\n        if match['engineRevision'] !=\
+    \ body['engineRevision']:\n            _bad(409, 'Pinned engine revision differs; download the matching client')\n\
+    \        if match['status'] != 'active' or str(match['activeSeat']) != str(seat):\n            _bad(403, 'Not\
+    \ your turn')\n        if match['revision'] != revision or point['stateDigest'] != body['expectedDigest']:\n\
+    \            _bad(409, 'Stale save revision or checkpoint')\n        next_seat = 1 - seat\n        _validate_snapshot(state,\
+    \ next_seat)\n        if len(_canonical(previous_state).encode('utf-8')) > MAX_SNAPSHOT_BYTES:\n           \
+    \ _bad(409, 'Stored game save is too large')\n        target = db.execute(sa.text('SELECT \"issuer\",\"subject\"\
+    \ FROM \"GameParticipant\" '\n            'WHERE \"matchId\"=:m AND \"seatId\"=:seat AND \"role\"=\\'player\\\
+    ''),\n            {'m':match_id, 'seat':str(next_seat)}).mappings().all()\n        if len(target) != 1:\n  \
+    \          _bad(409, 'Opponent has not joined')\n        changed = db.execute(sa.text('UPDATE \"GameMatch\"\
+    \ SET \"revision\"=:new, \"rngState\"=:rng, '\n            '\"activeSeat\"=:seat, \"turnIndex\"=:turn, \"updatedAtUtc\"\
+    =:now '\n            'WHERE \"id\"=:m AND \"revision\"=:previous AND \"activeSeat\"=:owner'), {\n          \
+    \      'new':revision+1,'rng':state['seed'],'seat':str(next_seat), 'turn':match['turnIndex']+1,\n          \
+    \      'now':now,'m':match_id,'previous':revision,'owner':str(seat)})\n        if changed.rowcount != 1:\n \
+    \           _bad(409, 'Concurrent save update')\n        db.execute(sa.text('INSERT INTO \"GameCheckpoint\"\
+    \ '\n            '(\"id\",\"matchId\",\"revision\",\"turnIndex\",\"state\",\"stateDigest\",\"rngState\",\"createdAtUtc\"\
+    ) '\n            'VALUES (:id,:m,:revision,:turn,:state,:digest,:rng,:now)'), {\n            'id':str(uuid.uuid4()),'m':match_id,'revision':revision+1,'turn':match['turnIndex']+1,\n\
+    \            'state':_canonical(state),'digest':new_hash,'rng':state['seed'],'now':now})\n        db.execute(sa.text('INSERT\
+    \ INTO \"GameAction\" '\n            '(\"id\",\"matchId\",\"revisionBefore\",\"revisionAfter\",\"turnIndex\"\
+    ,\"actorIssuer\",'\n            '\"actorSubject\",\"idempotencyKey\",\"commandDigest\",\"command\",\"resultDigest\"\
+    ,\"createdAtUtc\") '\n            'VALUES (:id,:m,:before,:after,:turn,:issuer,:subject,:idem,:commandDigest,:command,:resultDigest,:now)'),\
+    \ {\n            'id':str(uuid.uuid4()),'m':match_id,'before':revision,'after':revision+1,\n            'turn':match['turnIndex']+1,'issuer':identity['issuer'],'subject':identity['subject'],'idem':idem,\n\
+    \            'commandDigest':command_hash,'command':_canonical(command),'resultDigest':new_hash,'now':now})\n\
+    \        db.execute(sa.text('INSERT INTO \"GameNotificationOutbox\" '\n            '(\"id\",\"matchId\",\"turnIndex\"\
+    ,\"recipientIssuer\",\"recipientSubject\",\"eventId\",\"eventType\",'\n            '\"status\",\"attempts\"\
+    ,\"nextDispatchUtc\",\"createdAtUtc\") '\n            'VALUES (:id,:m,:turn,:issuer,:subject,:event,\\'turn_ready\\\
+    ',\\'pending\\',0,:now,:now)'), {\n            'id':str(uuid.uuid4()),'m':match_id,'turn':match['turnIndex']+1,\n\
+    \            'issuer':target[0]['issuer'],'subject':target[0]['subject'],\n            'event':f'{match_id}:turn:{match[\"\
+    turnIndex\"]+1}:revision:{revision+1}', 'now':now})\n    return {'ok':True,'schema':SCHEMA,'matchId':match_id,\
+    \ 'revision':revision+1,\n            'stateDigest':new_hash,'replayed':False}\n"
 - path: /info
   kind: response
   response:

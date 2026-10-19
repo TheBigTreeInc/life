@@ -3,129 +3,140 @@
   "spec_version": "1.0.0",
   "project": {
     "key": "the-life-loop",
-    "version": "0.5.96",
-    "base_version": "0.5.95"
+    "version": "0.5.97",
+    "base_version": "0.5.96"
   },
   "update": {
-    "id": "LIFE-20261019-096-01",
+    "id": "LIFE-20261019-097-CLOUD01",
     "kind": "source_update",
-    "created_at": "2026-10-19T00:00:00Z",
-    "summary": "Add source-only deterministic atomic turn replay/outbox groundwork without replacing legacy LoopRD/Atrium/Tavi interfaces."
+    "created_at": "2026-10-19T20:00:00Z",
+    "summary": "Add direct LoopRD trusted-client cloud save handler and offline final-save outbox, preserving legacy /play and Atrium."
   },
   "planned_work": [
     {
-      "id": "LL-351",
-      "title": "Atomic client-queued seeded turn foundation",
-      "acceptance_criteria": "One actual game-engine whole-turn replay + single SQLite commit, offline retryable durable outbox and two-seat restart source tests; no live endpoint changes",
+      "id": "LL-354",
+      "title": "Direct LoopRD trusted-client cloud-save source pilot",
+      "acceptance_criteria": "Direct optional /cloud handler with valid Tavi scoped proof, authorized seat, read/commit CAS, retry handling, SQL restart, existing routes preserved; production approval explicitly pending",
       "priority": "critical"
     },
     {
-      "id": "LL-352",
-      "title": "Direct LoopRD on-demand evaluator and identity-backed handler",
-      "acceptance_criteria": "Trusted JS execution, actual LoopRD SQL, authenticated public commit_turn, production verifier and no second service",
+      "id": "LL-355",
+      "title": "Real browser/OpenClaw and Atrium cloud-save integration",
+      "acceptance_criteria": "Two live verified Tavi principals via Atrium/LoopRD, browser and headless turn exchange, offline reconnect, Tavi notification delivered, no third-party read; legacy routes remain safe",
       "priority": "critical"
-    },
-    {
-      "id": "LL-353",
-      "title": "Browser and OpenClaw integration through Atrium",
-      "acceptance_criteria": "Client outbox wired to game actions, real two-seat offline/reconnect/notify and Atrium launch acceptance",
-      "priority": "high"
     }
   ],
   "done_work": [
     {
-      "id": "LL-351",
-      "summary": "Source-level atomic replay/SQL commit and durable outbox implemented; production activation not claimed",
+      "id": "LL-354",
+      "summary": "Local source pilot handler, generated LoopRD route, versioned identity envelope and offline client queue tested against SQLite and actual Life JS client fixture; production acceptance not claimed",
       "evidence": [
         {
-          "kind": "test",
-          "ref": "tests/test_async_turn_bundle_096.py",
-          "description": "Real JS engine + SQLite two-seat replay with restart and invalid actor checks"
+          "kind": "source",
+          "ref": "server/cloud_save_looprd.py",
+          "description": "Direct LoopRD inline handler using existing match tables and Tavi proof redemption"
         },
         {
           "kind": "test",
-          "ref": "tests/async-turn-outbox.test.cjs",
-          "description": "Persisted network-outage retries without token persistence"
+          "ref": "tests/test_cloud_save_looprd_097.py",
+          "description": "Two-player local SQL/JS client replay, same-match scoped sessions, idempotent CAS and restart"
+        },
+        {
+          "kind": "test",
+          "ref": "tests/cloud-save-outbox.test.cjs",
+          "description": "Credential-free offline queue, retries and manual conflicts"
         },
         {
           "kind": "documentation",
-          "ref": "docs/LIFE_SEEDED_TURN_LOOPRD_MIGRATION_096.adoc",
-          "description": "Non-breaking plan, API semantics and open operator gates"
+          "ref": "docs/LIFE_CLOUD_SAVE_LOOPRD_097.adoc",
+          "description": "API envelope, trust boundary, deployment gates and handoff"
         }
       ]
     }
   ],
   "todo_work": [
     {
-      "id": "LL-352",
+      "id": "LL-355",
       "status": "blocked",
-      "next_action": "Coordinate approved LoopRD on-demand immutable JS evaluator and Social verified principal, then mount direct commit_turn without touching existing live handlers",
+      "next_action": "Wire actual Life browser End Turn and OpenClaw, connect Atrium approved Create/Invite/Join to real bound match and provision Social game proof and event dispatcher",
       "blockers": [
-        "DAPI worker capability and production identity exchange not available in this Life session"
+        "Production match bootstrap verifier and Social service credentials not operator-approved",
+        "Live Atrium/Tavi/LoopRD two-seat acceptance not performed"
       ]
-    },
-    {
-      "id": "LL-353",
-      "status": "planned",
-      "next_action": "Integrate browser and OpenClaw adapters after LL-352 public API and approved Atrium route are verified"
     }
   ],
   "validation": {
     "model_reported": "partial",
     "checks": [
       {
-        "id": "LIFE096-JS",
-        "description": "Full JS verifier",
+        "id": "LIFE097-CLOUD-PY",
+        "description": "Direct LoopRD cloud handler two-seat and restart tests",
         "status": "passed",
-        "command": "node tools/verify.mjs",
-        "environment": "Linux Node 22 with bounded test concurrency",
-        "evidence_ref": "docs/evidence/life096-js-verifier.log"
+        "command": "python -m unittest discover -s tests -p test_cloud_save_looprd_097.py -q",
+        "evidence_ref": "docs/evidence/life097-cloud-python.log"
       },
       {
-        "id": "LIFE096-PY",
+        "id": "LIFE097-CLOUD-JS",
+        "description": "Offline cloud-save queue tests",
+        "status": "passed",
+        "command": "node --test tests/cloud-save-outbox.test.cjs",
+        "evidence_ref": "docs/evidence/life097-cloud-node.log"
+      },
+      {
+        "id": "LIFE097-JS",
+        "description": "Full JavaScript verifier",
+        "status": "passed",
+        "command": "node tools/verify.mjs",
+        "environment": "Linux Node 22; Python 3.13; SQLite",
+        "evidence_ref": "docs/evidence/life097-js-verifier.log"
+      },
+      {
+        "id": "LIFE097-PY",
         "description": "Full Python suite",
         "status": "passed",
         "command": "python -m unittest discover -s tests -p 'test_*.py' -q",
-        "environment": "Linux Python 3.13, SQLite and Node 22",
-        "evidence_ref": "docs/evidence/life096-python-tests.log"
+        "environment": "Linux Node 22; Python 3.13; SQLite",
+        "evidence_ref": "docs/evidence/life097-python-tests.log"
       },
       {
-        "id": "LIFE096-LIVE",
-        "description": "Public LoopRD, Tavi, Atrium and OpenClaw connected match",
+        "id": "LIFE097-LIVE",
+        "description": "Live LoopRD/Tavi/Atrium/OpenClaw match",
         "status": "not_run",
-        "reason": "Production runtime credentials and deployment unavailable; no public route mounted"
+        "reason": "Operator-provisioned credentials and deployments not available in this workspace"
       }
     ]
   },
   "handover": {
-    "next_pass": "In LoopRD/DAPI session implement optional bounded pinned JS turn validator, wire real Social identity to direct SQL transaction; keep Atrium/Tavi contracts and staged gateway until live acceptance. Then wire browser and agent outbox.",
+    "next_pass": "Activate the optional trusted-client cloud handler after operator trust review and provision Social match-grant redemption; connect Atrium real create/invite/join, then browser/OpenClaw cloud-sync and durable notification dispatch; retire gateway only after acceptance.",
     "risks": [
-      "Old v0.5.95 match revisions are per action; do not mix with per-turn bundle mode within a match before migration approval.",
-      "Legacy signed gateway remains a rollback route, not a required permanent backend.",
-      "No production Social verifier in Life source; test identities are disposable."
+      "Existing Game* matches created with per-action evaluator semantics remain unchanged; no automatic destructive migration.",
+      "Social grants are match-bound and require prior subscription, so match creation still needs trusted Social bootstrap.",
+      "15-minute Life cloud sessions cannot be actively revoked; they expire and must be renewed with a fresh proof."
     ],
     "blockers": [
-      "LoopRD optional engine execution and real Social verification must be completed by their owners"
+      "No live Social game-proof service credential or session key in this source ZIP",
+      "Atrium real lobby and Tavi notifications are not implemented by this Life source update"
     ],
     "notes": [
-      "Preserved LL-072, LL-263, LL-092, LL-082 and LL-347 acceptance and operator statuses. Offline PLAY.html unchanged in semantics."
+      "Keep LL-072, LL-082, LL-092, LL-263, LL-347, LL-352, LL-353 and their operator status/acceptance intact.",
+      "Do not deploy/push/publish; keep offline and old rooms and existing /play routes."
     ]
   },
   "operator_actions": [
     {
-      "id": "LIFE096-OP-1",
-      "description": "Review DAPI/LoopRD worker and Social proof plan before enabling commit_turn",
+      "id": "LIFE097-OP-1",
+      "description": "Provision approved Social service access and match-session secret only after backup and review of LoopRD identity permissions",
       "status": "required"
     },
     {
-      "id": "LIFE096-OP-2",
-      "description": "Perform two-account real Atrium/Tavi/OpenClaw offline/restart acceptance before retiring old gateway",
+      "id": "LIFE097-OP-2",
+      "description": "Complete live Tavi/Atrium/OpenClaw two-seat, reconnect and rejection acceptance; approve separate retirement of old gateway only after rollback test",
       "status": "required"
     }
   ],
   "release": {
     "requested": false,
     "requires_operator_approval": true,
-    "notes": "No Git push/deploy/tag or gateway decommissioning is authorized."
+    "notes": "Source ZIP only. No push, deploy, tag, publication or secrets."
   }
 }

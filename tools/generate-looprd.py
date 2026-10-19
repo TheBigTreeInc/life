@@ -5,6 +5,7 @@ import yaml
 root=Path(__file__).resolve().parent.parent
 source=(root/'server/looprd_handler.py').read_text()
 play_source=(root/'server/async_looprd_gateway.py').read_text()
+cloud_source=(root/'server/cloud_save_looprd.py').read_text()
 spec={
  'apiVersion':'looprd/v1', 'component':'the-life-loop', 'release':json.loads((root/'package.json').read_text())['version'], 'api':{'version':'v1'},
  'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':3,'migrations':[{'version':2,'statements':['ALTER TABLE "Room" ADD COLUMN "chatKey" VARCHAR(64)']},{'version':3,'statements':[]}]},
@@ -103,10 +104,13 @@ spec={
  },
  'resources':{'pulses':{'model':'Pulse','path':'/pulses','operations':['get']}},
  'websocket':{'path':'/events','resources':['pulses']},
+ 'dependencies':[{'component':'looprd-social','contract':'tavi-game-grant-redeem','version':1,
+                  'credentialSecret':'tavi/services/the-life-loop','optional':True}],
  'handlers':[
   {'path':'/session','method':'POST','kind':'python','source':source},
   {'path':'/play/info','method':'GET','kind':'python','source':play_source},
   {'path':'/play','method':'POST','kind':'python','source':play_source},
+  {'path':'/cloud','method':'POST','kind':'python','source':cloud_source},
   {'path':'/info','kind':'response','response':{'protocol':'the-life-loop/1','transport':'HTTP commands + Looprd WebSocket notifications','auth':'room-scoped capability tokens'}}]
 }
 # v3 explicitly creates new Game* tables on existing schema-2 installations.

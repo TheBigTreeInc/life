@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.96",
-  "summary": "0.5.96: additive seeded-turn migration foundation; replay a full turn through the exact Life JS engine and persist one SQL revision/outbox intent, with a credential-free durable offline retry queue. Existing LoopRD /play, Atrium lobby, Social/Tavi identity, hotseat and offline PLAY.html are unchanged; commit_turn is NOT mounted or advertised.",
+  "version": "0.5.97",
+  "summary": "0.5.97: additive trusted-client LoopRD cloud-save pilot uses existing Game* SQL and Tavi proof redemption for match-scoped short sessions, atomic final-save CAS and offline retry. Existing /play, Atrium lobby, /session, legacy gateway and offline PLAY.html remain intact; cloud create/login/dispatch/browser/OpenClaw live wiring remain open.",
   "implemented": [
     {
       "id": "LL-181",
@@ -1574,6 +1574,18 @@
         "Receive OpenClaw turn via the same deterministic rules, close clients, restart LoopRD and resume both seats through Atrium.",
         "Ensure no Life-specific Tavi routing or duplicate match/session creation; keep legacy client behavior as rollback."
       ]
+    },
+    {
+      "id": "LL-354",
+      "title": "Direct LoopRD client-trusted cloud-save pilot production acceptance",
+      "summary": "Code and source tests provide new /cloud exchange/get/commit handler using existing Game* persistence, bound Tavi match grants, short-lived signed session, revision CAS, idempotent whole-save commit and notification intent. Operator must verify DAPI 0.2.0 activation, production Social proof, no credential leakage, 2-seat restart and rollback before marking complete.",
+      "priority": "critical"
+    },
+    {
+      "id": "LL-355",
+      "title": "Cloud saves in Life browser and OpenClaw through Atrium",
+      "summary": "Wire browser End Turn and OpenClaw to Life-owned cloud saves, handle expired Tavi sessions and offline pending/conflict UI, ensure Atrium approved match creation/invitation/launch and durable notification dispatch. Preserve independent offline Life and reject a third player.",
+      "priority": "critical"
     }
   ]
 }

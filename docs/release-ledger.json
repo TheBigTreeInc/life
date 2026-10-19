@@ -225,6 +225,13 @@
       "kind": "seeded-offline-turn-foundation",
       "supersedes": "0.5.95",
       "notes": "Atomic full turn replay against existing deterministic engine, SQLite idempotent commit and credential-free offline queued submissions; additive source only, old public LoopRD/Atrium routes unaffected. Direct LoopRD worker and public commit_turn remain pending."
+    },
+    {
+      "version": "0.5.97",
+      "artifact": "the-life-loop-0.5.97-ziprunner.zip",
+      "kind": "direct-looprd-trusted-client-cloud-save-source-pilot",
+      "supersedes": "0.5.96",
+      "notes": "New direct /cloud handler and offline full-save outbox use existing LoopRD Game* SQL and Tavi match proof redemption, atomic revision CAS, no Node worker or separate backend; legacy /play and Atrium remain untouched. Production Social activation, Atrium lobby and UI/agent sync still gated."
     }
   ]
 }

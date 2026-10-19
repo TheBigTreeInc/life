@@ -1,6 +1,6 @@
 {
   "name": "the-life-loop",
-  "version": "0.5.96",
+  "version": "0.5.97",
   "private": true,
   "description": "Online two-human friend-code co-op via Looprd HTTP actions and WebSocket room notifications; Classic and Modern preserved",
   "scripts": {

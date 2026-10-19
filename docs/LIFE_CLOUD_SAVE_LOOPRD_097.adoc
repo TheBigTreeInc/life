@@ -1,0 +1,80 @@
+= Life v0.5.97 — LoopRD cloud-save turns (trusted-client pilot)
+:revnumber: 0.5.97
+:revdate: 2026-10-19
+:toc: left
+:sectnums:
+
+== Decision
+
+Life's online turn protocol uses the existing browser/agent deterministic LifeGame state as a *cloud save*. The client downloads the current Life checkpoint, plays locally and uploads the final checkpoint at End Turn or when its network connection returns. The LoopRD component performs **only identity/seat validation, revision compare-and-swap, bounded save-shape checks, durable storage and next-player notification intent**. No Node worker, long-lived Life web server, duplicated database or game-rule replay is required for this *trusted-friends mode*. The client remains responsible for honest economic/rules execution. This mode is not suitable for competitive/ranked play without optional independent verification.
+
+This is an **additive pilot API**, not automatic activation of production `/play`. Existing `POST /play`, `GET /play/info`, room `/session`, `looprd.game-play/v1` Atrium responses, Tavi challenge flows, offline `PLAY.html` and the `atriumd.yaml` sidecar remain unchanged. The previously authored private gateway is retained as rollback source until the operator accepts a full replacement; its existence does not oblige a standalone backend installation.
+
+== Lifecycle and identity
+
+LoopRD owns `GameMatch`, `GameParticipant`, `GameCheckpoint`, `GameAction` and `GameNotificationOutbox` tables (all preexisting schema v3). The new `POST /looprd/the-life-loop/v1/cloud` mounts an inline Python handler in the same component. It needs *no new schema migration*.
+
+The handler has one optional declared same-runtime service dependency: `looprd-social` contract `tavi-game-grant-redeem` v1. The operator must approve and provision the existing `tavi/services/the-life-loop` **service credential**; the Social installation must allow `the-life-loop` to redeem `life.loop` grants. A distinct LoopRD secret reference `life/cloud-session-key` (minimum 32 bytes, supplied privately by the operator) signs short-lived match-scoped sessions. Missing secrets and unavailable Social prevent exchange but never grant an unverified identity or interrupt older `/session` and `/play` behavior.
+
+After Tavi game-invite consent, the enrolled player obtains a single-use **match-bound** Social game grant. The `exchange` operation sends it through LoopRD's trusted `ctx.call(...)`, verifies Social's returned `{issuer,subject,gameId,matchId,scope}` and *independently verifies* a matching `GameParticipant` player seat for that match. A verified identity alone does **not** create a seat. A random 15-minute HMAC-signed Life match session is returned only to that caller. Its bearer must never be placed in URLs, snapshots, offline queues or logs. The user must get a fresh authorized proof/session when the 15-minute session expires. A real revoked Social session cannot be re-exchanged, though already issued short-lived Life sessions are not actively revoked until expiration; tightening this requires a separate Tavi service check contract.
+
+**Important bootstrap limitation:** Current Social `game_grant_issue` requires an *existing match subscription*. Therefore the new cloud route deliberately operates on **existing Life match IDs and seats**; it does not fabricate a new match-creation authorization flow. Actual production Atrium Create/Invite/Join must be separately connected to a verified Social actor before claiming the whole lobby works. Do not accept a plain Tavi user UUID or a game challenge response as credential proof.
+
+== Protocol
+
+One route `POST /looprd/the-life-loop/v1/cloud`, JSON objects with `schema:"life.cloud-save/v1"`.
+
+=== Exchange a Tavi one-time identity proof
+
+[source,json]
+----
+{"schema":"life.cloud-save/v1","op":"exchange","matchId":"match_001","grant":"<one-use-Social-grant>"}
+----
+
+Result: `{ "ok":true,"schema":"life.cloud-save/v1","matchId":"match_001","yourSeat":0,"session":"<short-lived-secret>","expiresInSeconds":900 }`. Never persist the session in the offline game outbox. The grant must already have been delivered after approved match subscription.
+
+=== Retrieve the last authoritative cloud save
+
+With `Authorization: Bearer <Life-session>`:
+
+[source,json]
+----
+{"schema":"life.cloud-save/v1","op":"get","matchId":"match_001"}
+----
+
+Returns `{ok:true,schema,match:{matchId,revision,stateDigest,engineRevision,rulesDigest,seed,turnOwner,yourSeat,turnIndex,status,state}}`. The `state` field is the *existing full LifeGame snapshot*, not an invented model; the client must have the matching engine version. A third party gets 404 even if the match ID is known.
+
+=== Submit a completed turn (not individual actions)
+
+With the same short-lived bearer:
+
+[source,json]
+----
+{
+  "schema":"life.cloud-save/v1", "op":"commit", "matchId":"match_001",
+  "expectedRevision":4,
+  "expectedDigest":"<64-character-base-checkpoint-sha256>",
+  "engineRevision":"life-0.5.97", "idempotencyKey":"turn-match001-seat0-rev4",
+  "state":{"players":[],"settings":{},"active":1,"seed":12345}
+}
+----
+
+The illustrative `state` above is **not a valid Life snapshot**; use the complete `LifeGame.snapshot()` object including the original three stable player IDs and hotseat settings. Do not replace game state with this abbreviated example.
+
+LoopRD checks the actor is bound to an eligible seat, that it owns the current turn, opponent has joined, match is active, `expectedRevision` and `expectedDigest` match the stored checkpoint, and the pinned `engineRevision` agrees. It also checks bounded JSON (at most 360 KB), original three player IDs, hotseat mode, numerical seed and next seat. It **does not** replay financial/skill/rule events. The handler writes an incremented `GameMatch` revision, checkpoint, hashed idempotent `GameAction` and the next Tavi notification *outbox intent* in one SQL transaction. Duplicate identical submissions return `{replayed:true}`, inconsistent retries reject, and conflicts leave the client's offline turn in its local queue for explicit resolution. On connection failure it retries with the SAME idempotency key; do not auto-rebase.
+
+The outbox is only persisted notification **intent** until a dedicated dispatch worker calls Social `tavi-game-event/v1` with approved credentials; this source pass does not claim actual Tavi notifications were delivered. Guest/legacy room state is not copied or migrated automatically.
+
+== Tests and activation boundaries
+
+`tests/test_cloud_save_looprd_097.py` tests two SQL-backed seats, fake/deny Social proof, actual Life JS computed client snapshots, wrong-turn denial, conflict, replay, Tavi notification intent, and full SQLite service reopen. The LoopRD handler itself executes no Node. `tests/cloud-save-outbox.test.cjs` tests offline persistent retries, credential exclusion and manual conflict handling.
+
+Tests use **disposable fake Tavi proof responses**; live `ctx.call` and operator-approved service secrets are **not tested**, and production match creation is not yet solved. Installation/deployment and approval remain separate from source ZIP import; do not enable public gameplay based on these local tests alone. Atrium must not silently fall back to mock data when real Life isn't available.
+
+== Owners / follow-up
+
+* Life: connect the actual browser End Turn and OpenClaw client to a shared `life.cloud-save/v1` client, preserving both existing `/play` and independent offline single-player. Match screen must show local-unsynced status, never lose an unsent turn.
+* Social/Tavi: approve and provision same-runtime game proof redemption + issuer/service bindings; provide signed-in authorizer for the initial match creation without weakening existing consent.
+* Atrium: continue consuming `looprd.game-play/v1` Create/Invite/Join/Resume (not cloud-specific). After match starts, game clients use `/cloud` directly. Keep one Life-owned match ID everywhere.
+* LoopRD: no runtime feature needed; inspect/approve the new inline handler, dependency, key reference, size limits and existing game-schema operation under 0.2.0 before activation.
+* Operator: back up the production LoopRD game database and existing descriptors first, approve least-privilege credentials, test authentic human-vs-agent seated and unauthorized users, restart, no impact on other containers, then approve gradual switch. Never delete private saves or old Room rows.

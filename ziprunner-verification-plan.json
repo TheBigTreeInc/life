@@ -1,51 +1,46 @@
 {
   "schema": "ziprunner.verification-plan/v1",
   "project": "the-life-loop",
-  "version": "0.5.96",
+  "version": "0.5.97",
   "tasks": [
     {
-      "id": "LL-351",
+      "id": "LL-354",
       "criteria": [
         {
-          "id": "LL-351-AC-1",
-          "description": "Client persists and retries same queued turn without credentials",
+          "id": "LL-354-AC1",
+          "description": "Direct LoopRD GET cloud state and atomic client-trusted completed-turn CAS under proved Tavi seat",
           "mode": "automated",
           "checks": [
-            "LIFE096-TEST-1"
+            "LIFE097-T1"
           ]
         },
         {
-          "id": "LL-351-AC-2",
-          "description": "Actual deterministic rules replay and one atomic SQLite commit per turn",
+          "id": "LL-354-AC2",
+          "description": "Offline save queue retains same upload until matching acknowledgement",
           "mode": "automated",
           "checks": [
-            "LIFE096-TEST-2"
+            "LIFE097-T2"
+          ]
+        },
+        {
+          "id": "LL-354-AC3",
+          "description": "Operator live Social binding and LoopRD deployment",
+          "mode": "manual",
+          "checks": [
+            "LIFE097-LIVE"
           ]
         }
       ]
     },
     {
-      "id": "LL-352",
+      "id": "LL-355",
       "criteria": [
         {
-          "id": "LL-352-AC-1",
-          "description": "LoopRD direct version-pinned JS runtime and real Social auth",
+          "id": "LL-355-AC1",
+          "description": "Tavi/Atrium real creation, browser/OpenClaw offline turns, notifications and restart",
           "mode": "manual",
           "checks": [
-            "LIFE096-LIVE-1"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "LL-353",
-      "criteria": [
-        {
-          "id": "LL-353-AC-1",
-          "description": "OpenClaw/Human gameplay across Atrium with offline turn resend",
-          "mode": "manual",
-          "checks": [
-            "LIFE096-LIVE-1"
+            "LIFE097-LIVE"
           ]
         }
       ]
@@ -53,38 +48,36 @@
   ],
   "checks": [
     {
-      "id": "LIFE096-TEST-1",
+      "id": "LIFE097-T1",
       "kind": "automated",
       "stage": "functional",
-      "description": "Offline outbox and exact Life JS replay unit tests",
-      "runner_ref": "life-seeded-turn-node",
+      "description": "Two seats, one SQL match, Tavi grant stub, wrong seat, retry, persistence and actual JS client turn fixture",
+      "runner_ref": "life-cloud-python",
       "assertions": [
-        "Deterministic replay matches pinned JS engine",
-        "Offline retries retain same key and commands",
-        "Credential-free queue, conflicting revisions held for review"
+        "No match ID alone grants access",
+        "Whole-save commits change one revision",
+        "Tavi notification intent created atomically"
       ],
-      "test_ref": "tests/async-turn-outbox.test.cjs"
+      "test_ref": "tests/test_cloud_save_looprd_097.py"
     },
     {
-      "id": "LIFE096-TEST-2",
+      "id": "LIFE097-T2",
       "kind": "automated",
       "stage": "functional",
-      "description": "Two-seat SQLite and real JS engine full-turn integration",
-      "runner_ref": "life-seeded-turn-python",
+      "description": "Local offline save queue repeat and conflict",
+      "runner_ref": "life-cloud-node",
       "assertions": [
-        "Two distinct seats, one revision per whole turn",
-        "Wrong seat and third account rejected",
-        "Same request is idempotent; stale rejected",
-        "Reopen persisted SQL and resume"
+        "No credentials stored",
+        "Queue retained until matching commit acknowledgement"
       ],
-      "test_ref": "tests/test_async_turn_bundle_096.py"
+      "test_ref": "tests/cloud-save-outbox.test.cjs"
     },
     {
-      "id": "LIFE096-LIVE-1",
+      "id": "LIFE097-LIVE",
       "kind": "manual",
       "stage": "acceptance",
-      "description": "Production Atrium/Tavi/LoopRD turn-bundle acceptance",
-      "instructions": "Only after operator-approved DAPI JS worker and real Social verifier: test create/invite/join, offline action bundle, reconnect, agent turn, third-party rejection, full LoopRD restart and durable Tavi notice without new daemon."
+      "description": "Live, operator-approved LoopRD/Social/Atrium/Tavi/OpenClaw acceptance",
+      "instructions": "Verify proof redemption against actual Social service, durable 2-seat match creation, third actor denial, offline/reconnect from both clients, actual notification receipt and full LoopRD restart; ensure other containers unaffected."
     }
   ]
 }

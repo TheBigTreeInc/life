@@ -1,6 +1,10 @@
-## v0.5.96 — Private LoopRD play gateway and headless two-seat game
+## v0.5.97 — Direct LoopRD cloud-save source pilot (not yet live)
 
-Artifact: `the-life-loop-0.5.96-ziprunner.zip` — **complete source package**, including `/play/info` and `/play` LoopRD Python handlers, HMAC-signed private gateway, Life-owned headless Node/SQL backend, deterministic request-ID match creation and generic Atrium lobby projection. Local signed-socket two-seat/restart tests use TEST credentials. **Not live on LoopRD, no production Social proof verifier, no automatic Atrium/Tavi match, no OpenClaw real agent acceptance.** See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`. Public hosting is blocked until an operator provisions the trusted backend, verifier, socket/key, and independently verifies deployment.
+A new **optional** `POST /looprd/the-life-loop/v1/cloud` handler uses existing match/checkpoint/seat tables. Client downloads the existing LifeGame save, plays offline, and uploads its completed turn when online. LoopRD only enforces match-scoped Tavi proof/seat, revision CAS, bounded checkpoint, idempotency and durable next-player notification *intent*. **No separate Life backend or Node rule worker is required** for this trusted-client path. Existing `/play`, `/session`, Atrium `atriumd.yaml` and offline `PLAY.html` are unchanged. The real Tavi game grant exchange, initial match bootstrap via Atrium, browser/OpenClaw UI integration, delivery of notifications, and live acceptance are not yet configured/verified. See `docs/LIFE_CLOUD_SAVE_LOOPRD_097.adoc`.
+
+## v0.5.97 — Private LoopRD play gateway and headless two-seat game
+
+Artifact: `the-life-loop-0.5.97-ziprunner.zip` — **complete source package**, including `/play/info` and `/play` LoopRD Python handlers, HMAC-signed private gateway, Life-owned headless Node/SQL backend, deterministic request-ID match creation and generic Atrium lobby projection. Local signed-socket two-seat/restart tests use TEST credentials. **Not live on LoopRD, no production Social proof verifier, no automatic Atrium/Tavi match, no OpenClaw real agent acceptance.** See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`. Public hosting is blocked until an operator provisions the trusted backend, verifier, socket/key, and independently verifies deployment.
 
 ## v0.5.92 — Atrium discovery sidecar
 
@@ -605,6 +609,6 @@ Classic games now return every player home at turn end, even with insufficient c
 
 `server/async_participants.py` is an internal trusted GameParticipant roster, not a public join endpoint. See `docs/decisions/ADR-0087-durable-verified-match-seats.md`.
 
-## v0.5.96 — Offline-first turn protocol foundation
+## v0.5.97 — Offline-first turn protocol foundation
 
 Additive atomic server replay and credential-free client outbox modules; not integrated into active UI or public LoopRD handlers. See `docs/LIFE_SEEDED_TURN_LOOPRD_MIGRATION_096.adoc`. Legacy offline and Atrium/Tavi routes unchanged.

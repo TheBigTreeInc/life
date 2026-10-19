@@ -79,6 +79,14 @@ files += ['src/async-turn-bundle.js','src/async-turn-outbox.js',
           'docs/LIFE_LOOPRD_TURN_WORKER_HANDOFF_096.adoc',
           'docs/evidence/life096-python-tests.log','docs/evidence/life096-js-verifier.log',
           'docs/evidence/life096-turn-tests.log']
+# v0.5.97 direct LoopRD trusted-client cloud-save (additive).
+files += ['server/cloud_save_looprd.py','src/cloud-save-outbox.js',
+          'tests/test_cloud_save_looprd_097.py','tests/cloud-save-outbox.test.cjs',
+          'docs/LIFE_CLOUD_SAVE_LOOPRD_097.adoc',
+          'docs/evidence/life097-cloud-python.log','docs/evidence/life097-cloud-node.log',
+          'docs/evidence/life097-python-tests.log','docs/evidence/life097-js-verifier.log']
+# Keep the complete archive free of duplicate paths despite historic test inclusion.
+files = list(dict.fromkeys(files))
 with ZipFile(output,'w',compression=ZIP_DEFLATED,compresslevel=6) as z:
     for name in files:
         path=root/name
