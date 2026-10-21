@@ -232,6 +232,13 @@
       "kind": "direct-looprd-trusted-client-cloud-save-source-pilot",
       "supersedes": "0.5.96",
       "notes": "New direct /cloud handler and offline full-save outbox use existing LoopRD Game* SQL and Tavi match proof redemption, atomic revision CAS, no Node worker or separate backend; legacy /play and Atrium remain untouched. Production Social activation, Atrium lobby and UI/agent sync still gated."
+    },
+    {
+      "version": "0.5.98",
+      "artifact": "the-life-loop-0.5.98-ziprunner.zip",
+      "kind": "atrium-registration-workflow",
+      "supersedes": "0.5.97",
+      "notes": "Pinned Atrium register-game composite action after successful Life GitHub Pages deploy to main, manual retry support, scoped registration token requirement, immutable deployed-SHA checkout and tests. No gameplay/rules or LoopRD handler changes. External Atrium trust/release approval remains pending."
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema": "ziprunner.post-update-tests.v1",
-  "version": "0.5.97",
+  "version": "0.5.98",
   "tests": [
     {
       "kind": "command",
@@ -26,6 +26,15 @@
       "definition_revision": "097",
       "rerun_policy": "every_update",
       "command": "python -m unittest discover -s tests -p test_cloud_save_looprd_097.py -q",
+      "attention_on_failure": true,
+      "gating": false
+    },
+    {
+      "kind": "command",
+      "semantic_id": "life-atrium-registration",
+      "definition_revision": "098",
+      "rerun_policy": "every_update",
+      "command": "node --test tests/atrium-registration-workflow.test.cjs",
       "attention_on_failure": true,
       "gating": false
     }

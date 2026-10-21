@@ -1,0 +1,50 @@
+# Register a successfully deployed Life revision with Atrium.
+name: Register Life with Atrium
+
+on:
+  workflow_run:
+    workflows: ['Deploy The Life Loop to GitHub Pages']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: life-atrium-registration
+  cancel-in-progress: false
+
+jobs:
+  register:
+    name: Register published Life revision
+    if: >-
+      ${{
+        (github.event_name == 'workflow_run' &&
+         github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.head_branch == 'main') ||
+        (github.event_name == 'workflow_dispatch' &&
+         github.ref == 'refs/heads/main')
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout the exact released source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Validate compatibility and request Atrium registration
+        id: register
+        # Pinned to the reviewed Atrium action revision, not mutable @main.
+        uses: TheBigTreeInc/atrium/.github/actions/register-game@76c667c4a362e9fe12682b48749ba2382e5a66e4
+        with:
+          source-sha: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          # Fine-grained token / GitHub App installation token: Actions WRITE on Atrium only.
+          atrium-token: ${{ secrets.ATRIUM_REGISTRATION_TOKEN }}
+
+      - name: Ensure a registration request was sent
+        if: ${{ steps.register.outputs.registration-sent != 'true' }}
+        run: |
+          echo '::error::No Atrium registration was dispatched. Configure ATRIUM_REGISTRATION_TOKEN with Atrium Actions:write and retry.'
+          exit 1

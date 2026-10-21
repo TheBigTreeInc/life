@@ -1,0 +1,34 @@
+= The Life Loop 0.5.98 — automatic Atrium registration from Pages
+:toc: left
+:revdate: 2026-10-21
+
+== Purpose
+
+Make a successful GitHub Pages deployment from `TheBigTreeInc/life` submit its immutable deployed commit for review and game registration in `TheBigTreeInc/atrium` without a second Life frontend server. This is a delivery/integration pass only; `PLAY.html`, Classic/Modern game rules, `atriumd.yaml` and LoopRD runtime handler semantics are unchanged.
+
+== GitHub workflow
+
+`life/.github/workflows/atrium-register.yml` listens to completed workflow runs of `Deploy The Life Loop to GitHub Pages`, gates on success and main, and also supports operator `workflow_dispatch` on main. It checks out the exact deployed `head_sha` (not a moving main) for automatic registration. Manual run checks out its main commit and the Atrium receiver rejects a revision that was not successfully Pages-deployed. Job runs with Life `contents: read` permission, checkout credentials disabled, and no Life writes to Atrium.
+
+The step uses reviewed Atrium composite action `TheBigTreeInc/atrium/.github/actions/register-game@76c667c4a362e9fe12682b48749ba2382e5a66e4`. The action checks `atriumd.yaml` and `looprd.yaml`, then (only when supplied an Atrium-scoped credential) dispatches `receive-game.yml` in Atrium with repository, SHA and validated game ID. The workflow explicitly fails if `registration-sent` is not true so missing credentials are never mistaken for publication success.
+
+== Required operator configuration
+
+. Confirm Live Pages URL and successful exact deployed SHA. The usual Pages base is `https://thebigtreeinc.github.io/life/`, but ownership, final URL and associated API must be verified by Atrium's operator before approval.
+. Add Life Actions secret `ATRIUM_REGISTRATION_TOKEN` consisting of a GitHub App installation token or restricted fine-grained credential with *Actions:write on TheBigTreeInc/atrium only*. Do not grant Contents:write to Life, and do not store LoopRD/Social keys in it.
+. Add a reviewed entry for Life in Atrium-owned `registry/trusted-sources.json`: trusted repository `TheBigTreeInc/life`, game `life.loop`, publisher `thebigtreeinc`, component `the-life-loop`, approved deployment identity, actual HTTPS Pages launch base (ending slash), real versioned LoopRD API base, `status: active`, `autoPublish: true`. This file currently starts with `games: []`; no game may self-authorize an entry.
+. Ensure Atrium receiver `.github/workflows/receive-game.yml` may commit reviewed records subject to organization branch protections. Its independently checked Pages run must be successful and match Life's source SHA. Optionally configure Atrium `ATRIUM_AUTO_PUBLISH_CATALOG=true` and required Tavi URL variable to deploy the verified catalog.
+. Push this reviewed Life ZIP to `main` via normal operator-controlled ZipRunner source review. Once its Pages workflow completes successfully, inspect Life `Register Life with Atrium` run and Atrium `Review trusted game registration` run. Retry only when Pages exact commit is deployed and trust/token prerequisites are installed.
+
+== Release gates and limitations
+
+* A successful GitHub Actions dispatch is *not* proof of game publication, Tavi navigation, approved deployment, multiplayer authentication or live LoopRD cloud-save integration.
+* The portable `atriumd.yaml` deliberately uses `originRef: game-web`, never a fixed URL. Atrium owns the resolved origin and API binding.
+* Atrium's registry policy requires newest successful Pages deploy SHA to match; retrying an older commit will not supersede a new deployment.
+* The GitHub App/Actions-scoped token must be rotated or revoked independently. Avoid putting secrets in source, outputs or user-visible Pages assets.
+* LL-346, LL-354, LL-355 and server authoritative-vs-client-trusted evolution remain operator-gated.
+* Game source compatibility test and one manual successful/failed-pages workflow acceptance are needed before LL-356 is approved.
+
+== Local verification
+
+Run `node --test tests/atrium-registration-workflow.test.cjs`, `node tools/verify.mjs`, `python -m unittest discover -s tests -p 'test_*.py' -q`, and package using `python tools/package-ziprunner.py`. No live GitHub dispatch or production credentials are used by these commands.

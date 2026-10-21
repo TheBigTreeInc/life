@@ -1,3 +1,7 @@
+### v0.5.98 — Atrium registration workflow candidate (LL-356, operator review)
+
+Complete source ZIP: `the-life-loop-0.5.98-ziprunner.zip`. Adds successful-Pages-deployment-triggered registration using the Atrium-owned pinned action; source validation and workflow tests are automated. The external registration token, trusted-source policy, published catalog and in-Tavi launch still require independent operator acceptance. Preserve all 351 existing local workboard states; LL-346, LL-354 and LL-355 remain open.
+
 ### v0.5.97 cloud-save migration
 
 Added a new, disabled-by-missing-secrets `/cloud` source handler using existing LoopRD SQL. Code/tests cover one match/two seats, locally mocked Social proof, bounded client save commits, idempotency, offline retry, and SQLite restart. No existing task statuses or acceptance criteria changed. LL-354 and LL-355 require operator approval/live end-to-end verification. See `docs/LIFE_CLOUD_SAVE_LOOPRD_097.adoc`.

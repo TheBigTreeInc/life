@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.97
+# Workboard lifecycle reconciliation — v0.5.98
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 298 done (historical claims included); 17 blocked; 12 in progress; 14 to do.
+**Counts:** 298 done (historical claims included); 17 blocked; 12 in progress; 15 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -55,6 +55,7 @@
 - **LL-353:** Wire offline UI and OpenClaw turn submission through Atrium-resolved Life match
 - **LL-354:** Direct LoopRD client-trusted cloud-save pilot production acceptance
 - **LL-355:** Cloud saves in Life browser and OpenClaw through Atrium
+- **LL-356:** Approve Life-to-Atrium successful-Pages automatic registration
 
 ## Done (current ZipRunner update)
 

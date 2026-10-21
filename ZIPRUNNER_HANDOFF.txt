@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.97
-filename: the-life-loop-0.5.97-ziprunner.zip
+version: 0.5.98
+filename: the-life-loop-0.5.98-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -161,3 +161,5 @@ v0.5.91: Internal match lifecycle create/invite/join/resume; 27 async Python uni
 notes_gateway_095: Complete-source v0.5.97 has two new generated LoopRD handlers: GET /play/info and POST /play, proxy to separately deployed Life Node+SQL backend over operator-provisioned signed Unix socket or TLS. No real Social verifier or installed Pi backend is bundled. Operator must configure trusted Social credential exchange and install server/run_headless.py before external use. See docs/LIFE_LOOPRD_GATEWAY_095.adoc. Do not push/tag/release/deploy automatically.
 
 notes_async_096: Bounded source-only seeded complete-turn replay + offline durable outbox. Existing /play gateway and Atrium discovery untouched. Direct LoopRD on-demand JS worker and Social authentication are required BEFORE commit_turn is exposed. Do not install a separate backend; no public turn-bundle endpoint in v0.5.97.
+
+notes_atrium_registration_098: On successful Life Pages workflow_run on main, or a manual main-branch dispatch, .github/workflows/atrium-register.yml checks out the immutable source SHA and calls Atrium's SHA-pinned register-game action. Action verifies root atriumd.yaml/looprd.yaml, then dispatches a request to Atrium (not direct write or approval). The workflow fails when ATRIUM_REGISTRATION_TOKEN is missing. Requires operator-approved Atrium registry/trusted-sources.json and a narrowly scoped Actions:write-on-Atrium token. No URL in portable atriumd.yaml. See docs/LIFE_ATRIUM_AUTOREGISTRATION_098.adoc.

@@ -3,27 +3,21 @@
   "spec_version": "1.0.0",
   "project": {
     "key": "the-life-loop",
-    "version": "0.5.97",
-    "base_version": "0.5.96"
+    "version": "0.5.98",
+    "base_version": "0.5.97"
   },
   "update": {
-    "id": "LIFE-20261019-097-CLOUD01",
+    "id": "LIFE-20261021-098-ATRIUM01",
     "kind": "source_update",
-    "created_at": "2026-10-19T20:00:00Z",
-    "summary": "Add direct LoopRD trusted-client cloud save handler and offline final-save outbox, preserving legacy /play and Atrium."
+    "created_at": "2026-10-21T14:10:00Z",
+    "summary": "Add automatic Life GitHub Pages deploy-to-Atrium registration via pinned first-party action. Preserve existing gameplay, Cloud/LoopRD APIs and Atrium portable sidecar."
   },
   "planned_work": [
     {
-      "id": "LL-354",
-      "title": "Direct LoopRD trusted-client cloud-save source pilot",
-      "acceptance_criteria": "Direct optional /cloud handler with valid Tavi scoped proof, authorized seat, read/commit CAS, retry handling, SQL restart, existing routes preserved; production approval explicitly pending",
-      "priority": "critical"
-    },
-    {
-      "id": "LL-355",
-      "title": "Real browser/OpenClaw and Atrium cloud-save integration",
-      "acceptance_criteria": "Two live verified Tavi principals via Atrium/LoopRD, browser and headless turn exchange, offline reconnect, Tavi notification delivered, no third-party read; legacy routes remain safe",
-      "priority": "critical"
+      "id": "LL-356",
+      "title": "Life successful Pages deployment registration via Atrium action",
+      "acceptance_criteria": "Checkout exact deployed SHA and dispatch Atrium request on successful main Pages workflow, safe manual retry; operator configures restricted token and trusted-source policy before catalog approval.",
+      "priority": "high"
     }
   ],
   "done_work": [
@@ -52,6 +46,27 @@
           "description": "API envelope, trust boundary, deployment gates and handoff"
         }
       ]
+    },
+    {
+      "id": "LL-356",
+      "summary": "Source implementation candidate only: pinned GitHub Actions integration, offline verifier, versioned QA contract and operator handoff; no production registration or operator acceptance claimed.",
+      "evidence": [
+        {
+          "kind": "source",
+          "ref": ".github/workflows/atrium-register.yml",
+          "description": "After-successful-Pages automatic workflow with immutable SHA and scoped token"
+        },
+        {
+          "kind": "test",
+          "ref": "tests/atrium-registration-workflow.test.cjs",
+          "description": "Static workflow/invariants and source package regression"
+        },
+        {
+          "kind": "documentation",
+          "ref": "docs/LIFE_ATRIUM_AUTOREGISTRATION_098.adoc",
+          "description": "Operator approval, trust policy, token scope and limitation handoff"
+        }
+      ]
     }
   ],
   "todo_work": [
@@ -62,6 +77,15 @@
       "blockers": [
         "Production match bootstrap verifier and Social service credentials not operator-approved",
         "Live Atrium/Tavi/LoopRD two-seat acceptance not performed"
+      ]
+    },
+    {
+      "id": "LL-356",
+      "status": "blocked",
+      "next_action": "Configure Atrium Actions-write-only registration credential, operator approve Life trusted-source entry, then verify exact-SHA successful Pages dispatch, Atrium receiver and visible Tavi catalog.",
+      "blockers": [
+        "Atrium registry/trusted-sources.json currently empty",
+        "No narrow scoped operator credential delivered to Life; manual/live acceptance not performed"
       ]
     }
   ],
@@ -103,11 +127,38 @@
         "description": "Live LoopRD/Tavi/Atrium/OpenClaw match",
         "status": "not_run",
         "reason": "Operator-provisioned credentials and deployments not available in this workspace"
+      },
+      {
+        "id": "LIFE098-ATR-LOCAL",
+        "description": "Static automated pinned successful-Pages Atrium registration workflow contract",
+        "status": "passed",
+        "command": "node --test tests/atrium-registration-workflow.test.cjs",
+        "evidence_ref": "docs/evidence/life098-atrium-registration-tests.log"
+      },
+      {
+        "id": "LIFE098-ATR-LIVE",
+        "description": "Operator validates GitHub token, Pages event, Atrium trust policy, receiver registration and catalog",
+        "status": "not_run",
+        "reason": "Credentials and operator-approved Atrium registry are external prerequisites"
+      },
+      {
+        "id": "LIFE098-JS",
+        "description": "Full JS verifier and static Pages/offline build",
+        "status": "passed",
+        "command": "node tools/verify.mjs",
+        "evidence_ref": "docs/evidence/life098-js-verifier.log"
+      },
+      {
+        "id": "LIFE098-PY",
+        "description": "Full Python gateway/LoopRD/cloud-save suites",
+        "status": "passed",
+        "command": "python -m unittest discover -s tests -p 'test_*.py' -q",
+        "evidence_ref": "docs/evidence/life098-python-tests.log"
       }
     ]
   },
   "handover": {
-    "next_pass": "Activate the optional trusted-client cloud handler after operator trust review and provision Social match-grant redemption; connect Atrium real create/invite/join, then browser/OpenClaw cloud-sync and durable notification dispatch; retire gateway only after acceptance.",
+    "next_pass": "Operator approves Life GitHub Pages origin and LoopRD endpoint in Atrium trusted-sources, sets scoped registration token, verifies exact-SHA Pages trigger and Atrium receiver; then continue LL-355/LL-354 live cloud-save integration or LL-039 gameplay parity.",
     "risks": [
       "Existing Game* matches created with per-action evaluator semantics remain unchanged; no automatic destructive migration.",
       "Social grants are match-bound and require prior subscription, so match creation still needs trusted Social bootstrap.",
@@ -115,7 +166,8 @@
     ],
     "blockers": [
       "No live Social game-proof service credential or session key in this source ZIP",
-      "Atrium real lobby and Tavi notifications are not implemented by this Life source update"
+      "Atrium real lobby and Tavi notifications are not implemented by this Life source update",
+      "Live Atrium game registration needs scoped Actions token and Atrium trusted-source entry"
     ],
     "notes": [
       "Keep LL-072, LL-082, LL-092, LL-263, LL-347, LL-352, LL-353 and their operator status/acceptance intact.",
@@ -132,11 +184,16 @@
       "id": "LIFE097-OP-2",
       "description": "Complete live Tavi/Atrium/OpenClaw two-seat, reconnect and rejection acceptance; approve separate retirement of old gateway only after rollback test",
       "status": "required"
+    },
+    {
+      "id": "LIFE098-ATR-OP-1",
+      "description": "Approve Life origin / API binding in Atrium trust registry and install scoped registration token; verify Pages SHA and receive-game dispatch",
+      "status": "required"
     }
   ],
   "release": {
     "requested": false,
     "requires_operator_approval": true,
-    "notes": "Source ZIP only. No push, deploy, tag, publication or secrets."
+    "notes": "Source ZIP only; no auto push, release, tag, provisioning or catalog changes from the packaging process."
   }
 }

@@ -1,10 +1,16 @@
+## v0.5.98 — Automatic Life-to-Atrium game registration
+
+Artifact: `the-life-loop-0.5.98-ziprunner.zip` — full ZipRunner project source, including the offline playable game and existing LoopRD integration. This pass adds `.github/workflows/atrium-register.yml` to run after the successful **Deploy The Life Loop to GitHub Pages** workflow on `main` (or via manual main-branch dispatch). It checks out the *deployed* commit and uses the Atrium composite `register-game` action pinned to reviewed SHA `76c667c4a362e9fe12682b48749ba2382e5a66e4`. Source validation is independent of catalogue approval; Atrium re-fetches the source and verifies that GitHub Pages deployed the submitted SHA.
+
+**Operator setup (not included in the ZIP):** Configure Life Actions secret `ATRIUM_REGISTRATION_TOKEN` with Atrium-only Actions:write permission; approve Life in Atrium-owned `registry/trusted-sources.json` with the verified Pages and LoopRD origins; ensure Atrium receive workflow can write the reviewed catalog. Without the token, the workflow fails visibly; without Atrium trust approval, its receiver rejects the submission. Gameplay, static frontend hosting and multiplayer trust boundaries are unchanged. See `docs/LIFE_ATRIUM_AUTOREGISTRATION_098.adoc`.
+
 ## v0.5.97 — Direct LoopRD cloud-save source pilot (not yet live)
 
 A new **optional** `POST /looprd/the-life-loop/v1/cloud` handler uses existing match/checkpoint/seat tables. Client downloads the existing LifeGame save, plays offline, and uploads its completed turn when online. LoopRD only enforces match-scoped Tavi proof/seat, revision CAS, bounded checkpoint, idempotency and durable next-player notification *intent*. **No separate Life backend or Node rule worker is required** for this trusted-client path. Existing `/play`, `/session`, Atrium `atriumd.yaml` and offline `PLAY.html` are unchanged. The real Tavi game grant exchange, initial match bootstrap via Atrium, browser/OpenClaw UI integration, delivery of notifications, and live acceptance are not yet configured/verified. See `docs/LIFE_CLOUD_SAVE_LOOPRD_097.adoc`.
 
 ## v0.5.97 — Private LoopRD play gateway and headless two-seat game
 
-Artifact: `the-life-loop-0.5.97-ziprunner.zip` — **complete source package**, including `/play/info` and `/play` LoopRD Python handlers, HMAC-signed private gateway, Life-owned headless Node/SQL backend, deterministic request-ID match creation and generic Atrium lobby projection. Local signed-socket two-seat/restart tests use TEST credentials. **Not live on LoopRD, no production Social proof verifier, no automatic Atrium/Tavi match, no OpenClaw real agent acceptance.** See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`. Public hosting is blocked until an operator provisions the trusted backend, verifier, socket/key, and independently verifies deployment.
+Artifact: `the-life-loop-0.5.98-ziprunner.zip` — **complete source package**, including `/play/info` and `/play` LoopRD Python handlers, HMAC-signed private gateway, Life-owned headless Node/SQL backend, deterministic request-ID match creation and generic Atrium lobby projection. Local signed-socket two-seat/restart tests use TEST credentials. **Not live on LoopRD, no production Social proof verifier, no automatic Atrium/Tavi match, no OpenClaw real agent acceptance.** See `docs/LIFE_LOOPRD_GATEWAY_095.adoc`. Public hosting is blocked until an operator provisions the trusted backend, verifier, socket/key, and independently verifies deployment.
 
 ## v0.5.92 — Atrium discovery sidecar
 

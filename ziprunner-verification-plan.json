@@ -1,7 +1,7 @@
 {
   "schema": "ziprunner.verification-plan/v1",
   "project": "the-life-loop",
-  "version": "0.5.97",
+  "version": "0.5.98",
   "tasks": [
     {
       "id": "LL-354",
@@ -44,6 +44,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "LL-356",
+      "criteria": [
+        {
+          "id": "LL-356-AC1",
+          "description": "Successful published main commit sends exact SHA via pinned reviewed Atrium action",
+          "mode": "automated",
+          "checks": [
+            "LIFE098-ATRIUM-LOCAL"
+          ]
+        },
+        {
+          "id": "LL-356-AC2",
+          "description": "Operator verified token/trusted policy, receiver and published catalog",
+          "mode": "manual",
+          "checks": [
+            "LIFE098-ATRIUM-LIVE"
+          ]
+        }
+      ]
     }
   ],
   "checks": [
@@ -78,6 +99,26 @@
       "stage": "acceptance",
       "description": "Live, operator-approved LoopRD/Social/Atrium/Tavi/OpenClaw acceptance",
       "instructions": "Verify proof redemption against actual Social service, durable 2-seat match creation, third actor denial, offline/reconnect from both clients, actual notification receipt and full LoopRD restart; ensure other containers unaffected."
+    },
+    {
+      "id": "LIFE098-ATRIUM-LOCAL",
+      "kind": "automated",
+      "stage": "functional",
+      "description": "Pinned action, immutable deployed SHA, success gate, manual retry and no-url-sidecar invariants",
+      "runner_ref": "life-atrium-registration",
+      "assertions": [
+        "Successful main Pages deploy only",
+        "Secretless run fails visibly and does not claim catalog approval",
+        "Atrium review remains independent"
+      ],
+      "test_ref": "tests/atrium-registration-workflow.test.cjs"
+    },
+    {
+      "id": "LIFE098-ATRIUM-LIVE",
+      "kind": "manual",
+      "stage": "acceptance",
+      "description": "Verify exact Pages SHA and trusted Atrium receiver with narrowly scoped token",
+      "instructions": "Operator installs restricted token/approved trust entry; test success, failure, manual retry, duplicate and catalog presence; no gameplay changes."
     }
   ]
 }
