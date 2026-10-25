@@ -1,6 +1,6 @@
 {
   "schema": "the-life-loop.workboard-classifications.v1",
-  "release": "0.5.99",
+  "release": "0.5.100",
   "blocked": {
     "LL-014": {
       "reason": "Cross-platform and physical mobile-device acceptance requires operator devices and browsers not available in this source build.",
@@ -73,6 +73,14 @@
     "LL-357": {
       "reason": "Source-only embedded launch selector and test host exist, but actual approved Tavi generic surface, Pages CSP and Windows/Android/web integration have not been device-verified.",
       "unblock_when": "Tavi host and Atrium releases are approved and M1 embedded play, safe Home/Back, origin policies and viewport/device tests pass."
+    },
+    "LL-358": {
+      "reason": "Life P1-086 backend source and local tests exist, but service credential issuer, real Social challenge lookup, live LoopRD integration and operator approval remain unverified.",
+      "unblock_when": "Run staged v4 migration, signed Atrium-service identity, verified original Social challenge mapping and two-client headless Life restart acceptance."
+    },
+    "LL-359": {
+      "reason": "Live server-side Social notification provider, LoopRD job scheduler and Tavi/OpenClaw end-to-end trials are not yet provisioned or operator-accepted.",
+      "unblock_when": "Deploy approved sender, prove deduped notification IDs, persistent hostless turns and 60-hour timeout policy, and complete M2 live acceptance."
     }
   },
   "in_progress": [

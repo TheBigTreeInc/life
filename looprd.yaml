@@ -1,14 +1,14 @@
 # Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py
 apiVersion: looprd/v1
 component: the-life-loop
-release: 0.5.99
+release: 0.5.100
 api:
   version: v1
 auth:
   mode: public
 database:
   backend: sqlite
-  schemaVersion: 3
+  schemaVersion: 4
   migrations:
   - version: 2
     statements:
@@ -42,6 +42,16 @@ database:
       NOT NULL, "recipientSubject" VARCHAR(256) NOT NULL, "eventId" VARCHAR(128) NOT NULL, "eventType" VARCHAR(80)
       NOT NULL, "status" VARCHAR(24) NOT NULL, "attempts" INTEGER NOT NULL, "lastErrorClass" VARCHAR(128), "nextDispatchUtc"
       VARCHAR(40), "createdAtUtc" VARCHAR(40) NOT NULL)
+  - version: 4
+    statements:
+    - CREATE TABLE IF NOT EXISTS "GameAtriumBinding" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id" VARCHAR(64)
+      NOT NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL UNIQUE, "lobbyId" VARCHAR(128) NOT NULL UNIQUE, "deploymentId"
+      VARCHAR(128) NOT NULL, "creatorIssuer" VARCHAR(256) NOT NULL, "creatorSubject" VARCHAR(256) NOT NULL, "requestId"
+      VARCHAR(128) NOT NULL, "settingsDigest" VARCHAR(128) NOT NULL, "createdAtUtc" VARCHAR(40) NOT NULL)
+    - CREATE TABLE IF NOT EXISTS "GameSocialChallengeBinding" ("recordId" INTEGER PRIMARY KEY AUTOINCREMENT, "id"
+      VARCHAR(64) NOT NULL UNIQUE, "matchId" VARCHAR(64) NOT NULL UNIQUE, "challengeKey" VARCHAR(64) NOT NULL UNIQUE,
+      "challengeId" VARCHAR(64) NOT NULL, "socialIssuer" VARCHAR(256) NOT NULL, "senderSubject" VARCHAR(256) NOT
+      NULL, "recipientSubject" VARCHAR(256) NOT NULL, "createdAtUtc" VARCHAR(40) NOT NULL)
 models:
   Room:
     fields:
@@ -302,6 +312,92 @@ models:
         type: string
         maxLength: 40
         required: true
+  GameAtriumBinding:
+    fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
+      id:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      lobbyId:
+        type: string
+        maxLength: 128
+        required: true
+        unique: true
+      deploymentId:
+        type: string
+        maxLength: 128
+        required: true
+      creatorIssuer:
+        type: string
+        maxLength: 256
+        required: true
+      creatorSubject:
+        type: string
+        maxLength: 256
+        required: true
+      requestId:
+        type: string
+        maxLength: 128
+        required: true
+      settingsDigest:
+        type: string
+        maxLength: 128
+        required: true
+      createdAtUtc:
+        type: string
+        maxLength: 40
+        required: true
+  GameSocialChallengeBinding:
+    fields:
+      recordId:
+        type: integer
+        primaryKey: true
+        generated: true
+      id:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      matchId:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      challengeKey:
+        type: string
+        maxLength: 64
+        required: true
+        unique: true
+      challengeId:
+        type: string
+        maxLength: 64
+        required: true
+      socialIssuer:
+        type: string
+        maxLength: 256
+        required: true
+      senderSubject:
+        type: string
+        maxLength: 256
+        required: true
+      recipientSubject:
+        type: string
+        maxLength: 256
+        required: true
+      createdAtUtc:
+        type: string
+        maxLength: 40
+        required: true
   GameNotificationOutbox:
     fields:
       recordId:
@@ -498,30 +594,32 @@ handlers:
     \    return hmac.new(key.encode('utf-8'), canonical.encode('ascii'), hashlib.sha256).hexdigest()\n\n\nasync\
     \ def handle(ctx):\n    method = ctx.request.method\n    path = ctx.request.url.path\n    # LoopRD's authenticated\
     \ outer dispatch selected this handler. No user\n    # input may choose a different backend path or component.\n\
-    \    suffix = '/play/info' if method == 'GET' else '/play'\n    if not path.endswith(suffix) or method not in\
-    \ ('GET', 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw =\
-    \ b'' if method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
+    \    suffix = '/play/info' if method == 'GET' else ('/play/host' if path.endswith('/play/host') else '/play')\n\
+    \    if suffix not in ('/play/info', '/play', '/play/host') or not path.endswith(suffix) or method not in ('GET',\
+    \ 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw = b'' if\
+    \ method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
     \ 'Life request too large')\n        if method == 'POST':\n            if ctx.request.headers.get('content-type',\
     \ '').split(';', 1)[0] != 'application/json':\n                raise HTTPException(415, 'JSON required')\n \
     \           envelope = json.loads(raw)\n            if not isinstance(envelope, dict) or envelope.get('schema')\
-    \ != SCHEMA:\n                raise HTTPException(422, 'Invalid Life envelope')\n        origin, transport =\
-    \ _endpoint(ctx.secret(SECRET_ORIGIN))\n        key = ctx.secret(SECRET_KEY)\n        if not isinstance(key,\
-    \ str) or len(key.encode()) < 32:\n            raise ValueError('Life gateway credential missing')\n    except\
-    \ HTTPException:\n        raise\n    except Exception:\n        raise HTTPException(503, 'Life play gateway\
-    \ not configured') from None\n\n    timestamp = str(int(time.time()))\n    headers = {'X-Life-Timestamp': timestamp,\
-    \ 'X-Life-Signature': _signature(key, timestamp, method, suffix, raw)}\n    if method == 'POST':\n        headers['Content-Type']\
-    \ = 'application/json'\n    authorization = ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n\
-    \        if not authorization.startswith('Bearer ') or len(authorization) > 8192:\n            raise HTTPException(401,\
-    \ 'Game-scoped bearer required')\n        headers['Authorization'] = authorization\n    try:\n        async\
-    \ with httpx.AsyncClient(transport=transport, timeout=8, follow_redirects=False, trust_env=False) as client:\n\
-    \            response = await client.request(method, origin + suffix, content=raw, headers=headers)\n      \
-    \  if response.status_code in (301, 302, 303, 307, 308):\n            raise HTTPException(502, 'Life backend\
-    \ redirect refused')\n        if len(response.content) > 1024 * 1024:\n            raise HTTPException(502,\
-    \ 'Life backend response exceeds limit')\n        result = response.json()\n        if not isinstance(result,\
-    \ dict) or result.get('schema' if method == 'POST' else 'protocol') != SCHEMA:\n            raise HTTPException(502,\
-    \ 'Invalid Life backend response')\n        if response.status_code >= 400:\n            # DAPI handler contracts\
-    \ return a fixed HTTP status. Use a native\n            # HTTPException to preserve the negative transport status;\
-    \ clients\n            # should normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
+    \ != ('life.atrium-host/v1' if suffix == '/play/host' else SCHEMA):\n                raise HTTPException(422,\
+    \ 'Invalid Life envelope')\n        origin, transport = _endpoint(ctx.secret(SECRET_ORIGIN))\n        key =\
+    \ ctx.secret(SECRET_KEY)\n        if not isinstance(key, str) or len(key.encode()) < 32:\n            raise\
+    \ ValueError('Life gateway credential missing')\n    except HTTPException:\n        raise\n    except Exception:\n\
+    \        raise HTTPException(503, 'Life play gateway not configured') from None\n\n    timestamp = str(int(time.time()))\n\
+    \    headers = {'X-Life-Timestamp': timestamp, 'X-Life-Signature': _signature(key, timestamp, method, suffix,\
+    \ raw)}\n    if method == 'POST':\n        headers['Content-Type'] = 'application/json'\n    authorization =\
+    \ ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n        if not authorization.startswith('Bearer\
+    \ ') or len(authorization) > 8192:\n            raise HTTPException(401, 'Game-scoped bearer required')\n  \
+    \      headers['Authorization'] = authorization\n    try:\n        async with httpx.AsyncClient(transport=transport,\
+    \ timeout=8, follow_redirects=False, trust_env=False) as client:\n            response = await client.request(method,\
+    \ origin + suffix, content=raw, headers=headers)\n        if response.status_code in (301, 302, 303, 307, 308):\n\
+    \            raise HTTPException(502, 'Life backend redirect refused')\n        if len(response.content) > 1024\
+    \ * 1024:\n            raise HTTPException(502, 'Life backend response exceeds limit')\n        result = response.json()\n\
+    \        if not isinstance(result, dict) or result.get('schema' if method == 'POST' else 'protocol') != ('life.atrium-host/v1'\
+    \ if suffix == '/play/host' else SCHEMA):\n            raise HTTPException(502, 'Invalid Life backend response')\n\
+    \        if response.status_code >= 400:\n            # DAPI handler contracts return a fixed HTTP status. Use\
+    \ a native\n            # HTTPException to preserve the negative transport status; clients\n            # should\
+    \ normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
     \ result)\n        return result\n    except HTTPException:\n        raise\n    except (httpx.HTTPError, ValueError,\
     \ json.JSONDecodeError):\n        raise HTTPException(503, 'Life backend unavailable') from None\n"
 - path: /play
@@ -545,30 +643,81 @@ handlers:
     \    return hmac.new(key.encode('utf-8'), canonical.encode('ascii'), hashlib.sha256).hexdigest()\n\n\nasync\
     \ def handle(ctx):\n    method = ctx.request.method\n    path = ctx.request.url.path\n    # LoopRD's authenticated\
     \ outer dispatch selected this handler. No user\n    # input may choose a different backend path or component.\n\
-    \    suffix = '/play/info' if method == 'GET' else '/play'\n    if not path.endswith(suffix) or method not in\
-    \ ('GET', 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw =\
-    \ b'' if method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
+    \    suffix = '/play/info' if method == 'GET' else ('/play/host' if path.endswith('/play/host') else '/play')\n\
+    \    if suffix not in ('/play/info', '/play', '/play/host') or not path.endswith(suffix) or method not in ('GET',\
+    \ 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw = b'' if\
+    \ method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
     \ 'Life request too large')\n        if method == 'POST':\n            if ctx.request.headers.get('content-type',\
     \ '').split(';', 1)[0] != 'application/json':\n                raise HTTPException(415, 'JSON required')\n \
     \           envelope = json.loads(raw)\n            if not isinstance(envelope, dict) or envelope.get('schema')\
-    \ != SCHEMA:\n                raise HTTPException(422, 'Invalid Life envelope')\n        origin, transport =\
-    \ _endpoint(ctx.secret(SECRET_ORIGIN))\n        key = ctx.secret(SECRET_KEY)\n        if not isinstance(key,\
-    \ str) or len(key.encode()) < 32:\n            raise ValueError('Life gateway credential missing')\n    except\
-    \ HTTPException:\n        raise\n    except Exception:\n        raise HTTPException(503, 'Life play gateway\
-    \ not configured') from None\n\n    timestamp = str(int(time.time()))\n    headers = {'X-Life-Timestamp': timestamp,\
-    \ 'X-Life-Signature': _signature(key, timestamp, method, suffix, raw)}\n    if method == 'POST':\n        headers['Content-Type']\
-    \ = 'application/json'\n    authorization = ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n\
-    \        if not authorization.startswith('Bearer ') or len(authorization) > 8192:\n            raise HTTPException(401,\
-    \ 'Game-scoped bearer required')\n        headers['Authorization'] = authorization\n    try:\n        async\
-    \ with httpx.AsyncClient(transport=transport, timeout=8, follow_redirects=False, trust_env=False) as client:\n\
-    \            response = await client.request(method, origin + suffix, content=raw, headers=headers)\n      \
-    \  if response.status_code in (301, 302, 303, 307, 308):\n            raise HTTPException(502, 'Life backend\
-    \ redirect refused')\n        if len(response.content) > 1024 * 1024:\n            raise HTTPException(502,\
-    \ 'Life backend response exceeds limit')\n        result = response.json()\n        if not isinstance(result,\
-    \ dict) or result.get('schema' if method == 'POST' else 'protocol') != SCHEMA:\n            raise HTTPException(502,\
-    \ 'Invalid Life backend response')\n        if response.status_code >= 400:\n            # DAPI handler contracts\
-    \ return a fixed HTTP status. Use a native\n            # HTTPException to preserve the negative transport status;\
-    \ clients\n            # should normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
+    \ != ('life.atrium-host/v1' if suffix == '/play/host' else SCHEMA):\n                raise HTTPException(422,\
+    \ 'Invalid Life envelope')\n        origin, transport = _endpoint(ctx.secret(SECRET_ORIGIN))\n        key =\
+    \ ctx.secret(SECRET_KEY)\n        if not isinstance(key, str) or len(key.encode()) < 32:\n            raise\
+    \ ValueError('Life gateway credential missing')\n    except HTTPException:\n        raise\n    except Exception:\n\
+    \        raise HTTPException(503, 'Life play gateway not configured') from None\n\n    timestamp = str(int(time.time()))\n\
+    \    headers = {'X-Life-Timestamp': timestamp, 'X-Life-Signature': _signature(key, timestamp, method, suffix,\
+    \ raw)}\n    if method == 'POST':\n        headers['Content-Type'] = 'application/json'\n    authorization =\
+    \ ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n        if not authorization.startswith('Bearer\
+    \ ') or len(authorization) > 8192:\n            raise HTTPException(401, 'Game-scoped bearer required')\n  \
+    \      headers['Authorization'] = authorization\n    try:\n        async with httpx.AsyncClient(transport=transport,\
+    \ timeout=8, follow_redirects=False, trust_env=False) as client:\n            response = await client.request(method,\
+    \ origin + suffix, content=raw, headers=headers)\n        if response.status_code in (301, 302, 303, 307, 308):\n\
+    \            raise HTTPException(502, 'Life backend redirect refused')\n        if len(response.content) > 1024\
+    \ * 1024:\n            raise HTTPException(502, 'Life backend response exceeds limit')\n        result = response.json()\n\
+    \        if not isinstance(result, dict) or result.get('schema' if method == 'POST' else 'protocol') != ('life.atrium-host/v1'\
+    \ if suffix == '/play/host' else SCHEMA):\n            raise HTTPException(502, 'Invalid Life backend response')\n\
+    \        if response.status_code >= 400:\n            # DAPI handler contracts return a fixed HTTP status. Use\
+    \ a native\n            # HTTPException to preserve the negative transport status; clients\n            # should\
+    \ normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
+    \ result)\n        return result\n    except HTTPException:\n        raise\n    except (httpx.HTTPError, ValueError,\
+    \ json.JSONDecodeError):\n        raise HTTPException(503, 'Life backend unavailable') from None\n"
+- path: /play/host
+  method: POST
+  kind: python
+  source: "\"\"\"LoopRD inline /play gateway. Generated verbatim into the component descriptor.\n\nOnly operator-supplied\
+    \ HTTPS or a shared Unix socket can be used. The upstream\nperforms its own Social verification and all game/seat\
+    \ authorization. This\ntransport does not derive an identity from HTTP headers or account UUIDs.\n\"\"\"\nimport\
+    \ hashlib\nimport hmac\nimport json\nimport re\nimport time\nfrom urllib.parse import urlsplit\n\nimport httpx\n\
+    from starlette.exceptions import HTTPException\n\nSCHEMA = 'looprd.game-play/v1'\nSECRET_ORIGIN = 'life/play-backend'\n\
+    SECRET_KEY = 'life/play-gateway-key'\n\n\ndef _endpoint(value):\n    if not isinstance(value, str) or not value\
+    \ or len(value) > 512:\n        raise ValueError('Missing trusted Life backend')\n    if value.startswith('unix:'):\n\
+    \        path = value[5:]\n        if not path.startswith('/') or '..' in path.split('/') or '?' in path or\
+    \ '#' in path or '\\\\' in path:\n            raise ValueError('Unsafe Life socket location')\n        return\
+    \ 'http://life.local', httpx.AsyncHTTPTransport(uds=path, retries=0)\n    origin = urlsplit(value)\n    if (origin.scheme\
+    \ != 'https' or not origin.hostname or origin.username or origin.password or\n            origin.path not in\
+    \ ('', '/') or origin.query or origin.fragment or value.rstrip('/') !=\n            f'https://{origin.netloc}'):\n\
+    \        raise ValueError('Life backend must be operator-configured HTTPS origin or Unix socket')\n    return\
+    \ value.rstrip('/'), httpx.AsyncHTTPTransport(retries=0, trust_env=False)\n\n\ndef _signature(key, timestamp,\
+    \ method, path, data):\n    canonical = f'{timestamp}\\n{method}\\n{path}\\n{hashlib.sha256(data).hexdigest()}'\n\
+    \    return hmac.new(key.encode('utf-8'), canonical.encode('ascii'), hashlib.sha256).hexdigest()\n\n\nasync\
+    \ def handle(ctx):\n    method = ctx.request.method\n    path = ctx.request.url.path\n    # LoopRD's authenticated\
+    \ outer dispatch selected this handler. No user\n    # input may choose a different backend path or component.\n\
+    \    suffix = '/play/info' if method == 'GET' else ('/play/host' if path.endswith('/play/host') else '/play')\n\
+    \    if suffix not in ('/play/info', '/play', '/play/host') or not path.endswith(suffix) or method not in ('GET',\
+    \ 'POST'):\n        raise HTTPException(404, 'Unknown Life play operation')\n    try:\n        raw = b'' if\
+    \ method == 'GET' else await ctx.request.body()\n        if len(raw) > 32768:\n            raise HTTPException(413,\
+    \ 'Life request too large')\n        if method == 'POST':\n            if ctx.request.headers.get('content-type',\
+    \ '').split(';', 1)[0] != 'application/json':\n                raise HTTPException(415, 'JSON required')\n \
+    \           envelope = json.loads(raw)\n            if not isinstance(envelope, dict) or envelope.get('schema')\
+    \ != ('life.atrium-host/v1' if suffix == '/play/host' else SCHEMA):\n                raise HTTPException(422,\
+    \ 'Invalid Life envelope')\n        origin, transport = _endpoint(ctx.secret(SECRET_ORIGIN))\n        key =\
+    \ ctx.secret(SECRET_KEY)\n        if not isinstance(key, str) or len(key.encode()) < 32:\n            raise\
+    \ ValueError('Life gateway credential missing')\n    except HTTPException:\n        raise\n    except Exception:\n\
+    \        raise HTTPException(503, 'Life play gateway not configured') from None\n\n    timestamp = str(int(time.time()))\n\
+    \    headers = {'X-Life-Timestamp': timestamp, 'X-Life-Signature': _signature(key, timestamp, method, suffix,\
+    \ raw)}\n    if method == 'POST':\n        headers['Content-Type'] = 'application/json'\n    authorization =\
+    \ ctx.request.headers.get('authorization', '')\n    if method == 'POST':\n        if not authorization.startswith('Bearer\
+    \ ') or len(authorization) > 8192:\n            raise HTTPException(401, 'Game-scoped bearer required')\n  \
+    \      headers['Authorization'] = authorization\n    try:\n        async with httpx.AsyncClient(transport=transport,\
+    \ timeout=8, follow_redirects=False, trust_env=False) as client:\n            response = await client.request(method,\
+    \ origin + suffix, content=raw, headers=headers)\n        if response.status_code in (301, 302, 303, 307, 308):\n\
+    \            raise HTTPException(502, 'Life backend redirect refused')\n        if len(response.content) > 1024\
+    \ * 1024:\n            raise HTTPException(502, 'Life backend response exceeds limit')\n        result = response.json()\n\
+    \        if not isinstance(result, dict) or result.get('schema' if method == 'POST' else 'protocol') != ('life.atrium-host/v1'\
+    \ if suffix == '/play/host' else SCHEMA):\n            raise HTTPException(502, 'Invalid Life backend response')\n\
+    \        if response.status_code >= 400:\n            # DAPI handler contracts return a fixed HTTP status. Use\
+    \ a native\n            # HTTPException to preserve the negative transport status; clients\n            # should\
+    \ normalize its `detail` field to the game-play error.\n            raise HTTPException(response.status_code,\
     \ result)\n        return result\n    except HTTPException:\n        raise\n    except (httpx.HTTPError, ValueError,\
     \ json.JSONDecodeError):\n        raise HTTPException(503, 'Life backend unavailable') from None\n"
 - path: /cloud
@@ -609,11 +758,17 @@ handlers:
     \ \"GameParticipant\" WHERE \"matchId\"=:m AND \"issuer\"=:i '\n        'AND \"subject\"=:s AND \"role\"=\\\
     'player\\' LIMIT 2'), {'m': match_id, 'i': issuer, 's': subject}).all()\n    if len(row) != 1 or row[0][0] not\
     \ in ('0', '1'):\n        _bad(404, 'Match unavailable')\n    return int(row[0][0])\n\n\ndef _record(db, match_id):\n\
-    \    match = db.execute(sa.text('SELECT * FROM \"GameMatch\" WHERE \"id\"=:m'), {'m': match_id}).mappings().first()\n\
-    \    if match is None:\n        _bad(404, 'Match unavailable')\n    point = db.execute(sa.text('SELECT * FROM\
-    \ \"GameCheckpoint\" WHERE \"matchId\"=:m '\n        'ORDER BY \"revision\" DESC LIMIT 1'), {'m': match_id}).mappings().first()\n\
-    \    if point is None or point['revision'] != match['revision']:\n        _bad(409, 'Persisted revision inconsistent')\n\
-    \    state = point['state'] if isinstance(point['state'], dict) else json.loads(point['state'])\n    if _digest(state)\
+    \    # These tables may also be used by Life's trusted /play headless engine.\n    # The old client-trusted\
+    \ whole-snapshot pilot MUST NOT mutate or expose a\n    # server-authoritative match, even to an otherwise authorized\
+    \ seat.\n    try:\n        authoritative = db.execute(sa.text('SELECT \"id\" FROM \"GameAtriumBinding\" WHERE\
+    \ \"matchId\"=:m LIMIT 1'),\n                                   {'m':match_id}).first()\n    except sa.exc.DBAPIError:\n\
+    \        _bad(503, 'Life schema-4 authority gate not migrated')\n    if authoritative is not None:\n       \
+    \ _bad(409, 'Server-authoritative match requires Life /play')\n    match = db.execute(sa.text('SELECT * FROM\
+    \ \"GameMatch\" WHERE \"id\"=:m'), {'m': match_id}).mappings().first()\n    if match is None:\n        _bad(404,\
+    \ 'Match unavailable')\n    point = db.execute(sa.text('SELECT * FROM \"GameCheckpoint\" WHERE \"matchId\"=:m\
+    \ '\n        'ORDER BY \"revision\" DESC LIMIT 1'), {'m': match_id}).mappings().first()\n    if point is None\
+    \ or point['revision'] != match['revision']:\n        _bad(409, 'Persisted revision inconsistent')\n    state\
+    \ = point['state'] if isinstance(point['state'], dict) else json.loads(point['state'])\n    if _digest(state)\
     \ != point['stateDigest']:\n        _bad(409, 'Persisted save checksum incorrect')\n    return match, point,\
     \ state\n\n\ndef _validate_snapshot(state, next_seat):\n    try:\n        if (type(state) is not dict or type(state.get('players'))\
     \ is not list or\n                len(state['players']) != 3 or\n                [x.get('id') if type(x) is\

@@ -3,14 +3,14 @@
   "spec_version": "1.0.0",
   "project": {
     "key": "the-life-loop",
-    "version": "0.5.99",
-    "base_version": "0.5.98"
+    "version": "0.5.100",
+    "base_version": "0.5.99"
   },
   "update": {
-    "id": "LIFE-20261025-099-EMBED01",
+    "id": "LIFE-20261025-100-HOSTLESS01",
     "kind": "source_update",
     "created_at": "2026-10-25T15:20:00Z",
-    "summary": "Add an unauthenticated opaque match selector and host-independent sandboxed browser smoke fixture for Life M1 embedded gameplay; preserve standalone/offline behavior, existing multiplayer API and rules."
+    "summary": "Add Life-owned, server-authorized Atrium lobby binding, approved Social seat admission, hostless persistent authoritative turns and retryable notification outbox. Live operator adapters remain gated."
   },
   "planned_work": [
     {
@@ -18,6 +18,12 @@
       "title": "Life hosted web embed launch and offline independent acceptance",
       "priority": "high",
       "acceptance_criteria": "Local fixture and match selector tests pass; actual Windows/Android/web Tavi nested surface and stable Home/Back require separate host and device acceptance."
+    },
+    {
+      "id": "LL-358",
+      "title": "Review Life-owned persistent hostless match bridge",
+      "priority": "critical",
+      "acceptance_criteria": "Source tests and additive v4 migration pass; real Atrium/ Social bindings, verified credentials, notification dispatch and two-device operator acceptance required."
     }
   ],
   "done_work": [
@@ -39,6 +45,27 @@
           "kind": "documentation",
           "ref": "docs/LIFE_TAVI_EMBED_HOSTLESS_099.adoc",
           "description": "M1/M2 service responsibility and manual acceptance handoff"
+        }
+      ]
+    },
+    {
+      "id": "LL-358",
+      "summary": "Life source integration candidate with private host API, two-seat policy, strict authorization, verified Node evaluator and durable turn-ready notification adapter; no live approval claimed.",
+      "evidence": [
+        {
+          "kind": "source",
+          "ref": "server/async_atrium_host.py",
+          "description": "Immutable Atrium lobby/match and original Social challenge binding"
+        },
+        {
+          "kind": "tests",
+          "ref": "tests/test_atrium_hostless_100.py",
+          "description": "Persistent two-principal match, retry, restart, unauthorized seat, legal turn"
+        },
+        {
+          "kind": "documentation",
+          "ref": "docs/LIFE_ATRIUM_HOSTLESS_100.adoc",
+          "description": "Complete request/response, security, errors, migrations and notification delivery contract"
         }
       ]
     }

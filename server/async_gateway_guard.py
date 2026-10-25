@@ -28,7 +28,7 @@ class SignedGatewayGuard:
             await self.app(scope, receive, send)
             return
         method, path = scope['method'], scope['path']
-        if (method, path) not in (('GET', '/play/info'), ('POST', '/play')):
+        if (method, path) not in (('GET', '/play/info'), ('POST', '/play'), ('POST', '/play/host')):
             response = JSONResponse({'ok': False, 'schema': SCHEMA, 'error': {'code':'NOT_FOUND'}}, status_code=404)
             await response(scope, receive, send)
             return

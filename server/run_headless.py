@@ -24,8 +24,20 @@ def bootstrap():
     # players. The public Social/Tavi SDK is not itself a token verifier.
     implementation = importlib.import_module(module)
     verifier = getattr(implementation, 'verify_game_credential', None)
+    # The server-only bridge cannot be activated without both independently
+    # provisioned verifiers and an explicit deployment allowlist.
+    atrium_issuer = os.environ.get('LIFE_ATRIUM_ISSUER')
+    deployment = os.environ.get('LIFE_APPROVED_DEPLOYMENT_ID')
+    verifier_atrium = getattr(implementation, 'verify_atrium_credential', None)
+    verifier_challenge = getattr(implementation, 'lookup_accepted_social_challenge', None)
+    if any((atrium_issuer, deployment, verifier_atrium, verifier_challenge)) and not all((
+            atrium_issuer, deployment, callable(verifier_atrium), callable(verifier_challenge))):
+        raise RuntimeError('Incomplete trusted Atrium integration; refusing to start')
     app, engine = create_runtime(database_url=database, verify_social=verifier,
-        social_issuer=issuer, gateway_key=gateway_key)
+        social_issuer=issuer, gateway_key=gateway_key,
+        verify_atrium=verifier_atrium if atrium_issuer else None,
+        atrium_issuer=atrium_issuer, verify_social_challenge=verifier_challenge if atrium_issuer else None,
+        approved_life_deployments=[deployment] if deployment else None)
     return app, engine
 
 

@@ -50,7 +50,9 @@ def create_match_tables(engine):
     return meta
 
 
-def create_runtime(*, database_url, verify_social, social_issuer, gateway_key):
+def create_runtime(*, database_url, verify_social, social_issuer, gateway_key,
+                   verify_atrium=None, atrium_issuer=None, verify_social_challenge=None,
+                   approved_life_deployments=None):
     if not callable(verify_social) or not isinstance(social_issuer, str) or not social_issuer:
         raise ValueError('Real operator-provisioned Social verifier and issuer required')
     if not isinstance(database_url,str) or not (database_url.startswith('sqlite:///') or database_url.startswith('postgresql+')):
@@ -90,5 +92,14 @@ def create_runtime(*, database_url, verify_social, social_issuer, gateway_key):
         rules_digest = hashlib.sha256(json.dumps(game_settings, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
         return lifecycle.create(token=token, engine_revision='life-' + version,
             rules_digest=rules_digest, seed=seed, settings=game_settings, request_id=request_id)
-    app = create_app(lifecycle, play, server_create=create_server_match)
+    host = None
+    if verify_atrium is not None or verify_social_challenge is not None:
+        from async_atrium_host import AtriumHostContract
+        version = json.loads((ROOT/'package.json').read_text())['version']
+        host = AtriumHostContract(sessions, bridge.snapshot_factory,
+            verify_atrium=verify_atrium, atrium_issuer=atrium_issuer,
+            verify_challenge=verify_social_challenge, social_issuer=social_issuer,
+            approved_deployments=approved_life_deployments,
+            seed_key=gateway_key, engine_revision='life-'+version)
+    app = create_app(lifecycle, play, server_create=create_server_match, atrium_host=host)
     return SignedGatewayGuard(app, gateway_key), engine

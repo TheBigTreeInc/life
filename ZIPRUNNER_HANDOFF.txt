@@ -1,8 +1,8 @@
 ZIPRUNNER_HANDOFF v1
 project: the-life-loop
 artifact_type: source_zip
-version: 0.5.99
-filename: the-life-loop-0.5.99-ziprunner.zip
+version: 0.5.100
+filename: the-life-loop-0.5.100-ziprunner.zip
 action: download_to_inbox
 build_command: node tools/verify.mjs
 play_file: PLAY.html
@@ -165,3 +165,5 @@ notes_async_096: Bounded source-only seeded complete-turn replay + offline durab
 notes_atrium_registration_098: On successful Life Pages workflow_run on main, or a manual main-branch dispatch, .github/workflows/atrium-register.yml checks out the immutable source SHA and calls Atrium's SHA-pinned register-game action. Action verifies root atriumd.yaml/looprd.yaml, then dispatches a request to Atrium (not direct write or approval). The workflow fails when ATRIUM_REGISTRATION_TOKEN is missing. Requires operator-approved Atrium registry/trusted-sources.json and a narrowly scoped Actions:write-on-Atrium token. No URL in portable atriumd.yaml. See docs/LIFE_ATRIUM_AUTOREGISTRATION_098.adoc.
 
 notes_life_embed_099: Source-only M1 candidate; standalone player remains fully offline-capable. Passive validated ?match selector is not a session grant; local tests do not prove Tavi/Pages WebView or M2 hostless online multiplayer. Tavi host/Atrium trust and real Life/Social issuer/action verification require separate acceptance. No automatic Git push/deploy.
+
+LIFE 0.5.100 HOSTLESS NOTES: Private /play/host requires independent operator-provisioned Atrium service credential, Social challenge lookup, approved deployment and additive LoopRD database schema 4. Outbox sender scheduled separately. No production Social/Tavi integration, release acceptance or Git push asserted. See docs/LIFE_ATRIUM_HOSTLESS_100.adoc.

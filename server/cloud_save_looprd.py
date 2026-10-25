@@ -98,6 +98,16 @@ def _member(db, match_id, issuer, subject):
 
 
 def _record(db, match_id):
+    # These tables may also be used by Life's trusted /play headless engine.
+    # The old client-trusted whole-snapshot pilot MUST NOT mutate or expose a
+    # server-authoritative match, even to an otherwise authorized seat.
+    try:
+        authoritative = db.execute(sa.text('SELECT "id" FROM "GameAtriumBinding" WHERE "matchId"=:m LIMIT 1'),
+                                   {'m':match_id}).first()
+    except sa.exc.DBAPIError:
+        _bad(503, 'Life schema-4 authority gate not migrated')
+    if authoritative is not None:
+        _bad(409, 'Server-authoritative match requires Life /play')
     match = db.execute(sa.text('SELECT * FROM "GameMatch" WHERE "id"=:m'), {'m': match_id}).mappings().first()
     if match is None:
         _bad(404, 'Match unavailable')

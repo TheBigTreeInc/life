@@ -5,6 +5,7 @@ issuer/subject must already be verified by Social and resolved to a seat via
 participant_seat. The game engine, not a browser, supplies resulting state.
 """
 import json
+from datetime import datetime, timedelta, timezone
 import subprocess
 from pathlib import Path
 from async_match_repository import MatchConflict, digest
@@ -95,4 +96,5 @@ class AsyncCommandService:
             command=command,resulting_snapshot=state,
             rng_state=calculated['checkpoint']['rngState'],
             turn_index=calculated['turnIndex'],active_seat=active,
-            due_at=None,outbox=notifications)
+            due_at=(datetime.now(timezone.utc)+timedelta(hours=60)).isoformat(timespec='seconds').replace('+00:00','Z')
+                   if command['type']=='end_turn' and notifications else None,outbox=notifications)

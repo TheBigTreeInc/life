@@ -1,7 +1,7 @@
 {
   "schema": "ziprunner.verification-plan/v1",
   "project": "the-life-loop",
-  "version": "0.5.99",
+  "version": "0.5.100",
   "tasks": [
     {
       "id": "LL-354",
@@ -86,6 +86,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "LL-358",
+      "criteria": [
+        {
+          "id": "LL-358-AC1",
+          "description": "Source tests for authenticated Life host registration, Social challenge seat, CAS turns and notification retry",
+          "mode": "automated",
+          "checks": [
+            "LIFE100-HOST-LOCAL"
+          ]
+        },
+        {
+          "id": "LL-358-AC2",
+          "description": "Actual Atrium/Social/LoopRD/Tavi/OpenClaw M2 acceptance",
+          "mode": "manual",
+          "checks": [
+            "LIFE100-M2-LIVE"
+          ]
+        }
+      ]
     }
   ],
   "checks": [
@@ -153,6 +174,19 @@
       "kind": "manual",
       "stage": "operator",
       "expected": "Physical and hosted Windows/Android/web tests, CSP/WebView and safe Tavi Home"
+    },
+    {
+      "id": "LIFE100-HOST-LOCAL",
+      "kind": "automated",
+      "stage": "functional",
+      "command": "python -m unittest discover -s tests -p test_*100.py -q",
+      "expected": "Pass Life P1-086 hostless and notification tests"
+    },
+    {
+      "id": "LIFE100-M2-LIVE",
+      "kind": "manual",
+      "stage": "operator",
+      "expected": "Approved signed identities, Social server lookups, real DAPI, two devices offline and restart, Social turn-ready and OpenClaw"
     }
   ]
 }

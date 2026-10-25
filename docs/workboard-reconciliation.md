@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.99
+# Workboard lifecycle reconciliation — v0.5.100
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 298 done (historical claims included); 18 blocked; 12 in progress; 15 to do.
+**Counts:** 298 done (historical claims included); 20 blocked; 12 in progress; 15 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -24,6 +24,8 @@
 - **LL-310 — Original DOS starting happiness audit:** DOS original starting stats and exact fractional university credit semantics have not yet been demonstrated from an executable/runtime trace. **Unblock:** Provide a version-matched original DOS capture proving initial Happiness and partial-lesson education stat increments.
 - **LL-352 — Direct LoopRD on-demand JS turn worker and authenticated commit_turn handler:** LoopRD does not yet provide a trusted version-pinned on-demand JavaScript rules worker; real Social game principal verification and operator admission remain unproven. **Unblock:** DAPI owner ships isolated worker capability, Social operator verifies issuer/audience/seat, and live LoopRD operator authorizes enablement.
 - **LL-357 — Life embedded hosted-web M1 source and operator acceptance:** Source-only embedded launch selector and test host exist, but actual approved Tavi generic surface, Pages CSP and Windows/Android/web integration have not been device-verified. **Unblock:** Tavi host and Atrium releases are approved and M1 embedded play, safe Home/Back, origin policies and viewport/device tests pass.
+- **LL-359 — Production hostless Life /play integration and notification acceptance:** Live server-side Social notification provider, LoopRD job scheduler and Tavi/OpenClaw end-to-end trials are not yet provisioned or operator-accepted. **Unblock:** Deploy approved sender, prove deduped notification IDs, persistent hostless turns and 60-hour timeout policy, and complete M2 live acceptance.
+- **LL-358 — Life-owned Atrium hostless match backend source:** Life P1-086 backend source and local tests exist, but service credential issuer, real Social challenge lookup, live LoopRD integration and operator approval remain unverified. **Unblock:** Run staged v4 migration, signed Atrium-service identity, verified original Social challenge mapping and two-client headless Life restart acceptance.
 
 ## In progress
 

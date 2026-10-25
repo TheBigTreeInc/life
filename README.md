@@ -1,6 +1,6 @@
-## v0.5.99 — Life host-independent embedded launch readiness
+## v0.5.100 — Life host-independent embedded launch readiness
 
-Artifact: `the-life-loop-0.5.99-ziprunner.zip` — complete ZipRunner source with standalone `PLAY.html`, GitHub Pages and retained LoopRD API. This pass adds a passive read-only `?match=<opaque-id>` selector and independent iframe smoke fixture (`tests/fixtures/life-embed-smoke.html`). It **does not authenticate** a Life player, resume a match, or assert M1/M2 deployed status. Actual Tavi host `tavix.surface/v1`, Atrium reviewed publication and Life/Social authoritative services remain independent acceptance gates. See `docs/LIFE_TAVI_EMBED_HOSTLESS_099.adoc`.
+Artifact: `the-life-loop-0.5.100-ziprunner.zip` — complete ZipRunner source with standalone `PLAY.html`, GitHub Pages and retained LoopRD API. This pass adds a passive read-only `?match=<opaque-id>` selector and independent iframe smoke fixture (`tests/fixtures/life-embed-smoke.html`). It **does not authenticate** a Life player, resume a match, or assert M1/M2 deployed status. Actual Tavi host `tavix.surface/v1`, Atrium reviewed publication and Life/Social authoritative services remain independent acceptance gates. See `docs/LIFE_TAVI_EMBED_HOSTLESS_099.adoc`.
 
 ## v0.5.98 — Automatic Life-to-Atrium game registration
 
@@ -622,3 +622,7 @@ Classic games now return every player home at turn end, even with insufficient c
 ## v0.5.97 — Offline-first turn protocol foundation
 
 Additive atomic server replay and credential-free client outbox modules; not integrated into active UI or public LoopRD handlers. See `docs/LIFE_SEEDED_TURN_LOOPRD_MIGRATION_096.adoc`. Legacy offline and Atrium/Tavi routes unchanged.
+
+## v0.5.100 — Life-owned hostless Atrium match contract
+
+See `docs/LIFE_ATRIUM_HOSTLESS_100.adoc` for the private `/play/host` server integration, accepted Social challenge seat admission, persistent revisions, signed LoopRD gateway, 60-hour turn deadlines, agent API use and turn-ready notification dispatcher. No Tavi or Atrium sources are modified. The browser/offline game is unchanged; production verifiers, Social sender and DAPI activation require operator integration.

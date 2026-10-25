@@ -9,7 +9,7 @@ const script=readFileSync(join(root,'tools/generate-looprd.py'),'utf8');
 const handler=readFileSync(join(root,'server/looprd_handler.py'),'utf8');
 const spec=readFileSync(join(root,'looprd.yaml'),'utf8');
 test('inert async-match persistence models are generated additively',()=>{
-  assert.match(spec,/schemaVersion: 3/);
+  assert.match(spec,/schemaVersion: 4/);
   for(const name of ['GameMatch','GameParticipant','GameAction','GameCheckpoint','GameNotificationOutbox']){
     assert.match(script,new RegExp("'"+name+"':\\{'fields'"));
     assert.match(spec,new RegExp('^  '+name+':','m'));

@@ -25,7 +25,7 @@ class SidecarContract(unittest.TestCase):
     def test_looprd_unchanged_schema(self):
         import re
         s=(ROOT/'looprd.yaml').read_text()
-        self.assertRegex(s,r'(?m)^  schemaVersion: 3$')
+        self.assertRegex(s,r'(?m)^  schemaVersion: 4$')
         self.assertNotIn('atriumd:',s)
 
 if __name__=='__main__':unittest.main()

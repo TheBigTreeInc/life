@@ -8,7 +8,7 @@ play_source=(root/'server/async_looprd_gateway.py').read_text()
 cloud_source=(root/'server/cloud_save_looprd.py').read_text()
 spec={
  'apiVersion':'looprd/v1', 'component':'the-life-loop', 'release':json.loads((root/'package.json').read_text())['version'], 'api':{'version':'v1'},
- 'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':3,'migrations':[{'version':2,'statements':['ALTER TABLE "Room" ADD COLUMN "chatKey" VARCHAR(64)']},{'version':3,'statements':[]}]},
+ 'auth':{'mode':'public'}, 'database':{'backend':'sqlite','schemaVersion':4,'migrations':[{'version':2,'statements':['ALTER TABLE "Room" ADD COLUMN "chatKey" VARCHAR(64)']},{'version':3,'statements':[]},{'version':4,'statements':[]}]},
  'models':{
   'Room':{'fields':{
    'id':{'type':'integer','primaryKey':True,'generated':True},
@@ -85,6 +85,27 @@ spec={
    'stateDigest':{'type':'string','maxLength':128,'required':True},
    'rngState':{'type':'integer','required':True},
    'createdAtUtc':{'type':'string','maxLength':40,'required':True}}},
+  'GameAtriumBinding':{'fields':{
+   'recordId':{'type':'integer','primaryKey':True,'generated':True},
+   'id':{'type':'string','maxLength':64,'required':True,'unique':True},
+   'matchId':{'type':'string','maxLength':64,'required':True,'unique':True},
+   'lobbyId':{'type':'string','maxLength':128,'required':True,'unique':True},
+   'deploymentId':{'type':'string','maxLength':128,'required':True},
+   'creatorIssuer':{'type':'string','maxLength':256,'required':True},
+   'creatorSubject':{'type':'string','maxLength':256,'required':True},
+   'requestId':{'type':'string','maxLength':128,'required':True},
+   'settingsDigest':{'type':'string','maxLength':128,'required':True},
+   'createdAtUtc':{'type':'string','maxLength':40,'required':True}}},
+  'GameSocialChallengeBinding':{'fields':{
+   'recordId':{'type':'integer','primaryKey':True,'generated':True},
+   'id':{'type':'string','maxLength':64,'required':True,'unique':True},
+   'matchId':{'type':'string','maxLength':64,'required':True,'unique':True},
+   'challengeKey':{'type':'string','maxLength':64,'required':True,'unique':True},
+   'challengeId':{'type':'string','maxLength':64,'required':True},
+   'socialIssuer':{'type':'string','maxLength':256,'required':True},
+   'senderSubject':{'type':'string','maxLength':256,'required':True},
+   'recipientSubject':{'type':'string','maxLength':256,'required':True},
+   'createdAtUtc':{'type':'string','maxLength':40,'required':True}}},
   'GameNotificationOutbox':{'fields':{
    'recordId':{'type':'integer','primaryKey':True,'generated':True},
    'id':{'type':'string','maxLength':64,'required':True,'unique':True},
@@ -110,6 +131,7 @@ spec={
   {'path':'/session','method':'POST','kind':'python','source':source},
   {'path':'/play/info','method':'GET','kind':'python','source':play_source},
   {'path':'/play','method':'POST','kind':'python','source':play_source},
+  {'path':'/play/host','method':'POST','kind':'python','source':play_source},
   {'path':'/cloud','method':'POST','kind':'python','source':cloud_source},
   {'path':'/info','kind':'response','response':{'protocol':'the-life-loop/1','transport':'HTTP commands + Looprd WebSocket notifications','auth':'room-scoped capability tokens'}}]
 }
@@ -130,4 +152,18 @@ for _model_name in ('GameMatch','GameParticipant','GameInvitation','GameAction',
         _cols.append(_col)
     _v3.append(f'CREATE TABLE IF NOT EXISTS "{_model_name}" ('+', '.join(_cols)+')')
 spec['database']['migrations'][1]['statements']=_v3
+# v4 only adds Life-owned lobby/challenge bindings. Never delete older Game* data.
+_v4=[]
+for _model_name in ('GameAtriumBinding','GameSocialChallengeBinding'):
+    _cols=[]
+    for _name,_field in spec['models'][_model_name]['fields'].items():
+        _type = {'integer':'INTEGER','string':f'VARCHAR({_field.get("maxLength",255)})','json':'JSON'}[_field['type']]
+        _col = f'"{_name}" {_type}'
+        if _field.get('primaryKey'): _col += ' PRIMARY KEY AUTOINCREMENT'
+        else:
+            if _field.get('required'): _col += ' NOT NULL'
+            if _field.get('unique'): _col += ' UNIQUE'
+        _cols.append(_col)
+    _v4.append(f'CREATE TABLE IF NOT EXISTS "{_model_name}" ('+', '.join(_cols)+')')
+spec['database']['migrations'][2]['statements']=_v4
 (root/'looprd.yaml').write_text('# Auto-embedded from server/looprd_handler.py using tools/generate-looprd.py\n'+yaml.safe_dump(spec,sort_keys=False,allow_unicode=True,width=110))

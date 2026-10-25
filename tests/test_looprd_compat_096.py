@@ -15,7 +15,7 @@ class Compatibility(unittest.TestCase):
         self.assertIn(('/play','POST'),handlers)
         self.assertNotIn(('/commit_turn','POST'),handlers)
         self.assertEqual(spec['auth']['mode'],'public')
-        self.assertEqual(spec['database']['schemaVersion'],3)
+        self.assertEqual(spec['database']['schemaVersion'],4)
         self.assertEqual(spec['api']['version'],'v1')
         for model in ('Room','GameMatch','GameParticipant','GameAction','GameCheckpoint','GameNotificationOutbox'):
             self.assertIn(model,spec['models'])

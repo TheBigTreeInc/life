@@ -8,10 +8,19 @@ ROOT = Path(__file__).resolve().parents[1]
 class TestLooprdSchema089(unittest.TestCase):
     def test_ordered_migration(self):
         data = yaml.safe_load((ROOT / 'looprd.yaml').read_text())
-        self.assertEqual(data['database']['schemaVersion'], 3)
-        self.assertEqual([m['version'] for m in data['database']['migrations']], [2, 3])
+        self.assertEqual(data['database']['schemaVersion'], 4)
+        self.assertEqual([m['version'] for m in data['database']['migrations']], [2, 3, 4])
         self.assertEqual(len(data['database']['migrations'][1]['statements']), 6)
         self.assertTrue(all(x.startswith('CREATE TABLE IF NOT EXISTS') for x in data['database']['migrations'][1]['statements']))
+
+    def test_v4_bindings_additive(self):
+        data=yaml.safe_load((ROOT/'looprd.yaml').read_text())
+        self.assertEqual(len(data['database']['migrations'][2]['statements']),2)
+        self.assertTrue(all(x.startswith('CREATE TABLE IF NOT EXISTS') for x in data['database']['migrations'][2]['statements']))
+        with sqlite3.connect(':memory:') as db:
+            for x in data['database']['migrations'][1]['statements']+data['database']['migrations'][2]['statements']:
+                db.execute(x)
+            self.assertIn('lobbyId',[x[1] for x in db.execute('PRAGMA table_info("GameAtriumBinding")')])
 
     def test_generated_integer_primary_keys_and_stable_ids(self):
         data = yaml.safe_load((ROOT / 'looprd.yaml').read_text())

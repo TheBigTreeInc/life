@@ -1,6 +1,6 @@
 {
   "schema": "ziprunner.post-update-tests.v1",
-  "version": "0.5.99",
+  "version": "0.5.100",
   "tests": [
     {
       "kind": "command",
@@ -44,6 +44,24 @@
       "definition_revision": "099",
       "rerun_policy": "every_update",
       "command": "node --test tests/embed-launch-099.test.cjs",
+      "attention_on_failure": true,
+      "gating": false
+    },
+    {
+      "kind": "command",
+      "semantic_id": "life-atrium-hostless-v100",
+      "definition_revision": "100",
+      "rerun_policy": "every_update",
+      "command": "python -m unittest discover -s tests -p test_atrium_hostless_100.py -v",
+      "attention_on_failure": true,
+      "gating": false
+    },
+    {
+      "kind": "command",
+      "semantic_id": "life-social-outbox-v100",
+      "definition_revision": "100",
+      "rerun_policy": "every_update",
+      "command": "python -m unittest discover -s tests -p test_turn_notifications_100.py -v",
       "attention_on_failure": true,
       "gating": false
     }

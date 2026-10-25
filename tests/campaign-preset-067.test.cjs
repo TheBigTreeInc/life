@@ -34,7 +34,7 @@ test('release 0.5.67 is unique and versioned; retained local tests may coexist',
  const pkg=JSON.parse(read('package.json'));
  const ledger=JSON.parse(read('docs/release-ledger.json')).releases;
  const entry=ledger.find(r=>r.version==='0.5.67');
- assert.ok(pkg.version>='0.5.67');
+ assert.ok(pkg.version.split('.').map(Number).reduce((n,x)=>n*1000+x,0)>=5067);
  assert.equal(entry.artifact,'the-life-loop-0.5.67-ziprunner.zip');
  assert.equal(entry.supersedes,'0.5.66');
  assert.equal(ledger.filter(r=>r.version==='0.5.67').length,1);

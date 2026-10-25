@@ -246,6 +246,13 @@
       "kind": "life-embedded-launch-readiness",
       "supersedes": "0.5.98",
       "notes": "Unprivileged validated ?match selector, browser-iframe smoke fixture and tests. Life remains standalone/offline. No live Tavix surface, verified match grant, persistent hostless authoritative multiplayer or Android/Windows device QA is claimed."
+    },
+    {
+      "version": "0.5.100",
+      "artifact": "the-life-loop-0.5.100-ziprunner.zip",
+      "kind": "life-atrium-hostless-authoritative-backend-contract",
+      "supersedes": "0.5.99",
+      "notes": "Source-level Life-owned schema-4 Atrium lobby/accepted Social challenge bindings, idempotent match creation, 2-seat authorization, server-run Node legal turns, revision CAS, deadline and durable Social notification outbox. Production Social/Atrium adapters, DAPI migrations and M2 live acceptance are separate operator gates."
     }
   ]
 }

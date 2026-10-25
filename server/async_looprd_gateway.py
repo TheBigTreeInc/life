@@ -45,8 +45,8 @@ async def handle(ctx):
     path = ctx.request.url.path
     # LoopRD's authenticated outer dispatch selected this handler. No user
     # input may choose a different backend path or component.
-    suffix = '/play/info' if method == 'GET' else '/play'
-    if not path.endswith(suffix) or method not in ('GET', 'POST'):
+    suffix = '/play/info' if method == 'GET' else ('/play/host' if path.endswith('/play/host') else '/play')
+    if suffix not in ('/play/info', '/play', '/play/host') or not path.endswith(suffix) or method not in ('GET', 'POST'):
         raise HTTPException(404, 'Unknown Life play operation')
     try:
         raw = b'' if method == 'GET' else await ctx.request.body()
@@ -56,7 +56,7 @@ async def handle(ctx):
             if ctx.request.headers.get('content-type', '').split(';', 1)[0] != 'application/json':
                 raise HTTPException(415, 'JSON required')
             envelope = json.loads(raw)
-            if not isinstance(envelope, dict) or envelope.get('schema') != SCHEMA:
+            if not isinstance(envelope, dict) or envelope.get('schema') != ('life.atrium-host/v1' if suffix == '/play/host' else SCHEMA):
                 raise HTTPException(422, 'Invalid Life envelope')
         origin, transport = _endpoint(ctx.secret(SECRET_ORIGIN))
         key = ctx.secret(SECRET_KEY)
@@ -84,7 +84,7 @@ async def handle(ctx):
         if len(response.content) > 1024 * 1024:
             raise HTTPException(502, 'Life backend response exceeds limit')
         result = response.json()
-        if not isinstance(result, dict) or result.get('schema' if method == 'POST' else 'protocol') != SCHEMA:
+        if not isinstance(result, dict) or result.get('schema' if method == 'POST' else 'protocol') != ('life.atrium-host/v1' if suffix == '/play/host' else SCHEMA):
             raise HTTPException(502, 'Invalid Life backend response')
         if response.status_code >= 400:
             # DAPI handler contracts return a fixed HTTP status. Use a native

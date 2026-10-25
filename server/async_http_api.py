@@ -18,7 +18,7 @@ from async_command_service import CommandRejected, EvaluatorUnavailable
 SCHEMA = 'looprd.game-play/v1'
 
 
-def create_app(lifecycle, play_api, *, game_id='life.loop', server_create=None):
+def create_app(lifecycle, play_api, *, game_id='life.loop', server_create=None, atrium_host=None):
     """Pure composition root. Call only with real trusted verifier-backed services."""
     if lifecycle is None or play_api is None:
         raise ValueError('Verified services required')
@@ -155,4 +155,66 @@ def create_app(lifecycle, play_api, *, game_id='life.loop', server_create=None):
         except (ValueError, TypeError, KeyError, __import__('json').JSONDecodeError):
             return failure('BAD_REQUEST', 'Invalid request fields', 422)
 
-    return Starlette(routes=[Route('/play/info', info, methods=['GET']), Route('/play', play, methods=['POST'])])
+    async def host(request):
+        # This is a separate machine-to-machine audience. Never accept a
+        # player's life-play credential for match/seat administration.
+        from async_atrium_host import HostRejected, HostDependencyUnavailable, HOST_SCHEMA
+        if atrium_host is None:
+            return failure('HOST_UNAVAILABLE', 'Reviewed Atrium integration not installed', 503)
+        try:
+            token = bearer(request)
+            atrium_host.authorize(token)
+            if request.headers.get('content-type','').split(';',1)[0] != 'application/json':
+                return failure('BAD_REQUEST', 'JSON content type required', 415)
+            raw = await request.body()
+            if len(raw) > 32768:
+                return failure('BAD_REQUEST','Request too large',413)
+            import json
+            body = json.loads(raw)
+            if not isinstance(body,dict) or body.get('schema') != HOST_SCHEMA:
+                raise ValueError('Invalid host schema')
+            op = body.get('op')
+            allowed = {
+                'create_match': ('lobbyId','deploymentId','creatorIssuer','creatorSubject','requestId','settings'),
+                'admit_seat': ('matchId','lobbyId','challengeId','recipientSubject'),
+                'verify_match': ('matchId','lobbyId'),
+                'verify_seat': ('matchId','lobbyId','subject','seat'),
+                'can_resume': ('matchId','lobbyId','subject'),
+            }
+            if op not in allowed:
+                return failure('UNKNOWN_OPERATION','Unsupported host operation',422)
+            params = {k:v for k,v in body.items() if k not in ('schema','op')}
+            if set(params) - set(allowed[op]):
+                raise ValueError('Unexpected host fields')
+            required = set(allowed[op])-({'settings'} if op=='create_match' else set())
+            if set(params) & required != required:
+                raise ValueError('Missing host fields')
+            fn = {'create_match':atrium_host.create,'admit_seat':atrium_host.admit,
+                  'verify_match':atrium_host.verify_match,'verify_seat':atrium_host.verify_seat,
+                  'can_resume':atrium_host.can_resume}[op]
+            args = {
+                'lobbyId':'lobby_id','deploymentId':'deployment_id','creatorIssuer':'creator_issuer',
+                'creatorSubject':'creator_subject','requestId':'request_id','settings':'settings',
+                'matchId':'match_id','challengeId':'challenge_id','recipientSubject':'recipient_subject',
+                'subject':'subject','seat':'seat'
+            }
+            from starlette.concurrency import run_in_threadpool
+            result = await run_in_threadpool(fn,**{args[k]:v for k,v in params.items()})
+            return JSONResponse({'ok':True,'schema':HOST_SCHEMA,'result':result})
+        except IdentityRejected:
+            return failure('UNAUTHENTICATED','Verified Atrium service credential required',401)
+        except MatchNotFound:
+            return failure('MATCH_NOT_FOUND','Life match/lobby unavailable',404)
+        except MatchConflict:
+            return failure('CONFLICT','Life match/seat conflict',409)
+        except HostDependencyUnavailable:
+            return failure('SOCIAL_UNAVAILABLE', 'Trusted Social challenge lookup unavailable', 503)
+        except HostRejected:
+            return failure('FORBIDDEN','Atrium request or Social admission rejected',403)
+        except (EvaluatorUnavailable, StateEngineUnavailable):
+            return failure('EVALUATOR_UNAVAILABLE','Life game engine unavailable',503)
+        except (ValueError,TypeError,KeyError,__import__('json').JSONDecodeError):
+            return failure('BAD_REQUEST','Invalid host request',422)
+
+    return Starlette(routes=[Route('/play/info', info, methods=['GET']),
+        Route('/play', play, methods=['POST']), Route('/play/host', host, methods=['POST'])])

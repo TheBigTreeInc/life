@@ -157,7 +157,7 @@ if(!load('docs/decisions/ADR-0009-offline-reusable-character-profiles.md').inclu
 if(!['LL-083','LL-084','LL-085'].every(id=>allImplemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-086'))errors.push('Character creator workboard tasks missing');
 if(!load('docs/decisions/ADR-0010-shared-multiplayer-cosmetics-ephemeral-chat-and-viewport.md').includes('**Status:** Accepted'))errors.push('Multiplayer cosmetics/chat architecture decision missing');
 if(!['LL-087','LL-088','LL-089','LL-090','LL-091'].every(id=>allImplemented.some(t=>t.id===id))||!manifest.remaining.some(t=>t.id==='LL-092'))errors.push('v0.5.7 workboard tasks missing');
-if(!(/schemaVersion: (?:2|3)/.test(load('looprd.yaml')))||!load('looprd.yaml').includes('chatKey:'))errors.push('Looprd v2 private chat key missing');
+if(!(/schemaVersion: (?:2|3|4)/.test(load('looprd.yaml')))||!load('looprd.yaml').includes('chatKey:'))errors.push('Looprd v2 private chat key missing');
 if(!load('server/looprd_handler.py').includes("if op == 'chat':")||!load('src/network.js').includes('async sendChat(')||!load('index.html').includes('id="chatPanel"'))errors.push('Ephemeral WSS chat implementation missing');
 if(!load('src/app.js').includes('quick-start-form')||!load('src/app.js').includes('characters.all().find(p=>p.id===f.get('))errors.push('Guest profile sharing or quick start missing');
 const artManifest=JSON.parse(load('assets/art/styles/contemporary-default/manifest.json'));
@@ -289,3 +289,5 @@ const regressionFiles=readdirSync(resolve(root,'tests')).filter(name=>name.endsW
 // Bound worker fan-out so full-source ZipRunner verification remains reliable on small hosts.
 execFileSync(process.execPath,['--test','--test-concurrency=4',...regressionFiles],{cwd:root,stdio:'inherit'});
 console.log('Verification succeeded.');
+
+if(atLeast('0.5.100') && (!load('looprd.yaml').includes('GameAtriumBinding:') || !load('looprd.yaml').includes('/play/host') || !load('server/async_atrium_host.py').includes('class AtriumHostContract') || !load('server/async_turn_notifications.py').includes('class TurnReadyDispatcher') || !load('docs/LIFE_ATRIUM_HOSTLESS_100.adoc').includes('admit_seat') || !manifest.remaining.some(t=>t.id==='LL-358') || !manifest.remaining.some(t=>t.id==='LL-359')))throw Error('v0.5.100 Life-hostless backend contract missing');

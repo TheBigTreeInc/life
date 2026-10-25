@@ -1,0 +1,125 @@
+= Life 0.5.100 — Atrium persistent lobby and hostless authoritative match contract
+:revdate: 2026-10-25
+:toc:
+
+== Ownership and evidence
+
+This Life-owned source implementation targets Atrium `docs/P1_086_SOCIAL_CHALLENGE_TO_LIFE_LOBBY.adoc` 0.5.42. Atrium owns the persistent lobby and verifies original Social challenge interactions; Social owns identity, friendship, messaging and challenges; *Life* owns private persistent match, two durable seats, seed/rules, legal actions, revision CAS and turn readiness. LoopRD provides the deployment runtime/transport. Tavi remains messaging-first. Life remains an independent GitHub Pages and offline game.
+
+*Source acceptance:* `tests/test_atrium_hostless_100.py` uses operator-shaped **mock** Social and Atrium verifiers and a durable SQLite file, Life's real Node evaluator, two independently authenticated principals, deliberate restart and negative authorization tests. `tests/test_turn_notifications_100.py` validates retry/lease/idempotent notification intents. No real Social challenge lookup, Live Atrium host API mounting, Tavi embedded browser or external notification provider was tested. Do not mark M2 or operator approval complete.
+
+== Endpoint routing
+
+* Public LoopRD component path (relative): `GET /play/info`, `POST /play`, `POST /play/host`. A LoopRD deployment prefixes these with its component route, resolved by trusted service discovery; never hardcode the server hostname into `looprd.yaml` or `atriumd.yaml`.
+* The LoopRD Python gateway forwards only a fixed suffix to a configured Life HTTPS backend or private Unix socket. It HMAC-signs method, path, timestamp and SHA256 of raw body using operator secret `life/play-gateway-key`. The backend refuses requests without this signature or with a timestamp outside 30 seconds. This is *transport authentication only*.
+* `POST /play/host` uses `Authorization: Bearer <server-service-grant>`, independently verified by `verify_atrium_credential`. Required verified claims: `iss=<configured-atrium issuer>`, `aud=life-atrium-host`, `sub=<nonempty service identity>`, `scope=life.match.manage`. The approved deployment ID is configured out of band. Never accept a browser token or caller-supplied `iss`, `scope` or `aud` as verified claims. Ensure service grants are short-lived, signed, revocable and never exposed to the frontend.
+* `POST /play` uses a *different* independently verified Social game grant (`iss=<configured Social issuer>`, `aud=life-play`, `sub=<verified Social subject>`). It cannot call the host endpoint. No arbitrary user ID, seat, username or snapshot is accepted from the player payload.
+* Every JSON envelope is limited to 32 KiB. Successful HTTP status is 200. The error envelope retains the outer `schema:looprd.game-play/v1` and includes `{ok:false,error:{code,message}}`; the gateway relays backend rejection status with JSON body in its HTTP exception `detail` (DAPI transport behavior must be checked on target runtime).
+
+== Host operation schemas (server to server only)
+
+Request body: `{"schema":"life.atrium-host/v1","op":"<operation>",...}`. Response: `{"ok":true,"schema":"life.atrium-host/v1","result":{...}}`. Required fields must be supplied exactly; `settings` is optional for creation. No plaintext Social credential or invitation token is carried in either payload.
+
+=== create_match
+
+[source,json]
+----
+{
+  "schema":"life.atrium-host/v1", "op":"create_match",
+  "lobbyId":"atrium-lobby-100", "deploymentId":"reviewed-life-001",
+  "creatorIssuer":"social-issuer", "creatorSubject":"acct_1",
+  "requestId":"stable-client-intent-001",
+  "settings":{"mode":"private-async", "deadlineHours":60, "ruleset":"classic"}
+}
+----
+
+The server credential attests Atrium's verified creator/lobby mapping (not user-supplied identity); Life additionally checks its Social issuer and approved deployment allowlist. It deterministically derives seed and matchId from the trusted request and server key, then inserts `GameMatch` (pending), first server-evaluated `GameCheckpoint`, creator seat 0 and the immutable `GameAtriumBinding` in a single database transaction. Retry with **identical** lobby/creator/request/settings returns the existing match with `alreadyCreated:true` and its *current* durable revision; duplicate request IDs, altered settings or rebinding a lobby conflict. Result contains `matchId`, `revision` (initially 0), `status`, `activeSeat`, `turnIndex`, `dueAtUtc`, `alreadyCreated`. Match IDs are opaque; never interpreted as permissions.
+
+The lifecycle becomes active only after the accepted Social recipient is admitted; a pending match cannot execute turns.
+
+=== admit_seat
+
+[source,json]
+----
+{"schema":"life.atrium-host/v1","op":"admit_seat",
+ "matchId":"<opaque-uuid>","lobbyId":"atrium-lobby-100",
+ "challengeId":123,"recipientSubject":"acct_2"}
+----
+
+Only Atrium's authenticated server calls this after its own approval. Life independently calls `lookup_accepted_social_challenge(challengeId)` in a privileged operator-provisioned Social adapter. The result must be a verified record with `{id:123,issuer:<configured Social issuer>,sender:"acct_1",recipient:"acct_2",gameId:"life",status:"accepted",friendsConfirmed:true}`. **The original numeric challenge ID is NOT an invitation or browser grant.** Social's catalog `life` is intentionally distinct from Atrium's reviewed `life.loop` mapping.
+
+Life checks immutable lobby↔match mapping, original creator, verified recipient and accepted current-friend relationship. It stores a unique issuer/challenge reference in `GameSocialChallengeBinding` plus seat 1, promotes the match from pending to active, checkpoints revision 1, sets a 60-hour due time and inserts one creator `turn_ready` outbox intent, all in one transaction. Idempotent replay returns `alreadyJoined:true`; another friend, challenge or match conflicts. Result includes `matchId`, `revision`, `status`, `activeSeat`, `turnIndex`, `dueAtUtc`, `seat:1`, `alreadyJoined`.
+
+=== verify_match, verify_seat, can_resume
+
+[source,json]
+----
+{"schema":"life.atrium-host/v1","op":"verify_match", "matchId":"<uuid>","lobbyId":"atrium-lobby-100"}
+{"schema":"life.atrium-host/v1","op":"verify_seat", "matchId":"<uuid>","lobbyId":"atrium-lobby-100","subject":"acct_2","seat":1}
+{"schema":"life.atrium-host/v1","op":"can_resume", "matchId":"<uuid>","lobbyId":"atrium-lobby-100","subject":"acct_2"}
+----
+
+`verify_match` result: `{matchId,revision,status,activeSeat,turnIndex,dueAtUtc,verified:true}`. `verify_seat` adds `seat` after checking Life's participant table with the configured Social issuer. `can_resume` returns `{matchId,seat,canResume:true,revision}` only for an *active* match and a currently enrolled Social subject; it never accepts Atrium's claim of a seat without checking Life. These are privileged lobby adapters; a browser must instead authenticate through Life's player API.
+
+== Player and authorized agent operations (`POST /play`)
+
+JSON envelope: `{"schema":"looprd.game-play/v1","op":"...",...}`. Existing operations:
+
+[cols="2,3,4",options="header"]
+|===
+|op |Required fields |Result
+|`get` / `resume` |`matchId` |`{matchId,revision,status,turnIndex,activeSeat,yourSeat,dueAtUtc,engineRevision,state}` from Life stored checkpoint
+|`legal_actions` |`matchId` |`{matchId,revision,actions:[...]}` from Life's trusted Node rules engine; empty if not actor's turn
+|`act` |`matchId`, `expectedRevision`, `idempotencyKey`, `action` |`{matchId,revision,resultDigest,replayed}`; Life recomputes legal outcome and CAS persists it
+|`end_turn` |`matchId`, `expectedRevision`, `idempotencyKey` |Same revision/idempotency contract; Life advances active seat and writes notification intent
+|`list_matches` |None |`{matches:[...]}` limited to verified participant's matches (max 100)
+|===
+
+`action` must be a Life command of type `travel` / `action` / `end_turn` with engine-supported parameters. It is **not** a client-provided game snapshot. `expectedRevision` is a nonnegative integer. `idempotencyKey` is a caller-generated stable string unique per logical action; on exact replay, Life returns the original revision without re-running the action. Wrong seat, pending match, stale revisions and illegal actions are denied. OpenClaw must be issued its own verified `life-play` principal, assigned a seat, then call `get → legal_actions → act / end_turn`; browser automation is unnecessary.
+
+== HTTP errors
+
+[cols="2,1,4",options="header"]
+|===
+|Code |Status |Meaning
+|`UNAUTHENTICATED` |401 |Invalid, absent, wrong-audience or wrongly-scoped game/service grant
+|`GATEWAY_UNAUTHORIZED` |403 |No valid LoopRD-to-Life transport HMAC; returned by headless gateway guard
+|`FORBIDDEN` |403 |Unapproved deployment, Social challenge not accepted, wrong recipient, seat or current friend proof
+|`MATCH_NOT_FOUND` |404 |Missing or mismatched Life↔Atrium match/lobby association
+|`NOT_A_PARTICIPANT` |404 |Player cannot discover another user's private match
+|`CONFLICT` / `REVISION_CONFLICT` |409 |Idempotency reuse, occupied seat, stale match revision, conflicting challenge/match
+|`ACTION_REJECTED` |409 |Illegal action, inactive match or non-active actor
+|`BAD_REQUEST` |413/415/422 |Size, content-type, JSON body or unknown fields
+|`UNKNOWN_OPERATION` |422 |Unsupported host/player operation
+|`HOST_UNAVAILABLE` / `EVALUATOR_UNAVAILABLE` |503 |Host provider disabled or headless game evaluator unavailable
+|`SOCIAL_UNAVAILABLE` |503 |Trusted server-to-server Social challenge lookup failed; preserve pending lobby and retry same intent
+|===
+
+No automatic replay of a different request ID is permitted. Record a pending lobby on transient Life failure and retry the same intent after recovery, as P1-086 requires.
+
+== Durable notification outbox and 60-hour turns
+
+`GameNotificationOutbox` inserts `eventType:turn_ready` atomically with each `end_turn` and with first seat admission. It records `eventId`, recipient issuer/subject, match ID and turn index; no bearer/token/state is stored. `TurnReadyDispatcher` sends a public provider payload:
+
+[source,json]
+----
+{"schema":"life.turn-ready/v1", "eventId":"<match-id>:turn:1:revision:2",
+ "gameId":"life.loop", "matchId":"<opaque-match-id>", "turnIndex":1,
+ "recipient":{"issuer":"social-issuer","subject":"acct_2"}}
+----
+
+Operator must supply `send_turn_ready(event) -> literal True` on a private module; acknowledgement MUST mean durable receipt by Social. Retries are at-least-once with fixed `eventId`; **Social must deduplicate** on `eventId` for exactly-once user-visible notification. Run `python server/run_turn_dispatch.py` on a LoopRD/server-side scheduler, e.g. every minute; do not rely on a player process. Retryable lease claims recover from process crashes and capped exponential backoff handles provider outages. 60-hour `dueAtUtc` is a persisted deadline; *automatic expiry/forfeit remains separately gated* until a reviewed deterministic timeout policy is approved. Client closure does not alter the match or outbox.
+
+== Database migration and operations
+
+Generated `looprd.yaml` schema 4 adds **only** `GameAtriumBinding` and `GameSocialChallengeBinding`, keeping preexisting schema-3 Room and Game* content untouched. Migration 4 uses idempotent `CREATE TABLE IF NOT EXISTS`; back up real data and validate DAPI supports this schema before applying. The private Life headless server and its scheduled dispatcher MUST use the same persistent Life match database (SQLite on reliable single-writer volume or reviewed PostgreSQL). If LoopRD has its own registry database, it must not be mistaken for the Life authoritative match DB. Do not use in-memory persistence or expose the database to browser clients.
+
+Provision in the private `LIFE_SOCIAL_VERIFIER_MODULE`: `verify_game_credential(token)` (Life player), `verify_atrium_credential(token)` (Life-audience Atrium service), and `lookup_accepted_social_challenge(id)` (server-side original Social verification). Only reviewed implementations with signature, expiry, issuer, audience, nonce and scope checks are allowed; the examples in tests are not deployable. Environment: `LIFE_SOCIAL_ISSUER`, `LIFE_ATRIUM_ISSUER`, `LIFE_APPROVED_DEPLOYMENT_ID`, `LIFE_PLAY_DATABASE_URL`, `LIFE_PLAY_GATEWAY_KEY`, `LIFE_PLAY_UNIX_SOCKET`. The LoopRD gateway uses `life/play-backend` and `life/play-gateway-key` secrets. For notifications: `LIFE_SOCIAL_NOTIFY_MODULE` exposing `send_turn_ready` and the same `LIFE_PLAY_DATABASE_URL`.
+
+A service deployment needs `node` available locally, the matching Life JS source, the private Life process, the LoopRD proxy, trusted verifier and sender plugins, durable backing volume and scheduled dispatcher. Life's existing GitHub Pages static site is separate and unchanged. The original client-trusted `/cloud` pilot is NOT M2 authoritative `POST /play`. Its v4 handler now refuses reads and commits for any match in `GameAtriumBinding` (`409`) and fails closed when the v4 authority gate is unavailable (`503`); it may serve legacy, non-Atrium cloud matches only. The same database cannot allow an untrusted client snapshot to overwrite a server-owned checkpoint.
+
+== Acceptance and rollback
+
+* M2 live gates: activate the reviewed Tavi/Social grant and challenge lookup, approved Atrium 0.5.42 host bindings, DAPI schema-4 migration, trusted private Life runtime and outbox sender; create and accept with two actual accounts, restart Life/LoopRD/Tavi independently, take authorized turns with one player offline for many hours, ensure one UI notification per `eventId`, prove OpenClaw with own account. Verify source SHA and database backup.
+* Negative gates: unverified challenge, wrong recipient, reused challenge, mismatched lobby, expired service grant, wrong token audience, third player, stale revision, duplicate actions, failed evaluator, interrupted notification dispatch.
+* Rollback: stop `/play/host` and dispatcher; retain match rows, bindings, checkpoints and outbox for replay/recovery. Never drop user game state. `atrium` trust mapping and Tavi extensions are separate operator gates; no changes to Atrium or Tavi are in this release.

@@ -1,6 +1,6 @@
-### v0.5.99 — M1 Life iframe and URL selector source candidate (LL-357)
+### v0.5.100 — M1 Life iframe and URL selector source candidate (LL-357)
 
-Complete source ZIP: `the-life-loop-0.5.99-ziprunner.zip`. Five isolated selector and fixture checks plus full game regressions; no claimed Tavi/Android/Windows acceptance and no fabricated M2 service. LL-354/355 and registration LL-356 remain operator pending. The v0.5.98 source implement record remains in the archive; local operator workboard statuses remain authoritative.
+Complete source ZIP: `the-life-loop-0.5.100-ziprunner.zip`. Five isolated selector and fixture checks plus full game regressions; no claimed Tavi/Android/Windows acceptance and no fabricated M2 service. LL-354/355 and registration LL-356 remain operator pending. The v0.5.98 source implement record remains in the archive; local operator workboard statuses remain authoritative.
 
 ### v0.5.98 — Atrium registration workflow candidate (LL-356, operator review)
 
@@ -839,3 +839,9 @@ The full-source `the-life-loop-0.5.97-ziprunner.zip` carries mounted descriptor 
 ## v0.5.97 — Life atomic offline turn migration
 
 LL-351 source foundation implemented/tested, operator QA pending. LL-352 on-demand LoopRD JS worker and LL-353 browser/agent submission remain open. LL-072, LL-263, LL-092, LL-082 and LL-347 retain their earlier acceptance criteria and operator decisions. See `docs/LIFE_SEEDED_TURN_LOOPRD_MIGRATION_096.adoc`.
+
+### v0.5.100 source acceptance (not operator approval)
+
+- LL-358 Life-owned Atrium hostless match backend — source/tests added, awaiting review.
+- LL-359 production Social grant/challenge verification, DAPI schema-4 migration, notification scheduler and two-client M2 acceptance — blocked until operator integration.
+- LL-354, LL-355, LL-356, LL-357 retain existing review/acceptance gates.

@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.99",
-  "summary": "v0.5.99: Life M1 embed-readiness source, strict unauthenticated match selector, local sandboxed iframe smoke fixture and tests. Does not assert Tavi embed or M2 hostless gameplay; production Life authority and Social grant remain operator/dependency gates.",
+  "version": "0.5.100",
+  "summary": "v0.5.100: Life server-side source for Atrium P1-086: durable reviewed lobby-to-match binding, idempotent creator match, independent Social challenge seat admission, real Life headless legal turns, server-owned revisions and retryable notification intents. Production verifiers, DAPI and Tavi acceptance remain gated.",
   "implemented": [
     {
       "id": "LL-181",
@@ -121,7 +121,7 @@
       "title": "Rival layoff recovery and essentials protection",
       "summary": "Fix unemployed travel loop; apply for a qualified role before leaving ACNE; add one-food-unit conservative buffer during downturn.",
       "operator_checks": [
-        "Advance a crisis scenario and check Jones applies at Employment Office before heading back to Black’s Market."
+        "Advance a crisis scenario and check Jones applies at Employment Office before heading back to Black\u2019s Market."
       ]
     },
     {
@@ -183,7 +183,7 @@
     {
       "id": "LL-206",
       "title": "Original waypoint tick estimator",
-      "summary": "Implement source-derived steps + 2×20 tick estimate per traveled leg independently of the provisional playable action-clock time conversion.",
+      "summary": "Implement source-derived steps + 2\u00d720 tick estimate per traveled leg independently of the provisional playable action-clock time conversion.",
       "operator_checks": [
         "Hover venues to compare actual spending units and the independent original source-estimate ticks."
       ]
@@ -367,7 +367,7 @@
     {
       "id": "LL-229",
       "title": "DOS weekly computer bonus state 4",
-      "summary": "Replace approximate Classic computer bank bonus with 1/7 draw and 20–100 cash as supported by startTrn.sc, with sourceState=4 diagnostics; retain Modern behavior.",
+      "summary": "Replace approximate Classic computer bank bonus with 1/7 draw and 20\u2013100 cash as supported by startTrn.sc, with sourceState=4 diagnostics; retain Modern behavior.",
       "operator_checks": [
         "Use deterministic rolls to verify no-computer, win/loss, minimum and maximum awards; check Classic/Modern isolation."
       ]
@@ -471,7 +471,7 @@
     {
       "id": "LL-242",
       "title": "Separate source-linked Classic relaxation",
-      "summary": "Introduce validated 10–30 relaxation independent from energy/happiness; recover source state 6 weekly −1 to floor 10 with an explicitly provisional rest adapter.",
+      "summary": "Introduce validated 10\u201330 relaxation independent from energy/happiness; recover source state 6 weekly \u22121 to floor 10 with an explicitly provisional rest adapter.",
       "operator_checks": [
         "Run node tools/verify.mjs; inspect Classic game in desktop and mobile browsers, reduced-motion and ordinary-motion journeys."
       ]
@@ -753,7 +753,7 @@
       "title": "Separate road preview from storefront art",
       "summary": "Draw a subtle, rounded hover path on public streets with an independent door target marker and short threshold; do not draw the travel highlight through storefront illustrations.",
       "operator_checks": [
-        "Hover Bank, Black’s Market, Z-Mart, Socket City and Factory; preview points must remain outside shop bounds."
+        "Hover Bank, Black\u2019s Market, Z-Mart, Socket City and Factory; preview points must remain outside shop bounds."
       ]
     },
     {
@@ -796,7 +796,7 @@
       "summary": "Draw permanent paved footpaths to all 13 commissioned art entrances and highlight the full walk; animate the pawn continuously from one door via public streets to the next.",
       "priority": "medium",
       "operator_checks": [
-        "Hover Bank and Black’s Market; verify both street and door segments appear; complete and skip a pawn journey; inspect no invisible teleport."
+        "Hover Bank and Black\u2019s Market; verify both street and door segments appear; complete and skip a pawn journey; inspect no invisible teleport."
       ]
     },
     {
@@ -811,7 +811,7 @@
     {
       "id": "LL-284",
       "title": "DOS Employment end-of-week time cap",
-      "summary": "Allow Classic job applications and raises with 1–3 remaining, cap actual charged units at zero remaining, preserve qualification and Modern restrictions.",
+      "summary": "Allow Classic job applications and raises with 1\u20133 remaining, cap actual charged units at zero remaining, preserve qualification and Modern restrictions.",
       "priority": "high",
       "operator_checks": [
         "Run node --test tests/classic-dos-time-parity.test.cjs and node tools/dos-time-audit.mjs; verify full build and legacy saves."
@@ -1046,7 +1046,7 @@
     },
     {
       "id": "LL-319",
-      "title": "Original Black’s Market price tests and DOS economy RNG comparators",
+      "title": "Original Black\u2019s Market price tests and DOS economy RNG comparators",
       "summary": "Regression for 1/2/4 week food bundle source prices, original DOS index drift math and event RNG gates; comparator is not connected to live compatibility economy.",
       "operator_checks": [
         "Run npm run test:retail-pawn and verify seven goods-index readings.",
@@ -1188,7 +1188,7 @@
       "title": "Visible running version and About panel",
       "summary": "Expose loaded bundle version and copyable diagnostics in game menu, including on phones. Retain stable top End Week and Work/Done controls.",
       "operator_checks": [
-        "Open Menu → About on a phone and desktop; confirm v0.5.75, copy diagnostics, close and resume turn."
+        "Open Menu \u2192 About on a phone and desktop; confirm v0.5.75, copy diagnostics, close and resume turn."
       ]
     },
     {
@@ -1371,7 +1371,7 @@
     {
       "id": "LL-134",
       "title": "Original detailed economy, merchandise, events and security parity",
-      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black’s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
+      "summary": "Apply the Wiki Economy, Dependibility and Quick Reference findings: weekly price changes, crash/boom effects and unemployment; split Z-Mart/Black\u2019s Market/Socket City supply and durability; implement bank/grocery robberies, true house security, exact hardship rescue and weekend events. Exact DOS formulas still require executable observations.",
       "priority": "high",
       "operator_checks": [
         "Record DOS reference walkthrough for robberies, item breakage, price changes and real estate moves."
@@ -1380,10 +1380,10 @@
     {
       "id": "LL-147",
       "title": "Full original DOS store-location and retail risk parity",
-      "summary": "Revisit the 13 shared board constraint versus original separate Z-Mart/Black’s Market physical buildings. Verify exact original weekly inventory, discount price, equipment breakdown rates, tickets, economy fluctuations and residence theft with captured DOS sessions. Current rotating shelves and outcomes are explicit approximations.",
+      "summary": "Revisit the 13 shared board constraint versus original separate Z-Mart/Black\u2019s Market physical buildings. Verify exact original weekly inventory, discount price, equipment breakdown rates, tickets, economy fluctuations and residence theft with captured DOS sessions. Current rotating shelves and outcomes are explicit approximations.",
       "priority": "high",
       "operator_checks": [
-        "Record week-by-week DOS inventory at Z-Mart and Black’s Market and durability/breakage events; compare with Life Loop."
+        "Record week-by-week DOS inventory at Z-Mart and Black\u2019s Market and durability/breakage events; compare with Life Loop."
       ]
     },
     {
@@ -1610,6 +1610,30 @@
         "Reject duplicate/malformed match selector and never treat match ID as authorization.",
         "Verify live Pages CSP/framing and WebView storage policies with two viewports."
       ]
+    },
+    {
+      "id": "LL-359",
+      "title": "Production hostless Life /play integration and notification acceptance",
+      "summary": "Operator to activate independently verified Atrium service grants and Social challenge lookup, Life private headless service and DAPI v4, schedule notification worker, test two Tavi clients/AI agent offline, 60-hour deadline policy and rollback. Do not claim M2 until complete.",
+      "priority": "critical",
+      "operator_checks": [
+        "Check issuer/audience/scope/expiry/nonce/signature against actual Atrium and Social runtime.",
+        "Observe real Tavi accept-challenge -> Life seat 1 binding, browser offline and host disconnected.",
+        "Verify retry dedupe of turn.ready, restart of all services and OpenClaw API-only gameplay.",
+        "Review deadline timeout/forfeit policy and staged database migration before operator approval."
+      ]
+    },
+    {
+      "id": "LL-358",
+      "title": "Life-owned Atrium hostless match backend source",
+      "summary": "Additive schema-4 Life/Atrium bindings and original Social challenge binding, restricted server-to-server /play/host route, idempotent creation/admission, real Life Node rules engine, CAS revisions, restart-safe seats and a scheduled Social turn-ready outbox dispatcher. Source candidate only; operator proof and live DAPI approval pending.",
+      "operator_checks": [
+        "Run python -m unittest discover -s tests -p test_atrium_hostless_100.py -v and test_turn_notifications_100.py -v.",
+        "Back up DB; verify additive schema-4 migration and tested v4 handlers on live LoopRD staging.",
+        "Prove actual Atrium P1-086 signed service grant, Social challenge lookup, approved deployment binding, two live accounts and restart/resume.",
+        "Test Social deduped turn notifications and OpenClaw as its own verified seat; keep browser offline Life independent."
+      ],
+      "priority": "critical"
     }
   ]
 }
