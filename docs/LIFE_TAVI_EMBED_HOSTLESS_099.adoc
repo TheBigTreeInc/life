@@ -1,0 +1,40 @@
+= Life v0.5.99 — Tavi embedded surface readiness and mandatory hostless acceptance
+:revdate: 2026-10-25
+:toc:
+
+== Release scope and evidence
+
+This is a *Life-only bounded M1 source pass*. It does not deploy a TaviX host broker, install an Atrium extension, approve a game launch origin, create a game grant, or implement live authoritative multiplayer. It does not change original DOS gameplay, Classic/Modern rules, player saves, the standalone one-file offline `PLAY.html`, or the portable `looprd.yaml` and `atriumd.yaml` contracts.
+
+* New `src/embed-launch.js` is in `index.html`, the offline `PLAY.html` compiler, and the Pages compiler. It accepts an optional unique `?match=<opaque-id>` using the existing Life match-ID character contract `[A-Za-z0-9][A-Za-z0-9_-]{0,127}`. It rejects duplicate or malformed selector values and exports a *read-only passive context*. It neither fetches private state nor creates/assumes authentication. Solo games do not need `match`.
+* `window.LifeLaunchContext` is a data-only hook for Life's later approved identity/seat flow. It does not send messages to the parent frame, inherit tokens or navigate the top frame.
+* `tests/fixtures/life-embed-smoke.html` is a local test-host, not Tavi. It embeds the actual modular game in a restrictive sandbox and provides its own Return control. Serve project root through localhost (`python -m http.server 8080`), open `http://localhost:8080/tests/fixtures/life-embed-smoke.html` and confirm game render and basic solo navigation. The test fixture is deliberately NOT a fake auth service or an Atrium-reviewed catalog.
+* Run `node --test tests/embed-launch-099.test.cjs`, `node tools/verify.mjs` and the Python LoopRD tests. Validate generated `PLAY.html` and Pages `dist/index.html` against the same source. This local smoke does *not* establish Windows WebView2, Android WebView, production CSP/frame policy or cross-origin storage persistence.
+
+== M1 live acceptance boundary
+
+The reviewed `atriumd.yaml` stays `game.id=life.loop`, `launch.originRef=game-web` and `entrypoint=index.html`; no deployment URL is compiled into the portable descriptors. Atrium's published and reviewed game target must be resolved from trusted runtime deployment configuration, not the user's input. Tavi must implement and feature-advertise `tavix.surface/v1`, including the host-owned nested Back/Home stack. Launch from Tavi > Atrium > Life must remain inside the Tavi workspace. Closing the game surface only unmounts UI, not a match.
+
+GitHub Pages or its proxy must actually permit the chosen cross-origin embed. `frame-ancestors` works in HTTP Content-Security-Policy response headers, not a `<meta http-equiv>` equivalent. A real device acceptance must verify HTTPS, frame/cookie/storage behavior and explicit user-facing external fallback if embedding is not available; do not assert a Pages setting that has not been observed. Inspect Windows 355x630 compact, expanded game workspace, Android 320/390 and web. Ensure the host's Home and native Back are always accessible, leaving Life for Atrium then Tavi Home without losing conversations/drafts.
+
+The only optional launch context is the bare opaque match ID, which must never be treated as proof. No Social bearer, game token, access proof, invite secret or personal data is permitted in query strings, fragments, extension surfaces, iframe messages or client logs.
+
+== M2 mandatory hostless match authority — NOT IMPLEMENTED BY THIS PASS
+
+Atrium owns persistent `lobbyId`, membership, invites, matchmaking and launch/resume mapping, never the Life game's authoritative state. Life owns matchId, verified seats, deterministic rules and RNG, checkpoints, deadlines, revision CAS and legal actions on a persistent server authority. LoopRD supplies runtime, persistence, scheduled processing, durable events and scoped identity. Tavi is a client and must never become the host or lifecycle owner.
+
+Required server contract, pending agreement with Social/LoopRD and Atrium:
+
+* `/play/info` advertises exact stable `create`, `invite`, `join`, `list_matches`, `resume`, `legal_actions`, `act`, `end_turn` capabilities rather than assuming that a previous isolated source module is mounted publicly. Every privileged request must verify a short-lived issuer/audience `life.loop` principal, match seat, expiry and revocation; Atrium lobby membership by itself cannot grant a Life seat.
+* `create`, seat assignment and joined lobby mapping must be idempotent and restart-reconcilable. Do not surface a lobby as playable until the Life match is committed. Disconnected creator must never be required to keep a browser, Tavi or a computer online.
+* Server-valid legal transitions must be replayed/checked by trusted Life authority before committing seed/RNG state, revision and snapshot. Do not trust arbitrary whole-game snapshots submitted by a client. Concurrent stale writes fail revision CAS; idempotency prevents duplicate turns or alerts.
+* Life commits a revised checkpoint before queuing a recipient-specific durable `turn.ready` event. Approved Social service consumes the persistent outbox with retries, consent checks and deduplication; wake is not the only record. No claimed closed-app Android push without deployed UnifiedPush support/device evidence.
+* Agents such as OpenClaw use an authorized `legal_actions` and `act` transport directly, not UI automation. Illegal moves leave state unchanged.
+
+Required joint live integration: two real users create/invite/join; shutdown A's client and Tavi while B inspects and plays the legal turn; resume A after ~60 hours; restart Life and Atrium separately; test duplicate/replayed/wrong-seat/expired/revoked credentials, CAS retry, seed determinism, durable notification recipient, and headless agent. None of these are claimed as passed merely because v0.5.99 local tests pass.
+
+== Operator and rollback
+
+* No automatic push, release, TaviX staging, migration or operator-verified Done status.
+* Build `the-life-loop-0.5.99-ziprunner.zip` through `python tools/package-ziprunner.py` from the exact verified source. Preserve v0.5.98 as recovery version.
+* If the new passive launch context causes a browser regression, revert the v0.5.99 artifact to the last operator-approved version; no DB rollback is needed because no schema or state changed.

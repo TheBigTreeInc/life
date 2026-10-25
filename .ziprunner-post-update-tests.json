@@ -1,6 +1,6 @@
 {
   "schema": "ziprunner.post-update-tests.v1",
-  "version": "0.5.98",
+  "version": "0.5.99",
   "tests": [
     {
       "kind": "command",
@@ -35,6 +35,15 @@
       "definition_revision": "098",
       "rerun_policy": "every_update",
       "command": "node --test tests/atrium-registration-workflow.test.cjs",
+      "attention_on_failure": true,
+      "gating": false
+    },
+    {
+      "kind": "command",
+      "semantic_id": "life-embedded-launch-contract",
+      "definition_revision": "099",
+      "rerun_policy": "every_update",
+      "command": "node --test tests/embed-launch-099.test.cjs",
       "attention_on_failure": true,
       "gating": false
     }

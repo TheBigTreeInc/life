@@ -239,6 +239,13 @@
       "kind": "atrium-registration-workflow",
       "supersedes": "0.5.97",
       "notes": "Pinned Atrium register-game composite action after successful Life GitHub Pages deploy to main, manual retry support, scoped registration token requirement, immutable deployed-SHA checkout and tests. No gameplay/rules or LoopRD handler changes. External Atrium trust/release approval remains pending."
+    },
+    {
+      "version": "0.5.99",
+      "artifact": "the-life-loop-0.5.99-ziprunner.zip",
+      "kind": "life-embedded-launch-readiness",
+      "supersedes": "0.5.98",
+      "notes": "Unprivileged validated ?match selector, browser-iframe smoke fixture and tests. Life remains standalone/offline. No live Tavix surface, verified match grant, persistent hostless authoritative multiplayer or Android/Windows device QA is claimed."
     }
   ]
 }

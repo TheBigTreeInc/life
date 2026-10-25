@@ -1,8 +1,8 @@
 {
   "schema": "ziprunner.workboard-update.v1",
   "project": "the-life-loop",
-  "version": "0.5.98",
-  "summary": "0.5.98: full game source and automatic GitHub Pages-to-Atrium registration workflow, pinned to reviewed Atrium action, with manual retry, no game/API changes. Requires operator-only token and trusted-source policy for live registration; LL-354/355 still open.",
+  "version": "0.5.99",
+  "summary": "v0.5.99: Life M1 embed-readiness source, strict unauthenticated match selector, local sandboxed iframe smoke fixture and tests. Does not assert Tavi embed or M2 hostless gameplay; production Life authority and Social grant remain operator/dependency gates.",
   "implemented": [
     {
       "id": "LL-181",
@@ -1597,6 +1597,18 @@
         "Confirm Atrium-only Actions:write token is installed as Life secret ATRIUM_REGISTRATION_TOKEN; no Life or Atrium Contents:write secret in game.",
         "Approve Atrium trusted-sources record for verified GitHub Pages origin and LoopRD endpoint; verify receive-game workflow independently checks matching deployed SHA and updates hosted-games.json.",
         "Manually retry after setup and check duplicate dispatch is idempotent; confirm Tavi/Atrium launch remains subject to its independent runtime acceptance."
+      ]
+    },
+    {
+      "id": "LL-357",
+      "title": "Life embedded hosted-web M1 source and operator acceptance",
+      "summary": "Source candidate implements strict, unprivileged match selector and local iframe fixture; approval pending real Tavi host nested surface, Android/Windows device tests, Pages CSP/storage and safe host Back/Home. No M2 multiplayer acceptance.",
+      "priority": "high",
+      "operator_checks": [
+        "Run node --test tests/embed-launch-099.test.cjs and node tools/verify.mjs.",
+        "Verify reviewed Life opens in Tavi without Chrome on Windows Android and web, can return to messenger without state loss.",
+        "Reject duplicate/malformed match selector and never treat match ID as authorization.",
+        "Verify live Pages CSP/framing and WebView storage policies with two viewports."
       ]
     }
   ]

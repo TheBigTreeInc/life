@@ -1,3 +1,7 @@
+## v0.5.99 — Life host-independent embedded launch readiness
+
+Artifact: `the-life-loop-0.5.99-ziprunner.zip` — complete ZipRunner source with standalone `PLAY.html`, GitHub Pages and retained LoopRD API. This pass adds a passive read-only `?match=<opaque-id>` selector and independent iframe smoke fixture (`tests/fixtures/life-embed-smoke.html`). It **does not authenticate** a Life player, resume a match, or assert M1/M2 deployed status. Actual Tavi host `tavix.surface/v1`, Atrium reviewed publication and Life/Social authoritative services remain independent acceptance gates. See `docs/LIFE_TAVI_EMBED_HOSTLESS_099.adoc`.
+
 ## v0.5.98 — Automatic Life-to-Atrium game registration
 
 Artifact: `the-life-loop-0.5.98-ziprunner.zip` — full ZipRunner project source, including the offline playable game and existing LoopRD integration. This pass adds `.github/workflows/atrium-register.yml` to run after the successful **Deploy The Life Loop to GitHub Pages** workflow on `main` (or via manual main-branch dispatch). It checks out the *deployed* commit and uses the Atrium composite `register-game` action pinned to reviewed SHA `76c667c4a362e9fe12682b48749ba2382e5a66e4`. Source validation is independent of catalogue approval; Atrium re-fetches the source and verifies that GitHub Pages deployed the submitted SHA.

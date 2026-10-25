@@ -1,7 +1,7 @@
 {
   "schema": "ziprunner.verification-plan/v1",
   "project": "the-life-loop",
-  "version": "0.5.98",
+  "version": "0.5.99",
   "tasks": [
     {
       "id": "LL-354",
@@ -65,6 +65,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "LL-357",
+      "criteria": [
+        {
+          "id": "LL-357-AC1",
+          "description": "Non-authenticating launch selector, offline and host-independent iframe smoke",
+          "mode": "automated",
+          "checks": [
+            "LIFE099-EMBED-LOCAL"
+          ]
+        },
+        {
+          "id": "LL-357-AC2",
+          "description": "Actual approved Windows Android web Tavi surface and standalone deployed source QA",
+          "mode": "manual",
+          "checks": [
+            "LIFE099-EMBED-LIVE"
+          ]
+        }
+      ]
     }
   ],
   "checks": [
@@ -119,6 +140,19 @@
       "stage": "acceptance",
       "description": "Verify exact Pages SHA and trusted Atrium receiver with narrowly scoped token",
       "instructions": "Operator installs restricted token/approved trust entry; test success, failure, manual retry, duplicate and catalog presence; no gameplay changes."
+    },
+    {
+      "id": "LIFE099-EMBED-LOCAL",
+      "kind": "automated",
+      "stage": "functional",
+      "command": "node --test tests/embed-launch-099.test.cjs",
+      "expected": "Pass selector and iframe-fixture source tests"
+    },
+    {
+      "id": "LIFE099-EMBED-LIVE",
+      "kind": "manual",
+      "stage": "operator",
+      "expected": "Physical and hosted Windows/Android/web tests, CSP/WebView and safe Tavi Home"
     }
   ]
 }

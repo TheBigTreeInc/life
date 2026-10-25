@@ -86,6 +86,7 @@ files += ['server/cloud_save_looprd.py','src/cloud-save-outbox.js',
           'docs/evidence/life097-cloud-python.log','docs/evidence/life097-cloud-node.log',
           'docs/evidence/life097-python-tests.log','docs/evidence/life097-js-verifier.log']
 files += ['.github/workflows/atrium-register.yml','tests/atrium-registration-workflow.test.cjs','docs/LIFE_ATRIUM_AUTOREGISTRATION_098.adoc','docs/evidence/life098-atrium-registration-tests.log','docs/evidence/life098-js-verifier.log','docs/evidence/life098-python-tests.log']
+files += ['src/embed-launch.js','tests/embed-launch-099.test.cjs','tests/fixtures/life-embed-smoke.html','docs/LIFE_TAVI_EMBED_HOSTLESS_099.adoc']
 # Keep the complete archive free of duplicate paths despite historic test inclusion.
 files = list(dict.fromkeys(files))
 with ZipFile(output,'w',compression=ZIP_DEFLATED,compresslevel=6) as z:

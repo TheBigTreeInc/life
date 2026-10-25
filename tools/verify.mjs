@@ -277,6 +277,7 @@ if(atLeast('0.5.64')&&(!load('src/classic-consumables-064.js').includes('classic
    !load('docs/decisions/ADR-0064-dos-opening-stats-and-consumable-identity.md').includes('**Status:** Accepted')||
    !['LL-321','LL-322','LL-323'].every(id=>manifest.implemented.some(t=>t.id===id))))
   errors.push('v0.5.64 DOS starting state, food identities and release evidence missing');
+if(atLeast('0.5.99') && (!load('index.html').includes('src/embed-launch.js') || !load('PLAY.html').includes('LifeEmbedLaunch') || !load('tools/build-offline.mjs').includes("'embed-launch'") || !load('tests/embed-launch-099.test.cjs').includes('opaque Atrium match') || !manifest.remaining.some(t=>t.id==='LL-357')))errors.push('v0.5.99 hosted Life embed contract missing');
 if(errors.length)throw Error(errors.join('\n'));
 reconcile({check:true});
 console.log(`ZipRunner workboard OK; ${tasks.length} items; offline build OK.`);

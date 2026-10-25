@@ -12,6 +12,9 @@ const GoalPresets=window.LifeGoalPresets;
 const I18n=window.LifeI18n;
 // The loaded HTML bundle is the authoritative release identity, not server or ZipRunner state.
 const LIFE_RELEASE=document.querySelector('meta[name="life-release-version"]')?.content||'unknown';
+// Passive, unprivileged Tavi/Atrium launch metadata. It never authorizes a game seat.
+const LIFE_LAUNCH=window.LifeEmbedLaunch?.fromWindow(window)||null;
+window.LifeLaunchContext=LIFE_LAUNCH;
 const RulePresets=window.LifeRulePresets;
 const SharedPortrait=window.LifeSharedPortraitUI;
 const preferencesStorage=(()=>{try{return window.localStorage;}catch{return null;}})();

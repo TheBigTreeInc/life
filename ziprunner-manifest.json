@@ -3,89 +3,69 @@
   "spec_version": "1.0.0",
   "project": {
     "key": "the-life-loop",
-    "version": "0.5.98",
-    "base_version": "0.5.97"
+    "version": "0.5.99",
+    "base_version": "0.5.98"
   },
   "update": {
-    "id": "LIFE-20261021-098-ATRIUM01",
+    "id": "LIFE-20261025-099-EMBED01",
     "kind": "source_update",
-    "created_at": "2026-10-21T14:10:00Z",
-    "summary": "Add automatic Life GitHub Pages deploy-to-Atrium registration via pinned first-party action. Preserve existing gameplay, Cloud/LoopRD APIs and Atrium portable sidecar."
+    "created_at": "2026-10-25T15:20:00Z",
+    "summary": "Add an unauthenticated opaque match selector and host-independent sandboxed browser smoke fixture for Life M1 embedded gameplay; preserve standalone/offline behavior, existing multiplayer API and rules."
   },
   "planned_work": [
     {
-      "id": "LL-356",
-      "title": "Life successful Pages deployment registration via Atrium action",
-      "acceptance_criteria": "Checkout exact deployed SHA and dispatch Atrium request on successful main Pages workflow, safe manual retry; operator configures restricted token and trusted-source policy before catalog approval.",
-      "priority": "high"
+      "id": "LL-357",
+      "title": "Life hosted web embed launch and offline independent acceptance",
+      "priority": "high",
+      "acceptance_criteria": "Local fixture and match selector tests pass; actual Windows/Android/web Tavi nested surface and stable Home/Back require separate host and device acceptance."
     }
   ],
   "done_work": [
     {
-      "id": "LL-354",
-      "summary": "Local source pilot handler, generated LoopRD route, versioned identity envelope and offline client queue tested against SQLite and actual Life JS client fixture; production acceptance not claimed",
+      "id": "LL-357",
+      "summary": "Source implementation candidate only. Strict read-only match selector and local iframe fixture; no seat auth and no M1 live/device acceptance.",
       "evidence": [
         {
           "kind": "source",
-          "ref": "server/cloud_save_looprd.py",
-          "description": "Direct LoopRD inline handler using existing match tables and Tavi proof redemption"
+          "ref": "src/embed-launch.js",
+          "description": "Passive launch context, no auth or persistence"
         },
         {
           "kind": "test",
-          "ref": "tests/test_cloud_save_looprd_097.py",
-          "description": "Two-player local SQL/JS client replay, same-match scoped sessions, idempotent CAS and restart"
-        },
-        {
-          "kind": "test",
-          "ref": "tests/cloud-save-outbox.test.cjs",
-          "description": "Credential-free offline queue, retries and manual conflicts"
+          "ref": "tests/embed-launch-099.test.cjs",
+          "description": "Opaque match ID and fixture security tests"
         },
         {
           "kind": "documentation",
-          "ref": "docs/LIFE_CLOUD_SAVE_LOOPRD_097.adoc",
-          "description": "API envelope, trust boundary, deployment gates and handoff"
-        }
-      ]
-    },
-    {
-      "id": "LL-356",
-      "summary": "Source implementation candidate only: pinned GitHub Actions integration, offline verifier, versioned QA contract and operator handoff; no production registration or operator acceptance claimed.",
-      "evidence": [
-        {
-          "kind": "source",
-          "ref": ".github/workflows/atrium-register.yml",
-          "description": "After-successful-Pages automatic workflow with immutable SHA and scoped token"
-        },
-        {
-          "kind": "test",
-          "ref": "tests/atrium-registration-workflow.test.cjs",
-          "description": "Static workflow/invariants and source package regression"
-        },
-        {
-          "kind": "documentation",
-          "ref": "docs/LIFE_ATRIUM_AUTOREGISTRATION_098.adoc",
-          "description": "Operator approval, trust policy, token scope and limitation handoff"
+          "ref": "docs/LIFE_TAVI_EMBED_HOSTLESS_099.adoc",
+          "description": "M1/M2 service responsibility and manual acceptance handoff"
         }
       ]
     }
   ],
   "todo_work": [
     {
-      "id": "LL-355",
+      "id": "LL-357",
       "status": "blocked",
-      "next_action": "Wire actual Life browser End Turn and OpenClaw, connect Atrium approved Create/Invite/Join to real bound match and provision Social game proof and event dispatcher",
+      "next_action": "Joint test with live Tavi tavix.surface/v1 host, reviewed Atrium target and actual Pages CSP/WebView settings",
       "blockers": [
-        "Production match bootstrap verifier and Social service credentials not operator-approved",
-        "Live Atrium/Tavi/LoopRD two-seat acceptance not performed"
+        "Tavi and Atrium release/device acceptance not yet observed"
       ]
     },
     {
-      "id": "LL-356",
+      "id": "LL-354",
       "status": "blocked",
-      "next_action": "Configure Atrium Actions-write-only registration credential, operator approve Life trusted-source entry, then verify exact-SHA successful Pages dispatch, Atrium receiver and visible Tavi catalog.",
+      "next_action": "Deploy verified Life authoritative /play API and accepted Social proof, then test recovery, wrong-seat, CAS and durability",
       "blockers": [
-        "Atrium registry/trusted-sources.json currently empty",
-        "No narrow scoped operator credential delivered to Life; manual/live acceptance not performed"
+        "No verified production Social grant or trusted server-executed rules processing"
+      ]
+    },
+    {
+      "id": "LL-355",
+      "status": "blocked",
+      "next_action": "Connect browser/agent to authenticated Life /play and Atrium lobby, durable turn-ready dispatch and hostless restart QA",
+      "blockers": [
+        "Server side tests and approved deployments outstanding"
       ]
     }
   ],

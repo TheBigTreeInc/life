@@ -1,8 +1,8 @@
-# Workboard lifecycle reconciliation — v0.5.98
+# Workboard lifecycle reconciliation — v0.5.99
 
 **Scope:** Version-controlled reconciliation of stable LL IDs. The active ZipRunner importer still reads `.ziprunner-workboard-update.json` (v1), which does **not** implement explicit Blocked/In Progress transitions. Those require a verified ZipRunner importer update.
 
-**Counts:** 298 done (historical claims included); 17 blocked; 12 in progress; 15 to do.
+**Counts:** 298 done (historical claims included); 18 blocked; 12 in progress; 15 to do.
 
 ## Blocked — reason and unblock condition
 
@@ -23,6 +23,7 @@
 - **LL-263 — Cross-game single sign-on and social deployment:** No production identity provider, trust keys, social instance URL or authenticated game-server gateway is available; the local development token must never become production SSO. **Unblock:** Deploy a trusted OIDC issuer and verify token exchange and two-client authorization against the game and social services.
 - **LL-310 — Original DOS starting happiness audit:** DOS original starting stats and exact fractional university credit semantics have not yet been demonstrated from an executable/runtime trace. **Unblock:** Provide a version-matched original DOS capture proving initial Happiness and partial-lesson education stat increments.
 - **LL-352 — Direct LoopRD on-demand JS turn worker and authenticated commit_turn handler:** LoopRD does not yet provide a trusted version-pinned on-demand JavaScript rules worker; real Social game principal verification and operator admission remain unproven. **Unblock:** DAPI owner ships isolated worker capability, Social operator verifies issuer/audience/seat, and live LoopRD operator authorizes enablement.
+- **LL-357 — Life embedded hosted-web M1 source and operator acceptance:** Source-only embedded launch selector and test host exist, but actual approved Tavi generic surface, Pages CSP and Windows/Android/web integration have not been device-verified. **Unblock:** Tavi host and Atrium releases are approved and M1 embedded play, safe Home/Back, origin policies and viewport/device tests pass.
 
 ## In progress
 

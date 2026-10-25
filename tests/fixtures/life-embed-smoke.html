@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life host-independent embedded game smoke fixture</title>
+<style>
+  body{margin:0;padding:0;display:grid;grid-template-rows:auto 1fr;height:100dvh;background:#132521;color:#fff;font:14px system-ui}
+  header{padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
+  #game{width:100%;height:100%;border:0;background:#fff}
+  button{min-height:44px;cursor:pointer}
+</style></head>
+<body>
+<header><strong>Test host — not Tavi</strong><button id="close" type="button">Return to test host</button></header>
+<!-- Deliberately opaque-origin sandbox. No privileged Tavi host bridge or
+     same-origin grants are intentionally absent. Local fixture only. -->
+<iframe id="game" title="Life embedded smoke" sandbox="allow-scripts allow-forms" referrerpolicy="no-referrer" src="../../index.html"></iframe>
+<script>
+const child=document.getElementById('game');
+document.getElementById('close').addEventListener('click',()=>{child.remove();document.querySelector('strong').textContent='Returned to test host';});
+</script>
+</body></html>

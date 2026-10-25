@@ -44,7 +44,7 @@ test('Portable Life game metadata still references deployment-owned origin, not 
 });
 
 test('Versioned game ZIP includes reviewer checks but does not declare operator acceptance', () => {
- assert.equal(pkg.version,'0.5.98');
+ assert.ok(pkg.version.split('.').map(Number).reduce((n,x)=>n*1000+x,0)>=5098);
  assert.equal(manifest.version,pkg.version);
  assert.ok(manifest.remaining.some(item=>item.id === 'LL-356' && item.priority === 'high'));
  assert.ok(manifest.remaining.some(item=>item.id === 'LL-354'));

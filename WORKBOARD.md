@@ -1,3 +1,7 @@
+### v0.5.99 — M1 Life iframe and URL selector source candidate (LL-357)
+
+Complete source ZIP: `the-life-loop-0.5.99-ziprunner.zip`. Five isolated selector and fixture checks plus full game regressions; no claimed Tavi/Android/Windows acceptance and no fabricated M2 service. LL-354/355 and registration LL-356 remain operator pending. The v0.5.98 source implement record remains in the archive; local operator workboard statuses remain authoritative.
+
 ### v0.5.98 — Atrium registration workflow candidate (LL-356, operator review)
 
 Complete source ZIP: `the-life-loop-0.5.98-ziprunner.zip`. Adds successful-Pages-deployment-triggered registration using the Atrium-owned pinned action; source validation and workflow tests are automated. The external registration token, trusted-source policy, published catalog and in-Tavi launch still require independent operator acceptance. Preserve all 351 existing local workboard states; LL-346, LL-354 and LL-355 remain open.
